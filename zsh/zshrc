@@ -1,0 +1,39 @@
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/.share/oh-my-zsh
+
+# Set name of the theme to load.
+if [[ -n $INSIDE_EMACS ]]; then
+  ZSH_THEME="xandeer-emacs"
+elif [[ "$OSTYPE" = darwin* ]]; then
+  ZSH_THEME="xandeer-osx"
+else
+  ZSH_THEME="xandeer"
+fi
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
+
+# Which plugins would you like to load? (plugins can bo found in ~/.oh-m-zsh/plugins/*)
+plugins=(git-flow yarn git gitignore osx npm common-aliases sudo zsh_reload scd copydir copyfile copybuffer xandeer)
+
+# User configuration
+export ZSH_CUSTOM=$HOME/.config/zsh
+
+source $ZSH/oh-my-zsh.sh
+autoload -U compinit && compinit -u
+
+if [[ "$OSTYPE" = darwin* ]]; then
+  export TERM='screen-256color'
+fi
+
+setopt nonomatch
+
+zstyle ':completion:*' rehash true
+
+for file in $HOME/.config/zsh/{proxy,aliases,functions,path,extra,exports}; do
+	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+		# shellcheck source=/dev/null
+		source "$file"
+	fi
+done
+unset file

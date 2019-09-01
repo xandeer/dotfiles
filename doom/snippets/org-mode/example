@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: example
+# key: example
+# --
+#+begin_example
+$0
+`(%t)`
+#+end_example

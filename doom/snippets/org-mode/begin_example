@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: #+begin_example
+# key: <e
+# type: command
+# --
+(%alias "example")

@@ -1,0 +1,7 @@
+alias yag="yarn global add"
+alias ya="yarn add"
+alias yad="yarn add -D"
+alias yr="yarn run"
+alias ys="yarn run start"
+alias yb="yarn run build"
+alias yu="yarn upgrade"

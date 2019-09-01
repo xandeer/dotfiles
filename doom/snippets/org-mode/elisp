@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: elisp block
+# key: elisp
+# --
+#+begin_src elisp :tangle yes
+$0
+#+end_src
