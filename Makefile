@@ -25,6 +25,7 @@ dotfiles: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
 	xrdb -merge $(HOME)/.Xresources;
 	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;
+	ln -snf $(CURDIR)/profile $(HOME)/.profile;
 
 .PHONY: etc
 etc: ## Installs the etc directory files.
