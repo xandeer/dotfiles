@@ -18,6 +18,7 @@ dotfiles: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/i3status $(HOME)/.config/i3status;
 	ln -snf $(CURDIR)/doom $(HOME)/.config/doom;
 	ln -snf $(CURDIR)/zsh $(HOME)/.config/zsh;
+	ln -snf $(CURDIR)/tmux $(HOME)/.config/tmux;
 
 	mkdir -p $(HOME)/.local/share;
 	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
@@ -26,6 +27,8 @@ dotfiles: ## Installs the dotfiles.
 	xrdb -merge $(HOME)/.Xresources;
 	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;
 	ln -snf $(CURDIR)/profile $(HOME)/.profile;
+	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
+	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
 
 .PHONY: etc
 etc: ## Installs the etc directory files.
