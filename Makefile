@@ -2,8 +2,8 @@ UNAME := $(shell uname -s)
 CONDIR := $(HOME)/.config
 CONFIGS := i3 i3status doom zsh tmux
 
-.PHONY: all
-all: bin dotfiles etc ## Installs the bin and etc directory files and the dotfiles.
+.PHONY: install
+install: bin dotfiles etc ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: bin
 bin: ## Installs the bin directory files.
@@ -41,6 +41,13 @@ etc: ## Installs the etc directory files.
 		sudo mkdir -p $$(dirname $$f); \
 		sudo ln -f $$file $$f; \
 	done
+
+.PHONY: update
+update: pull install ## Git pull and install all.
+
+.PHONY: pull
+pull: ## Git pull.
+	git pull;
 
 .PHONY: help
 help:
