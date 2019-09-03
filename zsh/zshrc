@@ -30,10 +30,6 @@ setopt nonomatch
 
 zstyle ':completion:*' rehash true
 
-for file in $HOME/.config/zsh/{proxy,aliases,functions,path,extra,exports}; do
-	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-		# shellcheck source=/dev/null
-		source "$file"
-	fi
-done
-unset file
+if [[ -r $HOME/.profile ]] && [[ -f $HOME/.profile ]]; then
+  source $HOME/.profile
+fi
