@@ -1,3 +1,7 @@
+UNAME := $(shell uname -s)
+CONDIR := $(HOME)/.config
+CONFIGS := i3 i3status doom zsh tmux
+
 .PHONY: all
 all: bin dotfiles etc ## Installs the bin and etc directory files and the dotfiles.
 
@@ -12,23 +16,23 @@ bin: ## Installs the bin directory files.
 .PHONY: dotfiles
 dotfiles: ## Installs the dotfiles.
 	# add aliases for dotfiles
-	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
-	mkdir -p $(HOME)/.config;
-	ln -snf $(CURDIR)/i3 $(HOME)/.config/i3;
-	ln -snf $(CURDIR)/i3status $(HOME)/.config/i3status;
-	ln -snf $(CURDIR)/doom $(HOME)/.config/doom;
-	ln -snf $(CURDIR)/zsh $(HOME)/.config/zsh;
-	ln -snf $(CURDIR)/tmux $(HOME)/.config/tmux;
+	mkdir -p $(CONDIR);
+	for config in $(CONFIGS); do \
+		ln -snf $(CURDIR)/$$config $(CONDIR)/$$config; \
+	done
 
 	mkdir -p $(HOME)/.local/share;
 	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
 
 	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
-	xrdb -merge $(HOME)/.Xresources;
 	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;
 	ln -snf $(CURDIR)/profile $(HOME)/.profile;
 	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
-	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
+	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
+
+ifeq ($(UNAME), Linux)
+	xrdb -merge $(HOME)/.Xresources;
+endif
 
 .PHONY: etc
 etc: ## Installs the etc directory files.
