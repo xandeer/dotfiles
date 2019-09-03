@@ -1,5 +1,5 @@
 #!/bin/sh
-# /usr/bin/i3exit
+# /usr/local/bin/i3exit
 
 # with openrc use loginctl
 [[ $(cat /proc/1/comm) == "systemd" ]] && logind=systemctl || logind=loginctl
