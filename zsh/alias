@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# emacs-vterm
+if [ -n "$INSIDE_EMACS" ]; then
+    alias vi='emacsclient -n'
+    alias vim='emacsclient -n'
+    alias emacs='emacsclient -n'
+fi
