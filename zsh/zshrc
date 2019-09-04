@@ -14,7 +14,23 @@ fi
 DISABLE_AUTO_UPDATE="true"
 
 # Which plugins would you like to load? (plugins can bo found in ~/.oh-m-zsh/plugins/*)
-plugins=(git-flow yarn git gitignore osx npm common-aliases sudo zsh_reload scd copydir copyfile copybuffer xandeer)
+plugins=(
+  yarn
+  git
+  gitignore
+  osx
+  npm
+  common-aliases
+  sudo
+  zsh_reload
+  scd
+  copydir
+  copyfile
+  copybuffer
+  xandeer
+  colored-man-pages
+  colorize
+)
 
 # User configuration
 export ZSH_CUSTOM=$HOME/.config/zsh
