@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 export DOTS_DIR=$HOME/projects/personal/dotfiles
 
