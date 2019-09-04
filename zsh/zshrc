@@ -2,13 +2,7 @@
 export ZSH=$HOME/.local/share/oh-my-zsh
 
 # Set name of the theme to load.
-if [[ -n $INSIDE_EMACS ]]; then
-  ZSH_THEME="xandeer-emacs"
-elif [[ "$OSTYPE" = darwin* ]]; then
-  ZSH_THEME="xandeer-osx"
-else
-  ZSH_THEME="xandeer"
-fi
+ZSH_THEME="xandeer"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 DISABLE_AUTO_UPDATE="true"
