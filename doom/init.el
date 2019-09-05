@@ -86,6 +86,8 @@
        tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
        ;;wakatime
+
+       :term
        vterm             ; another terminals in Emacs
 
        :lang
@@ -169,4 +171,10 @@
        ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
        ;; config. Use it as a reference for your own modules.
        (default +bindings +smartparens)
-       :private xandeer)
+
+       :xandeer
+       basic
+       key-bindings
+       ui
+       snippets
+       org)

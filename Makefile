@@ -23,6 +23,7 @@ dotfiles: ## Installs the dotfiles.
 
 	mkdir -p $(HOME)/.local/share;
 	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
+	ln -snf $(CURDIR)/plantuml $(HOME)/.local/share/plantuml;
 
 	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
 	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;

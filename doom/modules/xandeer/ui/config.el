@@ -1,0 +1,15 @@
+;;; xandeer/ui/config.el -*- lexical-binding: t; -*-
+
+(setq
+ ;doom-font (font-spec :family "Fira Mono for Powerline" :size 15)
+ doom-font (font-spec :family "Consola Mono" :size 16)
+ scroll-margin 0
+ display-line-numbers-type 'relative)
+
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+
+(use-package! nord-theme
+  :config
+  (load-theme 'nord t))
