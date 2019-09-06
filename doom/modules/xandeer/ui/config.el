@@ -1,8 +1,7 @@
 ;;; xandeer/ui/config.el -*- lexical-binding: t; -*-
 
 (setq
- ;doom-font (font-spec :family "Fira Mono for Powerline" :size 15)
- doom-font (font-spec :family "Consola Mono" :size 16)
+ doom-font (font-spec :family "Consola Mono")
  scroll-margin 0
  display-line-numbers-type 'relative)
 
