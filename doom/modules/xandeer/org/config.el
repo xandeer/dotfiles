@@ -13,7 +13,7 @@
                            ("diary.org" :maxlevel . 5)
                            ("learning.org" :maxlevel . 5)
                            ("reading.org" :maxlevel . 5)
-                           ("xmind.org" :maxlevel . 5)
+                           ("work.org" :maxlevel . 5)
                            ("notes.org" :maxlevel . 5)
                            (org-agenda-files :maxlevel . 5))
         org-default-notes-file (concat org-directory "/journal.org")
