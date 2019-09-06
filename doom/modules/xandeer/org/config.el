@@ -22,7 +22,7 @@
                                 ("c" "cache" entry (file+headline "" "Cache") ; "" => `org-default-notes-file'
                                  "* %? %U" :prepend t)
                                 ("D" "Do It Tomorrow" entry (file+headline "gtd.org" "Tasks")
-                                 "* TODO %?\n%(org-custom-scheduled-tomorrow)\n%U\n"
+                                 "* TODO %?\n%(+org/schedule-tomorrow)\n%U\n"
                                  :clock-resume t :prepend t)
                                 ("w" "word" item (file+olp+datetree "learning.org" "Words")
                                  "%?" :prepend t)

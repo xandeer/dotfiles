@@ -42,7 +42,8 @@
              (rfloc (list nil filename nil pos)))
         (org-refile nil nil rfloc))))))
 
-(defun org-custom-scheduled-tomorrow ()
+;;;###autoload
+(defun +org/schedule-tomorrow ()
   "Return scheduled string on tomorrow."
   (format-time-string "SCHEDULED: <%F %a>"
                       (time-add (current-time) (* 24 3600))))
