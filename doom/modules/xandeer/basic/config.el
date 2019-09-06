@@ -1,11 +1,5 @@
 ;;; xandeer/basic/config.el -*- lexical-binding: t; -*-
 
-(after! ivy
-  (map! :map ivy-minibuffer-map
-        "C-d" (λ! (insert (format-time-string "Daily %Y-%m-%d" (current-time))))
-        "C-w" (λ! (insert (format-time-string "Words %Y-%m-%d" (current-time))))
-        "C-v" #'ivy-scroll-up-command))
-
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh-theme\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))

@@ -51,31 +51,7 @@
                                (700 900 1000 1100 1400 1500 1600 1700)
                                "......"
                                "----------------")
-        org-agenda-start-on-weekday nil)
-
-  (map! :map org-mode-map
-        :gni [M-return]   (λ! (+org/insert-item-below 1))
-        :gni [s-return]   (λ! (+org/insert-item-below 1))
-        :gni [M-S-return] (λ! (+org/insert-item-above 1))
-        :gni [s-S-return] (λ! (+org/insert-item-above 1)))
-
-  (map! :map evil-org-mode-map
-        :i "C-l" (general-predicate-dispatch 'recenter-top-bottom
-                   (org-at-table-p) 'org-table-next-field)
-        :i "C-h" (general-predicate-dispatch 'help
-                   (org-at-table-p) 'org-table-previous-field)
-        :i "C-k" (general-predicate-dispatch 'kill-line
-                   (org-at-table-p) '+org/table-previous-row)
-        :i "C-j" (general-predicate-dispatch 'org-down-element
-                   (org-at-table-p) 'org-table-next-row)
-
-        :ni "M-j" #'org-next-visible-heading
-        :ni "M-k" #'org-previous-visible-heading)
-
-  (map! :localleader
-        :map org-mode-map
-        ;; scheduled to tomorrow
-        "n" (λ! (org--deadline-or-schedule "" 'scheduled "+1d"))))
+        org-agenda-start-on-weekday nil))
 
 (after! plantuml-mode
   (setq plantuml-jar-path "~/.local/share/plantuml/plantuml.jar"
