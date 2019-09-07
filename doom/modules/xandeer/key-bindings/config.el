@@ -83,7 +83,7 @@
 ;;;-------------------------------- ivy ---------------------------------
 (after! ivy
   (map! :map ivy-minibuffer-map
-        "C-d" (λ! (insert (format-time-string "Daily %Y-%m-%d" (current-time))))
-        "C-w" (λ! (insert (format-time-string "Words %Y-%m-%d" (current-time))))
+        ;; "C-d" (λ! (insert (format-time-string "Daily %Y-%m-%d" (current-time))))
+        ;; "C-w" (λ! (insert (format-time-string "Words %Y-%m-%d" (current-time))))
         "C-v" #'ivy-scroll-up-command))
 ;;;----------------------------------------------------------------------
