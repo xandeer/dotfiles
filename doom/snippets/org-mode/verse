@@ -2,7 +2,7 @@
 # name: verse
 # key: verse
 # --
-#+begin_verse
+#+BEGIN_VERSE
 $0
 `(%t)`
-#+end_verse
+#+END_VERSE

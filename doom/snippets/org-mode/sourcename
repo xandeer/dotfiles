@@ -2,4 +2,4 @@
 # name: source name
 # key: name
 # --
-#+srcname: $0
+#+SRCNAME: $0

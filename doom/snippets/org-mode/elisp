@@ -2,6 +2,6 @@
 # name: elisp block
 # key: elisp
 # --
-#+begin_src elisp :tangle yes
+#+BEGIN_SRC elisp :tangle yes
 $0
-#+end_src
+#+END_SRC

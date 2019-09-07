@@ -2,7 +2,7 @@
 # name: example
 # key: example
 # --
-#+begin_example
+#+BEGIN_EXAMPLE
 $0
 `(%t)`
-#+end_example
+#+END_EXAMPLE
