@@ -15,3 +15,8 @@
   (setq-default
    url-automatic-caching t
    youdao-dictionary-search-history-file (concat doom-cache-dir "youdao.cache")))
+
+(use-package! keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
