@@ -1,14 +1,25 @@
 ;;; xandeer/org/autoload.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(defun +org/archive-done-tasks ()
-  "Archive finished tasks."
-  (interactive)
+(defun +org/archive-tasks-of (type)
+  "Archive tasks of the type."
   (org-map-entries
    (lambda ()
      (org-archive-subtree)
      (setq org-map-continue-from (outline-previous-heading)))
-   "/+{|DONE|CANCELED}" 'tree))
+   (concat "/+{|" (upcase type) "}") 'tree))
+
+;;;###autoload
+(defun +org/archive-done-tasks ()
+  "Archive done tasks."
+  (interactive)
+  (+org/archive-tasks-of "DONE"))
+
+;;;###autoload
+(defun +org/archive-canceled-tasks ()
+  "Archive done tasks."
+  (interactive)
+  (+org/archive-tasks-of "CANCELED"))
 
 ;;;###autoload
 (defun +org/refile-to-top ()
