@@ -6,7 +6,7 @@
 (add-to-list 'auto-mode-alist '("zshrc" . sh-mode))
 
 (after! projectile
-  (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles" "~/Dropbox/notes/" "~/.emacs.d/"))
+  (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles/" "~/Dropbox/notes/" "~/.emacs.d/"))
     (when (file-directory-p dir)
       (add-to-list 'projectile-known-projects dir))))
 
