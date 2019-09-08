@@ -14,3 +14,6 @@
 (use-package! nord-theme
   :config
   (load-theme 'nord t))
+
+(after! org
+  (+ui/set-org-pretty-symbols))
