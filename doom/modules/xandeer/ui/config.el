@@ -16,4 +16,5 @@
   (load-theme 'nord t))
 
 (after! org
-  (+ui/set-org-pretty-symbols))
+  (+ui/set-org-pretty-symbols)
+  (+ui/init-popup-rules))
