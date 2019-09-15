@@ -176,4 +176,6 @@
        key-bindings
        ui
        snippets
-       org)
+       org
+       beancount
+       )
