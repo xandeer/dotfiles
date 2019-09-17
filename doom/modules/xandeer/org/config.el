@@ -54,5 +54,7 @@
         org-agenda-start-on-weekday nil))
 
 (after! plantuml-mode
-  (setq plantuml-jar-path "~/.local/share/plantuml/plantuml.jar"
-        org-plantuml-jar-path plantuml-jar-path))
+  (setq
+   plantuml-default-exec-mode 'jar
+   plantuml-jar-path "~/.local/share/plantuml/plantuml.jar"
+   org-plantuml-jar-path plantuml-jar-path))
