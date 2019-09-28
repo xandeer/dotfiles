@@ -178,4 +178,5 @@
        snippets
        org
        beancount
+       telega
        )
