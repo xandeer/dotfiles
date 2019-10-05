@@ -3,7 +3,7 @@
 export DOTS_DIR=$HOME/projects/personal/dotfiles
 
 # Make vim the default editor
-export EDITOR=vim
+export EDITOR="emacsclient -n"
 export GIT_EDITOR=vim
 
 # nvm

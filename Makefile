@@ -3,7 +3,7 @@ CONDIR := $(HOME)/.config
 CONFIGS := i3 i3status doom zsh tmux
 
 .PHONY: install
-install: bin dotfiles etc ## Installs the bin and etc directory files and the dotfiles.
+install: dotfiles ## Installs the dotfiles.
 
 .PHONY: bin
 bin: ## Installs the bin directory files.
@@ -34,14 +34,6 @@ dotfiles: ## Installs the dotfiles.
 ifeq ($(UNAME), Linux)
 	xrdb -merge $(HOME)/.Xresources;
 endif
-
-.PHONY: etc
-etc: ## Installs the etc directory files.
-	for file in $(shell find $(CURDIR)/etc -type f -not -name ".*.swp"); do \
-		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
-		sudo mkdir -p $$(dirname $$f); \
-		sudo ln -f $$file $$f; \
-	done
 
 .PHONY: update
 update: pull install ## Git pull and install all.

@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
-export https_proxy=http://127.0.0.1:8010
-export http_proxy=http://127.0.0.1:8010
-export all_proxy=http://127.0.0.1:8010
+export px=http://127.0.0.1:8010
+export https_proxy=$px
+export http_proxy=$px
+export all_proxy=$px
