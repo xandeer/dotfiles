@@ -1,37 +1,28 @@
 UNAME := $(shell uname -s)
 CONDIR := $(HOME)/.config
+CONFIGS := doom zsh tmux
+ifeq ($(UNAME), Linux)
 CONFIGS := i3 i3status doom zsh tmux
+endif
 
 .PHONY: install
-install: dotfiles ## Installs the dotfiles.
-
-.PHONY: bin
-bin: ## Installs the bin directory files.
-	# add aliases for things in bin
-	for file in $(shell find $(CURDIR)/bin -type f -not -name ".*.swp"); do \
-		f=$$(basename $$file); \
-		sudo ln -sf $$file /usr/local/bin/$$f; \
-	done
-
-.PHONY: dotfiles
-dotfiles: ## Installs the dotfiles.
-	# add aliases for dotfiles
+install: ## Installs the dotfiles.
 	mkdir -p $(CONDIR);
 	for config in $(CONFIGS); do \
 		ln -snf $(CURDIR)/$$config $(CONDIR)/$$config; \
 	done
 
 	mkdir -p $(HOME)/.local/share;
-	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
 	ln -snf $(CURDIR)/plantuml $(HOME)/.local/share/plantuml;
 
-	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
 	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;
 	ln -snf $(CURDIR)/profile $(HOME)/.profile;
 	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
 ifeq ($(UNAME), Linux)
+	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
+	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
 	xrdb -merge $(HOME)/.Xresources;
 endif
 
