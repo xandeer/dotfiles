@@ -60,7 +60,7 @@
     fzf bat prettyping lsof
     pavucontrol
     rofi
-    vivaldi
+    vivaldi firefox
     dropbox
     rustc cargo rustup rustracer
   ];
