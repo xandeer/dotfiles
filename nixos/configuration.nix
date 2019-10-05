@@ -55,14 +55,14 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget unzip vim git tree tmux htop ranger w3m
+    wget unzip vim git tree tmux htop ranger w3m ripgrep
     binutils gnumake cmake gcc libtool
     fzf bat prettyping lsof
     pavucontrol
     rofi
     vivaldi
     dropbox
-    rustc cargo
+    rustc cargo rustup rustracer
   ];
 
   # Enable the OpenSSH daemon.

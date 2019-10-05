@@ -11,8 +11,8 @@ if [[ "$XANDEER_PROFILE" != loaded ]] ; then
     export PATH=/usr/local/opt/findutils/libexec/gnubin:$PATH
     export MANPATH=/usr/local/opt/findutils/libexec/gnuman:$MANPATH
 
-    # add android path
     if [[ "$OSTYPE" = darwin* ]]; then
+        # add android path
         export SDK_DIR=~/Library/Android/sdk
         export PATH=$SDK_DIR/platform-tools:$PATH
         export PATH=$SDK_DIR/tools:$PATH
@@ -20,6 +20,8 @@ if [[ "$XANDEER_PROFILE" != loaded ]] ; then
         # add rust path
         export PATH=$HOME/.cargo/bin:$PATH
     fi
+
+    export RUST_SRC_PATH=$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 
     # add doom path
     export PATH=$HOME/.emacs.d/bin:$PATH
