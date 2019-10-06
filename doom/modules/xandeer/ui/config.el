@@ -4,7 +4,9 @@
  scroll-margin 0
  display-line-numbers-type 'relative)
 
-(+ui/set-font "Consola Mono" "WenQuanYi Micro Hei Mono" 24 27)
+(if IS-MAC
+    (+ui/set-font "Consola Mono" "Xingkai SC" 16 18)
+  (+ui/set-font "Consola Mono" "WenQuanYi Micro Hei Mono" 24 27))
 
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)

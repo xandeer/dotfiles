@@ -31,4 +31,4 @@
                       (format "%s:pixelsize=%d" en en-size))
   (dolist (charset '(kana han symbol cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font) charset
-                      (font-spec :family cn :size cn-size))))
+                      (font-spec :family cn :size cn-size :weight 'bold))))
