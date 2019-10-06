@@ -21,7 +21,6 @@ install: ## Installs the dotfiles.
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
 ifeq ($(UNAME), Linux)
-	ln -snf $(CURDIR)/fonts $(HOME)/.local/share/fonts;
 	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
 	xrdb -merge $(HOME)/.Xresources;
 endif
