@@ -5,8 +5,11 @@
  display-line-numbers-type 'relative)
 
 (if IS-MAC
-    (+ui/set-font "Consola Mono" "Xingkai SC" 16 18)
-  (+ui/set-font "Consola Mono" "WenQuanYi Micro Hei Mono" 24 27))
+    (+ui/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
+  (+ui/set-font "Consola Mono" "CloudKaiXingGBK" 30 36))
+; fonts test
+; 锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷
+; HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
