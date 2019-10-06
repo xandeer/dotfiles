@@ -24,3 +24,11 @@
 (defun +ui/init-popup-rules ()
   (set-popup-rules!
     '(("^\\*Org Agenda"    :size 0.4 :quit nil :select t :autosave t :modeline t :ttl nil))))
+
+;;;###autodef
+(defun +ui/set-font (en cn en-size cn-size)
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" en en-size))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family cn :size cn-size))))
