@@ -24,10 +24,6 @@
                                 ("D" "Do It Tomorrow" entry (file+headline "gtd.org" "Tasks")
                                  "* TODO %?\n%(+org/schedule-tomorrow)\n%U\n"
                                  :clock-resume t :prepend t)
-                                ("w" "word" item (file+olp+datetree "learning.org" "Words")
-                                 "%?" :prepend t)
-                                ("S" "sentences" item (file+headline "learning.org" "Sentences")
-                                 "%? %U" :prepend t)
                                 ("x" "work" entry (file+olp+datetree "work.org" "Weekly Summaries")
                                  (file ".work.tmpl.org") :prepend t)
                                 ("d" "daily review" entry (file+olp+datetree "diary.org" "Daily Review")
