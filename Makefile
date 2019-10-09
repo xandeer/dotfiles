@@ -1,9 +1,6 @@
 UNAME := $(shell uname -s)
 CONDIR := $(HOME)/.config
 CONFIGS := doom zsh tmux
-ifeq ($(UNAME), Linux)
-CONFIGS := i3 i3status doom zsh tmux
-endif
 
 .PHONY: install
 install: ## Installs the dotfiles.
@@ -19,11 +16,6 @@ install: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/profile $(HOME)/.profile;
 	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
-
-ifeq ($(UNAME), Linux)
-	ln -snf $(CURDIR)/Xresources $(HOME)/.Xresources;
-	xrdb -merge $(HOME)/.Xresources;
-endif
 
 .PHONY: update
 update: pull install ## Git pull and install all.
