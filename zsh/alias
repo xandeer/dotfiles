@@ -16,7 +16,7 @@ function update_personal_projects() {
 
 alias mn=commit_and_push_notes
 function commit_and_push_notes() {
-    cd ~/projects/personal/notess \
+    cd ~/projects/personal/notes \
         && git add all \
         && git commit -m "$(date +'manual: [%F %a %T]')" \
         && git push
