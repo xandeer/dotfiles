@@ -6,3 +6,5 @@ if [ -n "$INSIDE_EMACS" ]; then
     alias vim='emacsclient -n'
     alias emacs='emacsclient -n'
 fi
+
+alias mu='mr -j5 update'
