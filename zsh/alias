@@ -7,4 +7,18 @@ if [ -n "$INSIDE_EMACS" ]; then
     alias emacs='emacsclient -n'
 fi
 
-alias mu='mr -j5 update'
+alias mu=update_personal_projects
+function update_personal_projects() {
+    cd ~/projects/personal \
+        && mr -tj 5 update
+    cd -
+}
+
+alias mn=commit_and_push_notes
+function commit_and_push_notes() {
+    cd ~/projects/personal/notess \
+        && git add all \
+        && git commit -m "$(date +'manual: [%F %a %T]')" \
+        && git push
+    cd -
+}
