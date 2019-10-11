@@ -1,10 +1,10 @@
 ;;; xandeer/org/config.el -*- lexical-binding: t; -*-
 
 (after! org
-  (setq org-directory "~/Dropbox/notes"
+  (setq org-directory "~/projects/personal/notes"
         org-reverse-note-order t
         org-archive-reversed-order t
-        org-agenda-files '("~/Dropbox/notes/gtd.org")
+        org-agenda-files '("~/projects/personal/notes/gtd.org")
         org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
                             (sequence "|" "CANCELED(c@/!)"))
         org-refile-targets '((nil :maxlevel . 5)
