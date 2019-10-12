@@ -17,7 +17,7 @@ install: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
-	ln -sfn $(CURDIR)/mrconfig ../
+	ln -sfn $(CURDIR)/mrconfig ../.mrconfig
 
 .PHONY: update
 update: pull install ## Git pull and install all.
