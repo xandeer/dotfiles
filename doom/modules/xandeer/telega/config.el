@@ -6,8 +6,11 @@
   :hook (telega-chat-mode . doom-mark-buffer-as-real-h)
   :config
   (telega-mode-line-mode 1)
-  (set-popup-rule! "^\\*Telega Root" :side 'left :size 0.2 :quit nil :select t)
-  (set-popup-rule! "^◀\\[.*@.*\\]" :side 'right :size 0.6 :quit nil :select t)
+  (set-popup-rule! "^\\*Telega Root" :side 'left :size 50 :quit nil :select t)
+  (set-popup-rule! "^◀\\[.*\\]$" :side 'right :size 94 :quit nil :select t)
+  (set-popup-rule! "^◀\\(.*\\)$" :side 'right :size 94 :quit nil :select t)
+  (set-popup-rule! "^◀{.*}$" :side 'right :size 94 :quit nil :select t)
+  (set-popup-rule! "^◀<.*>$" :side 'right :size 94 :quit nil :select t)
   (setq
    telega-proxies
     (list
@@ -15,6 +18,7 @@
                :type (:@type "proxyTypeHttp" :http_only t)))
    telega-sticker-set-download t
    telega-chat-button-width 28
+   telega-cache-dir "Downloads/telega"
    ; telega-use-tracking t
    ; telega-known-inline-bots '("@")
    telega-root-fill-column 48)
