@@ -1,6 +1,10 @@
 UNAME := $(shell uname -s)
 CONFIGS := doom git mr plantuml tmux zsh
 
+ifeq ($(UNAME), Linux)
+CONFIGS += i3 i3status rofi xresources
+endif
+
 .PHONY: install
 install: ## Installs the dotfiles by stow.
 	for config in $(CONFIGS); do \

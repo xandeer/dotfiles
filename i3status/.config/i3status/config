@@ -1,0 +1,44 @@
+general {
+  interval = 3
+  colors = true
+  color_good = "#1C596E"
+  color_bad = "#586E75"
+  color_degraded = "#DC322F"
+}
+
+order += "cpu_usage"
+order += "wireless _first_"
+order += "battery all"
+order += "tztime local"
+
+cpu_usage {
+  format = " cpu %usage "
+}
+
+wireless _first_ {
+  format_up = " %quality at %essid: %ip "
+  format_down = " no wifi "
+}
+
+ethernet _first_ {
+  format_up = " lan: %ip %speed "
+  format_down = " no lan "
+}
+
+battery all {
+  format = " %status %percentage %remaining"
+  format_down = "No battery"
+
+  last_full_capacity = true
+  integer_battery_capacity = true
+  status_chr = ""
+  status_bat = ""
+  status_unk = ""
+  status_full = "☻"
+  low_threshold = 15
+  threshold_type = time
+}
+
+tztime local {
+  format = " %d:%m %H:%M "
+}

@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 
+if [ $(uname -s) = 'Linux' ]; then
+    alias ors='sudo nixos-rebuild switch'
+elif [ $(uname -s) = 'Darwin' ]; then
+    alias ors='darwin-rebuild switch'
+fi
+
 # emacs-vterm
 if [ -n "$INSIDE_EMACS" ]; then
     alias vi='emacsclient -n'
@@ -7,20 +13,14 @@ if [ -n "$INSIDE_EMACS" ]; then
     alias emacs='emacsclient -n'
 fi
 
-alias mu=update_personal_projects
-function update_personal_projects() {
-    cd ~/projects/personal \
-        && mr -tj 5 update
-    cd -
-}
+alias mu='mr -j 9 update'
+alias mn='commit_and_push notes'
+alias mp='commit_and_push pages'
 
-alias mn=commit_and_push_notes
-function commit_and_push_notes() {
-    cd ~/projects/personal/notes \
+function commit_and_push() {
+    cd ~/projects/personal/$1 \
         && git add --all \
         && git commit -m "$(date +'manual: [%F %a %T]')" \
         && git push
     cd -
 }
-
-alias swh='stow -d ~/projects/personal/dotfiles -t ~'
