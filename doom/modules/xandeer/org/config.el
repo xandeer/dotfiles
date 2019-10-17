@@ -2,6 +2,7 @@
 
 (after! org
   (setq org-directory "~/projects/personal/notes"
+        +org-export-directory "exports/pages"
         org-reverse-note-order t
         org-archive-reversed-order t
         org-agenda-files '("~/projects/personal/notes/gtd.org")
