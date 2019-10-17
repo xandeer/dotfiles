@@ -1,23 +1,11 @@
 UNAME := $(shell uname -s)
-CONDIR := $(HOME)/.config
-CONFIGS := doom zsh tmux
+CONFIGS := doom git mr plantuml tmux zsh
 
 .PHONY: install
-install: ## Installs the dotfiles.
-	mkdir -p $(CONDIR);
+install: ## Installs the dotfiles by stow.
 	for config in $(CONFIGS); do \
-		ln -snf $(CURDIR)/$$config $(CONDIR)/$$config; \
+		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
-
-	mkdir -p $(HOME)/.local/share;
-	ln -snf $(CURDIR)/plantuml $(HOME)/.local/share/plantuml;
-
-	ln -snf $(CURDIR)/zsh/zshrc $(HOME)/.zshrc;
-	ln -snf $(CURDIR)/profile $(HOME)/.profile;
-	ln -snf $(CURDIR)/tmux/tmux.conf $(HOME)/.tmux.conf;
-	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
-
-	ln -sfn $(CURDIR)/mrconfig ../.mrconfig
 
 .PHONY: update
 update: pull install ## Git pull and install all.

@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+# emacs-vterm
+if [ -n "$INSIDE_EMACS" ]; then
+    alias vi='emacsclient -n'
+    alias vim='emacsclient -n'
+    alias emacs='emacsclient -n'
+fi
+
+alias mu=update_personal_projects
+function update_personal_projects() {
+    cd ~/projects/personal \
+        && mr -tj 5 update
+    cd -
+}
+
+alias mn=commit_and_push_notes
+function commit_and_push_notes() {
+    cd ~/projects/personal/notes \
+        && git add --all \
+        && git commit -m "$(date +'manual: [%F %a %T]')" \
+        && git push
+    cd -
+}
+
+alias swh='stow -d ~/projects/personal/dotfiles -t ~'
