@@ -15,6 +15,7 @@ clock() {
     mmon=$(date +'%b')
     mweek=$(date +'%a')
 	mday=$(date +'%d')
+    mtime=$(date +'%H:%M')
 	echo "#[fg=$C7]#[bg=$C4] $mmon#[fg=$C6] $mweek $mday#[fg=$C5] $mtime #[fg=$C6]$EOL"
 }
 
