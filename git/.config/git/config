@@ -1,0 +1,13 @@
+[github]
+user=xandeer
+
+[gitlab "gitlab.xmind.cn/api/v4"]
+user=kevin
+
+[pager]
+diff=diff-so-fancy | less --tabs=1,5 -RFX
+show=diff-so-fancy | less --tabs=1,5 -RFX
+
+[user]
+email=kkxandeer@gmail.com
+name=Kevin Du
