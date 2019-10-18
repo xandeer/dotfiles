@@ -15,3 +15,6 @@ checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
 
 [projects/personal/pages]
 checkout = git clone 'git@github.com:xandeer/pages.git' 'pages'
+
+[projects/others/zplug]
+checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
