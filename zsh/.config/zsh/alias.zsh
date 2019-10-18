@@ -1,5 +1,3 @@
-alias ls='ls -G'
-
 if [ $(uname -s) = 'Linux' ]; then
     alias ors='sudo nixos-rebuild switch'
 elif [ $(uname -s) = 'Darwin' ]; then
@@ -25,7 +23,7 @@ alias -g G='| rg'
 # mr
 alias mu='mr -j 9 update'
 alias mn='commit_and_push notes'
-alias mp='commit_and_push pages'
+alias mp='commit_and_push xandeer.github.io'
 
 function commit_and_push() {
     cd ~/projects/personal/$1 \

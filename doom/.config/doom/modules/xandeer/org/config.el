@@ -39,7 +39,7 @@
                                  "1. %? %U" :prepend t)
                                 ("F" "films had watched" item (file+olp "someday.org" "Films" "Watched" "2019")
                                  "1. %? %^u" :prepend t)
-                                ("j" "daily extracts" plain (file+olp+datetree "journal.org" "日摘")
+                                ("j" "daily extracts" plain (file+olp+datetree "daily-extracts.org" "日摘")
                                  "%U\n1. %?" :prepend t)
                                 ("i" "Ideas" entry (file+headline "someday.org" "Ideas")
                                  "* %? %U" :prepend t))
