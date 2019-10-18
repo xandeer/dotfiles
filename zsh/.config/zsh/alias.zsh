@@ -59,3 +59,5 @@ alias ns="npm start"
 alias nt="npm test"
 alias nto="npm test --"
 alias nr="npm run"
+
+alias mx='chmod +x'
