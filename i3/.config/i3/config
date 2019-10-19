@@ -1,4 +1,4 @@
-font pango:Consola Mono 16
+font pango:Consola Mono 14
 floating_modifier Mod4
 new_window normal 2
 new_float normal 2
@@ -70,42 +70,40 @@ bindsym Mod4+q kill
 bindsym Mod4+r mode resize
 bindsym Mod4+s layout stacking
 
-
 bindsym Mod4+w layout tabbed
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
 
 mode "(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown" {
-bindsym Escape mode default
-bindsym Return mode default
-bindsym Shift+s exec --no-startup-id i3exit shutdown, mode default
-bindsym e exec --no-startup-id i3exit logout, mode default
-bindsym h exec --no-startup-id i3exit hibernate, mode default
-bindsym l exec --no-startup-id i3exit lock, mode default
-bindsym q mode default
-bindsym r exec --no-startup-id i3exit reboot, mode default
-bindsym s exec --no-startup-id i3exit suspend, mode default
-bindsym u exec --no-startup-id i3exit switch_user, mode default
+  bindsym Escape mode default
+  bindsym Return mode default
+  bindsym Shift+s exec --no-startup-id i3exit shutdown, mode default
+  bindsym e exec --no-startup-id i3exit logout, mode default
+  bindsym h exec --no-startup-id i3exit hibernate, mode default
+  bindsym l exec --no-startup-id i3exit lock, mode default
+  bindsym q mode default
+  bindsym r exec --no-startup-id i3exit reboot, mode default
+  bindsym s exec --no-startup-id i3exit suspend, mode default
+  bindsym u exec --no-startup-id i3exit switch_user, mode default
 }
 
 mode "resize" {
-bindsym Down resize grow height 10 px or 10 ppt
-bindsym Escape mode default
-bindsym Left resize shrink width 10 px or 10 ppt
-bindsym Return mode default
-bindsym Right resize grow width 10 px or 10 ppt
-bindsym Up resize shrink height 10 px or 10 ppt
-bindsym h resize shrink width 10 px or 10 ppt
-bindsym j resize grow height 10 px or 10 ppt
-bindsym k resize shrink height 10 px or 10 ppt
-bindsym l resize grow width 10 px or 10 ppt
-bindsym q mode default
+  bindsym Down resize grow height 10 px or 10 ppt
+  bindsym Escape mode default
+  bindsym Left resize shrink width 10 px or 10 ppt
+  bindsym Return mode default
+  bindsym Right resize grow width 10 px or 10 ppt
+  bindsym Up resize shrink height 10 px or 10 ppt
+  bindsym h resize shrink width 10 px or 10 ppt
+  bindsym j resize grow height 10 px or 10 ppt
+  bindsym k resize shrink height 10 px or 10 ppt
+  bindsym l resize grow width 10 px or 10 ppt
+  bindsym q mode default
 }
 
-
 bar {
-  font pango:Consola Mono 16
+  # font pango:Consola Mono 16
   mode dock
   hidden_state hide
   position bottom
@@ -126,8 +124,6 @@ bar {
   }
 }
 
-
-
 for_window [class="^.*"] border pixel 1
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
@@ -135,4 +131,4 @@ exec --no-startup-id fcitx
 
 exec --no-startup-id greenclip daemon
 
-
+exec setsid sudo xkeysnail -q ~/projects/personal/dotfiles/xkeysnail/config.py >/dev/null 2>&1 < /dev/null &
