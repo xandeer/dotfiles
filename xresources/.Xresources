@@ -46,8 +46,10 @@
 *.color14: nord7
 *.color15: nord6
 
+Xft.dpi: 140
+
 Emacs*toolBar: 0
-URxvt.font: xft:Inconsolata for Powerline:size=21,xft:CloudKaiXingGBK:size=23
+URxvt.font: xft:Inconsolata for Powerline:size=14,xft:CloudKaiXingGBK:size=16
 URxvt.iso14755: true
 URxvt.perl-ext-common: selection-to-clipboard
 URxvt.saveLines: 10000
