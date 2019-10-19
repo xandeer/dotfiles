@@ -194,8 +194,8 @@ fi
 if zplug check "b4b4r07/zsh-history-enhanced"; then
     ZSH_HISTORY_FILE="$HISTFILE"
     ZSH_HISTORY_FILTER="fzf:peco:percol"
-    ZSH_HISTORY_KEYBIND_GET_BY_DIR="^r"
-    ZSH_HISTORY_KEYBIND_GET_ALL="^r^a"
+    # ZSH_HISTORY_KEYBIND_GET_BY_DIR="^r"
+    ZSH_HISTORY_KEYBIND_GET_ALL="^r"
 fi
 
 if zplug check "denysdovhan/spaceship-prompt"; then
