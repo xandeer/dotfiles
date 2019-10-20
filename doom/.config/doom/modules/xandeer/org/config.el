@@ -2,22 +2,22 @@
 
 (after! org
   (setq org-directory "~/projects/personal/notes"
-        +org-export-directory "exports/pages"
+        +org-export-directory "exports"
         org-reverse-note-order t
         org-archive-reversed-order t
         org-agenda-files '("~/projects/personal/notes/gtd.org")
         org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
                             (sequence "|" "CANCELED(c@/!)"))
         org-refile-targets '((nil :maxlevel . 5)
+                           ("/pub/journal.org" :maxlevel . 5)
+                           ("/pub/reading.org" :maxlevel . 5)
+                           ("/pub/notes.org" :maxlevel . 5)
                            ("someday.org" :maxlevel . 5)
-                           ("journal.org" :maxlevel . 5)
                            ("diary.org" :maxlevel . 5)
                            ("learning.org" :maxlevel . 5)
-                           ("reading.org" :maxlevel . 5)
                            ("work.org" :maxlevel . 5)
-                           ("notes.org" :maxlevel . 5)
                            (org-agenda-files :maxlevel . 5))
-        org-default-notes-file (concat org-directory "/journal.org")
+        org-default-notes-file (concat org-directory "/pub/journal.org")
         org-capture-templates `(("t" "todo" entry (file+headline "gtd.org" "Tasks")
                                  "* TODO %?\n%U\n" :clock-resume t :prepend t)
                                 ("c" "cache" entry (file+headline "" "Cache") ; "" => `org-default-notes-file'
@@ -39,7 +39,7 @@
                                  "1. %? %U" :prepend t)
                                 ("F" "films had watched" item (file+olp "someday.org" "Films" "Watched" "2019")
                                  "1. %? %^u" :prepend t)
-                                ("j" "daily extracts" plain (file+olp+datetree "daily-extracts.org" "日摘")
+                                ("j" "daily extracts" plain (file+olp+datetree "pub/daily-extracts.org")
                                  "%U\n1. %?" :prepend t)
                                 ("i" "Ideas" entry (file+headline "someday.org" "Ideas")
                                  "* %? %U" :prepend t))
@@ -50,7 +50,8 @@
                                (700 900 1000 1100 1400 1500 1600 1700)
                                "......"
                                "----------------")
-        org-agenda-start-on-weekday nil))
+        org-agenda-start-on-weekday nil)
+  (+org/set-publish-alist))
 
 (after! plantuml-mode
   (setq

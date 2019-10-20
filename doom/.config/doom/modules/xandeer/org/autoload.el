@@ -58,3 +58,52 @@
   "Return scheduled string on tomorrow."
   (format-time-string "SCHEDULED: <%F %a>"
                       (time-add (current-time) (* 24 3600))))
+
+;;;###autodef
+(defun +org/set-publish-alist ()
+  "Set org publish alist."
+  (setq pub-base-dir "~/projects/personal/notes/pub/"
+        pub-export-dir "~/projects/personal/xandeer.github.io/"
+        website-html-head
+        "<link rel=\"stylesheet\" href=\"css/notebook.css\" type=\"text/css\"/>
+<link rel=\"stylesheet\" type=\"text/css\"
+href=\"https://fonts.googleapis.com/css?family=Marck+Script|Pacifico\"/>
+<link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">"
+        website-html-preamble
+        "<div class=\"nav\"><ul>
+<li><a href=\"index.html\">Home</a></li>
+<li><a href=\"https://github.com/xandeer\">GitHub</a></li>
+</ul><hr></div>"
+        website-html-postamble
+        "<div class=\"footer\"><hr>Copyright 2019 %a.<br>Last updated %C.<br>
+Built with %c.</div>")
+  (setq org-publish-project-alist
+        `(
+          ("org-notes"
+           :base-extension "org"
+           :base-directory ,pub-base-dir
+           :publishing-directory ,pub-export-dir
+           :publishing-function org-html-publish-to-html
+           :recursive t
+           :author "Kevin"
+           :email "kkxandeer@gmail.com"
+           :section-numbers nil
+           :headline-levels 3
+           :html-doctype "html5"
+           :html-html5-fancy t
+           ;; :html-head  ,website-html-head
+           :html-head-extra ,website-html-head
+           :auto-preamble t
+           :html-preamble ,website-html-preamble
+           :html-postamble ,website-html-postamble
+           :auto-sitemap t
+           :sitemap-filename "index.org"
+           :sitemap-title "Xandeer's Home")
+           ("org-static"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|ico"
+           :base-directory ,pub-base-dir
+           :publishing-directory ,pub-export-dir
+           :recursive t
+           :publishing-function org-publish-attachment
+           )
+           ("org" :components ("org-notes" "org-static")))))
