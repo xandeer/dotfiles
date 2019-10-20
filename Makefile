@@ -3,13 +3,28 @@ CONFIGS := doom git mr plantuml tmux zsh
 
 ifeq ($(UNAME), Linux)
 CONFIGS += i3 i3status rofi xresources
+MACHINE := nix-14
+NIX_TARGET := /
+NIX_SUDO := sudo
+NIX_DIR := /etc/nixos/
 endif
+
+ifeq ($(UNAME), Darwin)
+MACHINE := darwin-17
+NIX_TARGET := $(HOME)
+NIX_SUDO := ""
+NIX_DIR := $(HOME)/.nixpkgs/
+endif
+
+MACHINE_DIR := $(CURDIR)/nix/machines/$(MACHINE)
 
 .PHONY: install
 install: ## Installs the dotfiles by stow.
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
+	$(NIX_SUDO) stow -d $(MACHINE_DIR) -t $(NIX_TARGET) nix
+	$(NIX_SUDO) ln -sf $(MACHINE_DIR)/*.nix $(NIX_DIR)
 
 .PHONY: update
 update: pull install ## Git pull and install all.
