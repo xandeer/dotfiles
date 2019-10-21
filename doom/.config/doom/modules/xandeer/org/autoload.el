@@ -59,7 +59,7 @@
   (format-time-string "SCHEDULED: <%F %a>"
                       (time-add (current-time) (* 24 3600))))
 
-;;;###autodef
+;;;###autoload
 (defun +org/set-publish-alist ()
   "Set org publish alist."
   (setq pub-base-dir "~/projects/personal/notes/pub/"
