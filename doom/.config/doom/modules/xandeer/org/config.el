@@ -54,7 +54,4 @@
   (+org/set-publish-alist))
 
 (after! plantuml-mode
-  (setq
-   plantuml-default-exec-mode 'jar
-   plantuml-jar-path "~/.local/share/plantuml/plantuml.jar"
-   org-plantuml-jar-path plantuml-jar-path))
+  (setq plantuml-default-exec-mode 'executable))
