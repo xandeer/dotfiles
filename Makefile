@@ -12,7 +12,7 @@ endif
 ifeq ($(UNAME), Darwin)
 MACHINE := darwin-17
 NIX_TARGET := $(HOME)
-NIX_SUDO := ""
+NIX_SUDO :=
 NIX_DIR := $(HOME)/.nixpkgs/
 endif
 
