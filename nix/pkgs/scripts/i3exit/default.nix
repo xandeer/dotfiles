@@ -3,7 +3,7 @@
 writeShellScriptBin "i3exit" ''
   #! ${stdenv.shell}
   [[ $(cat /proc/1/comm) == "systemd" ]] && logind=systemctl || logind=loginctl
-  lock="i3lock -c 030303"
+  lock="i3lock -i $HOME/.wallpaper/lock.png"
 
   case "$1" in
       lock)

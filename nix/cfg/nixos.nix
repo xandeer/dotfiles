@@ -59,6 +59,7 @@
     ranger
     rofi
     vivaldi
+    imagemagick
 
     rustc
     cargo
