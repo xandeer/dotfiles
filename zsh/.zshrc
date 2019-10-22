@@ -23,7 +23,9 @@ zplug "b4b4r07/enhancd", use:init.sh
 zplug "b4b4r07/zsh-history-enhanced"
 
 # Supports oh-my-zsh plugins and the like
+zplug "lib/completion",                   from:oh-my-zsh
 zplug "lib/directories",                  from:oh-my-zsh
+zplug "lib/history",                      from:oh-my-zsh
 zplug "lib/theme-and-appearance",         from:oh-my-zsh
 zplug "plugins/common-aliases",           from:oh-my-zsh
 zplug "plugins/zsh_reload",               from:oh-my-zsh
