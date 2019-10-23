@@ -9,9 +9,3 @@
 ;;;###autoload
 (defun +basic/nth-days-inactive (n)
   (concat "[" (+basic/nth-days-timestamp n) "]"))
-
-;;;###autoload
-(defun +basic/backup-notes ()
-  "Backup notes"
-  (interactive)
-  (call-process-shell-command "~/Dropbox/notes/.backup.sh" nil nil))
