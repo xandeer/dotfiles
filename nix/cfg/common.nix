@@ -48,5 +48,6 @@
   #     pip
   #     setuptools
   #   ]))
+    shadowfox
   ];
 }
