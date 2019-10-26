@@ -1,6 +1,6 @@
 ;;; xandeer/ui/autoload.el -*- lexical-binding: t; -*-
 
-;;;###autodef
+;;;###autoload
 (defun +ui/set-org-pretty-symbols ()
   (set-pretty-symbols! 'org-mode
     ;; original
@@ -20,12 +20,12 @@
              )
     :merge t))
 
-;;;###autodef
+;;;###autoload
 (defun +ui/init-popup-rules ()
   (set-popup-rules!
     '(("^\\*Org Agenda"    :size 0.4 :quit nil :select t :autosave t :modeline t :ttl nil))))
 
-;;;###autodef
+;;;###autoload
 (defun +ui/set-font (en cn en-size cn-size)
   (set-face-attribute 'default nil :font
                       (format "%s:pixelsize=%d" en en-size))
