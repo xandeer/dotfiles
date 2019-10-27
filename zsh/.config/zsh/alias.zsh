@@ -10,7 +10,7 @@ alias tn='terminal-notifier -message'
 alias m='make'
 alias n='npm'
 alias y='yarn'
-alias s='sudo'
+alias s='scd'
 alias rmrf='rm -rf'
 
 alias cat='bat'
@@ -59,3 +59,7 @@ alias nto="npm test --"
 alias nr="npm run"
 
 alias mx='chmod +x'
+
+unalias cp
+unalias mv
+unalias rm
