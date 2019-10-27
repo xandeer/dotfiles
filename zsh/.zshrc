@@ -18,10 +18,6 @@ zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "k4rthik/git-cal", as:command
 zplug "peco/peco", as:command, from:gh-r, use:"*${(L)$(uname -s)}*amd64*"
 
-# Enhanced cd
-zplug "b4b4r07/enhancd", use:init.sh
-zplug "b4b4r07/zsh-history-enhanced"
-
 # Supports oh-my-zsh plugins and the like
 zplug "lib/completion",                   from:oh-my-zsh
 zplug "lib/directories",                  from:oh-my-zsh
@@ -61,6 +57,8 @@ zplug "plugins/nvm",                      from:oh-my-zsh, if:"(( $+commands[nvm]
 zplug "plugins/rust",                     from:oh-my-zsh, if:"(( $+commands[rust] ))"
 zplug "plugins/rvm",                      from:oh-my-zsh, if:"(( $+commands[rvm] ))"
 zplug "plugins/sudo",                     from:oh-my-zsh, if:"(( $+commands[sudo] ))"
+zplug "plugins/scd",                      from:oh-my-zsh
+export FPATH=$FPATH:$ZPLUG_REPOS/robbyrussell/oh-my-zsh/plugins/scd
 zplug "plugins/systemd",                  from:oh-my-zsh, if:"(( $+commands[systemctl] ))"
 zplug "plugins/yarn",                     from:oh-my-zsh
 zplug "plugins/yum",                      from:oh-my-zsh, if:"(( $+commands[yum] ))"
@@ -86,7 +84,7 @@ zplug "skx/sysadmin-util"
 
 [ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
 
-zplug "~/.config/zsh", from:local
+zplug "~/.config/zsh", from:local, defer:3
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check; then
@@ -189,18 +187,6 @@ if zplug check "zsh-users/zsh-autosuggestions"; then
     bindkey '\es' autosuggest-execute
 fi
 
-if zplug check "b4b4r07/enhancd"; then
-    ENHANCD_FILTER="fzf:peco:percol"
-    ENHANCD_COMMAND="c"
-fi
-
-if zplug check "b4b4r07/zsh-history-enhanced"; then
-    ZSH_HISTORY_FILE="$HISTFILE"
-    ZSH_HISTORY_FILTER="fzf:peco:percol"
-    # ZSH_HISTORY_KEYBIND_GET_BY_DIR="^r"
-    ZSH_HISTORY_KEYBIND_GET_ALL="^r"
-fi
-
 if zplug check "denysdovhan/spaceship-prompt"; then
     SPACESHIP_PROMPT_ORDER=(
     time        # Time stampts section (Disabled)
@@ -212,7 +198,7 @@ if zplug check "denysdovhan/spaceship-prompt"; then
     line_sep      # Line break
     # battery       # Battery level and status
     jobs          # Background jobs indicator
-    char          # Prompt character
+    char
     )
 
     # SPACESHIP_RPROMPT_ORDER=(
@@ -223,20 +209,10 @@ if zplug check "denysdovhan/spaceship-prompt"; then
     SPACESHIP_TIME_SHOW=true
     SPACESHIP_EXIT_CODE_SHOW=true
     SPACESHIP_EXEC_TIME_SHOW=true
-
-    # SPACESHIP_PROMPT_SEPARATE_LINE=false
-    # SPACESHIP_PROMPT_ADD_NEWLINE=true
-
-    #SPACESHIP_PROMPT_SEPARATE_LINE=false
-    #SPACESHIP_PROMPT_FIRST_PREFIX_SHOW=true
-
-    #PROMPT='%F{red}%n%f@%F{blue}%m%f %F{yellow}%1~%f %# '
-    #RPROMPT='[%F{yellow}%?%f]'
 fi
 
 # Then, source plugins and add commands to $PATH
 zplug load
-
 echo "Zsh plugins loaded."
 
 [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
