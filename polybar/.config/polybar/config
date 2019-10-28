@@ -1,9 +1,9 @@
 [colors]
 	accent = #EDD080
-	bckgrd = #121212
+	bckgrd = #c5121212
 	select = #161A1B
 
-	background =            ${xrdb:color0:self.bckgrd}
+	background =            ${self.bckgrd}
 	background-alt = 		${self.select}
 	foreground =            ${xrdb:color6:#A5ffffff}
 	foreground-alt =        ${xrdb:color7:#222}
@@ -33,9 +33,9 @@
 [bar/main]
 	# monitor = ${env:MONITOR}
 	# monitor-strict = true
-	fixed-center = true
+	# fixed-center = true
 	dpi = 96
-	bottom = false
+	bottom = true
 	width = ${settings.barwidth}
 	height = ${settings.barheigh}
 	offset-x = 0
@@ -51,8 +51,8 @@
 	# border-right-size = ${settings.bargapp}
 	border-bottom-size = 0
 	border-color = ${colors.transparent}
-	radius-top = 10
-	# radius-bottom = 10
+	# radius-top = 10
+	radius-bottom = 10
 	spacing = 4
 	# padding-left = 2
 	# padding-right = 2
