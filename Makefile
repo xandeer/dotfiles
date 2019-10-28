@@ -1,8 +1,8 @@
 UNAME := $(shell uname -s)
-CONFIGS := doom git mr tmux zsh
+CONFIGS := doom fonts git mr tmux zsh
 
 ifeq ($(UNAME), Linux)
-CONFIGS += i3 i3status rofi xresources
+CONFIGS += i3 polybar rofi xresources
 MACHINE := nix-14
 NIX_TARGET := /
 NIX_SUDO := sudo

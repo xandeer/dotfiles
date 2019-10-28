@@ -102,27 +102,27 @@ mode "resize" {
   bindsym q mode default
 }
 
-bar {
-  # font pango:Consola Mono 16
-  mode dock
-  hidden_state hide
-  position bottom
-  status_command i3status
-  i3bar_command i3bar
-  workspace_buttons yes
-  strip_workspace_numbers no
-  tray_output primary
-  colors {
-    background #222d31
-    statusline #f9faf9
-    separator #454947
-    focused_workspace #F9FAF9 #16a085 #292F34
-    active_workspace #595B5B #353836 #FDF6E3
-    inactive_workspace #595B5B #222D31 #EEE8D5
-    urgent_workspace #16a085 #FDF6E3 #E5201D
-    binding_mode #16a085 #2C2C2C #F9FAF9
-  }
-}
+# bar {
+#   # font pango:Consola Mono 16
+#   mode dock
+#   hidden_state hide
+#   position bottom
+#   status_command i3status
+#   i3bar_command i3bar
+#   workspace_buttons yes
+#   strip_workspace_numbers no
+#   tray_output primary
+#   colors {
+#     background #222d31
+#     statusline #f9faf9
+#     separator #454947
+#     focused_workspace #F9FAF9 #16a085 #292F34
+#     active_workspace #595B5B #353836 #FDF6E3
+#     inactive_workspace #595B5B #222D31 #EEE8D5
+#     urgent_workspace #16a085 #FDF6E3 #E5201D
+#     binding_mode #16a085 #2C2C2C #F9FAF9
+#   }
+# }
 
 for_window [class="^.*"] border pixel 1
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -132,3 +132,5 @@ exec --no-startup-id fcitx
 exec --no-startup-id greenclip daemon
 
 exec setsid sudo xkeysnail -q ~/projects/personal/dotfiles/xkeysnail/config.py >/dev/null 2>&1 < /dev/null &
+
+exec_always --no-startup-id ~/.config/polybar/launch

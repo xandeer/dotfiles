@@ -60,6 +60,9 @@
     rofi
     vivaldi
     imagemagick
+    polybarFull
+    mpd
+    upower
 
     rustc
     cargo
