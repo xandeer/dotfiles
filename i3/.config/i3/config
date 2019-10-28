@@ -125,12 +125,13 @@ mode "resize" {
 for_window [class="^.*"] border pixel 1
 
 exec --no-startup-id compton
+exec --no-startup-id feh --bg-fill ~/.wallpaper/lock.png
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
+exec_always --no-startup-id ~/.config/polybar/launch
 exec --no-startup-id fcitx
 
 exec --no-startup-id greenclip daemon
 
 exec setsid sudo xkeysnail -q ~/projects/personal/dotfiles/xkeysnail/config.py >/dev/null 2>&1 < /dev/null &
 
-exec_always --no-startup-id ~/.config/polybar/launch

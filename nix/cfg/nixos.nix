@@ -53,6 +53,7 @@
     compton
     dropbox
     emacs
+    feh
     firefox
     git
     pavucontrol
