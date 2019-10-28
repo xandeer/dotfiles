@@ -47,7 +47,6 @@ bindsym Mod4+Shift+Left move left
 bindsym Mod4+Shift+Right move right
 bindsym Mod4+Shift+Up move up
 bindsym Mod4+Shift+c reload
-bindsym Mod4+Shift+e exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'
 bindsym Mod4+Shift+h move left
 bindsym Mod4+Shift+j move down
 bindsym Mod4+Shift+k move up
@@ -65,7 +64,6 @@ bindsym Mod4+h focus left
 bindsym Mod4+j focus down
 bindsym Mod4+k focus up
 bindsym Mod4+l focus right
-bindsym Mod4+m bar mode toggle
 bindsym Mod4+q kill
 bindsym Mod4+r mode resize
 bindsym Mod4+s layout stacking
@@ -125,6 +123,8 @@ mode "resize" {
 # }
 
 for_window [class="^.*"] border pixel 1
+
+exec --no-startup-id compton
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 
 exec --no-startup-id fcitx

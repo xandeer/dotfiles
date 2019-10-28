@@ -50,6 +50,7 @@
   services.urxvtd.enable = true;
 
   environment.systemPackages = with pkgs; [
+    compton
     dropbox
     emacs
     firefox

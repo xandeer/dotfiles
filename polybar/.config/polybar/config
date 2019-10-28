@@ -209,7 +209,7 @@
 	interface = wlp3s0
 	interval = 3.0
 	format-connected = <label-connected>
-	label-connected =  %essid%     %signal%
+	label-connected =  %essid%
 	# label-connected =  %essid%     %signal%     %upspeed%     %downspeed%
 	label-disconnected = "%{A1:connman-gtk &:}%{A}"
 	label-disconnected-foreground = #5b
@@ -280,10 +280,10 @@
 	adapter = AC
 	full-at = 95
 	time-format = %H:%M
-	label-charging = %percentage%%
-	label-discharging = %percentage%%
+	label-charging = %percentage%% %time%
+	label-discharging = %percentage%% %time%
 	format-charging = <animation-charging> <label-charging>
-	format-discharging = <animation-discharging> <label-discharging>
+	format-discharging = <ramp-capacity><label-discharging>
 	format-charging-foreground = ${colors.foreground}
 	label-charging-foreground = ${colors.foreground}
 	format-discharging-foreground = ${colors.foreground}
@@ -291,6 +291,11 @@
 	format-full-prefix = " "
 	format-full-prefix-foreground = ${colors.foreground}
 	label-full-foreground = ${colors.foreground}
+	ramp-capacity-0 = 
+	ramp-capacity-1 = 
+	ramp-capacity-2 = 
+	ramp-capacity-3 = 
+	ramp-capacity-4 = 
 	animation-charging-0 = 
 	animation-charging-1 = 
 	animation-charging-2 = 

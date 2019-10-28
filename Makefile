@@ -2,7 +2,7 @@ UNAME := $(shell uname -s)
 CONFIGS := doom fonts git mr tmux zsh
 
 ifeq ($(UNAME), Linux)
-CONFIGS += i3 polybar rofi xresources
+CONFIGS += compton i3 polybar rofi xresources
 MACHINE := nix-14
 NIX_TARGET := /
 NIX_SUDO := sudo
