@@ -1,7 +1,10 @@
 if [ $(uname -s) = 'Linux' ]; then
     alias ors='sudo nixos-rebuild switch'
+    alias rv='sudo systemctl restart v2ray'
 elif [ $(uname -s) = 'Darwin' ]; then
     alias ors='darwin-rebuild switch'
+    alias rv='sudo launchctl stop org.nixos.v2ray; sudo launchctl start org.nixos.v2ray'
+    alias p11='export https_proxy=http://localhost:8011'
 fi
 
 alias ag='alias | grep'
