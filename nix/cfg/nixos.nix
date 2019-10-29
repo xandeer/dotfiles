@@ -55,6 +55,7 @@
     emacs
     feh
     firefox
+    fontmatrix
     git
     pavucontrol
     prettyping

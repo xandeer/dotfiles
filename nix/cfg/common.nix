@@ -37,7 +37,6 @@
     ripgrep
     tree
 
-    fontmatrix
     font-awesome
     material-icons
     unifont
