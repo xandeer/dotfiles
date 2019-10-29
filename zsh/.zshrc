@@ -215,4 +215,4 @@ fi
 zplug load
 echo "Zsh plugins loaded."
 
-[ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
+# [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
