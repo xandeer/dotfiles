@@ -32,6 +32,8 @@ define_keymap(re.compile("Firefox|Google-chrome|Vivaldi*"), {
     # Ctrl+Alt+j/k to switch next/previous tab
     K("C-l"): K("C-TAB"),
     K("C-j"): K("C-Shift-TAB"),
+    K("M-l"): K("C-TAB"),
+    K("M-h"): K("C-Shift-TAB"),
     # Type C-j to focus to the content
     # K("C-j"): K("C-f6"),
     # very naive "Edit in editor" feature (just an example)
