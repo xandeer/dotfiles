@@ -280,9 +280,9 @@
 	adapter = AC
 	full-at = 95
 	time-format = %H:%M
-	label-charging = %percentage%% %time%
-	label-discharging = %percentage%% %time%
-	format-charging = <animation-charging> <label-charging>
+	label-charging = %percentage%%
+	label-discharging = %percentage%%
+	format-charging = <animation-charging><label-charging>
 	format-discharging = <ramp-capacity><label-discharging>
 	format-charging-foreground = ${colors.foreground}
 	label-charging-foreground = ${colors.foreground}
