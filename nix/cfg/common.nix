@@ -27,6 +27,7 @@
 
     unzip
     tmux
+    tmuxPlugins.yank
     vim
     wget
 
@@ -39,7 +40,6 @@
 
     font-awesome
     material-icons
-    unifont
 
     plantuml
 
