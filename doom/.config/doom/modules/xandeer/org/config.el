@@ -1,23 +1,23 @@
 ;;; xandeer/org/config.el -*- lexical-binding: t; -*-
 
 (after! org
-  (setq org-directory "~/projects/personal/notes"
+  (setq org-directory "~/projects/personal/notes/"
         +org-export-directory "exports"
         org-reverse-note-order t
         org-archive-reversed-order t
         org-agenda-files '("~/projects/personal/notes/gtd.org")
         org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
                             (sequence "|" "CANCELED(c@/!)"))
-        org-refile-targets '((nil :maxlevel . 5)
-                           ("/pub/journal.org" :maxlevel . 5)
-                           ("/pub/reading.org" :maxlevel . 5)
-                           ("/pub/notes.org" :maxlevel . 5)
+        org-refile-targets `((nil :maxlevel . 5)
+                           (,(concat org-directory "pub/journal.org") :maxlevel . 5)
+                           (,(concat org-directory "pub/notes.org") :maxlevel . 5)
+                           (,(concat org-directory "pub/reading.org") :maxlevel . 5)
                            ("someday.org" :maxlevel . 5)
                            ("diary.org" :maxlevel . 5)
                            ("learning.org" :maxlevel . 5)
                            ("work.org" :maxlevel . 5)
                            (org-agenda-files :maxlevel . 5))
-        org-default-notes-file (concat org-directory "/pub/journal.org")
+        org-default-notes-file (concat org-directory "pub/journal.org")
         org-capture-templates `(("t" "todo" entry (file+headline "gtd.org" "Tasks")
                                  "* TODO %?\n%U\n" :clock-resume t :prepend t)
                                 ("c" "cache" entry (file+headline "" "Cache") ; "" => `org-default-notes-file'
@@ -51,6 +51,7 @@
                                "......"
                                "----------------")
         org-agenda-start-on-weekday nil)
+  (+org/fix-chinese-newline-in-html)
   (+org/set-publish-alist))
 
 (after! plantuml-mode

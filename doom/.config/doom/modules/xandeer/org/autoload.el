@@ -107,3 +107,17 @@ Built with %c.</div>")
            :publishing-function org-publish-attachment
            )
            ("org" :components ("org-notes" "org-static")))))
+
+;;;###autoload
+(defun +org/fix-chinese-newline-in-html ()
+  "Join consecutive Chinese lines into a single long line without unwanted space
+ when exporting org-mode to html."
+  (defadvice org-html-paragraph
+      (before fsh-org-html-paragraph-advice (paragraph contents info) activate)
+    (let ((fixed-contents)
+          (orig-contents (ad-get-arg 1))
+          (reg-han "[[:multibyte:]]"))
+      (setq fixed-contents (replace-regexp-in-string
+                            (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+                            "\\1\\2" orig-contents))
+      (ad-set-arg 1 fixed-contents))))
