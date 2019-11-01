@@ -27,6 +27,8 @@
 
     unzip
     tmux
+    tmuxPlugins.continuum
+    tmuxPlugins.resurrect
     tmuxPlugins.yank
     vim
     wget
