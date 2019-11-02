@@ -2,7 +2,7 @@
 
 (setq
  scroll-margin 0
- display-line-numbers-type 'relative)
+ display-line-numbers-type 'visual)
 
 (if IS-MAC
     (+ui/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
