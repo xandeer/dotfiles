@@ -25,14 +25,13 @@ alias -g G='| rg'
 
 # mr
 alias mu='cd ~;mr -j 9 update;cd -'
-alias mn='commit_and_push notes'
-alias mp='commit_and_push xandeer.github.io'
+alias mp='commit_and_push notes; commit_and_push xandeer.github.io'
 
 function commit_and_push() {
     cd ~/projects/personal/$1 \
         && git add --all \
-        && git commit -m "$(date +'manual: [%F %a %T]')" \
-        && git push
+        && git commit -m "$(date +'manual: [%F %a %T]')"
+    git push
     cd -
 }
 
