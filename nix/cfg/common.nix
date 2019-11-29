@@ -37,6 +37,7 @@
     fzf
     htop
     lsof
+    neofetch
     ripgrep
     tree
 
