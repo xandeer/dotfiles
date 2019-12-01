@@ -65,18 +65,30 @@
   (setq pub-base-dir "~/projects/personal/notes/pub/"
         pub-export-dir "~/projects/personal/xandeer.github.io/"
         website-html-head
-        "<link rel=\"stylesheet\" href=\"css/notebook.css\" type=\"text/css\"/>
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/htmlize.css\"/>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/readtheorg.css\"/>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"css/note.css\"/>
 <link rel=\"stylesheet\" type=\"text/css\"
 href=\"https://fonts.googleapis.com/css?family=Marck+Script|Pacifico\"/>
 <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">"
         website-html-preamble
-        "<div class=\"nav\"><ul>
+        "<script>
+if (window.location.pathname.endsWith('index.html')) {
+     document.body.classList.add('home');
+}
+</script>
+<div class=\"nav\"><ul>
 <li><a href=\"index.html\">Home</a></li>
 <li><a href=\"https://github.com/xandeer\">GitHub</a></li>
-</ul><hr></div>"
+</ul></div>"
         website-html-postamble
-        "<div class=\"footer\"><hr>Copyright 2019 %a.<br>Last updated %C.<br>
-Built with %c.</div>")
+        "<div class=\"footer\">Copyright 2019 %a.<br>Last updated %C.<br>
+Built with %c.</div>
+        <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>
+        <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script>
+        <script type=\"text/javascript\" src=\"js/lib/jquery.stickytableheaders.min.js\"></script>
+        <script type=\"text/javascript\" src=\"js/note.js\"></script>
+        <script type=\"text/javascript\" src=\"js/lib/readtheorg.js\"></script>")
   (setq org-publish-project-alist
         `(
           ("org-notes"
