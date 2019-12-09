@@ -4,7 +4,7 @@
   imports = [
     ./common.nix
 
-    ../services/v2ray-darwin.nix
+    # ../services/v2ray-darwin.nix
   ];
 
   environment.systemPackages = with pkgs; [
