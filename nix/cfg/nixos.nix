@@ -16,6 +16,11 @@
   networking.proxy.default = "http://127.0.0.1:8010";
   services.openssh.enable = true;
 
+  services.v2ray = {
+    enable = true;
+    configFile = "/etc/v2ray/client.json";
+  };
+
   security.sudo = {
     enable = true;
     wheelNeedsPassword = false;

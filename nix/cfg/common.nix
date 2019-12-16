@@ -12,11 +12,6 @@
 
   time.timeZone = "Asia/Shanghai";
 
-  services.v2ray = {
-    enable = true;
-    configFile = "/etc/v2ray/client.json";
-  };
-
   environment.systemPackages = with pkgs; [
     cmake
     gitAndTools.diff-so-fancy
