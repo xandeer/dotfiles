@@ -73,7 +73,7 @@ href=\"https://fonts.googleapis.com/css?family=Marck+Script|Pacifico\"/>
 <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">"
         website-html-preamble
         "<script>
-if (window.location.pathname.endsWith('index.html')) {
+if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
      document.body.classList.add('home');
 }
 </script>
