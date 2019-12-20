@@ -36,6 +36,8 @@
     ripgrep
     tree
 
+    pass
+
     font-awesome
     material-icons
 
