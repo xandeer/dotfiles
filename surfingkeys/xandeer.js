@@ -37,4 +37,7 @@ settings.theme = `
 .sk_theme #sk_omnibarSearchResult .omnibar_folder {
 	color: #a31db1;
 }
+.sk_theme #sk_hints > div {
+    color: white !important;
+}
 `;
