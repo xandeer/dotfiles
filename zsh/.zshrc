@@ -54,6 +54,7 @@ zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[grad
 zplug "plugins/node",                     from:oh-my-zsh, if:"(( $+commands[node] ))"
 zplug "plugins/npm",                      from:oh-my-zsh, if:"(( $+commands[npm] ))"
 zplug "plugins/nvm",                      from:oh-my-zsh, if:"(( $+commands[nvm] ))"
+zplug "plugins/pass",                     from:oh-my-zsh, if:"(( $+commands[pass] ))"
 zplug "plugins/rust",                     from:oh-my-zsh, if:"(( $+commands[rust] ))"
 zplug "plugins/rvm",                      from:oh-my-zsh, if:"(( $+commands[rvm] ))"
 zplug "plugins/sudo",                     from:oh-my-zsh, if:"(( $+commands[sudo] ))"
