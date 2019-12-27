@@ -25,6 +25,7 @@
   (setq default-input-method "pyim"
         pyim-default-scheme 'xiaohe-shuangpin
         pyim-page-length 4
+        pyim-fuzzy-pinyin-alist nil
         pyim-dcache-directory "~/.cache/pyim")
         ;; pyim-dicts
         ;; `((:name
