@@ -62,6 +62,7 @@
     firefox
     fontmatrix
     git
+    gnupg
     pavucontrol
     prettyping
     ranger
