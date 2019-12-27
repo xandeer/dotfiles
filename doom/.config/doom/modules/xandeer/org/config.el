@@ -40,7 +40,7 @@
                                 ("F" "films had watched" item (file+olp "someday.org" "Films" "Watched" "2019")
                                  "1. %? %^u" :prepend t)
                                 ("j" "daily extracts" plain (file+olp+datetree "pub/daily-extracts.org")
-                                 "%U\n%?" :prepend t)
+                                 "%U\n%?\n" :prepend t)
                                 ("i" "Ideas" entry (file+headline "someday.org" "Ideas")
                                  "* %? %U" :prepend t))
         org-agenda-span 'day

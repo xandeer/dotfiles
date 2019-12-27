@@ -133,3 +133,16 @@ Built with %c.</div>
                             (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
                             "\\1\\2" orig-contents))
       (ad-set-arg 1 fixed-contents))))
+
+;;;###autoload
+(defun +org/convert-chinese-quotations ()
+  "Convert all [“|“] to [『|』] in current buffer."
+  (interactive)
+
+  (goto-char (point-min))
+  (while (re-search-forward "“" nil t)
+    (replace-match "「"))
+
+  (goto-char (point-min))
+  (while (re-search-forward "”" nil t)
+    (replace-match "」")))
