@@ -6,7 +6,7 @@
   :hook (telega-chat-mode . doom-mark-buffer-as-real-h)
   :config
   (telega-mode-line-mode 1)
-  (set-popup-rule! "^\\*Telega Root" :side 'left :size 70 :quit nil :select t)
+  (set-popup-rule! "^\\*Telega Root" :side 'left :size 50 :quit nil :select t)
   ;; (set-popup-rule! "^◀\\[.*\\]$" :side 'right :size 94 :quit nil :select t)
   ;; (set-popup-rule! "^◀\\(.*\\)$" :side 'right :size 94 :quit nil :select t)
   ;; (set-popup-rule! "^◀{.*}$" :side 'right :size 94 :quit nil :select t)
@@ -37,7 +37,9 @@
     (map!
      (:map telega-msg-button-map
        "k" nil
-       "l" nil)))
+       "l" nil
+       "e" nil
+       "f" nil)))
   (when (eq window-system 'mac)
     ;; emacs-mac have some bug on user avatars
     (setq telega-user-use-avatars nil)))
