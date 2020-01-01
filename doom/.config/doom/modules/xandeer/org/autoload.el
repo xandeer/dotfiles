@@ -146,3 +146,13 @@ Built with %c.</div>
   (goto-char (point-min))
   (while (re-search-forward "”" nil t)
     (replace-match "」")))
+
+;;;###autoload
+(defun +org/join-lines ()
+  "Join lines into a single long line without unwanted space"
+  (interactive)
+
+  (setq fill-column 100000)
+  (fill-paragraph nil)
+  (setq fill-column 78)
+)
