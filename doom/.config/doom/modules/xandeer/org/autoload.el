@@ -154,5 +154,5 @@ Built with %c.</div>
 
   (setq fill-column 100000)
   (fill-paragraph nil)
-  (setq fill-column 78)
+  (setq fill-column 80)
 )
