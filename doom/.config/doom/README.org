@@ -1,0 +1,30 @@
+#+TITLE: Emacs Configuration
+#+DATE: <2020-01-11 Sat>
+#+AUTHOR: Xandeer
+
+#+PROPERTY: header-args:elisp :tangle (concat (file-name-directory (buffer-file-name)) "config.el")
+
+* Prologue
+
+A Emacs configuration with the [[https://github.com/hlissner/doom-emacs][doom-emacs]], and I try to write it in literate
+form.
+
+* Dependencies
+
+- Emacs
+- git
+- make
+
+* Installation
+
+* Updates
+
+* Features
+
+* The Configuration
+
+** Basic
+
+#+include: "basic/README.org"
+
+* Epilogue
