@@ -22,7 +22,7 @@ endif
 MACHINE_DIR := $(CURDIR)/nix/machines/$(MACHINE)
 
 .PHONY: install
-install: ## Installs the dotfiles by stow.
+install: ## Install the dotfiles by stow.
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
@@ -34,7 +34,7 @@ update: pull install ## Git pull and install all.
 
 .PHONY: pull
 pull: ## Git pull.
-	git pull;
+	git pull
 
 .PHONY: help
 help: ## Show help.
