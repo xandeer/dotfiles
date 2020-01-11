@@ -172,7 +172,7 @@
        (default +bindings +smartparens)
 
        :xandeer
-       basic
+       ;; basic
        beancount
        chinese
        key-bindings
