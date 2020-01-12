@@ -18,39 +18,10 @@
 
 ;;; Code:
 
-;;----------------------------------------------------------------------------
-;; Basic
-;; Some basic configurations.
-;;----------------------------------------------------------------------------
-
-;;----------------------------------------------------------------------------
-;; Mode List
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh-theme\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("zshrc" . sh-mode))
-
-;;----------------------------------------------------------------------------
-;; Projectile
-(after! projectile
-  (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles/" "~/.emacs.d/"))
-    (when (file-directory-p dir)
-      (add-to-list 'projectile-known-projects dir))))
-
-;;----------------------------------------------------------------------------
-;; Youdao Dictionary
-(use-package! youdao-dictionary
-  :config
-  (setq-default
-   url-automatic-caching t
-   youdao-dictionary-search-history-file (concat doom-cache-dir "youdao.cache")))
-
-;;----------------------------------------------------------------------------
-;; Keyfreq
-(use-package! keyfreq
-  :config
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
 
 (defun evil-custom-end-of-buffer-dwim (&rest _)
   "If current line is empty, call `previous-line'."
@@ -59,8 +30,25 @@
 
 (advice-add #'end-of-buffer :after #'evil-custom-end-of-buffer-dwim)
 
-;;----------------------------------------------------------------------------
-;; Basic Utils
+(after! projectile
+  (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles/" "~/.emacs.d/"))
+    (when (file-directory-p dir)
+      (add-to-list 'projectile-known-projects dir))))
+
+(use-package! youdao-dictionary
+  :config
+  (setq-default
+   url-automatic-caching t
+   youdao-dictionary-search-history-file (concat doom-cache-dir "youdao.cache")))
+
+(use-package! keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
+(after! plantuml-mode
+  (setq plantuml-default-exec-mode 'executable))
+
 (defun +basic/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
   (format-time-string "%F %a"
@@ -154,3 +142,228 @@
 (after! telega
   (map! :map override
       :gni "M-c" #'ivy-telega-chat-with))
+
+(after! org
+  (setq org-directory "~/projects/personal/notes/"
+      +org-export-directory "exports"
+      org-reverse-note-order t
+      org-default-notes-file (concat org-directory "pub/journal.org")))
+
+(after! org
+  (setq org-refile-targets `((nil :maxlevel . 5)
+    (,(concat org-directory "pub/journal.org") :maxlevel . 5)
+    (,(concat org-directory "pub/notes.org") :maxlevel . 5)
+    (,(concat org-directory "pub/reading.org") :maxlevel . 5)
+    ("someday.org" :maxlevel . 5)
+    ("diary.org" :maxlevel . 5)
+    ("learning.org" :maxlevel . 5)
+    ("work.org" :maxlevel . 5)
+    (org-agenda-files :maxlevel . 5))
+  ))
+
+(defun xandeer/refile-to-first ()
+  "Move the current org headline to the first of its section."
+
+  (interactive)
+  ;; check if we are at the top level
+
+  (let ((lvl (org-current-level)))
+    (cond
+     ;; above all headlines so nothing to do
+     ((not lvl)
+      (message "No headline to move"))
+     ((= lvl 1)
+      ;; if at top level move current tree to go above first headline
+      (org-cut-subtree)
+      (beginning-of-buffer)
+      ;; test if point is now at the frst headline and if not then move
+      ;; to the first headline
+      (unless (looking-at-p "*")
+      (org-next-visible-heading 1))
+      (org-paste-subtree))
+     ((> lvl 1)
+      ;; if not at top level then get position of headline level above
+      ;; current section and refile to that position.
+      (let* ((org-reverse-note-order t)
+  	   (pos (save-excursion
+  		  (outline-up-heading 1)
+  		  (point)))
+  	   (filename (buffer-file-name))
+  	   (rfloc (list nil filename nil pos)))
+      (org-refile nil nil rfloc))))))
+
+(after! org
+  (setq org-archive-reversed-order t
+      org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
+  			  (sequence "|" "CANCELED(c@/!)"))
+      org-agenda-files '("~/projects/personal/notes/gtd.org")
+      org-agenda-span 'day
+      org-agenda-start-day nil
+      org-clock-clocked-in-display 'both
+      org-agenda-time-grid '((daily today require-timed)
+  			     (900 1000 1100 1330 1430 1530 1630 1700)
+  			     "......"
+  			     "------------------------------------------------")
+      org-agenda-start-on-weekday nil))
+
+(defun xandeer/archive-tasks-of (type)
+  "Archive tasks of the type."
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+   (concat "/+{|" (upcase type) "}") 'tree))
+
+(defun xandeer/archive-done-or-canceled ()
+  "Archive tasks which are done or canceled."
+  (interactive)
+  (xandeer/archive-tasks-of "DONE")
+  (xandeer/archive-tasks-of "CANCELED"))
+
+(defun xandeer/schedule-tomorrow ()
+  "Return scheduled string on tomorrow."
+  (format-time-string "SCHEDULED: <%F %a>"
+  		    (time-add (current-time) (* 24 3600))))
+
+(after! org-capture
+  (unless (boundp 'org-capture-templates)
+    (defvar org-capture-templates nil))
+
+  (add-to-list 'org-capture-templates
+  	     '("c" "Cache" entry
+  	       (file+headline "" "Cache") ; "" => `org-default-notes-file'
+  	       "* %? %U" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("i" "Ideas" entry
+  	       (file+olp "someday.org" "Ideas")
+  	       "* %? %U" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("fh" "Film had watched" item
+  	       (file+olp "someday.org" "Films" "Watched")
+  	       "1. %? %^u" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("f" "Film want to watch" item
+  	       (file+olp "someday.org" "Films" "Want to Watch")
+  	       "1. %? %U" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("bh" "Book had read" item
+  	       (file+olp "someday.org" "Books" "Read")
+  	       "1. %? %^u" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("b" "Book want to read" item
+  	       (file+olp "someday.org" "Books" "Want to Read")
+  	       "1. %? %U" :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("d" "Do It Tomorrow" entry
+  	       (file+headline "gtd.org" "Tasks")
+  	       "* TODO %?\n%(xandeer/schedule-tomorrow)\n%U\n" :clock-resume t))
+
+  (add-to-list 'org-capture-templates
+  	     '("t" "Tasks" entry
+  	       (file+headline "gtd.org" "Tasks")
+  	       "* TODO %?\n%U\n" :clock-resume t))
+
+  (add-to-list 'org-capture-templates
+  	     '("w" "Work" entry
+  	       (file+olp+datetree "work.org" "Weekly Summaries")
+  	       (file ".work.tmpl.org") :prepend t))
+
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("dr" "Daily review" entry
+  ;;                (file+olp+datetree "diary.org" "Daily Review")
+  ;;                (file ".daily.tmpl.org") :prepend t))
+
+  ;; (add-to-list 'org-capture-templates
+  ;;              '("wr" "Weekly review" entry
+  ;;                (file+olp+datetree "diary.org" "Weekly Review")
+  ;;                (file ".weekly.tmpl.org") :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("de" "Daily extracts" entry
+  	       (file+olp+datetree "pub/daily-extracts.org")
+  	       "%U\n%?\n" :prepend t)))
+
+(defun xandeer/fix-chinese-newline-in-html ()
+  "Join consecutive Chinese lines into a single long line without unwanted space
+ when exporting org-mode to html."
+  (defadvice org-html-paragraph
+      (before fsh-org-html-paragraph-advice (paragraph contents info) activate)
+    (let ((fixed-contents)
+  	(orig-contents (ad-get-arg 1))
+  	(reg-han "[[:multibyte:]]"))
+      (setq fixed-contents (replace-regexp-in-string
+  			  (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
+  			  "\\1\\2" orig-contents))
+      (ad-set-arg 1 fixed-contents))))
+
+(defun xandeer/set-publish-alist ()
+  "Set org publish alist."
+  (setq pub-base-dir "~/projects/personal/notes/pub/"
+      pub-export-dir "~/projects/personal/xandeer.github.io/"
+      website-html-head
+      "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/htmlize.css\"/>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/readtheorg.css\"/>
+<link rel=\"stylesheet\" type=\"text/css\" href=\"css/note.css\"/>
+<link rel=\"stylesheet\" type=\"text/css\"
+href=\"https://fonts.googleapis.com/css?family=Marck+Script|Pacifico\"/>
+<link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">"
+      website-html-preamble
+      "<script>
+if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+     document.body.classList.add('home');
+}
+</script>
+<div class=\"nav\"><ul>
+<li><a href=\"index.html\">Home</a></li>
+<li><a href=\"https://github.com/xandeer\">GitHub</a></li>
+</ul></div>"
+      website-html-postamble
+      "<div class=\"footer\">Copyright 2019 %a.<br>Last updated %C.<br>
+Built with %c.</div>
+      <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>
+      <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script>
+      <script type=\"text/javascript\" src=\"js/lib/jquery.stickytableheaders.min.js\"></script>
+      <script type=\"text/javascript\" src=\"js/note.js\"></script>
+      <script type=\"text/javascript\" src=\"js/lib/readtheorg.js\"></script>")
+  (setq org-publish-project-alist
+      `(
+  	("org-notes"
+  	 :base-extension "org"
+  	 :base-directory ,pub-base-dir
+  	 :publishing-directory ,pub-export-dir
+  	 :publishing-function org-html-publish-to-html
+  	 :recursive t
+  	 :author "Kevin"
+  	 :email "kkxandeer@gmail.com"
+  	 :section-numbers nil
+  	 :headline-levels 5
+  	 :html-doctype "html5"
+  	 :html-html5-fancy t
+  	 ;; :html-head  ,website-html-head
+  	 :html-head-extra ,website-html-head
+  	 :auto-preamble t
+  	 :html-preamble ,website-html-preamble
+  	 :html-postamble ,website-html-postamble
+  	 :auto-sitemap t
+  	 :sitemap-filename "index.org"
+  	 :sitemap-title "Xandeer's Home")
+  	 ("org-static"
+  	 :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|ico"
+  	 :base-directory ,pub-base-dir
+  	 :publishing-directory ,pub-export-dir
+  	 :recursive t
+  	 :publishing-function org-publish-attachment
+  	 )
+  	 ("org" :components ("org-notes" "org-static")))))
+
+(after! org
+  (xandeer/fix-chinese-newline-in-html)
+  (xandeer/set-publish-alist))
+
+;;; config.el ends here

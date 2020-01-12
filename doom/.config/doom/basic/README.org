@@ -37,6 +37,17 @@ Insert several file suffix to ~auto-mode-alist~.
 (add-to-list 'auto-mode-alist '("zshrc" . sh-mode))
 #+END_SRC
 
+* Custom Evil Buffer End
+
+#+BEGIN_SRC elisp
+(defun evil-custom-end-of-buffer-dwim (&rest _)
+  "If current line is empty, call `previous-line'."
+  (when (looking-at-p "^$")
+    (previous-line)))
+
+(advice-add #'end-of-buffer :after #'evil-custom-end-of-buffer-dwim)
+#+END_SRC
+
 * Projectile
 
 #+BEGIN_SRC elisp
@@ -83,15 +94,11 @@ Insert several file suffix to ~auto-mode-alist~.
   (keyfreq-autosave-mode 1))
 #+END_SRC
 
-* Custom Evil Buffer End
+* Plantuml
 
 #+BEGIN_SRC elisp
-(defun evil-custom-end-of-buffer-dwim (&rest _)
-  "If current line is empty, call `previous-line'."
-  (when (looking-at-p "^$")
-    (previous-line)))
-
-(advice-add #'end-of-buffer :after #'evil-custom-end-of-buffer-dwim)
+(after! plantuml-mode
+  (setq plantuml-default-exec-mode 'executable))
 #+END_SRC
 
 * Some Autoload Functions
@@ -105,3 +112,4 @@ Insert several file suffix to ~auto-mode-alist~.
 (defun +basic/nth-days-inactive (n)
   (concat "[" (+basic/nth-days-timestamp n) "]"))
 #+END_SRC
+

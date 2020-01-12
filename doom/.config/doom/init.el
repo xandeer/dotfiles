@@ -176,7 +176,7 @@
        beancount
        chinese
        ;; key-bindings
-       org
+       ;; org
        snippets
        telega
        ui

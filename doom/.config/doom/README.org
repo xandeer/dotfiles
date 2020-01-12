@@ -31,4 +31,12 @@ form.
 
 #+include: "key-binding/README.org"
 
-* Epilogue
+** Org
+
+#+include: "org/README.org"
+
+** Epilogue
+
+#+BEGIN_SRC elisp
+;;; config.el ends here
+#+END_SRC
