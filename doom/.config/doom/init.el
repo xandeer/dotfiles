@@ -175,7 +175,7 @@
        ;; basic
        beancount
        chinese
-       key-bindings
+       ;; key-bindings
        org
        snippets
        telega

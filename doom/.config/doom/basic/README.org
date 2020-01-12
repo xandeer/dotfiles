@@ -26,20 +26,11 @@ This includes some neccessary headers.
 ;;; Code:
 #+END_SRC
 
-#+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Basic
-;; Some basic configurations.
-;;----------------------------------------------------------------------------
-#+END_SRC
-
 * Mode List
 
 Insert several file suffix to ~auto-mode-alist~.
 
 #+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Mode List
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh-theme\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
@@ -49,8 +40,6 @@ Insert several file suffix to ~auto-mode-alist~.
 * Projectile
 
 #+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Projectile
 (after! projectile
   (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles/" "~/.emacs.d/"))
     (when (file-directory-p dir)
@@ -69,8 +58,6 @@ Insert several file suffix to ~auto-mode-alist~.
 ** Configuration
 
 #+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Youdao Dictionary
 (use-package! youdao-dictionary
   :config
   (setq-default
@@ -90,19 +77,26 @@ Insert several file suffix to ~auto-mode-alist~.
 ** Configuration
 
 #+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Keyfreq
 (use-package! keyfreq
   :config
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 #+END_SRC
 
+* Custom Evil Buffer End
+
+#+BEGIN_SRC elisp
+(defun evil-custom-end-of-buffer-dwim (&rest _)
+  "If current line is empty, call `previous-line'."
+  (when (looking-at-p "^$")
+    (previous-line)))
+
+(advice-add #'end-of-buffer :after #'evil-custom-end-of-buffer-dwim)
+#+END_SRC
+
 * Some Autoload Functions
 
 #+BEGIN_SRC elisp
-;;----------------------------------------------------------------------------
-;; Basic Utils
 (defun +basic/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
   (format-time-string "%F %a"
