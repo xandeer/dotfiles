@@ -285,7 +285,7 @@
   ;;                (file ".weekly.tmpl.org") :prepend t))
 
   (add-to-list 'org-capture-templates
-  	     '("de" "Daily extracts" entry
+  	     '("de" "Daily extracts" plain
   	       (file+olp+datetree "pub/daily-extracts.org")
   	       "%U\n%?\n" :prepend t)))
 
