@@ -35,6 +35,22 @@ form.
 
 #+include: "org/README.org"
 
+** Chinese
+
+#+include: "chinese/README.org"
+
+** Editor
+
+#+include: "editor/README.org"
+
+** UI
+
+#+include: "ui/README.org"
+
+** App
+
+#+include: "app/README.org"
+
 ** Epilogue
 
 #+BEGIN_SRC elisp
