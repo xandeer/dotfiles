@@ -1,0 +1,78 @@
+* Basic
+
+#+BEGIN_SRC elisp
+(setq
+ scroll-margin 0
+ display-line-numbers-type 'visual)
+
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+#+END_SRC
+
+* Theme
+
+** Package
+
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! nord-theme)
+#+END_SRC
+
+** Configuration
+
+#+BEGIN_SRC elisp
+(use-package! nord-theme
+  :config
+  (load-theme 'nord t))
+#+END_SRC
+
+* Font
+
+#+BEGIN_SRC elisp
+(defun xandeer/set-font (en cn en-size cn-size)
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" en en-size))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family cn :size cn-size))))
+
+(if IS-MAC
+    (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
+  (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 30 36))
+; fonts test
+; 锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷
+; HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+#+END_SRC
+
+* Pretty Symbol
+
+#+BEGIN_SRC elisp
+(defun xandeer/set-org-pretty-symbols ()
+  (set-pretty-symbols! 'org-mode
+    ;; original
+    :name "#+NAME:"
+    :src_block "#+BEGIN_SRC"
+    :src_block_end "#+END_SRC"
+    ;; customized
+    :alist '(
+             ("#+BEGIN_VERSE" . "☘")
+             ("#+END_VERSE" . "☘")
+             ("#+BEGIN_QUOTE" . "⚶")
+             ("#+END_QUOTE" . "⚶")
+             ("#+BEGIN_EXAMPLE" . "♒")
+             ("#+END_EXAMPLE" . "♒")
+             ("#+BEGIN_COMMENT" . "☕")
+             ("#+END_COMMENT" . "☕")
+             )
+    :merge t))
+
+;;;###autoload
+(defun xandeer/init-popup-rules ()
+  (set-popup-rules!
+    '(("^\\*Org Agenda"    :size 0.4 :quit nil :select t :autosave t :modeline t :ttl nil))))
+
+(after! org
+  (xandeer/set-org-pretty-symbols)
+  (xandeer/init-popup-rules))
+#+END_SRC

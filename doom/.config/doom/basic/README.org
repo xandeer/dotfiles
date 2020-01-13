@@ -104,12 +104,12 @@ Insert several file suffix to ~auto-mode-alist~.
 * Some Autoload Functions
 
 #+BEGIN_SRC elisp
-(defun +basic/nth-days-timestamp (n)
+(defun xandeer/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
   (format-time-string "%F %a"
                       (time-add (current-time) (* 24 3600 n))))
 
-(defun +basic/nth-days-inactive (n)
-  (concat "[" (+basic/nth-days-timestamp n) "]"))
+(defun xandeer/nth-days-inactive (n)
+  (concat "[" (xandeer/nth-days-timestamp n) "]"))
 #+END_SRC
 

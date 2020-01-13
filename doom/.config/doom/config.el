@@ -49,13 +49,13 @@
 (after! plantuml-mode
   (setq plantuml-default-exec-mode 'executable))
 
-(defun +basic/nth-days-timestamp (n)
+(defun xandeer/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
   (format-time-string "%F %a"
   		    (time-add (current-time) (* 24 3600 n))))
 
-(defun +basic/nth-days-inactive (n)
-  (concat "[" (+basic/nth-days-timestamp n) "]"))
+(defun xandeer/nth-days-inactive (n)
+  (concat "[" (xandeer/nth-days-timestamp n) "]"))
 
 (map! :leader
   :desc "Switch buffer"  "."    #'switch-to-buffer
@@ -365,5 +365,224 @@ Built with %c.</div>
 (after! org
   (xandeer/fix-chinese-newline-in-html)
   (xandeer/set-publish-alist))
+
+(defun xandeer/convert-chinese-quotations ()
+  "Convert all [“|“] to [『|』] in current buffer."
+  (interactive)
+
+  (goto-char (point-min))
+  (while (re-search-forward "“" nil t)
+    (replace-match "「"))
+
+  (goto-char (point-min))
+  (while (re-search-forward "”" nil t)
+    (replace-match "」")))
+
+(use-package! pyim
+  :bind
+  (("M-i" . pyim-convert-string-at-point))
+  :config
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  (setq-default pyim-english-input-switch-functions
+  	      '(pyim-probe-dynamic-english
+  		pyim-probe-isearch-mode
+  		pyim-probe-program-mode
+  		pyim-probe-org-structure-template))
+
+  (map! :map pyim-mode-map
+      "," #'pyim-page-previous-page
+      "." #'pyim-page-next-page)
+  (if (display-graphic-p)
+      (setq pyim-page-tooltip 'posframe)
+    (setq pyim-page-tooltip 'popup))
+
+  (setq default-input-method "pyim"
+      pyim-default-scheme 'xiaohe-shuangpin
+      pyim-page-length 4
+      pyim-fuzzy-pinyin-alist nil
+      pyim-dcache-directory "~/.cache/pyim")
+      ;; pyim-dicts
+      ;; `((:name
+  	 ;; "pyim-bigdict"
+  	 ;; :file
+  	 ;; ,(expand-file-name (concat doom-private-dir "etc/pyim/pyim-bigdict.pyim.gz")))))
+
+  (setq pyim-punctuation-dict
+      '(
+  	; ("'" "‘" "’")
+  	; ("\"" "“" "”")
+  	("'" "「" "」")
+  	("\"" "『" "』")
+  	("_" "——")
+  	("^" "…")
+  	("]" "】")
+  	("[" "【")
+  	;; ("@" "◎")
+  	("@" "@")
+  	("?" "？")
+  	(">" "》")
+  	("=" "＝")
+  	("<" "《")
+  	(";" "；")
+  	(":" "：")
+  	("/" "、")
+  	("\\" "、")
+  	("." "。")
+  	("-" "－")
+  	("," "，")
+  	("+" "＋")
+  	("*" "×")
+  	(")" "）")
+  	("(" "（")
+  	("&" "※")
+  	("%" "％")
+  	("$" "￥")
+  	("#" "#")
+  	("!" "！")
+  	("`" "・")
+  	("~" "～")
+  	("}" "」")
+  	("|" "÷")
+  	("{" "「")))
+
+  (use-package! pyim-greatdict
+    :config (pyim-greatdict-enable))
+
+  (add-hook 'emacs-startup-hook
+  	#'(lambda () (pyim-restart-1 t))))
+
+(use-package! yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.config/doom/snippets"))
+  (yas-global-mode 1))
+
+(setq
+ scroll-margin 0
+ display-line-numbers-type 'visual)
+
+(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+
+(use-package! nord-theme
+  :config
+  (load-theme 'nord t))
+
+(defun xandeer/set-font (en cn en-size cn-size)
+  (set-face-attribute 'default nil :font
+  		    (format "%s:pixelsize=%d" en en-size))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+  		    (font-spec :family cn :size cn-size))))
+
+(if IS-MAC
+    (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
+  (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 30 36))
+; fonts test
+; 锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷
+; HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+
+(defun xandeer/set-org-pretty-symbols ()
+  (set-pretty-symbols! 'org-mode
+    ;; original
+    :name "#+NAME:"
+    :src_block "#+BEGIN_SRC"
+    :src_block_end "#+END_SRC"
+    ;; customized
+    :alist '(
+  	   ("#+BEGIN_VERSE" . "☘")
+  	   ("#+END_VERSE" . "☘")
+  	   ("#+BEGIN_QUOTE" . "⚶")
+  	   ("#+END_QUOTE" . "⚶")
+  	   ("#+BEGIN_EXAMPLE" . "♒")
+  	   ("#+END_EXAMPLE" . "♒")
+  	   ("#+BEGIN_COMMENT" . "☕")
+  	   ("#+END_COMMENT" . "☕")
+  	   )
+    :merge t))
+
+;;;###autoload
+(defun xandeer/init-popup-rules ()
+  (set-popup-rules!
+    '(("^\\*Org Agenda"    :size 0.4 :quit nil :select t :autosave t :modeline t :ttl nil))))
+
+(after! org
+  (xandeer/set-org-pretty-symbols)
+  (xandeer/init-popup-rules))
+
+(use-package! telega
+  :commands (telega)
+  :defer t
+  :hook (telega-chat-mode . doom-mark-buffer-as-real-h)
+  :config
+  (telega-mode-line-mode 1)
+  (set-popup-rule! "^\\*Telega Root" :side 'left :size 50 :quit nil :select t)
+  ;; (set-popup-rule! "^◀\\[.*\\]$" :side 'right :size 94 :quit nil :select t)
+  ;; (set-popup-rule! "^◀\\(.*\\)$" :side 'right :size 94 :quit nil :select t)
+  ;; (set-popup-rule! "^◀{.*}$" :side 'right :size 94 :quit nil :select t)
+  ;; (set-popup-rule! "^◀<.*>$" :side 'right :size 94 :quit nil :select t)
+  (setq
+   telega-proxies
+    (list
+     '(:server "127.0.0.1" :port 8010 :enable t
+  	     :type (:@type "proxyTypeHttp" :http_only t)))
+   telega-sticker-set-download t
+   telega-chat-button-width 28
+   telega-cache-dir (expand-file-name "~/Downloads/telega")
+   ; telega-use-tracking t
+   ; telega-known-inline-bots '("@")
+   telega-root-fill-column 48)
+  (when (featurep! :completion ivy)
+    (defun ivy-telega-chat-highlight (chat)
+    (let ((unread (funcall (telega--tl-prop :unread_count) chat))
+  	  (title (telega-chat-title chat 'with-identity))
+  	  (not-muted-p (not (telega-chat-muted-p chat)))
+  	  (mentions (funcall (telega--tl-prop :unread_mention_count) chat)))
+
+      (if (and not-muted-p (> (+ unread mentions) 0))
+  	  (ivy-append-face (format "%s %d@%d" title unread mentions) 'ivy-highlight-face)
+      title)))
+
+    (defun ivy-telega-chat-with ()
+    "Starts chat with defined peer"
+    (interactive)
+
+    (telega t)
+    (let ((chats (mapcar
+  		  (lambda (x) (cons (ivy-telega-chat-highlight x) x))
+  		  (telega-filter-chats 'all telega--ordered-chats))))
+      (ivy-read "chat: " chats
+  	      :action (lambda (x) (telega-chat--pop-to-buffer (cdr x)))
+  	      :caller 'ivy-telega-chat-with)))
+
+    (setq telega-completing-read-function 'ivy-completing-read))
+  (when (featurep! :completion company)
+    (add-hook 'telega-chat-mode-hook
+  	    (lambda ()
+  	      (set (make-local-variable 'company-backends)
+  		   (append '(telega-company-emoji
+  			     telega-company-username
+  			     telega-company-hashtag)
+  			   (when (telega-chat-bot-p telega-chatbuf--chat)
+  			     '(telega-company-botcmd)))))))
+  (when (featurep! :editor evil)
+    (map!
+     (:map telega-msg-button-map
+       "k" nil
+       "l" nil
+       "e" nil
+       "f" nil)))
+  (when (eq window-system 'mac)
+    ;; emacs-mac have some bug on user avatars
+    (setq telega-user-use-avatars nil)))
+
+(use-package! beancount
+  :disabled t
+  :config
+    (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode)))
 
 ;;; config.el ends here
