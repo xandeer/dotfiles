@@ -2,11 +2,11 @@
 all: help
 
 .PHONY: generate
-generate: ## Generate config.el and packages.el from README.org
-	@echo "Generate config.el and packages.el from README.org"
-	@emacs -Q --batch --find-file "README.org" -f "org-org-export-to-org" && \
-		emacs -Q --batch --find-file "README.org.org" -f "org-babel-tangle" && \
-		rm -rf "README.org.org"
+generate: ## Generate config.el and packages.el from config.org
+	@echo "Generate config.el and packages.el from config.org"
+	@emacs -Q --batch --find-file "config.org" -f "org-org-export-to-org" && \
+		emacs -Q --batch --find-file "config.org.org" -f "org-babel-tangle" && \
+		rm -rf "config.org.org"
 
 .PHONY: docs
 docs: ## Update docs
