@@ -18,6 +18,8 @@
 
 ;;; Code:
 
+(setq-default lexical-binding t)
+
 (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh-theme\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))

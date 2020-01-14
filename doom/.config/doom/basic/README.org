@@ -26,6 +26,15 @@ This includes some neccessary headers.
 ;;; Code:
 #+END_SRC
 
+* Lexical Binding
+
+This makes it so that the file that is produced from tangleing this file uses
+lexical scoping.
+
+#+BEGIN_SRC elisp
+(setq-default lexical-binding t)
+#+END_SRC
+
 * Mode List
 
 Insert several file suffix to ~auto-mode-alist~.
