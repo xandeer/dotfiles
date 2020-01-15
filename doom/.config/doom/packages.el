@@ -22,10 +22,11 @@
 
 (package! nord-theme)
 
-(package! telega :recipe
+(package! telega
+  :recipe
   (:host github
    :repo "zevlg/telega.el"
-   :branch "master"
+   :branch "telega-tdlib-150"
    :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
 
 (package! beancount

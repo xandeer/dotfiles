@@ -4,10 +4,11 @@
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
-(package! telega :recipe
+(package! telega
+  :recipe
   (:host github
    :repo "zevlg/telega.el"
-   :branch "master"
+   :branch "telega-tdlib-150"
    :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
 #+END_SRC
 
