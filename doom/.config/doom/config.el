@@ -61,9 +61,11 @@
 
 (map! :leader
   :desc "Switch buffer"  "."    #'switch-to-buffer
-  :desc "Save buffer"    "s"    #'save-buffer
   :desc "Select the treemacs window if it is visible"    "z"    #'treemacs-select-window
-  :desc "Agenda List"    "a"    #'org-agenda-list)
+  :desc "Agenda List"    "a"    #'org-agenda-list
+
+  (:prefix-map ("n" . "notes")
+    :desc "Org capture"                  "n" #'counsel-org-capture))
 
 (map!
  :i "C-d" #'delete-char
@@ -120,7 +122,7 @@
       "n" (λ! (org--deadline-or-schedule "" 'scheduled "+1d")))
 
 (defun set-agenda-keys ()
-  (evil-define-key 'motion org-agenda-mode-map
+  (evil-define-key 'motion evil-org-agenda-mode-map
     "j" 'org-agenda-next-item
     "k" 'org-agenda-previous-item
     "t" 'org-agenda-todo
