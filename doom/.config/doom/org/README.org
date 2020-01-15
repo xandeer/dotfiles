@@ -3,6 +3,8 @@
 #+BEGIN_SRC elisp
 (after! org
   (setq org-directory "~/projects/personal/notes/"
+        org-id-locations-file (convert-standard-filename
+                               (concat org-directory ".org-ids"))
         +org-export-directory "exports"
         org-reverse-note-order t
         org-default-notes-file (concat org-directory "pub/journal.org")))
