@@ -1,3 +1,14 @@
+* Pyim
+
+#+BEGIN_SRC elisp
+(map! :map pyim-mode-map
+      "," #'pyim-page-previous-page
+      "." #'pyim-page-next-page)
+
+(map! :map ivy-minibuffer-map
+  "M-i" #'pyim-convert-string-at-point)
+#+END_SRC
+
 * Global
 
 #+BEGIN_SRC elisp
@@ -39,7 +50,6 @@
     "s" (lambda () (interactive) (save-buffer))
     "j" 'evil-normal-state))
 #+END_SRC
-
 * Org
 
 #+BEGIN_SRC elisp

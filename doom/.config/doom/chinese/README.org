@@ -16,7 +16,7 @@
     (replace-match "」")))
 #+END_SRC
 
-** Input Method
+* Input Method
 
 *** Package
 
@@ -57,9 +57,6 @@
                   pyim-probe-program-mode
                   pyim-probe-org-structure-template))
 
-  (map! :map pyim-mode-map
-        "," #'pyim-page-previous-page
-        "." #'pyim-page-next-page)
   (if (display-graphic-p)
       (setq pyim-page-tooltip 'posframe)
     (setq pyim-page-tooltip 'popup))

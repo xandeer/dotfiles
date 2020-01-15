@@ -59,6 +59,13 @@
 (defun xandeer/nth-days-inactive (n)
   (concat "[" (xandeer/nth-days-timestamp n) "]"))
 
+(map! :map pyim-mode-map
+      "," #'pyim-page-previous-page
+      "." #'pyim-page-next-page)
+
+(map! :map ivy-minibuffer-map
+  "M-i" #'pyim-convert-string-at-point)
+
 (map! :leader
   :desc "Switch buffer"  "."    #'switch-to-buffer
   :desc "Select the treemacs window if it is visible"    "z"    #'treemacs-select-window
@@ -397,9 +404,6 @@ Built with %c.</div>
   		pyim-probe-program-mode
   		pyim-probe-org-structure-template))
 
-  (map! :map pyim-mode-map
-      "," #'pyim-page-previous-page
-      "." #'pyim-page-next-page)
   (if (display-graphic-p)
       (setq pyim-page-tooltip 'posframe)
     (setq pyim-page-tooltip 'popup))
