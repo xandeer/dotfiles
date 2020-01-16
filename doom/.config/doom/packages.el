@@ -23,6 +23,7 @@
 (package! nord-theme)
 
 (package! ivy-posframe
+  :disable t
   :recipe
   (:host github :repo "tumashu/ivy-posframe"
        :files (:defaults "*.el")))

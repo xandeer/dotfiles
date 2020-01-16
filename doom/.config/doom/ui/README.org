@@ -79,17 +79,18 @@
 
 * Ivy Posframe
 
-*** Package
+** Package
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
 (package! ivy-posframe
+  :disable t
   :recipe
   (:host github :repo "tumashu/ivy-posframe"
          :files (:defaults "*.el")))
 #+END_SRC
 
-*** Configuration
+** Configuration
 
 #+BEGIN_SRC elisp
 (use-package! ivy-posframe
