@@ -59,6 +59,12 @@
 (defun xandeer/nth-days-inactive (n)
   (concat "[" (xandeer/nth-days-timestamp n) "]"))
 
+(use-package! disable-mouse
+  :config
+  (global-disable-mouse-mode))
+
+(setq-default cursor-in-non-selected-windows 'hollow)
+
 (map! :map pyim-mode-map
       "," #'pyim-page-previous-page
       "." #'pyim-page-next-page)

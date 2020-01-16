@@ -2,6 +2,8 @@
 
 (package! keyfreq)
 
+(package! disable-mouse)
+
 (package! pyim
   :recipe
   (:host github :repo "tumashu/pyim"

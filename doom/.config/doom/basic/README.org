@@ -110,7 +110,7 @@ Insert several file suffix to ~auto-mode-alist~.
   (setq plantuml-default-exec-mode 'executable))
 #+END_SRC
 
-* Some Autoload Functions
+* Custom Functions
 
 #+BEGIN_SRC elisp
 (defun xandeer/nth-days-timestamp (n)
@@ -122,3 +122,25 @@ Insert several file suffix to ~auto-mode-alist~.
   (concat "[" (xandeer/nth-days-timestamp n) "]"))
 #+END_SRC
 
+* Disable Mouse
+
+** Define Package
+
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! disable-mouse)
+#+END_SRC
+
+** Configuration
+
+#+BEGIN_SRC elisp
+(use-package! disable-mouse
+  :config
+  (global-disable-mouse-mode))
+#+END_SRC
+
+* Cursor
+
+#+BEGIN_SRC elisp
+(setq-default cursor-in-non-selected-windows 'hollow)
+#+END_SRC
