@@ -123,9 +123,9 @@
       :ni "M-j" #'org-next-visible-heading
       :ni "M-k" #'org-previous-visible-heading)
 
-(map! :localleader
-      :map org-mode-map
-      ;; scheduled to tomorrow
+(map! :map org-mode-map
+      :localleader
+      :desc "scheduled to tomorrow"
       "n" (λ! (org--deadline-or-schedule "" 'scheduled "+1d")))
 
 (defun set-agenda-keys ()
