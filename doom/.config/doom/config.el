@@ -524,6 +524,13 @@ Built with %c.</div>
   (xandeer/set-org-pretty-symbols)
   (xandeer/init-popup-rules))
 
+(use-package! ivy-posframe
+  :config
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))
+      ivy-posframe-parameters '((left-fringe . 8)
+  				(right-fringe . 8)))
+  (ivy-posframe-mode 1))
+
 (use-package! telega
   :commands (telega)
   :defer t

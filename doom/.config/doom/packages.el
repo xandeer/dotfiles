@@ -22,6 +22,11 @@
 
 (package! nord-theme)
 
+(package! ivy-posframe
+  :recipe
+  (:host github :repo "tumashu/ivy-posframe"
+       :files (:defaults "*.el")))
+
 (package! telega
   :recipe
   (:host github
