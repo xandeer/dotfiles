@@ -122,6 +122,11 @@ Generate a string for scheduling on tomorrow.
     (defvar org-capture-templates nil))
 
   (add-to-list 'org-capture-templates
+               '("u" "Web url bookmark" entry
+                 (file+headline "bookmarks.org" "Cache")
+                 "* %? \n%U" :prepend t))
+
+  (add-to-list 'org-capture-templates
                '("c" "Cache" entry
                  (file+headline "" "Cache") ; "" => `org-default-notes-file'
                  "* %? %U" :prepend t))
