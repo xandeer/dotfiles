@@ -160,7 +160,10 @@
   (map! :map override
       :gni "M-c" #'ivy-telega-chat-with))
 
-(map! :map eww-mode-map
+(use-package! eww
+  :defer t
+  :config
+  (map! :map eww-mode-map
       :n "f" #'link-hint-open-link
       :n "ya" #'link-hint-copy-link
       :n "yy" #'eww-copy-page-url
@@ -169,7 +172,7 @@
       :n "r" #'eww-reload
       :n "o" #'eww-browse-with-external-browser
       :n "J" #'eww-forward-url
-      :n "K" #'eww-back-url)
+      :n "K" #'eww-back-url))
 
 (after! org
   (setq org-directory "~/projects/personal/notes/"
