@@ -116,3 +116,17 @@
         :gni "M-c" #'ivy-telega-chat-with))
 #+END_SRC
 
+* Eww
+
+#+BEGIN_SRC elisp
+(map! :map eww-mode-map
+      :n "f" #'link-hint-open-link
+      :n "ya" #'link-hint-copy-link
+      :n "yy" #'eww-copy-page-url
+      :n "H" #'evil-window-top
+      :n "L" #'evil-window-bottom
+      :n "r" #'eww-reload
+      :n "o" #'eww-browse-with-external-browser
+      :n "J" #'eww-forward-url
+      :n "K" #'eww-back-url)
+#+END_SRC

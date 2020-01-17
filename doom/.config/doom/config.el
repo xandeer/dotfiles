@@ -160,6 +160,17 @@
   (map! :map override
       :gni "M-c" #'ivy-telega-chat-with))
 
+(map! :map eww-mode-map
+      :n "f" #'link-hint-open-link
+      :n "ya" #'link-hint-copy-link
+      :n "yy" #'eww-copy-page-url
+      :n "H" #'evil-window-top
+      :n "L" #'evil-window-bottom
+      :n "r" #'eww-reload
+      :n "o" #'eww-browse-with-external-browser
+      :n "J" #'eww-forward-url
+      :n "K" #'eww-back-url)
+
 (after! org
   (setq org-directory "~/projects/personal/notes/"
       org-id-locations-file (convert-standard-filename
@@ -607,5 +618,22 @@ Built with %c.</div>
   :disabled t
   :config
     (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode)))
+
+(use-package! eww
+  :defer t
+  :init
+  (setq browse-url-browser-function
+      '((".*google.*maps.*" . browse-url-generic)
+  	("http.*\/\/github.com" . browse-url-generic)
+  	("http.*\/\/gitlab.*" . browse-url-generic)
+  	("stackoverflow.com" . browse-url-generic)
+  	("youtube.com" . browse-url-generic)
+  	("." . eww-browse-url)))
+  (setq shr-external-browser 'browse-url-generic)
+  (setq browse-url-generic-program
+      (if IS-MAC
+  	  (executable-find "open")
+  	(executable-find "firefox")))
+  (setq shr-width 80))
 
 ;;; config.el ends here
