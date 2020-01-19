@@ -160,6 +160,11 @@
        :collab
        ;;floobits          ; peer programming for a price
        ;;impatient-mode    ; show off code over HTTP
+       ;;
+
+       :email
+       ;; (wanderlust +gmail)
+       (mu4e +gmail)
 
        :config
        ;; For literate config users. This will tangle+compile a config.org
