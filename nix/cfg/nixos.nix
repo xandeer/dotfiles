@@ -73,6 +73,9 @@
     mpd
     upower
 
+    mu
+    isync
+
     rustc
     cargo
     rustup
