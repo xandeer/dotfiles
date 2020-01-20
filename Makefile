@@ -2,7 +2,7 @@
 all: help
 
 UNAME := $(shell uname -s)
-CONFIGS := doom fonts git mr tmux zsh
+CONFIGS := doom fonts git mr tmux zsh mbsync
 
 ifeq ($(UNAME), Linux)
 CONFIGS += compton i3 polybar rofi xresources
