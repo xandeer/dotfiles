@@ -61,6 +61,7 @@
     feh
     firefox
     fontmatrix
+    gcc
     git
     gnupg
     pavucontrol
