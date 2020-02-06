@@ -265,7 +265,7 @@
   (add-to-list 'org-capture-templates
   	     '("u" "Web url bookmark" entry
   	       (file+headline "bookmarks.org" "Cache")
-  	       "* %? \n%U" :prepend t))
+  	       "* #BM# %? \n%U" :prepend t))
 
   (add-to-list 'org-capture-templates
   	     '("c" "Cache" entry
