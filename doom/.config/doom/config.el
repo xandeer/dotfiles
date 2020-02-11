@@ -305,7 +305,7 @@
   (add-to-list 'org-capture-templates
   	     '("t" "Tasks" entry
   	       (file+headline "gtd.org" "Tasks")
-  	       "* TODO %?\n%U\n" :clock-resume t))
+  	       "* TODO %?\n%U\n" :clock-resume t :prepend t))
 
   (add-to-list 'org-capture-templates
   	     '("w" "Work" entry
