@@ -4,6 +4,8 @@
 
 (package! disable-mouse)
 
+(package! deft)
+
 (package! pyim
   :recipe
   (:host github :repo "tumashu/pyim"

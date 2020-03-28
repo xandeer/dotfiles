@@ -404,6 +404,15 @@ Built with %c.</div>
   (xandeer/fix-chinese-newline-in-html)
   (xandeer/set-publish-alist))
 
+(use-package! deft
+  :config
+  (setq deft-directory "~/projects/personal/notes"
+      deft-extensions '("org")
+      deft-default-extension "org"
+      deft-text-mode 'org-mode
+      deft-use-filename-as-title t
+      deft-use-filter-string-for-filename t))
+
 (defun xandeer/convert-chinese-quotations ()
   "Convert all [“|“] to [『|』] in current buffer."
   (interactive)

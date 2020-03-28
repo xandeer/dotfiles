@@ -190,3 +190,24 @@ Generate a string for scheduling on tomorrow.
 * Publish
 
 #+include: "publish.org"
+* Deft
+
+** Define Package
+
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! deft)
+#+END_SRC
+
+** Configuration
+
+#+BEGIN_SRC elisp
+(use-package! deft
+  :config
+  (setq deft-directory "~/projects/personal/notes"
+        deft-extensions '("org")
+        deft-default-extension "org"
+        deft-text-mode 'org-mode
+        deft-use-filename-as-title t
+        deft-use-filter-string-for-filename t))
+#+END_SRC
