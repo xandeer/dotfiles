@@ -409,6 +409,7 @@ Built with %c.</div>
   (setq deft-directory "~/projects/personal/notes"
       deft-extensions '("org")
       deft-default-extension "org"
+      deft-recursive t
       deft-text-mode 'org-mode
       deft-use-filename-as-title t
       deft-use-filter-string-for-filename t))
