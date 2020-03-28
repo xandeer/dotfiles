@@ -709,4 +709,7 @@ Built with %c.</div>
   					   ("/dxandeer-gmail/[dxandeer].Starred" . ?r)
   					   ("/dxandeer-gmail/[dxandeer].Drafts" . ?d))))))))
 
+(setq pug-tab-width 2
+     js-indent-level 2)
+
 ;;; config.el ends here

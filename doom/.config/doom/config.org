@@ -28,6 +28,10 @@
 
 #+include: "app/README.org"
 
+* Front End
+
+#+include: "front-end/README.org"
+
 * Epilogue
 
 #+BEGIN_SRC elisp
