@@ -144,3 +144,8 @@ Insert several file suffix to ~auto-mode-alist~.
 #+BEGIN_SRC elisp
 (setq-default cursor-in-non-selected-windows 'hollow)
 #+END_SRC
+
+* Others
+#+BEGIN_SRC elisp
+(setq-default fill-column 76)
+#+END_SRC

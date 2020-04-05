@@ -65,6 +65,8 @@
 
 (setq-default cursor-in-non-selected-windows 'hollow)
 
+(setq-default fill-column 76)
+
 (map! :map pyim-mode-map
       "," #'pyim-page-previous-page
       "." #'pyim-page-next-page)
