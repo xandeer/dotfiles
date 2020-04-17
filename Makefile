@@ -1,8 +1,19 @@
 .PHONY: all
 all: help
 
+TERMUX_CHECK := termux-setup-storage
+IS_TERMUX := $(shell command -v $(TERMUX_CHECK))
+
 UNAME := $(shell uname -s)
-CONFIGS := doom fonts git mr tmux zsh mbsync
+CONFIGS := doom fonts git mr tmux zsh
+
+ifneq ($(IS_TERMUX),)
+UNAME := TERMUX
+endif
+
+ifneq ($(UNAME), TERMUX)
+CONFIGS += mbsync
+endif
 
 ifeq ($(UNAME), Linux)
 CONFIGS += compton i3 polybar rofi xresources
@@ -26,8 +37,10 @@ install: ## Install the dotfiles by stow.
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
-	$(NIX_SUDO) stow -d $(MACHINE_DIR) -t $(NIX_TARGET) nix
-	$(NIX_SUDO) ln -sf $(MACHINE_DIR)/*.nix $(NIX_DIR)
+	if test -z "$(IS_TERMUX)"; then \
+		$(NIX_SUDO) stow -d $(MACHINE_DIR) -t $(NIX_TARGET) nix; \
+		$(NIX_SUDO) ln -sf $(MACHINE_DIR)/*.nix $(NIX_DIR); \
+	fi
 
 .PHONY: update
 update: pull install ## Git pull and install all.

@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-export px=http://127.0.0.1:8010
-export https_proxy=$px
-export http_proxy=$px
-export all_proxy=$px
+set is_termux = command -v termux-setup-storage
+if test -z "$is_termux"; then
+  export px=http://127.0.0.1:8010
+  export https_proxy=$px
+  export http_proxy=$px
+  export all_proxy=$px
+fi
