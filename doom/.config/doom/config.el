@@ -551,8 +551,10 @@ Built with %c.</div>
  display-line-numbers-type 'visual)
 
 (menu-bar-mode -1)
-(toggle-scroll-bar -1)
 (tool-bar-mode -1)
+; This is undefined on Android
+(if (fboundp 'toggle-scroll-bar)
+    (toggle-scroll-bar -1))
 
 (use-package! nord-theme
   :config
