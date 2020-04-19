@@ -548,9 +548,10 @@ Built with %c.</div>
     (set-fontset-font (frame-parameter nil 'font) charset
   		    (font-spec :family cn :size cn-size))))
 
-(if IS-MAC
-    (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
-  (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 30 36))
+(when (fboundp 'set-fontset-font)
+  (if IS-MAC
+      (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
+    (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 30 36)))
 ; fonts test
 ; 锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷
 ; HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
