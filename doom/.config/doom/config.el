@@ -236,10 +236,49 @@
       org-agenda-start-day nil
       org-clock-clocked-in-display 'both
       org-agenda-time-grid '((daily today require-timed)
-  			     (900 1000 1100 1330 1430 1530 1630 1700)
+  			     (300 600 900 1200 1500 1800 2100 2400)
   			     "......"
-  			     "------------------------------------------------")
-      org-agenda-start-on-weekday nil))
+  			     "-----------------------------------------")
+      org-agenda-start-on-weekday nil)
+  (setq diary-file (concat org-directory "standard-diary")
+  (setq org-agenda-include-diary t)
+  (setq calendar-chinese-celestial-stem
+      ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (setq calendar-chinese-terrestrial-branch
+      ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+  ;; Copied from https://emacs-china.org/t/05-org-as/12092/4
+  ;; location
+  (setq calendar-longitude 113.9442)
+  (setq calendar-latitude 22.5395)
+  ;;Sunrise and Sunset
+  ;;日出而作, 日落而息
+  (defun xandeer/diary-sunrise ()
+    (let ((dss (diary-sunrise-sunset)))
+      (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+  	(replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ",")
+      (buffer-substring (point-min) (match-beginning 0)))))
+
+  (defun xandeer/diary-sunset ()
+    (let ((dss (diary-sunrise-sunset))
+  	start end)
+      (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+  	(replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ", ")
+      (setq start (match-end 0))
+      (search-forward " at")
+      (setq end (match-beginning 0))
+      (goto-char start)
+      (capitalize-word 1)
+      (buffer-substring start end)))))
 
 (defun xandeer/archive-tasks-of (type)
   "Archive tasks of the type."
