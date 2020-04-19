@@ -190,9 +190,6 @@
     (,(concat org-directory "pub/notes.org") :maxlevel . 5)
     (,(concat org-directory "pub/reading.org") :maxlevel . 5)
     ("someday.org" :maxlevel . 5)
-    ("diary.org" :maxlevel . 5)
-    ("learning.org" :maxlevel . 5)
-    ("work.org" :maxlevel . 5)
     (org-agenda-files :maxlevel . 5))
   ))
 
@@ -231,7 +228,6 @@
   (setq org-archive-reversed-order t
       org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
   			  (sequence "|" "CANCELED(c@/!)"))
-      org-agenda-files '("~/projects/personal/notes/gtd.org")
       org-agenda-span 'day
       org-agenda-start-day nil
       org-clock-clocked-in-display 'both
@@ -240,6 +236,9 @@
   			     "......"
   			     "-----------------------------------------")
       org-agenda-start-on-weekday nil)
+  (setq org-agenda-files `(,(concat org-directory "gtd.org")
+  			 ,(concat org-directory "today.org")
+  			 ,(concat org-directory "routine.org")))
   (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
@@ -303,8 +302,10 @@
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
 
+  (setq org-capture-templates nil)
+
   (add-to-list 'org-capture-templates
-  	     '("u" "Web url bookmark" entry
+  	     '("b" "Web url bookmark" entry
   	       (file+headline "bookmarks.org" "Cache")
   	       "* #BM# %? \n%U" :prepend t))
 
@@ -314,57 +315,37 @@
   	       "* %? %U" :prepend t))
 
   (add-to-list 'org-capture-templates
-  	     '("i" "Ideas" entry
-  	       (file+olp "someday.org" "Ideas")
-  	       "* %? %U" :prepend t))
+  	     '("p" "Procedures" entry
+  	       (file+olp "today.org" "Today" "Procedures")
+  	       "* TODO %? :procedure:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
-  	     '("fh" "Film had watched" item
-  	       (file+olp "someday.org" "Films" "Watched")
-  	       "1. %? %^u" :prepend t))
+  	     '("e" "Events" entry
+  	       (file+olp "today.org" "Today" "Events")
+  	       "* %? :event:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
-  	     '("f" "Film want to watch" item
-  	       (file+olp "someday.org" "Films" "Want to Watch")
-  	       "1. %? %U" :prepend t))
+  	     '("n" "Notes" entry
+  	       (file+olp "today.org" "Today" "Notes")
+  	       "* %? :note:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
-  	     '("bh" "Book had read" item
-  	       (file+olp "someday.org" "Books" "Read")
-  	       "1. %? %^u" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("b" "Book want to read" item
-  	       (file+olp "someday.org" "Books" "Want to Read")
-  	       "1. %? %U" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("d" "Do It Tomorrow" entry
-  	       (file+headline "gtd.org" "Tasks")
-  	       "* TODO %?\n%(xandeer/schedule-tomorrow)\n%U\n" :clock-resume t))
+  	     '("T" "Ticklers" entry
+  	       (file+olp "today.org" "Today" "Ticklers")
+  	       "* %? :tickler:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
   	     '("t" "Tasks" entry
-  	       (file+headline "gtd.org" "Tasks")
-  	       "* TODO %?\n%U\n" :clock-resume t :prepend t))
+  	       (file+olp "today.org" "Today" "Tasks")
+  	       "* TODO %? :task:\n%T\n" :clock-resume t :prepend t))
 
   (add-to-list 'org-capture-templates
   	     '("w" "Work" entry
   	       (file+olp+datetree "work.org" "Weekly Summaries")
   	       (file ".work.tmpl.org") :prepend t))
 
-  ;; (add-to-list 'org-capture-templates
-  ;;              '("dr" "Daily review" entry
-  ;;                (file+olp+datetree "diary.org" "Daily Review")
-  ;;                (file ".daily.tmpl.org") :prepend t))
-
-  ;; (add-to-list 'org-capture-templates
-  ;;              '("wr" "Weekly review" entry
-  ;;                (file+olp+datetree "diary.org" "Weekly Review")
-  ;;                (file ".weekly.tmpl.org") :prepend t))
-
   (add-to-list 'org-capture-templates
-  	     '("de" "Daily extracts" plain
+  	     '("d" "Daily extracts" plain
   	       (file+olp+datetree "pub/daily-extracts.org")
   	       "%U\n%?\n" :prepend t)))
 
