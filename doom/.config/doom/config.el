@@ -680,6 +680,7 @@ Built with %c.</div>
   (setq shr-width 80))
 
 (use-package! mu4e
+  :disabled t
   :config
   (setq mu4e-contexts
       (list

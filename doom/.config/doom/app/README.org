@@ -129,6 +129,7 @@
 
 #+BEGIN_SRC elisp
 (use-package! mu4e
+  :disabled t
   :config
   (setq mu4e-contexts
         (list
