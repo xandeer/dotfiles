@@ -240,7 +240,7 @@
   			     "......"
   			     "-----------------------------------------")
       org-agenda-start-on-weekday nil)
-  (setq diary-file (concat org-directory "standard-diary")
+  (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
       ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
