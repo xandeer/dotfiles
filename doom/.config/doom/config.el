@@ -231,17 +231,17 @@
       (org-refile nil nil rfloc))))))
 
 (after! org
-  (setq org-archive-reversed-order t
-      org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
-  			  (sequence "|" "CANCELED(c@/!)"))
-      org-agenda-span 'day
-      org-agenda-start-day nil
-      org-clock-clocked-in-display 'both
-      org-agenda-time-grid '((daily today require-timed)
-  			     (300 600 900 1200 1500 1800 2100 2400)
+  (setq org-archive-reversed-order t)
+  (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
+  			  (sequence "|" "CANCELED(c@/!)")))
+  (setq org-agenda-span 'day)
+  (setq org-agenda-start-day nil)
+  (setq org-clock-clocked-in-display 'both)
+  (setq org-agenda-start-on-weekday nil)
+  (setq org-agenda-time-grid '((daily today require-timed)
+  			     (600 900 1200 1500 1800 2100)
   			     "......"
-  			     "-----------------------------------------")
-      org-agenda-start-on-weekday nil)
+  			     "-----------------------------------------"))
   (setq org-agenda-files `(,(concat org-directory "gtd.org")
   			 ,(concat org-directory "today.org")
   			 ,(concat org-directory "routine.org")))
