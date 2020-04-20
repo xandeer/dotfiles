@@ -82,6 +82,8 @@
   :desc "Switch buffer"  "."    #'switch-to-buffer
   :desc "Select the treemacs window if it is visible"    "z"    #'treemacs-select-window
   :desc "Agenda List"    "a"    #'org-agenda-list
+  :desc "Org capture"    "x"    #'org-capture
+  :desc "Pop up scratch buffer"    "X" #'doom/open-scratch-buffer
 
   (:prefix-map ("n" . "notes")
     :desc "Org capture"                  "n" #'counsel-org-capture))
