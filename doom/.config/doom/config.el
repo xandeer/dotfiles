@@ -59,6 +59,10 @@
 (defun xandeer/nth-days-inactive (n)
   (concat "[" (xandeer/nth-days-timestamp n) "]"))
 
+(defun xandeer/today ()
+  "Format time string like: 2020-04-20 Monday"
+  (format-time-string "%F %A"))
+
 (use-package! disable-mouse
   :config
   (global-disable-mouse-mode))
