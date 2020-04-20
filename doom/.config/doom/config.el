@@ -528,6 +528,16 @@ Built with %c.</div>
   (add-hook 'emacs-startup-hook
   	#'(lambda () (pyim-restart-1 t))))
 
+(use-package! cal-china-x
+  :config
+  (setq mark-holidays-in-calendar t)
+  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+  (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
+  (setq calendar-holidays
+      (append cal-china-x-important-holidays
+  	      cal-china-x-general-holidays
+  	      other-holidays)))
+
 (use-package! yasnippet
   :config
   (setq yas-snippet-dirs '("~/.config/doom/snippets"))

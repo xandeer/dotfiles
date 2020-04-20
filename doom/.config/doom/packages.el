@@ -22,6 +22,11 @@
   (:host github :repo "tumashu/pyim-greatdict"
        :files (:defaults "pyim-greatdict.el" "pyim-greatdict.pyim.gz")))
 
+(package! cal-china-x
+  :recipe
+  (:host github :repo "xwl/cal-china-x"
+       :files (:defaults "*.el")))
+
 (package! yasnippet)
 
 (package! nord-theme)

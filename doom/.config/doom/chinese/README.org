@@ -17,8 +17,7 @@
 #+END_SRC
 
 * Input Method
-
-*** Package
+** Package
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
@@ -39,7 +38,7 @@
          :files (:defaults "pyim-greatdict.el" "pyim-greatdict.pyim.gz")))
 #+END_SRC
 
-*** Configuration
+** Configuration
 
 #+BEGIN_SRC elisp
 (use-package! pyim
@@ -115,4 +114,25 @@
 
   (add-hook 'emacs-startup-hook
           #'(lambda () (pyim-restart-1 t))))
+#+END_SRC
+* Chinese Calendar
+** Package
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! cal-china-x
+  :recipe
+  (:host github :repo "xwl/cal-china-x"
+         :files (:defaults "*.el")))
+#+END_SRC
+** Configuration
+#+BEGIN_SRC elisp
+(use-package! cal-china-x
+  :config
+  (setq mark-holidays-in-calendar t)
+  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+  (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
+  (setq calendar-holidays
+        (append cal-china-x-important-holidays
+                cal-china-x-general-holidays
+                other-holidays)))
 #+END_SRC
