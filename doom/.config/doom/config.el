@@ -234,7 +234,7 @@
 (after! org
   (setq org-archive-reversed-order t)
   (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
-  			  (sequence "|" "CANCELED(c@/!)")))
+  			  (sequence "|" "CANCELED(c@/!)" "SHELVE(s)")))
   (setq org-agenda-span 'day)
   (setq org-agenda-start-day nil)
   (setq org-clock-clocked-in-display 'both)
