@@ -354,7 +354,7 @@
   (add-to-list 'org-capture-templates
   	     '("d" "Daily extracts" plain
   	       (file+olp+datetree "pub/daily-extracts.org")
-  	       "%U\n%?\n" :prepend t)))
+  	       "%U%?" :prepend t)))
 
 (defun xandeer/fix-chinese-newline-in-html ()
   "Join consecutive Chinese lines into a single long line without unwanted space

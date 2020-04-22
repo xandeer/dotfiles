@@ -205,7 +205,7 @@ Generate a string for scheduling on tomorrow.
   (add-to-list 'org-capture-templates
                '("d" "Daily extracts" plain
                  (file+olp+datetree "pub/daily-extracts.org")
-                 "%U\n%?\n" :prepend t)))
+                 "%U%?" :prepend t)))
 #+END_SRC
 
 * Publish
