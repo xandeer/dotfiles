@@ -1,7 +1,5 @@
 * Telega
-
 ** Package
-
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
 (package! telega
@@ -11,9 +9,7 @@
    :branch "telega-tdlib-150"
    :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
 #+END_SRC
-
 ** Configuration
-
 #+BEGIN_SRC elisp
 (use-package! telega
   :commands (telega)
@@ -125,7 +121,7 @@
   (setq shr-width 80))
 #+END_SRC
 
-* Email
+* Email (Disabled)
 
 #+BEGIN_SRC elisp
 (use-package! mu4e
@@ -193,4 +189,19 @@
                                              ("/dxandeer-gmail/[dxandeer].All Mail" . ?a)
                                              ("/dxandeer-gmail/[dxandeer].Starred" . ?r)
                                              ("/dxandeer-gmail/[dxandeer].Drafts" . ?d))))))))
+#+END_SRC
+* Anki Editor
+** Package
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! anki-editor
+  :recipe
+  (:host github
+   :repo "louietan/anki-editor"
+   :branch "master"
+   :files (:defaults "*.el")))
+#+END_SRC
+** Configuration
+#+BEGIN_SRC elisp
+(use-package! anki-editor)
 #+END_SRC

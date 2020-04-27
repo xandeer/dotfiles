@@ -49,3 +49,10 @@
   :recipe
   (:host github :repo "beancount/beancount"
        :files ("editors/emacs/beancount.el")))
+
+(package! anki-editor
+  :recipe
+  (:host github
+   :repo "louietan/anki-editor"
+   :branch "master"
+   :files (:defaults "*.el")))
