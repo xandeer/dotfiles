@@ -197,8 +197,7 @@
     (,(concat org-directory "pub/reading.org") :maxlevel . 5)
     (,(concat org-directory "pub/daily-extracts.org") :maxlevel . 5)
     ("someday.org" :maxlevel . 5)
-    (org-agenda-files :maxlevel . 5))
-  ))
+    (org-agenda-files :maxlevel . 5))))
 
 (defun xandeer/refile-to-first ()
   "Move the current org headline to the first of its section."
@@ -245,6 +244,7 @@
   			     "-----------------------------------------"))
   (setq org-agenda-files `(,(concat org-directory "gtd.org")
   			 ,(concat org-directory "today.org")
+  			 ,(concat org-directory "diary-by-months")
   			 ,(concat org-directory "routine.org")))
   (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
@@ -760,6 +760,8 @@ Built with %c.</div>
   					   ("/dxandeer-gmail/[dxandeer].All Mail" . ?a)
   					   ("/dxandeer-gmail/[dxandeer].Starred" . ?r)
   					   ("/dxandeer-gmail/[dxandeer].Drafts" . ?d))))))))
+
+(use-package! anki-editor)
 
 (setq pug-tab-width 2
      js-indent-level 2)
