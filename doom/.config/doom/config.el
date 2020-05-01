@@ -110,13 +110,13 @@
       :i "C-r" #'isearch-backward
       )
 
-(general-evil-setup)
-(general-imap "j"
-  (general-key-dispatch 'self-insert-command
-    :timeout 0.25
-    "w" (lambda () (interactive) (evil-normal-state) (save-buffer))
-    "s" (lambda () (interactive) (save-buffer))
-    "j" 'evil-normal-state))
+;; (general-evil-setup)
+;; (general-imap "j"
+  ;; (general-key-dispatch 'self-insert-command
+    ;; :timeout 0.25
+    ;; "w" (lambda () (interactive) (evil-normal-state) (save-buffer))
+    ;; "s" (lambda () (interactive) (save-buffer))
+    ;; "j" 'evil-normal-state))
 
 (map! :map org-mode-map
       :gni [M-return]   (λ! (+org/insert-item-below 1))
