@@ -337,6 +337,11 @@
   	       "* %? :note:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
+  	     '("a" "Anki" entry
+  	       (file+olp "today.org" "Today" "Notes")
+  	       "* Anki :note:anki:\n:PROPERTIES:\n:ANKI_DECK: English\n:END:\n%T\n%?" :prepend t :clock-in t :clock-keep t))
+
+  (add-to-list 'org-capture-templates
   	     '("T" "Ticklers" entry
   	       (file+olp "today.org" "Today" "Ticklers")
   	       "* %? :tickler:\n%T" :prepend t))
