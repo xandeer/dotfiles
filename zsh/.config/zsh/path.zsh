@@ -14,12 +14,17 @@ if [[ "$XANDEER_PROFILE" != loaded ]] ; then
     if [[ "$OSTYPE" = darwin* ]]; then
         # add android path
         export SDK_DIR=~/Library/Android/sdk
-        export PATH=$SDK_DIR/platform-tools:$PATH
-        export PATH=$SDK_DIR/tools:$PATH
 
         # add rust path
         export PATH=$HOME/.cargo/bin:$PATH
     fi
+
+    if [[ "$OSTYPE" = linux* ]]; then
+        export SDK_DIR=~/Android/Sdk
+    fi
+
+    export PATH=$SDK_DIR/platform-tools:$PATH
+    export PATH=$SDK_DIR/tools:$PATH
 
     export RUST_SRC_PATH=$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 
