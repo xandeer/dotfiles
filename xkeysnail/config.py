@@ -19,7 +19,16 @@ define_conditional_modmap(re.compile(r'Emacs'), {
 define_multipurpose_modmap(
     # Enter is enter when pressed and released. Control when held down.
     {
-        Key.ENTER: [Key.ENTER, Key.RIGHT_CTRL]
+        Key.ENTER: [Key.ENTER, Key.RIGHT_CTRL],
+        Key.LEFT_ALT: [Key.ESC, Key.LEFT_ALT],
+        Key.RIGHT_ALT: [Key.ESC, Key.RIGHT_ALT],
+        Key.D: [Key.D, Key.LEFT_CTRL],
+        Key.F: [Key.F, Key.LEFT_CTRL],
+        Key.C: [Key.C, Key.LEFT_CTRL],
+        Key.V: [Key.V, Key.LEFT_CTRL],
+        Key.J: [Key.J, Key.RIGHT_CTRL],
+        Key.K: [Key.K, Key.RIGHT_CTRL],
+        Key.N: [Key.N, Key.RIGHT_CTRL],
     }
 
     # Capslock is escape when pressed and released. Control when held down.
@@ -49,7 +58,7 @@ define_keymap(re.compile("Zeal"), {
 }, "Zeal")
 
 # Emacs-like keybindings in non-Emacs applications
-define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt"), {
+define_keymap(lambda wm_class: wm_class not in ("Emacs", "URxvt", "jetbrains-studio"), {
     # Cursor
     K("C-b"): with_mark(K("left")),
     K("C-f"): with_mark(K("right")),
