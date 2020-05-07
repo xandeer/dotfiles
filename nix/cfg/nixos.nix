@@ -54,6 +54,9 @@
 
   services.urxvtd.enable = true;
 
+  programs.adb.enable = true;
+  users.users.kevin.extraGroups = ["adbusers"];
+
   environment.systemPackages = with pkgs; [
     compton
     dropbox
