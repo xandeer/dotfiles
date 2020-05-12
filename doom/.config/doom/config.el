@@ -339,10 +339,10 @@
   (add-to-list 'org-capture-templates
   	     '("a" "Anki" entry
   	       (file+olp "today.org" "Today" "Notes")
-  	       "* Anki :note:anki:\n:PROPERTIES:\n:ANKI_DECK: English\n:END:\n%T\n%?" :prepend t :clock-in t :clock-keep t))
+  	       "* Anki :note:anki:\n:PROPERTIES:\n:ANKI_DECK: English\n:END:\n%T\n%?" :prepend t :clock-in t :clock-keep t :jump-to-captured t :immediate-finish t))
 
   (add-to-list 'org-capture-templates
-  	     '("T" "Ticklers" entry
+  	     '("m" "Ticklers" entry
   	       (file+olp "today.org" "Today" "Ticklers")
   	       "* %? :tickler:\n%T" :prepend t))
 
@@ -350,6 +350,11 @@
   	     '("t" "Tasks" entry
   	       (file+olp "today.org" "Today" "Tasks")
   	       "* TODO %? :task:\n%T\n" :clock-resume t :prepend t))
+
+  (add-to-list 'org-capture-templates
+  	     '("g" "Get up" entry
+  	       (file+olp "today.org" "Today" "Events")
+  	       "* Get up %^T :event:getup:" :immediate-finish t))
 
   (add-to-list 'org-capture-templates
   	     '("w" "Work" entry
