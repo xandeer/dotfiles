@@ -85,6 +85,7 @@
     rustup
     rustracer
 
+    xandeer.clash
     xandeer.greenclip
     xandeer.i3exit
     xandeer.tdlib
