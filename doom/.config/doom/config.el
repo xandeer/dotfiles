@@ -632,7 +632,7 @@ Built with %c.</div>
    telega-proxies
     (list
      '(:server "127.0.0.1" :port 8010 :enable t
-  	     :type (:@type "proxyTypeHttp" :http_only t)))
+  	     :type (:@type "proxyTypeHttp")))
    telega-sticker-set-download t
    telega-chat-button-width 28
    telega-cache-dir (expand-file-name "~/Downloads/telega")
