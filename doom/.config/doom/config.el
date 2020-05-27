@@ -329,7 +329,7 @@
   (add-to-list 'org-capture-templates
   	     '("e" "Events" entry
   	       (file+olp "today.org" "Today" "Events")
-  	       "* %? :event:\n%T" :prepend t))
+  	       "* %? :event:\n%T" :prepend t :clock-in t :clock-keep t))
 
   (add-to-list 'org-capture-templates
   	     '("n" "Notes" entry
@@ -364,7 +364,7 @@
   (add-to-list 'org-capture-templates
   	     '("d" "Daily extracts" plain
   	       (file+olp+datetree "pub/daily-extracts.org")
-  	       "%U%?" :prepend t)))
+  	       "%U%?" :prepend t :immediate-finish t)))
 
 (defun xandeer/fix-chinese-newline-in-html ()
   "Join consecutive Chinese lines into a single long line without unwanted space
