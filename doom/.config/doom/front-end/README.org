@@ -2,5 +2,6 @@
 
 #+BEGIN_SRC elisp
 (setq pug-tab-width 2
+      css-indent-offset 2
      js-indent-level 2)
 #+END_SRC

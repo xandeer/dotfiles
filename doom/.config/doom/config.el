@@ -334,7 +334,7 @@
   (add-to-list 'org-capture-templates
   	     '("n" "Notes" entry
   	       (file+olp "today.org" "Today" "Notes")
-  	       "* %? :note:\n%T" :prepend t))
+  	       "* %? :note:\n%T" :prepend t :clock-in t :clock-keep t))
 
   (add-to-list 'org-capture-templates
   	     '("a" "Anki" entry
@@ -344,7 +344,7 @@
   (add-to-list 'org-capture-templates
   	     '("m" "Ticklers" entry
   	       (file+olp "today.org" "Today" "Ticklers")
-  	       "* %? :tickler:\n%T" :prepend t))
+  	       "* %? :tickler:\n%T" :prepend t :clock-in t :clock-keep t))
 
   (add-to-list 'org-capture-templates
   	     '("t" "Tasks" entry
@@ -774,6 +774,7 @@ Built with %c.</div>
 (use-package! anki-editor)
 
 (setq pug-tab-width 2
+      css-indent-offset 2
      js-indent-level 2)
 
 ;;; config.el ends here
