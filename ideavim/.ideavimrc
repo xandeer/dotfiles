@@ -1,0 +1,16 @@
+let mapleader=","
+set easymotion
+
+nnoremap <a-h> gT
+nnoremap <a-l> gt
+
+nnoremap [m :action MethodUp<cr>
+nnoremap ]m :action MethodDown<cr>
+
+inoremap <C-a> <Home>
+inoremap <C-b> <Left>
+inoremap <C-d> <Delete>
+inoremap <C-e> <End>
+inoremap <C-f> <Right>
+
+nnoremap <leader>sr :source ~/.ideavimrc<cr>
