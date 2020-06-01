@@ -83,6 +83,7 @@
     polybarFull
     mpd
     upower
+    xclip
 
     mu
     isync
