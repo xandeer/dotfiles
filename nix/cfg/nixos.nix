@@ -58,6 +58,7 @@
   users.users.kevin.extraGroups = ["adbusers"];
 
   environment.systemPackages = with pkgs; [
+    chromium
     compton
     dropbox
     emacs
