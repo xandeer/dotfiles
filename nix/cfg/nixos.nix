@@ -6,6 +6,7 @@
     ./xserver.nix
     ./users.nix
 
+    ../services/clash.nix
     ../services/v2ray.nix
   ];
 
@@ -16,8 +17,13 @@
   networking.proxy.default = "http://127.0.0.1:8010";
   services.openssh.enable = true;
 
-  services.v2ray = {
+  services.clash = {
     enable = true;
+    configDir = "/etc/clash";
+  };
+
+  services.v2ray = {
+    enable = false;
     configFile = "/etc/v2ray/client.json";
   };
 
