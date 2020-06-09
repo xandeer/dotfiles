@@ -93,6 +93,9 @@
     rustup
     rustracer
 
+    nodejs
+    yarn
+
     xandeer.clash
     xandeer.greenclip
     xandeer.i3exit
