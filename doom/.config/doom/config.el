@@ -338,6 +338,11 @@
   	       "* TODO %? :procedure:\n%T" :prepend t))
 
   (add-to-list 'org-capture-templates
+  	     '("r" "Running" entry
+  	       (file+olp "today.org" "Today" "Events")
+  	       "* Running %? %^T :event:running:" :prepend t))
+
+  (add-to-list 'org-capture-templates
   	     '("e" "Events" entry
   	       (file+olp "today.org" "Today" "Events")
   	       "* %? :event:\n%T" :prepend t :clock-in t :clock-keep t))
