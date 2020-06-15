@@ -5,6 +5,7 @@ map('F', 'af');
 map('h', 'E');
 map('l', 'R');
 
+settings.focusFirstCandidate = true
 
 // theme
 settings.theme = `
