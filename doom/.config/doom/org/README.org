@@ -1,5 +1,4 @@
 * Org
-
 #+BEGIN_SRC elisp
 (after! org
   (setq org-directory "~/projects/personal/notes/"
@@ -9,7 +8,6 @@
         org-reverse-note-order t
         org-default-notes-file (concat org-directory "pub/journal.org")))
 #+END_SRC
-
 ** Refile
 
 #+BEGIN_SRC elisp
@@ -59,7 +57,6 @@ Refile current headline to the first of its section.
 #+END_SRC
 
 * Agenda
-
 #+BEGIN_SRC elisp
 (after! org
   (setq org-archive-reversed-order t)
@@ -76,7 +73,11 @@ Refile current headline to the first of its section.
   (setq org-agenda-files `(,(concat org-directory "gtd.org")
                            ,(concat org-directory "today.org")
                            ,(concat org-directory "diary-by-months")
+                           ,(concat org-directory "roam")
                            ,(concat org-directory "routine.org")))
+  (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
+  ;; (setq org-agenda-file-regexp "\\`[^.].*\\'")
+  ;; (setq org-journal-enable-agenda-integration t)
   (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
@@ -143,9 +144,7 @@ Define an interactive function to archive tasks which are done or canceled.
 #+END_SRC
 
 * Schedule
-
 Generate a string for scheduling on tomorrow.
-
 #+BEGIN_SRC elisp
 (defun xandeer/schedule-tomorrow ()
   "Return scheduled string on tomorrow."
@@ -154,7 +153,6 @@ Generate a string for scheduling on tomorrow.
 #+END_SRC
 
 * Capture
-
 #+BEGIN_SRC elisp
 (after! org-capture
   (unless (boundp 'org-capture-templates)
@@ -224,19 +222,14 @@ Generate a string for scheduling on tomorrow.
 #+END_SRC
 
 * Publish
-
 #+include: "publish.org"
 * Deft
-
 ** Define Package
-
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
 (package! deft)
 #+END_SRC
-
 ** Configuration
-
 #+BEGIN_SRC elisp
 (use-package! deft
   :config
@@ -247,4 +240,27 @@ Generate a string for scheduling on tomorrow.
         deft-text-mode 'org-mode
         deft-use-filename-as-title t
         deft-use-filter-string-for-filename t))
+#+END_SRC
+* Roam
+#+BEGIN_SRC elisp
+(after! org-roam
+  (setq org-roam-directory (concat org-directory "roam"))
+  (setq org-roam-capture-templates
+        '(("d" "default" plain #'org-roam-capture--get-point "%?"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]"
+           :unnarrowed t)))
+  (setq org-roam-dailies-capture-templates
+        '(("d" "daily" plain (function org-roam-capture--get-point) ""
+           :immediate-finish t
+           :file-name "%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d, %A>\n\n* %<%A, %x>"))))
+#+END_SRC
+* Journal
+#+BEGIN_SRC elisp
+(after! org-journal
+  (setq org-journal-dir (concat org-directory "roam"))
+  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n\n")
+  (setq org-journal-time-format "<%Y-%m-%d %R> ")
+  (setq org-journal-file-format "%Y-%m-%d.org"))
 #+END_SRC

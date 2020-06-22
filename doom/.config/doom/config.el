@@ -256,7 +256,11 @@
   (setq org-agenda-files `(,(concat org-directory "gtd.org")
   			 ,(concat org-directory "today.org")
   			 ,(concat org-directory "diary-by-months")
+  			 ,(concat org-directory "roam")
   			 ,(concat org-directory "routine.org")))
+  (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
+  ;; (setq org-agenda-file-regexp "\\`[^.].*\\'")
+  ;; (setq org-journal-enable-agenda-integration t)
   (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
@@ -468,6 +472,25 @@ Built with %c.</div>
       deft-text-mode 'org-mode
       deft-use-filename-as-title t
       deft-use-filter-string-for-filename t))
+
+(after! org-roam
+  (setq org-roam-directory (concat org-directory "roam"))
+  (setq org-roam-capture-templates
+      '(("d" "default" plain #'org-roam-capture--get-point "%?"
+  	 :file-name "%<%Y%m%d%H%M%S>-${slug}"
+  	 :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]"
+  	 :unnarrowed t)))
+  (setq org-roam-dailies-capture-templates
+      '(("d" "daily" plain (function org-roam-capture--get-point) ""
+  	 :immediate-finish t
+  	 :file-name "%<%Y-%m-%d>"
+  	 :head "#+title: %<%Y-%m-%d, %A>\n\n* %<%A, %x>"))))
+
+(after! org-journal
+  (setq org-journal-dir (concat org-directory "roam"))
+  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n\n")
+  (setq org-journal-time-format "<%Y-%m-%d %R> ")
+  (setq org-journal-file-format "%Y-%m-%d.org"))
 
 (defun xandeer/convert-chinese-quotations ()
   "Convert all [“|“] to [『|』] in current buffer."
