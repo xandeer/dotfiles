@@ -478,17 +478,17 @@ Built with %c.</div>
   (setq org-roam-capture-templates
       '(("d" "default" plain #'org-roam-capture--get-point "%?"
   	 :file-name "%<%Y%m%d%H%M%S>-${slug}"
-  	 :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]"
+  	 :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]\n* Main"
   	 :unnarrowed t)))
   (setq org-roam-dailies-capture-templates
       '(("d" "daily" plain (function org-roam-capture--get-point) ""
   	 :immediate-finish t
   	 :file-name "%<%Y-%m-%d>"
-  	 :head "#+title: %<%Y-%m-%d, %A>\n\n* %<%A, %x>"))))
+  	 :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>"))))
 
 (after! org-journal
   (setq org-journal-dir (concat org-directory "roam"))
-  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n\n")
+  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
   (setq org-journal-time-format "<%Y-%m-%d %R> ")
   (setq org-journal-file-format "%Y-%m-%d.org"))
 
