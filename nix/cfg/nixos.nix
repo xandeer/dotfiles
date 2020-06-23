@@ -85,6 +85,8 @@
     upower
     xclip
 
+    sqlite
+
     mu
     isync
 
