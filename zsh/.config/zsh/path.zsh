@@ -23,11 +23,11 @@ if [[ "$XANDEER_PROFILE" != loaded ]] ; then
         export SDK_DIR=~/Android/Sdk
     fi
 
-    export PATH=$SDK_DIR/platform-tools:$PATH
-    export PATH=$SDK_DIR/tools:$PATH
+    export PATH=$PATH:$SDK_DIR/platform-tools
+    export PATH=$PATH:$SDK_DIR/tools
 
     export RUST_SRC_PATH=$HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 
     # add doom path
-    export PATH=$HOME/.emacs.d/bin:$PATH
+    export PATH=$PATH:$HOME/.emacs.d/bin
 fi
