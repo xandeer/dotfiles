@@ -241,21 +241,6 @@ Generate a string for scheduling on tomorrow.
         deft-use-filename-as-title t
         deft-use-filter-string-for-filename t))
 #+END_SRC
-* Roam
-#+BEGIN_SRC elisp
-(after! org-roam
-  (setq org-roam-directory (concat org-directory "roam"))
-  (setq org-roam-capture-templates
-        '(("d" "default" plain #'org-roam-capture--get-point "%?"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]\n* Main"
-           :unnarrowed t)))
-  (setq org-roam-dailies-capture-templates
-        '(("d" "daily" plain (function org-roam-capture--get-point) ""
-           :immediate-finish t
-           :file-name "%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>"))))
-#+END_SRC
 * Journal
 #+BEGIN_SRC elisp
 (after! org-journal

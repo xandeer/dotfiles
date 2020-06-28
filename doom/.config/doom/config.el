@@ -473,24 +473,36 @@ Built with %c.</div>
       deft-use-filename-as-title t
       deft-use-filter-string-for-filename t))
 
-(after! org-roam
-  (setq org-roam-directory (concat org-directory "roam"))
-  (setq org-roam-capture-templates
-      '(("d" "default" plain #'org-roam-capture--get-point "%?"
-  	 :file-name "%<%Y%m%d%H%M%S>-${slug}"
-  	 :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]\n* Main"
-  	 :unnarrowed t)))
-  (setq org-roam-dailies-capture-templates
-      '(("d" "daily" plain (function org-roam-capture--get-point) ""
-  	 :immediate-finish t
-  	 :file-name "%<%Y-%m-%d>"
-  	 :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>"))))
-
 (after! org-journal
   (setq org-journal-dir (concat org-directory "roam"))
   (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
   (setq org-journal-time-format "<%Y-%m-%d %R> ")
   (setq org-journal-file-format "%Y-%m-%d.org"))
+
+(use-package org-roam
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory (concat org-directory "roam"))
+  (org-roam-capture-templates
+   '(("d" "default" plain #'org-roam-capture--get-point "%?"
+      :file-name "%<%Y%m%d%H%M%S>-${slug}"
+      :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]\n* Main"
+      :unnarrowed t)))
+  (org-roam-dailies-capture-templates
+   '(("d" "daily" plain (function org-roam-capture--get-point) ""
+      :immediate-finish t
+      :file-name "%<%Y-%m-%d>"
+      :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>")))
+  :bind
+  (:map org-roam-mode-map
+   (("C-c n l" . org-roam)
+    ("C-c n f" . org-roam-find-file)
+    ("C-c n j" . org-roam-jump-to-index)
+    ("C-c n b" . org-roam-switch-to-buffer)
+    ("C-c n g" . org-roam-graph))
+   :map org-mode-map
+   (("C-c n i" . org-roam-insert))))
 
 (defun xandeer/convert-chinese-quotations ()
   "Convert all [“|“] to [『|』] in current buffer."
