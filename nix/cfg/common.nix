@@ -40,6 +40,7 @@
     font-awesome
     material-icons
 
+    graphviz
     plantuml
 
     xandeer.dots

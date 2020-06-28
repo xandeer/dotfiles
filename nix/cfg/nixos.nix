@@ -84,7 +84,6 @@
     mpd
     upower
     xclip
-    graphviz
 
     sqlite
 
