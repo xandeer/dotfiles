@@ -473,11 +473,14 @@ Built with %c.</div>
       deft-use-filename-as-title t
       deft-use-filter-string-for-filename t))
 
-(after! org-journal
-  (setq org-journal-dir (concat org-directory "roam"))
-  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
-  (setq org-journal-time-format "<%Y-%m-%d %R> ")
-  (setq org-journal-file-format "%Y-%m-%d.org"))
+(use-package org-journal
+  :ensure t
+  :defer t
+  :custom
+  (org-journal-dir (concat org-directory "roam"))
+  (org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
+  (org-journal-time-format "<%Y-%m-%d %R> ")
+  (org-journal-file-format "%Y-%m-%d.org"))
 
 (use-package org-roam
   :hook
@@ -500,6 +503,7 @@ Built with %c.</div>
     ("C-c n f" . org-roam-find-file)
     ("C-c n j" . org-roam-jump-to-index)
     ("C-c n b" . org-roam-switch-to-buffer)
+    ("C-c n t" . org-roam-dailies-today)
     ("C-c n g" . org-roam-graph))
    :map org-mode-map
    (("C-c n i" . org-roam-insert))))

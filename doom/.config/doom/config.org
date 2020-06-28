@@ -11,6 +11,7 @@
 * Org
 
 #+include: "org/README.org"
+#+include: "configs/org-journal.org"
 #+include: "configs/org-roam.org"
 
 * Chinese

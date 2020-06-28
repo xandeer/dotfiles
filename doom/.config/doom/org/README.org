@@ -241,11 +241,3 @@ Generate a string for scheduling on tomorrow.
         deft-use-filename-as-title t
         deft-use-filter-string-for-filename t))
 #+END_SRC
-* Journal
-#+BEGIN_SRC elisp
-(after! org-journal
-  (setq org-journal-dir (concat org-directory "roam"))
-  (setq org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
-  (setq org-journal-time-format "<%Y-%m-%d %R> ")
-  (setq org-journal-file-format "%Y-%m-%d.org"))
-#+END_SRC
