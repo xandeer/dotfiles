@@ -1,16 +1,14 @@
-.PHONY: all
-all: help
-
 .PHONY: generate
-generate: ## Generate config.el and packages.el from config.org
-	@echo "Generate config.el and packages.el from config.org"
-	@emacs -Q --batch --find-file "config.org" -f "org-org-export-to-org" && \
-		emacs -Q --batch --find-file "config.org.org" -f "org-babel-tangle" && \
-		rm -rf "config.org.org"
+generate: ## Generate config.el and packages.el from configs/index.org
+	@echo "Generate config.el and packages.el from configs/index.org"
+	@emacs -Q --batch --find-file "configs/index.org" -f "org-org-export-to-org" && \
+		mv configs/index.org.org index.org && \
+		emacs -Q --batch --find-file "index.org" -f "org-babel-tangle" && \
+		rm -rf "index.org"
 
-.PHONY: docs
-docs: ## Update docs
-	org2html README.org && git checkout gh-pages && && mv README.html index.html && git commit -am "Update docs." && git push && git checkout master
+# .PHONY: docs
+# docs: ## Update docs
+#	org2html README.org && git checkout gh-pages && && mv README.html index.html && git commit -am "Update docs." && git push && git checkout master
 
 .PHONY: help
 help: ## Show help.

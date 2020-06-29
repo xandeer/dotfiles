@@ -1,0 +1,15 @@
+#+title: Xandeer
+
+#+BEGIN_SRC elisp
+(defun xandeer/nth-days-timestamp (n)
+  "Return after n days's timestamp like: 2019-05-26 Sun"
+  (format-time-string "%F %a"
+                      (time-add (current-time) (* 24 3600 n))))
+
+(defun xandeer/nth-days-inactive (n)
+  (concat "[" (xandeer/nth-days-timestamp n) "]"))
+
+(defun xandeer/today ()
+  "Format time string like: 2020-04-20 Monday"
+  (format-time-string "%F %A"))
+#+END_SRC

@@ -1,0 +1,8 @@
+#+title: Plantuml
+
+#+BEGIN_SRC elisp
+(use-package! plantuml
+  :defer
+  :custom
+  (plantuml-default-exec-mode 'executable))
+#+END_SRC

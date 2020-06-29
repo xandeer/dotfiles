@@ -1,0 +1,11 @@
+#+title: Projectile
+
+#+BEGIN_SRC elisp
+(use-package! projectile
+  :defer
+  :ensure
+  :config
+  (dolist (dir '("~/Downloads/" "~/projects/personal/dotfiles/" "~/.emacs.d/"))
+    (when (file-directory-p dir)
+      (add-to-list 'projectile-known-projects dir))))
+#+END_SRC

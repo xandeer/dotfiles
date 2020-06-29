@@ -21,4 +21,4 @@ form.
 
 * The Configuration
 
-#+include: "config.org"
+#+include: "configs/index.org"

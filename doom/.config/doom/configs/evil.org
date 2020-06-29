@@ -1,0 +1,11 @@
+#+title: Evil
+
+* Custom Evil Buffer End
+#+BEGIN_SRC elisp
+(defun evil-custom-end-of-buffer-dwim (&rest _)
+  "If current line is empty, call `previous-line'."
+  (when (looking-at-p "^$")
+    (previous-line)))
+
+(advice-add #'end-of-buffer :after #'evil-custom-end-of-buffer-dwim)
+#+END_SRC

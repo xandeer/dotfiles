@@ -1,0 +1,34 @@
+#+TITLE: Doom Configuration
+#+PROPERTY: header-args:elisp :tangle (concat (file-name-directory (buffer-file-name)) "config.el")
+
+* Basic
+#+include: "basic.org"
+#+include: "disable-mouse.org"
+#+include: "evil.org"
+#+include: "projectile.org"
+#+include: "keyfreq.org"
+#+include: "youdao-dictionary.org"
+* Key Binding
+#+include: "../key-binding/README.org"
+* Org
+#+include: "../org/README.org"
+#+include: "deft.org"
+#+include: "org-journal.org"
+#+include: "org-roam.org"
+* Chinese
+#+include: "../chinese/README.org"
+* Editor
+#+include: "../editor/README.org"
+* UI
+#+include: "../ui/README.org"
+* App
+#+include: "../app/README.org"
+#+include: "plantuml.org"
+* Front End
+#+include: "../front-end/README.org"
+* Personal Functions
+#+include: "xandeer.org"
+* Epilogue
+#+BEGIN_SRC elisp
+;;; config.el ends here
+#+END_SRC

@@ -1,8 +1,8 @@
-(package! youdao-dictionary)
+(package! disable-mouse)
 
 (package! keyfreq)
 
-(package! disable-mouse)
+(package! youdao-dictionary)
 
 (package! deft)
 
