@@ -1,0 +1,7 @@
+#+title: Org
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq org-archive-reversed-order t)
+  (setq org-reverse-note-order t))
+#+END_SRC

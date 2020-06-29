@@ -197,50 +197,10 @@
       :n "K" #'eww-back-url))
 
 (after! org
+  (setq org-archive-reversed-order t)
   (setq org-reverse-note-order t))
 
 (after! org
-  (setq org-refile-targets `((nil :maxlevel . 5)
-    (,(concat org-directory "pub/journal.org") :maxlevel . 5)
-    (,(concat org-directory "pub/notes.org") :maxlevel . 5)
-    (,(concat org-directory "pub/reading.org") :maxlevel . 5)
-    (,(concat org-directory "pub/daily-extracts.org") :maxlevel . 5)
-    ("someday.org" :maxlevel . 5)
-    (org-agenda-files :maxlevel . 5))))
-
-(defun xandeer/refile-to-first ()
-  "Move the current org headline to the first of its section."
-
-  (interactive)
-  ;; check if we are at the top level
-
-  (let ((lvl (org-current-level)))
-    (cond
-     ;; above all headlines so nothing to do
-     ((not lvl)
-      (message "No headline to move"))
-     ((= lvl 1)
-      ;; if at top level move current tree to go above first headline
-      (org-cut-subtree)
-      (beginning-of-buffer)
-      ;; test if point is now at the frst headline and if not then move
-      ;; to the first headline
-      (unless (looking-at-p "*")
-      (org-next-visible-heading 1))
-      (org-paste-subtree))
-     ((> lvl 1)
-      ;; if not at top level then get position of headline level above
-      ;; current section and refile to that position.
-      (let* ((org-reverse-note-order t)
-  	   (pos (save-excursion
-  		  (outline-up-heading 1)
-  		  (point)))
-  	   (filename (buffer-file-name))
-  	   (rfloc (list nil filename nil pos)))
-      (org-refile nil nil rfloc))))))
-
-(after! org
-  (setq org-archive-reversed-order t)
   (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
   			  (sequence "|" "CANCELED(c@/!)" "SHELVE(s)")))
   (setq org-agenda-span 'day)
@@ -251,9 +211,6 @@
   			     (600 900 1200 1500 1800 2100)
   			     "......"
   			     "-----------------------------------------"))
-  ;; (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
-  ;; (setq org-agenda-file-regexp "\\`[^.].*\\'")
-  ;; (setq org-journal-enable-agenda-integration t)
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
       ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
@@ -262,198 +219,7 @@
   ;; Copied from https://emacs-china.org/t/05-org-as/12092/4
   ;; location
   (setq calendar-longitude 113.9442)
-  (setq calendar-latitude 22.5395)
-  ;;Sunrise and Sunset
-  ;;日出而作, 日落而息
-  (defun xandeer/diary-sunrise ()
-    (let ((dss (diary-sunrise-sunset)))
-      (with-temp-buffer
-      (insert dss)
-      (goto-char (point-min))
-      (while (re-search-forward " ([^)]*)" nil t)
-  	(replace-match "" nil nil))
-      (goto-char (point-min))
-      (search-forward ",")
-      (buffer-substring (point-min) (match-beginning 0)))))
-
-  (defun xandeer/diary-sunset ()
-    (let ((dss (diary-sunrise-sunset))
-  	start end)
-      (with-temp-buffer
-      (insert dss)
-      (goto-char (point-min))
-      (while (re-search-forward " ([^)]*)" nil t)
-  	(replace-match "" nil nil))
-      (goto-char (point-min))
-      (search-forward ", ")
-      (setq start (match-end 0))
-      (search-forward " at")
-      (setq end (match-beginning 0))
-      (goto-char start)
-      (capitalize-word 1)
-      (buffer-substring start end)))))
-
-(defun xandeer/archive-tasks-of (type)
-  "Archive tasks of the type."
-  (org-map-entries
-   (lambda ()
-     (org-archive-subtree)
-     (setq org-map-continue-from (outline-previous-heading)))
-   (concat "/+{|" (upcase type) "}") 'tree))
-
-(defun xandeer/archive-done-or-canceled ()
-  "Archive tasks which are done or canceled."
-  (interactive)
-  (xandeer/archive-tasks-of "DONE")
-  (xandeer/archive-tasks-of "CANCELED"))
-
-(defun xandeer/schedule-tomorrow ()
-  "Return scheduled string on tomorrow."
-  (format-time-string "SCHEDULED: <%F %a>"
-  		    (time-add (current-time) (* 24 3600))))
-
-(after! org-capture
-  (unless (boundp 'org-capture-templates)
-    (defvar org-capture-templates nil))
-
-  (setq org-capture-templates nil)
-
-  (add-to-list 'org-capture-templates
-  	     '("b" "Web url bookmark" entry
-  	       (file+headline "bookmarks.org" "Cache")
-  	       "* #BM# %? \n%U" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("c" "Cache" entry
-  	       (file+headline "" "Cache") ; "" => `org-default-notes-file'
-  	       "* %? %U" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("p" "Procedures" entry
-  	       (file+olp "today.org" "Today" "Procedures")
-  	       "* TODO %? :procedure:\n%T" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("r" "Running" entry
-  	       (file+olp "today.org" "Today" "Events")
-  	       "* Running %? %^T :event:running:" :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("e" "Events" entry
-  	       (file+olp "today.org" "Today" "Events")
-  	       "* %? :event:\n%T" :prepend t :clock-in t :clock-keep t))
-
-  (add-to-list 'org-capture-templates
-  	     '("n" "Notes" entry
-  	       (file+olp "today.org" "Today" "Notes")
-  	       "* %? :note:\n%T" :prepend t :clock-in t :clock-keep t))
-
-  (add-to-list 'org-capture-templates
-  	     '("a" "Anki" entry
-  	       (file+olp "today.org" "Today" "Notes")
-  	       "* Anki :note:anki:\n:PROPERTIES:\n:ANKI_DECK: English\n:END:\n%T\n%?" :prepend t :clock-in t :clock-keep t :jump-to-captured t :immediate-finish t))
-
-  (add-to-list 'org-capture-templates
-  	     '("m" "Ticklers" entry
-  	       (file+olp "today.org" "Today" "Ticklers")
-  	       "* %? :tickler:\n%T" :prepend t :clock-in t :clock-keep t))
-
-  (add-to-list 'org-capture-templates
-  	     '("t" "Tasks" entry
-  	       (file+olp "today.org" "Today" "Tasks")
-  	       "* TODO %? :task:\n%T\n" :clock-resume t :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("g" "Get up" entry
-  	       (file+olp "today.org" "Today" "Events")
-  	       "* Get up %^T :event:getup:" :immediate-finish t))
-
-  (add-to-list 'org-capture-templates
-  	     '("w" "Work" entry
-  	       (file+olp+datetree "work.org" "Weekly Summaries")
-  	       (file ".work.tmpl.org") :prepend t))
-
-  (add-to-list 'org-capture-templates
-  	     '("d" "Daily extracts" plain
-  	       (file+olp+datetree "pub/daily-extracts.org")
-  	       "%U%?" :prepend t :immediate-finish t)))
-
-(defun xandeer/fix-chinese-newline-in-html ()
-  "Join consecutive Chinese lines into a single long line without unwanted space
- when exporting org-mode to html."
-  (defadvice org-html-paragraph
-      (before fsh-org-html-paragraph-advice (paragraph contents info) activate)
-    (let ((fixed-contents)
-  	(orig-contents (ad-get-arg 1))
-  	(reg-han "[[:multibyte:]]"))
-      (setq fixed-contents (replace-regexp-in-string
-  			  (concat "\\(" reg-han "\\) *\n *\\(" reg-han "\\)")
-  			  "\\1\\2" orig-contents))
-      (ad-set-arg 1 fixed-contents))))
-
-(defun xandeer/set-publish-alist ()
-  "Set org publish alist."
-  (setq pub-base-dir "~/projects/personal/notes/pub/"
-      pub-export-dir "~/projects/personal/xandeer.github.io/"
-      website-html-head
-      "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/htmlize.css\"/>
-<link rel=\"stylesheet\" type=\"text/css\" href=\"css/lib/readtheorg.css\"/>
-<link rel=\"stylesheet\" type=\"text/css\" href=\"css/note.css\"/>
-<link rel=\"stylesheet\" type=\"text/css\"
-href=\"https://fonts.googleapis.com/css?family=Marck+Script|Pacifico\"/>
-<link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">"
-      website-html-preamble
-      "<script>
-if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-     document.body.classList.add('home');
-}
-</script>
-<div class=\"nav\"><ul>
-<li><a href=\"index.html\">Home</a></li>
-<li><a href=\"https://github.com/xandeer\">GitHub</a></li>
-</ul></div>"
-      website-html-postamble
-      "<div class=\"footer\">Copyright 2019 %a.<br>Last updated %C.<br>
-Built with %c.</div>
-      <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>
-      <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script>
-      <script type=\"text/javascript\" src=\"js/lib/jquery.stickytableheaders.min.js\"></script>
-      <script type=\"text/javascript\" src=\"js/note.js\"></script>
-      <script type=\"text/javascript\" src=\"js/lib/readtheorg.js\"></script>")
-  (setq org-publish-project-alist
-      `(
-  	("org-notes"
-  	 :base-extension "org"
-  	 :base-directory ,pub-base-dir
-  	 :publishing-directory ,pub-export-dir
-  	 :publishing-function org-html-publish-to-html
-  	 :recursive t
-  	 :author "Kevin"
-  	 :email "kkxandeer@gmail.com"
-  	 :section-numbers nil
-  	 :headline-levels 5
-  	 :html-doctype "html5"
-  	 :html-html5-fancy t
-  	 ;; :html-head  ,website-html-head
-  	 :html-head-extra ,website-html-head
-  	 :auto-preamble t
-  	 :html-preamble ,website-html-preamble
-  	 :html-postamble ,website-html-postamble
-  	 :auto-sitemap t
-  	 :sitemap-filename "index.org"
-  	 :sitemap-title "Xandeer's Home")
-  	 ("org-static"
-  	 :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|ico"
-  	 :base-directory ,pub-base-dir
-  	 :publishing-directory ,pub-export-dir
-  	 :recursive t
-  	 :publishing-function org-publish-attachment
-  	 )
-  	 ("org" :components ("org-notes" "org-static")))))
-
-(after! org
-  (xandeer/fix-chinese-newline-in-html)
-  (xandeer/set-publish-alist))
+  (setq calendar-latitude 22.5395))
 
 (use-package! deft
   :ensure t
@@ -839,5 +605,84 @@ Built with %c.</div>
 (defun xandeer/today ()
   "Format time string like: 2020-04-20 Monday"
   (format-time-string "%F %A"))
+
+(defun xandeer/refile-to-first ()
+  "Move the current org headline to the first of its section."
+
+  (interactive)
+  ;; check if we are at the top level
+
+  (let ((lvl (org-current-level)))
+    (cond
+     ;; above all headlines so nothing to do
+     ((not lvl)
+      (message "No headline to move"))
+     ((= lvl 1)
+      ;; if at top level move current tree to go above first headline
+      (org-cut-subtree)
+      (beginning-of-buffer)
+      ;; test if point is now at the frst headline and if not then move
+      ;; to the first headline
+      (unless (looking-at-p "*")
+      (org-next-visible-heading 1))
+      (org-paste-subtree))
+     ((> lvl 1)
+      ;; if not at top level then get position of headline level above
+      ;; current section and refile to that position.
+      (let* ((org-reverse-note-order t)
+  	   (pos (save-excursion
+  		  (outline-up-heading 1)
+  		  (point)))
+  	   (filename (buffer-file-name))
+  	   (rfloc (list nil filename nil pos)))
+      (org-refile nil nil rfloc))))))
+
+;;日出而作, 日落而息
+(defun xandeer/diary-sunrise ()
+  (let ((dss (diary-sunrise-sunset)))
+    (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+      (replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ",")
+      (buffer-substring (point-min) (match-beginning 0)))))
+
+(defun xandeer/diary-sunset ()
+  (let ((dss (diary-sunrise-sunset))
+      start end)
+    (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+      (replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ", ")
+      (setq start (match-end 0))
+      (search-forward " at")
+      (setq end (match-beginning 0))
+      (goto-char start)
+      (capitalize-word 1)
+      (buffer-substring start end))))
+
+(defun xandeer/schedule-tomorrow ()
+  "Return scheduled string on tomorrow."
+  (format-time-string "SCHEDULED: <%F %a>"
+  		    (time-add (current-time) (* 24 3600))))
+
+(defun xandeer/archive-tasks-of (type)
+  "Archive tasks of the type."
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+   (concat "/+{|" (upcase type) "}") 'tree))
+
+(defun xandeer/archive-done-or-canceled ()
+  "Archive tasks which are done or canceled."
+  (interactive)
+  (xandeer/archive-tasks-of "DONE")
+  (xandeer/archive-tasks-of "CANCELED"))
 
 ;;; config.el ends here

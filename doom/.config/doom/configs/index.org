@@ -12,7 +12,11 @@
 * Key Binding
 #+include: "../key-binding/README.org"
 * Org
-#+include: "../org/README.org"
+#+include: "org.org"
+#+include: "agenda.org"
+# #+include: "capture.org"
+# #+include: "publish.org"
+# #+include: "refile.org"
 #+include: "deft.org"
 #+include: "org-journal.org"
 #+include: "org-roam.org"

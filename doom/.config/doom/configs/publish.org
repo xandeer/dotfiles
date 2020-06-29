@@ -1,4 +1,4 @@
-* Publish
+#+title: Publish
 
 #+BEGIN_SRC elisp
 (defun xandeer/fix-chinese-newline-in-html ()

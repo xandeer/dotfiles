@@ -1,0 +1,24 @@
+#+title: Agenda
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
+                            (sequence "|" "CANCELED(c@/!)" "SHELVE(s)")))
+  (setq org-agenda-span 'day)
+  (setq org-agenda-start-day nil)
+  (setq org-clock-clocked-in-display 'both)
+  (setq org-agenda-start-on-weekday nil)
+  (setq org-agenda-time-grid '((daily today require-timed)
+                               (600 900 1200 1500 1800 2100)
+                               "......"
+                               "-----------------------------------------"))
+  (setq org-agenda-include-diary t)
+  (setq calendar-chinese-celestial-stem
+        ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+  (setq calendar-chinese-terrestrial-branch
+        ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+  ;; Copied from https://emacs-china.org/t/05-org-as/12092/4
+  ;; location
+  (setq calendar-longitude 113.9442)
+  (setq calendar-latitude 22.5395))
+#+END_SRC
