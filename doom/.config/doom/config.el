@@ -26,7 +26,7 @@
 
 (setq-default cursor-in-non-selected-windows 'hollow)
 
-(set-default fill-column 76)
+(setq-default fill-column 76)
 
 (use-package! disable-mouse
   :config
