@@ -3,6 +3,7 @@
 
 * Basic
 #+include: "basic.org"
+#+include: "directories.org"
 #+include: "disable-mouse.org"
 #+include: "evil.org"
 #+include: "projectile.org"

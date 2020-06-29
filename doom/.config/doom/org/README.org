@@ -1,12 +1,7 @@
 * Org
 #+BEGIN_SRC elisp
 (after! org
-  (setq org-directory "~/projects/personal/notes/"
-        org-id-locations-file (convert-standard-filename
-                               (concat org-directory ".org-ids"))
-        +org-export-directory "exports"
-        org-reverse-note-order t
-        org-default-notes-file (concat org-directory "pub/journal.org")))
+  (setq org-reverse-note-order t))
 #+END_SRC
 ** Refile
 
@@ -70,15 +65,9 @@ Refile current headline to the first of its section.
                                (600 900 1200 1500 1800 2100)
                                "......"
                                "-----------------------------------------"))
-  (setq org-agenda-files `(,(concat org-directory "gtd.org")
-                           ,(concat org-directory "today.org")
-                           ,(concat org-directory "diary-by-months")
-                           ,(concat org-directory "roam")
-                           ,(concat org-directory "routine.org")))
-  (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
+  ;; (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
   ;; (setq org-agenda-file-regexp "\\`[^.].*\\'")
   ;; (setq org-journal-enable-agenda-integration t)
-  (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
         ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])

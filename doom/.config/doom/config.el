@@ -28,6 +28,21 @@
 
 (setq-default fill-column 76)
 
+(after! org
+  (setq org-directory "~/projects/personal/notes/")
+  (setq org-id-locations-file (convert-standard-filename (concat org-directory ".org-ids")))
+  (setq org-default-notes-file (concat org-directory "pub/journal.org"))
+  (setq +org-export-directory "exports")
+  (setq diary-file (concat org-directory "standard-diary"))
+  (setq org-roam-directory (concat org-directory "roam/"))
+  (setq deft-directory org-roam-directory)
+  (setq org-journal-dir (concat org-roam-directory "journal"))
+  (setq org-agenda-files `(,(concat org-directory "gtd.org")
+  			 ,(concat org-directory "today.org")
+  			 ,(concat org-directory "diary-by-months")
+  			 ,(concat org-journal-dir)
+  			 ,(concat org-directory "routine.org"))))
+
 (use-package! disable-mouse
   :config
   (global-disable-mouse-mode))
@@ -182,12 +197,7 @@
       :n "K" #'eww-back-url))
 
 (after! org
-  (setq org-directory "~/projects/personal/notes/"
-      org-id-locations-file (convert-standard-filename
-  			     (concat org-directory ".org-ids"))
-      +org-export-directory "exports"
-      org-reverse-note-order t
-      org-default-notes-file (concat org-directory "pub/journal.org")))
+  (setq org-reverse-note-order t))
 
 (after! org
   (setq org-refile-targets `((nil :maxlevel . 5)
@@ -241,15 +251,9 @@
   			     (600 900 1200 1500 1800 2100)
   			     "......"
   			     "-----------------------------------------"))
-  (setq org-agenda-files `(,(concat org-directory "gtd.org")
-  			 ,(concat org-directory "today.org")
-  			 ,(concat org-directory "diary-by-months")
-  			 ,(concat org-directory "roam")
-  			 ,(concat org-directory "routine.org")))
-  (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
+  ;; (setq org-agenda-file-regexp "\\`[^.].*[d]*\\.org\\'")
   ;; (setq org-agenda-file-regexp "\\`[^.].*\\'")
   ;; (setq org-journal-enable-agenda-integration t)
-  (setq diary-file (concat org-directory "standard-diary"))
   (setq org-agenda-include-diary t)
   (setq calendar-chinese-celestial-stem
       ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
@@ -455,7 +459,6 @@ Built with %c.</div>
   :ensure t
   :defer t
   :custom
-  (deft-directory (concat org-directory "roam"))
   (deft-extensions '("org"))
   (deft-default-extension "org")
   (deft-recursive t)
@@ -468,7 +471,6 @@ Built with %c.</div>
   :ensure t
   :defer t
   :custom
-  (org-journal-dir (concat org-directory "roam"))
   (org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
   (org-journal-time-format "<%Y-%m-%d %R> ")
   (org-journal-file-format "%Y-%m-%d.org"))
@@ -477,7 +479,6 @@ Built with %c.</div>
   :hook
   (after-init . org-roam-mode)
   :custom
-  (org-roam-directory (concat org-directory "roam"))
   (org-roam-capture-templates
    '(("d" "default" plain #'org-roam-capture--get-point "%?"
       :file-name "%<%Y%m%d%H%M%S>-${slug}"
@@ -486,7 +487,7 @@ Built with %c.</div>
   (org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
-      :file-name "%<%Y-%m-%d>"
+      :file-name "journal/%<%Y-%m-%d>"
       :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>")))
   :bind (:map org-roam-mode-map
        ("C-c n l" . org-roam)

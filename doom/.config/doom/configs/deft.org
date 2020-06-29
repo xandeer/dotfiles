@@ -10,7 +10,6 @@
   :ensure t
   :defer t
   :custom
-  (deft-directory (concat org-directory "roam"))
   (deft-extensions '("org"))
   (deft-default-extension "org")
   (deft-recursive t)

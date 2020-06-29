@@ -5,7 +5,6 @@
   :hook
   (after-init . org-roam-mode)
   :custom
-  (org-roam-directory (concat org-directory "roam"))
   (org-roam-capture-templates
    '(("d" "default" plain #'org-roam-capture--get-point "%?"
       :file-name "%<%Y%m%d%H%M%S>-${slug}"
@@ -14,7 +13,7 @@
   (org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
-      :file-name "%<%Y-%m-%d>"
+      :file-name "journal/%<%Y-%m-%d>"
       :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>")))
   :bind (:map org-roam-mode-map
          ("C-c n l" . org-roam)

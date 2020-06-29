@@ -1,0 +1,18 @@
+#+title: Custom Directories
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq org-directory "~/projects/personal/notes/")
+  (setq org-id-locations-file (convert-standard-filename (concat org-directory ".org-ids")))
+  (setq org-default-notes-file (concat org-directory "pub/journal.org"))
+  (setq +org-export-directory "exports")
+  (setq diary-file (concat org-directory "standard-diary"))
+  (setq org-roam-directory (concat org-directory "roam/"))
+  (setq deft-directory org-roam-directory)
+  (setq org-journal-dir (concat org-roam-directory "journal"))
+  (setq org-agenda-files `(,(concat org-directory "gtd.org")
+                           ,(concat org-directory "today.org")
+                           ,(concat org-directory "diary-by-months")
+                           ,(concat org-journal-dir)
+                           ,(concat org-directory "routine.org"))))
+#+END_SRC
