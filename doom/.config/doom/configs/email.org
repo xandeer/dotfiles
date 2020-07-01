@@ -1,0 +1,69 @@
+#+title: Email
+
+#+BEGIN_SRC elisp
+(use-package! mu4e
+  :disabled t
+  :config
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          :name "kkxandeer" ;;for kkxandeer-gmail
+          :enter-func (lambda () (mu4e-message "Entering context work"))
+          :leave-func (lambda () (mu4e-message "Leaving context work"))
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches
+                           msg '(:from :to :cc :bcc) "kkxandeer@gmail.com")))
+          :vars '((user-mail-address . "kkxandeer@gmail.com")
+                  (user-full-name . "Kevin Du")
+                  (mu4e-sent-folder . "/kkxandeer-gmail/[kkxandeer].Sent")
+                  (mu4e-drafts-folder . "/kkxandeer-gmail/[kkxandeer].Drafts")
+                  (mu4e-trash-folder . "/kkxandeer-gmail/[kkxandeer].Trash")
+                  (mu4e-compose-signature . "Kevin\n")
+                  (mu4e-compose-format-flowed . t)
+                  (smtpmail-queue-dir . "~/.mail/kkxandeer-gmail/queue/cur")
+                  (message-send-mail-function . smtpmail-send-it)
+                  (smtpmail-smtp-user . "kkxandeer")
+                  (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+                  (smtpmail-default-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-service . 587)
+                  (smtpmail-debug-info . t)
+                  (smtpmail-debug-verbose . t)
+                  (mu4e-maildir-shortcuts . (("/kkxandeer-gmail/INBOX" . ?i)
+                                             ("/kkxandeer-gmail/[kkxandeer].Sent" . ?s)
+                                             ("/kkxandeer-gmail/[kkxandeer].Trash" . ?t)
+                                             ("/kkxandeer-gmail/[kkxandeer].All Mail" . ?a)
+                                             ("/kkxandeer-gmail/[kkxandeer].Starred" . ?r)
+                                             ("/kkxandeer-gmail/[kkxandeer].Drafts" . ?d)))))
+         (make-mu4e-context
+          :name "dxandeer" ;;for dxandeer-gmail
+          :enter-func (lambda () (mu4e-message "Entering context work"))
+          :leave-func (lambda () (mu4e-message "Leaving context work"))
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches
+                           msg '(:from :to :cc :bcc) "dxandeer@gmail.com")))
+          :vars '((user-mail-address . "dxandeer@gmail.com")
+                  (user-full-name . "Kevin Du")
+                  (mu4e-sent-folder . "/dxandeer-gmail/[dxandeer].Sent")
+                  (mu4e-drafts-folder . "/dxandeer-gmail/[dxandeer].Drafts")
+                  (mu4e-trash-folder . "/dxandeer-gmail/[dxandeer].Trash")
+                  (mu4e-compose-signature . "Kevin\n")
+                  (mu4e-compose-format-flowed . t)
+                  (smtpmail-queue-dir . "~/.mail/dxandeer-gmail/queue/cur")
+                  (message-send-mail-function . smtpmail-send-it)
+                  (smtpmail-smtp-user . "dxandeer")
+                  (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+                  (smtpmail-default-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-server . "smtp.gmail.com")
+                  (smtpmail-smtp-service . 587)
+                  (smtpmail-debug-info . t)
+                  (smtpmail-debug-verbose . t)
+                  (mu4e-maildir-shortcuts . (("/dxandeer-gmail/INBOX" . ?i)
+                                             ("/dxandeer-gmail/[dxandeer].Sent" . ?s)
+                                             ("/dxandeer-gmail/[dxandeer].Trash" . ?t)
+                                             ("/dxandeer-gmail/[dxandeer].All Mail" . ?a)
+                                             ("/dxandeer-gmail/[dxandeer].Starred" . ?r)
+                                             ("/dxandeer-gmail/[dxandeer].Drafts" . ?d))))))))
+#+END_SRC

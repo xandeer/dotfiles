@@ -27,7 +27,11 @@
 * UI
 #+include: "../ui/README.org"
 * App
-#+include: "../app/README.org"
+# #+include: "anki-editor.org"
+# #+include: "beancount.org"
+# #+include: "email.org"
+#+include: "eww.org"
+#+include: "telega.org"
 #+include: "plantuml.org"
 * Front End
 #+include: "../front-end/README.org"

@@ -43,16 +43,3 @@
    :repo "zevlg/telega.el"
    :branch "telega-tdlib-150"
    :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
-
-(package! beancount
-  :disable t
-  :recipe
-  (:host github :repo "beancount/beancount"
-       :files ("editors/emacs/beancount.el")))
-
-(package! anki-editor
-  :recipe
-  (:host github
-   :repo "louietan/anki-editor"
-   :branch "master"
-   :files (:defaults "*.el")))

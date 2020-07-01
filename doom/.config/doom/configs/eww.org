@@ -1,0 +1,22 @@
+#+title: Eww
+
+
+#+BEGIN_SRC elisp
+(use-package! eww
+  :defer t
+  :init
+  (setq browse-url-browser-function
+        '((".*google.*maps.*" . browse-url-generic)
+          ("http.*\/\/github.com" . browse-url-generic)
+          ("http.*\/\/gitlab.*" . browse-url-generic)
+          ("stackoverflow.com" . browse-url-generic)
+          ("youtube.com" . browse-url-generic)
+          ("." . browse-url-generic)))
+          ;("." . eww-browse-url)))
+  (setq shr-external-browser 'browse-url-generic)
+  (setq browse-url-generic-program
+        (if IS-MAC
+            (executable-find "open")
+          (executable-find "firefox")))
+  (setq shr-width 80))
+#+END_SRC
