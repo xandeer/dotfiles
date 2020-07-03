@@ -7,7 +7,7 @@
 
 #+BEGIN_SRC elisp
 (use-package! yasnippet
-  :custom
-  ( yas-snippet-dirs (concat doom-private-dir "snippets"))
+  :config
+  (setq yas-snippet-dirs `(,(concat doom-private-dir "snippets")))
   (yas-global-mode 1))
 #+END_SRC

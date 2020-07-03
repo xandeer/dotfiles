@@ -6,3 +6,12 @@
   (setq org-archive-reversed-order t)
   (setq org-reverse-note-order t))
 #+END_SRC
+
+** Key Bindings
+#+BEGIN_SRC elisp
+(map! :map org-mode-map
+      :gni [M-return]   (λ! (+org/insert-item-below 1))
+      :gni [s-return]   (λ! (+org/insert-item-below 1))
+      :gni [M-S-return] (λ! (+org/insert-item-above 1))
+      :gni [s-S-return] (λ! (+org/insert-item-above 1)))
+#+END_SRC

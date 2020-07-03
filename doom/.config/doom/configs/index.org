@@ -13,7 +13,7 @@
 #+include: "pretty-symbols.org"
 #+include: "ivy-posframe.org"
 * Key Binding
-#+include: "../key-binding/README.org"
+#+include: "key-bindings.org"
 * Org
 #+include: "org.org"
 #+include: "agenda.org"

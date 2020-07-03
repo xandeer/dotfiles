@@ -21,8 +21,13 @@
 
 #+BEGIN_SRC elisp
 (use-package! pyim
-  :bind
-  (("M-i" . pyim-convert-string-at-point))
+  :bind (
+         ("M-i" . pyim-convert-string-at-point))
+  :bind (:map pyim-mode-map
+         ("," . pyim-page-previous-page)
+         ("." . pyim-page-next-page))
+  :bind (:map ivy-minibuffer-map
+         ("M-i" . pyim-convert-string-at-point))
   :config
   ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
   ;; 我自己使用的中英文动态切换规则是：

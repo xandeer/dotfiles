@@ -17,5 +17,15 @@
         (if IS-MAC
             (executable-find "open")
           (executable-find "firefox")))
-  (setq shr-width 80))
+  (setq shr-width 80)
+  :bind (:map eww-mode-map
+         ("f" . link-hint-open-link)
+         ("ya" . link-hint-copy-link)
+         ("yy" . eww-copy-page-url)
+         ("H" . evil-window-top)
+         ("L" . evil-window-bottom)
+         ("r" . eww-reload)
+         ("o" . eww-browse-with-external-browser)
+         ("J" . eww-forward-url)
+         ("K" . eww-back-url)))
 #+END_SRC
