@@ -168,7 +168,7 @@
 
        :email
        ;; (wanderlust +gmail)
-       (mu4e +gmail)
+       ;(mu4e +gmail)
 
        :config
        ;; For literate config users. This will tangle+compile a config.org
