@@ -21,7 +21,8 @@
 #+include: "org-journal.org"
 #+include: "org-roam.org"
 * Chinese
-#+include: "../chinese/README.org"
+#+include: "cal-china.org"
+#+include: "pyim.org"
 * Editor
 #+include: "yasnippet.org"
 * UI

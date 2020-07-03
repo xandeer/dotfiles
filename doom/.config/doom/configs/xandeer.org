@@ -108,3 +108,18 @@ Define an interactive function to archive tasks which are done or canceled.
   (xandeer/archive-tasks-of "DONE")
   (xandeer/archive-tasks-of "CANCELED"))
 #+END_SRC
+
+** Convert Chinese Quotations
+#+BEGIN_SRC elisp
+(defun xandeer/convert-chinese-quotations ()
+  "Convert all [“|“] to [『|』] in current buffer."
+  (interactive)
+
+  (goto-char (point-min))
+  (while (re-search-forward "“" nil t)
+    (replace-match "「"))
+
+  (goto-char (point-min))
+  (while (re-search-forward "”" nil t)
+    (replace-match "」")))
+#+END_SRC

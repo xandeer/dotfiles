@@ -1,23 +1,4 @@
-* Utils
-
-** Convert Chinese Quotations
-
-#+BEGIN_SRC elisp
-(defun xandeer/convert-chinese-quotations ()
-  "Convert all [“|“] to [『|』] in current buffer."
-  (interactive)
-
-  (goto-char (point-min))
-  (while (re-search-forward "“" nil t)
-    (replace-match "「"))
-
-  (goto-char (point-min))
-  (while (re-search-forward "”" nil t)
-    (replace-match "」")))
-#+END_SRC
-
-* Input Method
-** Package
+* Pyim Input Method
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
@@ -37,8 +18,6 @@
   (:host github :repo "tumashu/pyim-greatdict"
          :files (:defaults "pyim-greatdict.el" "pyim-greatdict.pyim.gz")))
 #+END_SRC
-
-** Configuration
 
 #+BEGIN_SRC elisp
 (use-package! pyim
@@ -114,24 +93,4 @@
 
   (add-hook 'emacs-startup-hook
           #'(lambda () (pyim-restart-1 t))))
-#+END_SRC
-* Chinese Calendar
-** Package
-#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
-#+BEGIN_SRC elisp
-(package! cal-china-x
-  :recipe
-  (:host github :repo "xwl/cal-china-x"
-         :files (:defaults "*.el")))
-#+END_SRC
-** Configuration
-#+BEGIN_SRC elisp
-(use-package! cal-china-x
-  :config
-  (setq mark-holidays-in-calendar t)
-  (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
-  (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
-  (setq calendar-holidays
-        (append cal-china-x-important-holidays
-                cal-china-x-general-holidays)))
 #+END_SRC
