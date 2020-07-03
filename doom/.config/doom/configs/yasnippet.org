@@ -1,17 +1,13 @@
 * Yasnippet
 
-** Package
-
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
 (package! yasnippet)
 #+END_SRC
 
-** Configuration
-
 #+BEGIN_SRC elisp
 (use-package! yasnippet
-  :config
-  (setq yas-snippet-dirs '("~/.config/doom/snippets"))
+  :custom
+  ( yas-snippet-dirs (concat doom-private-dir "snippets"))
   (yas-global-mode 1))
 #+END_SRC

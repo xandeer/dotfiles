@@ -23,7 +23,7 @@
 * Chinese
 #+include: "../chinese/README.org"
 * Editor
-#+include: "../editor/README.org"
+#+include: "yasnippet.org"
 * UI
 #+include: "../ui/README.org"
 * App
