@@ -1,6 +1,6 @@
-#+title: Evil
+* Evil
 
-* Custom Evil Buffer End
+** Custom Evil Buffer End
 #+BEGIN_SRC elisp
 (defun evil-custom-end-of-buffer-dwim (&rest _)
   "If current line is empty, call `previous-line'."

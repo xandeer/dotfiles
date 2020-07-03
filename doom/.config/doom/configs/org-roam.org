@@ -1,4 +1,4 @@
-#+title: Org Roam
+* Org Roam
 
 #+BEGIN_SRC elisp
 (use-package org-roam

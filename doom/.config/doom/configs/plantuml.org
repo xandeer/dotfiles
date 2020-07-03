@@ -1,4 +1,4 @@
-#+title: Plantuml
+* Plantuml
 
 #+BEGIN_SRC elisp
 (use-package! plantuml

@@ -1,6 +1,6 @@
-#+title: Xandeer
+* Xandeer
 
-* TimeStamp
+** TimeStamp
 #+BEGIN_SRC elisp
 (defun xandeer/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
@@ -14,7 +14,7 @@
   "Format time string like: 2020-04-20 Monday"
   (format-time-string "%F %A"))
 #+END_SRC
-* Custom Refile
+** Custom Refile
 Refile current headline to the first of its section.
 #+BEGIN_SRC elisp
 (defun xandeer/refile-to-first ()
@@ -48,7 +48,7 @@ Refile current headline to the first of its section.
              (rfloc (list nil filename nil pos)))
         (org-refile nil nil rfloc))))))
 #+END_SRC
-* Diary Sunrise and Sunset
+** Diary Sunrise and Sunset
 Copied from https://emacs-china.org/t/05-org-as/12092/4
 #+BEGIN_SRC elisp
   ;;日出而作, 日落而息
@@ -80,7 +80,7 @@ Copied from https://emacs-china.org/t/05-org-as/12092/4
       (capitalize-word 1)
       (buffer-substring start end))))
 #+END_SRC
-* Schedule
+** Schedule
 Generate a string for scheduling on tomorrow.
 #+BEGIN_SRC elisp
 (defun xandeer/schedule-tomorrow ()
@@ -88,7 +88,7 @@ Generate a string for scheduling on tomorrow.
   (format-time-string "SCHEDULED: <%F %a>"
                       (time-add (current-time) (* 24 3600))))
 #+END_SRC
-* Archive
+** Archive
 Define a function to archive tasks with special type.
 #+BEGIN_SRC elisp
 (defun xandeer/archive-tasks-of (type)

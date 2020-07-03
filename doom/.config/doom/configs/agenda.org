@@ -1,4 +1,4 @@
-#+title: Agenda
+* Agenda
 
 #+BEGIN_SRC elisp
 (after! org

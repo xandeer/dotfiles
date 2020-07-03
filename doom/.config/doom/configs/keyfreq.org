@@ -1,4 +1,4 @@
-#+title: Keyfreq
+* Keyfreq
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp

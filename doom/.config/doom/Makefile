@@ -2,9 +2,8 @@
 generate: ## Generate config.el and packages.el from configs/index.org
 	@echo "Generate config.el and packages.el from configs/index.org"
 	@emacs -Q --batch --find-file "configs/index.org" -f "org-org-export-to-org" && \
-		mv configs/index.org.org index.org && \
-		emacs -Q --batch --find-file "index.org" -f "org-babel-tangle" && \
-		rm -rf "index.org"
+		mv configs/index.org.org config.org && \
+		~/.emacs.d/bin/doom sync
 
 # .PHONY: docs
 # docs: ## Update docs

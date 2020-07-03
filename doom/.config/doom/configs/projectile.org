@@ -1,4 +1,4 @@
-#+title: Projectile
+* Projectile
 
 #+BEGIN_SRC elisp
 (use-package! projectile
