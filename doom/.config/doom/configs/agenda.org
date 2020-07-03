@@ -20,5 +20,8 @@
   ;; Copied from https://emacs-china.org/t/05-org-as/12092/4
   ;; location
   (setq calendar-longitude 113.9442)
-  (setq calendar-latitude 22.5395))
+  (setq calendar-latitude 22.5395)
+  (set-popup-rules!
+    '(("^\\*Org Agenda"
+       :size 0.4 :quit nil :select t :autosave t :modeline t :ttl nil))))
 #+END_SRC

@@ -8,7 +8,10 @@
 #+include: "evil.org"
 #+include: "projectile.org"
 #+include: "keyfreq.org"
-#+include: "youdao-dictionary.org"
+* UI
+#+include: "theme.org"
+#+include: "pretty-symbols.org"
+#+include: "ivy-posframe.org"
 * Key Binding
 #+include: "../key-binding/README.org"
 * Org
@@ -25,17 +28,16 @@
 #+include: "pyim.org"
 * Editor
 #+include: "yasnippet.org"
-* UI
-#+include: "../ui/README.org"
 * App
 # #+include: "anki-editor.org"
 # #+include: "beancount.org"
 # #+include: "email.org"
 #+include: "eww.org"
 #+include: "telega.org"
+#+include: "youdao-dictionary.org"
 #+include: "plantuml.org"
 * Front End
-#+include: "../front-end/README.org"
+#+include: "front-end.org"
 * Personal Functions
 #+include: "xandeer.org"
 * Epilogue

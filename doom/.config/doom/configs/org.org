@@ -2,6 +2,7 @@
 
 #+BEGIN_SRC elisp
 (after! org
+  (xandeer/set-org-pretty-symbols)
   (setq org-archive-reversed-order t)
   (setq org-reverse-note-order t))
 #+END_SRC
