@@ -1,5 +1,7 @@
 let mapleader=","
 set easymotion
+set ignorecase smartcase
+set hlsearch
 
 nnoremap <a-h> gT
 nnoremap <a-l> gt
@@ -14,3 +16,9 @@ inoremap <C-e> <End>
 inoremap <C-f> <Right>
 
 nnoremap <leader>sr :source ~/.ideavimrc<cr>
+
+; easy system clipboard copy/paste
+noremap <leader>y "*y
+noremap <leader>yy "*Y
+noremap <leader>p "*p
+noremap <leader>P "*P
