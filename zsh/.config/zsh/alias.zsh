@@ -62,6 +62,11 @@ alias nr="npm run"
 
 alias mx='chmod +x'
 
+# tmux
+alias tma='tmux attach -d -t'
+alias tmn='tmux new -s $(basename $(pwd))'
+alias tmu='tmux list-sessions'
+
 unalias cp
 unalias mv
 unalias rm
