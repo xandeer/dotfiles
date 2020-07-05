@@ -65,6 +65,7 @@ alias mx='chmod +x'
 # tmux
 alias tma='tmux attach -d -t'
 alias tmn='tmux new -s $(basename $(pwd))'
+alias tmr='tmux new -s ranger'
 alias tmu='tmux list-sessions'
 
 unalias cp
