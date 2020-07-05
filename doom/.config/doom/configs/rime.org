@@ -14,8 +14,8 @@ This could make rime and emacs-rime use the same configuration.
 **** Mac
 #+header: :tangle no :results silent
 #+BEGIN_SRC sh
-ln -s /Library/Input\ Methods/Squirrel.app/Contents/SharedSupport/opencc ~/Library/Rime/opencc
-ln -s ~/Library/Rime ~/.local/share/rime
+ln -shf /Library/Input\ Methods/Squirrel.app/Contents/SharedSupport/opencc ~/Library/Rime/opencc
+ln -shf ~/Library/Rime ~/.local/share/rime
 #+END_SRC
 ** Configuration
 #+HEADER: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
