@@ -25,7 +25,8 @@
 #+include: "org-roam.org"
 * Chinese
 #+include: "cal-china.org"
-#+include: "pyim.org"
+# #+include: "pyim.org"
+#+include: "rime.org"
 * Editor
 #+include: "yasnippet.org"
 * App

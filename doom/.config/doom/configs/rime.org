@@ -1,0 +1,56 @@
+* Rime
+** Prepare
+*** [[https://rime.im/download/][Download and install rime]]
+*** [[https://github.com/rime/librime][Librim]]
+**** Mac
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+wget https://github.com/rime/librime/releases/download/1.5.3/rime-1.5.3-osx.zip
+unzip rime-1.5.3-osx.zip -d librime
+cp -a librime/dist ~/.local/share/librime
+#+END_SRC
+*** Prepare share data
+This could make rime and emacs-rime use the same configuration.
+**** Mac
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -s /Library/Input\ Methods/Squirrel.app/Contents/SharedSupport/opencc ~/Library/Rime/opencc
+ln -s ~/Library/Rime ~/.local/share/rime
+#+END_SRC
+** Configuration
+#+HEADER: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! rime
+  :recipe
+  (:host github
+    :repo "DogLooksGood/emacs-rime"
+    :files ( "Makefile" "*.el" "lib.c")))
+(package! posframe)
+#+END_SRC
+
+#+BEGIN_SRC elisp
+(use-package! rime
+  :bind (("M-i" . toggle-input-method))
+  :bind (:map rime-mode-map
+    ("M-I" . rime-force-enable))
+  :bind (:map rime-active-mode-map
+    ("M-i" . rime-inline-ascii))
+  :bind (:map ivy-minibuffer-map
+    ("M-i" . toggle-input-method))
+  :when (or IS-LINUX IS-MAC)
+  :custom
+  (rime-librime-root "~/.local/share/librime")
+  (rime-share-data-dir (expand-file-name "~/.local/share/rime"))
+  (rime-user-data-dir (expand-file-name "~/.cache/rime"))
+  (rime-show-candidate 'posframe)
+  (rime-show-preedit t)
+  (rime-cursor "˰")
+  (rime-inline-ascii-trigger 'shift-l)
+  (rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "M-f" "M-b" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>"))
+  (rime-disable-predicates
+    '(rime-predicate-evil-mode-p
+      rime-predicate-after-alphabet-char-p
+      rime-predicate-current-uppercase-letter-p
+      rime-predicate-prog-in-code-p))
+  (default-input-method "rime"))
+#+END_SRC
