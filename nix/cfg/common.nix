@@ -44,7 +44,7 @@
     plantuml
 
     xandeer.dots
-    xandeer.v2ray
+    # xandeer.v2ray
 
     openjdk8
     python3
