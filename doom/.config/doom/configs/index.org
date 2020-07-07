@@ -27,6 +27,7 @@
 #+include: "cal-china.org"
 # #+include: "pyim.org"
 #+include: "rime.org"
+#+include: "ivy-pinyin.org"
 * Editor
 #+include: "yasnippet.org"
 * App
