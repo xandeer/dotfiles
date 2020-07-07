@@ -28,6 +28,7 @@
 # #+include: "pyim.org"
 #+include: "rime.org"
 #+include: "ivy-pinyin.org"
+#+include: "sdcv.org"
 * Editor
 #+include: "yasnippet.org"
 * App

@@ -1,0 +1,34 @@
+* StartDict console version
+
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! sdcv
+  :recipe (:host github :repo "manateelazycat/sdcv"))
+#+END_SRC
+
+#+BEGIN_SRC elisp
+(use-package! sdcv
+  :commands (sdcv-search-pointer
+             sdcv-search-pointer+
+             sdcv-search-input
+             sdcv-search-input+)
+  :init
+  (map!
+   :leader
+   :prefix ("l" . "lookup")
+   :n "l" #'sdcv-search-pointer+
+   :n "i" #'sdcv-search-input+)
+  :config
+  (setq sdcv-say-word-p nil
+        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")
+        sdcv-dictionary-simple-list
+        '(
+          "朗道英汉字典5.0"
+          "朗道汉英字典5.0"
+          "现代汉语词典")
+        sdcv-dictionary-complete-list
+        '(
+          "朗道英汉字典5.0"
+          "朗道汉英字典5.0"
+          "现代汉语词典")))
+#+END_SRC
