@@ -11,7 +11,8 @@
 * UI
 #+include: "theme.org"
 #+include: "pretty-symbols.org"
-#+include: "ivy-posframe.org"
+# Conflict with rime when type Chinese as filename.
+# #+include: "ivy-posframe.org"
 * Key Binding
 #+include: "key-bindings.org"
 * Org
