@@ -54,7 +54,7 @@
     supportedLocales = [ "en_US.UTF-8/UTF-8" "zh_CN.UTF-8/UTF-8" ];
     inputMethod = {
       enabled = "fcitx";
-      # fcitx.engines = with pkgs.fcitx-engines; [ libpinyin ];
+      fcitx.engines = with pkgs.fcitx-engines; [ rime ];
     };
   };
 
@@ -84,6 +84,9 @@
     mpd
     upower
     xclip
+    fcitx-configtool
+    sdcv
+    librime
 
     sqlite
 
