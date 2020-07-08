@@ -1,7 +1,7 @@
 * Rime
 ** Prepare
 *** [[https://rime.im/download/][Download and install rime]]
-*** [[https://github.com/rime/librime][Librim]]
+*** [[https://github.com/rime/librime][Librime]]
 **** Mac
 #+header: :tangle no :results silent
 #+BEGIN_SRC sh
@@ -9,6 +9,19 @@ wget https://github.com/rime/librime/releases/download/1.5.3/rime-1.5.3-osx.zip
 unzip rime-1.5.3-osx.zip -d librime
 cp -a librime/dist ~/.local/share/librime
 #+END_SRC
+**** Nixos
+#+BEGIN_SRC elisp
+(when (eq window-system 'x)
+  ; This may not exist, so I use the following.
+  ; (setq rime-emacs-module-header-root (concat (shell-command-to-string "nix eval --raw '(let pkgs = import <nixpkgs> {}; in with pkgs; lib.getLib emacs)'") "/include"))
+  (setq rime-emacs-module-header-root "/run/current-system/sw/share/emacs/26.3/src"))
+#+END_SRC
+
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -sTf $(nix eval --raw '(let pkgs = import <nixpkgs> {}; in with pkgs; lib.getLib librime)') ~/.local/share/librime
+#+END_SRC
+
 *** Prepare share data
 This could make rime and emacs-rime use the same configuration.
 **** Mac
@@ -16,6 +29,11 @@ This could make rime and emacs-rime use the same configuration.
 #+BEGIN_SRC sh
 ln -shf /Library/Input\ Methods/Squirrel.app/Contents/SharedSupport/opencc ~/Library/Rime/opencc
 ln -shf ~/Library/Rime ~/.local/share/rime
+#+END_SRC
+**** Nixos
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
 #+END_SRC
 ** Configuration
 #+HEADER: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
