@@ -16,10 +16,13 @@
   (map!
    :leader
    :prefix ("l" . "lookup")
+   :n "L" #'sdcv-search-pointer
+   :n "I" #'sdcv-search-input
    :n "l" #'sdcv-search-pointer+
    :n "i" #'sdcv-search-input+)
   :config
   (setq sdcv-say-word-p nil
+        sdcv-tooltip-timeout 10
         sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")
         sdcv-dictionary-simple-list
         '(
