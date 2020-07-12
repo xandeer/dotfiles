@@ -4,6 +4,8 @@ map('t', 'T');
 map('F', 'af');
 map('h', 'E');
 map('l', 'R');
+map('j', 'd');
+map('k', 'e');
 
 settings.focusFirstCandidate = true
 
