@@ -2,7 +2,10 @@
 
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
-(package! pinyinlib)
+(package! pinyinlib
+  :recipe
+  (:host github
+   :repo "xlshiz/pinyinlib.el"))
 #+END_SRC
 
 #+BEGIN_SRC elisp
@@ -12,6 +15,8 @@
 ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
 (use-package! pinyinlib
   :commands pinyinlib-build-regexp-string
+  :config
+  (setq pinyinlib--simplified-char-table 'pinyinlib--simplified-xiaohe)
   :init
   (with-no-warnings
     (defun ivy--regex-pinyin (str)
@@ -35,8 +40,8 @@
         ((equal str "") nil)
         (t str)))
 
-    (defun pinyin-to-utf8 (str)
-      "Convert STR to UTF-8."
+    (defun pinyin-to-utf8+ (str)
+      "Convert STR to UTF-8 with prefix ';'."
       (cond ((equal 0 (length str)) nil)
         ((equal (substring str 0 1) ";")
           (mapconcat
@@ -47,5 +52,10 @@
                           (replace-regexp-in-string ";" "" str)
                           "")))
             ""))
-        (t nil)))))
+        (t nil)))
+
+    (defun pinyin-to-utf8 (str)
+      "Convert STR to UFT-8."
+      (cond ((equal 0 (length str)) nil)
+            (t (concat (my-pinyinlib-build-regexp-string str)))))))
 #+END_SRC
