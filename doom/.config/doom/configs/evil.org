@@ -1,5 +1,11 @@
 * Evil
 
+#+BEGIN_SRC elisp
+(use-package! evil
+  :init
+  (setq evil-shift-width 2))
+#+END_SRC
+
 ** Custom Evil Buffer End
 #+BEGIN_SRC elisp
 (defun evil-custom-end-of-buffer-dwim (&rest _)
