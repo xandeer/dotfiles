@@ -5,7 +5,7 @@
   :ensure t
   :defer t
   :custom
-  (org-journal-file-header "#+title: %Y-%m-%d, %A\n#+startup: content\n\n")
+  (org-journal-file-header "#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
   (org-journal-time-format "<%Y-%m-%d %R> ")
-  (org-journal-file-format "%Y-%m-%d.org"))
+  (org-journal-file-format "%Y-%m-%d-%a.org"))
 #+END_SRC

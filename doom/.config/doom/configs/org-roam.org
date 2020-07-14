@@ -8,13 +8,13 @@
   (org-roam-capture-templates
    '(("d" "default" plain #'org-roam-capture--get-point "%?"
       :file-name "%<%Y%m%d%H%M%S>-${slug}"
-      :head "#+title: ${title}\n\n* Metadata\n** Created: [%<%Y-%m-%d %a %R>]\n* Main"
+      :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: Inbox\n\n"
       :unnarrowed t)))
   (org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
-      :file-name "journal/%<%Y-%m-%d>"
-      :head "#+title: %<%Y-%m-%d, %A>\n#+startup: content\n\n* %<%A, %x>")))
+      :file-name "journal/%<%Y-%m-%d-%a>"
+      :head "#+TITLE: %<%Y-%m-%d, %A>\n#+STARTUP: content\n\n* %<%A, %x>")))
   :bind (:map org-roam-mode-map
          ("C-c n l" . org-roam)
          ("C-c n f" . org-roam-find-file)
