@@ -47,14 +47,14 @@ ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(use-package! rime
+(use-package rime
   :bind (("M-i" . toggle-input-method))
   :bind (:map rime-mode-map
-    ("M-I" . rime-force-enable))
+         ("M-I" . rime-force-enable))
   :bind (:map rime-active-mode-map
-    ("M-i" . rime-inline-ascii))
+         ("M-i" . rime-inline-ascii))
   :bind (:map ivy-minibuffer-map
-    ("M-i" . toggle-input-method))
+         ("M-i" . toggle-input-method))
   :when (or IS-LINUX IS-MAC)
   :custom
   (rime-librime-root "~/.local/share/librime")
