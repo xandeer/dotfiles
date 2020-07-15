@@ -2,10 +2,12 @@
 
 #+BEGIN_SRC elisp
 (use-package org-journal
-  :ensure t
-  :defer t
-  :custom
-  (org-journal-file-header "#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
-  (org-journal-time-format "<%Y-%m-%d %R> ")
-  (org-journal-file-format "%Y-%m-%d-%a.org"))
+  :init
+  (setq org-journal-file-format "%Y-%m-%d-%a.org")
+  :bind (("C-c C-j" . org-journal-new-entry))
+  :bind (:map org-mode-map
+         ("C-c C-j" . org-journal-new-entry))
+  :config
+  (setq org-journal-file-header "#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
+  (setq org-journal-time-format "<%Y-%m-%d %R> "))
 #+END_SRC
