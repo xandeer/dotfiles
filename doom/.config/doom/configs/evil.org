@@ -1,8 +1,8 @@
 * Evil
 
 #+BEGIN_SRC elisp
-(use-package! evil
-  :init
+(use-package evil
+  :config
   (setq evil-shift-width 2))
 #+END_SRC
 
