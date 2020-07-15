@@ -6,6 +6,7 @@
 #+include: "directories.org"
 #+include: "disable-mouse.org"
 #+include: "evil.org"
+#+include: "mini-buffer.org"
 #+include: "projectile.org"
 #+include: "keyfreq.org"
 * UI
