@@ -4,10 +4,14 @@
 (use-package org-journal
   :init
   (setq org-journal-file-format "%Y-%m-%d-%a.org")
+  ; I don't know why this doesn't work.
+  ; (setq org-journal-follow-mode t)
   :bind (("C-c C-j" . org-journal-new-entry))
   :bind (:map org-mode-map
          ("C-c C-j" . org-journal-new-entry))
   :config
+  (when (featurep! :editor evil)
+    (add-hook 'org-journal-after-entry-create-hook 'evil-insert-state))
   (setq org-journal-file-header "#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
   (setq org-journal-time-format "<%Y-%m-%d %R> "))
 #+END_SRC
