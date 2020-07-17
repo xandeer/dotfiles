@@ -14,8 +14,6 @@
 #+include: "pretty-symbols.org"
 # Conflict with rime when type Chinese as filename.
 # #+include: "ivy-posframe.org"
-* Key Binding
-#+include: "key-bindings.org"
 * Org
 #+include: "org.org"
 #+include: "agenda.org"
@@ -48,6 +46,8 @@
 #+include: "kotlin.org"
 * Personal Functions
 #+include: "xandeer.org"
+* Key Binding
+#+include: "key-bindings.org"
 * Epilogue
 #+BEGIN_SRC elisp
 ;;; config.el ends here

@@ -7,19 +7,11 @@
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(use-package! sdcv
+(use-package sdcv
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
              sdcv-search-input+)
-  :init
-  (map!
-   :leader
-   :prefix ("l" . "lookup")
-   :n "L" #'sdcv-search-pointer
-   :n "I" #'sdcv-search-input
-   :n "l" #'sdcv-search-pointer+
-   :n "i" #'sdcv-search-input+)
   :config
   (setq sdcv-say-word-p nil
         sdcv-tooltip-timeout 10

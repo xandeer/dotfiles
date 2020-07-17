@@ -1,20 +1,12 @@
 * Deft
 
-#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
-(package! deft)
-#+END_SRC
-
-#+BEGIN_SRC elisp
-(use-package! deft
-  :ensure t
-  :defer t
+(use-package deft
   :custom
   (deft-extensions '("org"))
   (deft-default-extension "org")
   (deft-recursive t)
   (deft-text-mode 'org-mode)
   (deft-use-filename-as-title t)
-  (deft-use-filter-string-for-filename t)
-  :bind (("C-c n d" . deft)))
+  (deft-use-filter-string-for-filename t))
 #+END_SRC
