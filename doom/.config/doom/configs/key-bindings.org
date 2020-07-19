@@ -53,34 +53,35 @@
   (evilem-make-motion evilem-motion-backward-WORD-end #'evil-backward-WORD-end :scope 'visible-buffer))
 #+END_SRC
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC elisp :results none
 (map!
  :prefix ("C-c x" . "Xandeer")
  ; deft
- :desc "Open deft" "d" #'deft
+ :desc "Open deft"             "d"   #'deft
  ;journal
- :desc "New journal entry" "j" #'org-journal-new-entry
- :desc "Open today's journal" "t" #'org-journal-open-current-journal-file
+ :desc "New journal entry"     "j"   #'org-journal-new-entry
+ :desc "Open today's journal"  "t"   #'org-journal-open-current-journal-file
  ; roam
- :desc "Roam yesterday" "y" #'org-roam-dilies-yesterday
- :desc "Roam find" "f" #'org-roam-find-file
+ :desc "Roam yesterday"        "y"   #'org-roam-dailies-yesterday
+ :desc "Roam find"             "f"   #'org-roam-find-file
+ :desc "Roam Capture"          "c"   #'org-roam-capture
  ; sdcv
- :desc "Lookup pointer+" "l" #'sdcv-search-pointer+
- :desc "Lookup input+" "L" #'sdcv-search-input+
+ :desc "Lookup pointer+"       "l"   #'sdcv-search-pointer+
+ :desc "Lookup input+"         "k"   #'sdcv-search-input+
 
  :map org-mode-map
  ; roam
- :desc "Roam insert" "i" #'org-roam-insert
- :desc "Roam insert immediate" "I" #'org-roam-insert-immediate
+ :desc "Roam insert"           "i"   #'org-roam-insert
+ :desc "Roam insert immediate" "I"   #'org-roam-insert-immediate
  ; journal
  :desc "Open previous journal" "C-b" #'org-journal-open-previous-entry
- :desc "Open next journal" "C-f" #'org-journal-open-next-entry
- :desc "Search journal" "s" #'org-journal-search-forever
- :desc "Open schedule view" "C-s" #'org-journal-schedule-view
- :desc "New scheduled entry" "S" #'org-journal-new-scheduled-entry
+ :desc "Open next journal"     "C-f" #'org-journal-open-next-entry
+ :desc "Search journal"        "s"   #'org-journal-search-forever
+ :desc "Open schedule view"    "C-s" #'org-journal-schedule-view
+ :desc "New scheduled entry"   "S"   #'org-journal-new-scheduled-entry
 
  :map org-roam-mode-map
- :desc "Roam mode" "r" #'org-roam
- :desc "Roam buffer" "b" #'org-roam-switch-to-buffer
- :desc "Roam graph" "g" #'org-roam-graph)
+ :desc "Roam mode"             "r"   #'org-roam
+ :desc "Roam buffer"           "b"   #'org-roam-switch-to-buffer
+ :desc "Roam graph"            "g"   #'org-roam-graph)
 #+END_SRC
