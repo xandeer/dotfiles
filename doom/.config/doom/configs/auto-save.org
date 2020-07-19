@@ -1,0 +1,16 @@
+* Auto Save
+
+#+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
+#+BEGIN_SRC elisp
+(package! auto-save
+  :recipe (:host github :repo "manateelazycat/auto-save"))
+#+END_SRC
+
+#+BEGIN_SRC elisp :results none
+(use-package auto-save
+  :config
+  (setq auto-save-silent t)
+  (setq auto-save-delete-trailing-whitespace nil)
+  (setq auto-save-idle 3)
+  (auto-save-enable))
+#+END_SRC
