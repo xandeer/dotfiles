@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: - from ::
+# key: -f
+# --
+- from :: $0

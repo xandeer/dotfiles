@@ -20,5 +20,5 @@
     (error "Couldn't find snippet" &optional ARGS)))
 
 (defun %t ()
-  "Insert an inactive timestamp."
-  (format-time-string "[%F %a %R]" (current-time)))
+  "Insert an active timestamp."
+  (format-time-string "<%F %a %R>" (current-time)))
