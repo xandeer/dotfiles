@@ -10,7 +10,9 @@
 (use-package auto-save
   :config
   (setq auto-save-silent t)
-  (setq auto-save-delete-trailing-whitespace nil)
-  (setq auto-save-idle 3)
+  (setq auto-save-delete-trailing-whitespace t)
+  (setq auto-save-idle 1)
+  (add-hook 'org-capture-mode-hook 'auto-save-disable)
+  (add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
   (auto-save-enable))
 #+END_SRC
