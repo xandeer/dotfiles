@@ -9,6 +9,6 @@
   :config
   (when (featurep! :editor evil)
     (add-hook 'org-journal-after-entry-create-hook 'evil-insert-state))
-  (setq org-journal-file-header "#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
+  (setq org-journal-file-header ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %Y-%m-%d, %A\n#+STARTUP: content\n\n")
   (setq org-journal-time-format "<%Y-%m-%d %R> "))
 #+END_SRC

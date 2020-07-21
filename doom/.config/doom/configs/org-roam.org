@@ -14,5 +14,5 @@
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
       :file-name "journal/%<%Y-%m-%d-%a>"
-      :head "#+TITLE: %<%Y-%m-%d, %A>\n#+STARTUP: content\n\n* %<%A, %x>"))))
+      :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%Y-%m-%d, %A>\n#+STARTUP: content\n\n* %<%A, %x>"))))
 #+END_SRC
