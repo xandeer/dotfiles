@@ -3,6 +3,7 @@
 #+BEGIN_SRC elisp
 (after! org
   (xandeer/set-org-pretty-symbols)
+  (remove-hook 'after-save-hook '+literate-recompile-maybe-h)
   (setq org-archive-reversed-order t)
   (setq org-reverse-note-order t))
 #+END_SRC
