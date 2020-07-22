@@ -81,6 +81,8 @@
  :desc "New scheduled entry"   "S"   #'org-journal-new-scheduled-entry
 
  :map org-roam-mode-map
+ :desc "Roam add tag"          "+"   #'xandeer/roam-add-tag
+ :desc "Roam delete tag"       "-"   #'xandeer/roam-delete-tag
  :desc "Roam mode"             "r"   #'org-roam
  :desc "Roam buffer"           "b"   #'org-roam-switch-to-buffer
  :desc "Roam graph"            "g"   #'org-roam-graph)
