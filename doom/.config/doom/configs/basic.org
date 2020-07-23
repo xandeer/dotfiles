@@ -47,4 +47,5 @@ Insert several file suffix to ~auto-mode-alist~.
 * Fill Column
 #+BEGIN_SRC elisp
 (setq-default fill-column 76)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+END_SRC
