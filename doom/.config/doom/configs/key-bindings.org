@@ -83,7 +83,7 @@
  :map org-roam-mode-map
  :desc "Roam add tag"          "+"   #'xandeer/roam-add-tag
  :desc "Roam delete tag"       "-"   #'xandeer/roam-delete-tag
- :desc "Roam mode"             "r"   #'org-roam
+ :desc "Roam toggle buffer"    "r"   #'org-roam
  :desc "Roam buffer"           "b"   #'org-roam-switch-to-buffer
  :desc "Roam graph"            "g"   #'org-roam-graph)
 #+END_SRC
