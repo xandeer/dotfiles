@@ -12,7 +12,31 @@ roam except journal."
     ('visible (when (xandeer/is-journal-buffer)
                 (org-roam-buffer-deactivate)))
     ((or 'exists 'none) (when (and (xandeer/is-roam-buffer) (not (xandeer/is-journal-buffer)))
-                         (org-roam-buffer-activate)))))
+                          (org-roam-buffer-activate)))))
+
+(defun xandeer/auto-toggle-roam-buffer-enable+ ()
+  (add-hook 'doom-switch-window-hook 'xandeer/auto-toggle-roam-buffer)
+  (add-hook 'doom-switch-buffer-hook 'xandeer/auto-toggle-roam-buffer))
+
+(defun xandeer/auto-toggle-roam-buffer-disable+ ()
+  (remove-hook 'doom-switch-window-hook 'xandeer/auto-toggle-roam-buffer)
+  (remove-hook 'doom-switch-buffer-hook 'xandeer/auto-toggle-roam-buffer))
+
+(defun xandeer/auto-toggle-roam-buffer-enable ()
+  (interactive)
+  (xandeer/auto-toggle-roam-buffer-enable+)
+  (advice-add 'org-roam-capture--capture :before #'xandeer/auto-toggle-roam-buffer-disable+)
+  (advice-add 'org-roam-capture--capture :after #'xandeer/auto-toggle-roam-buffer-enable+))
+
+(defun xandeer/auto-toggle-roam-buffer-disable ()
+  (interactive)
+  (xandeer/auto-toggle-roam-buffer-disable+)
+  (advice-remove 'org-roam-capture--capture #'xandeer/auto-toggle-roam-buffer-disable+)
+  (advice-remove 'org-roam-capture--capture #'xandeer/auto-toggle-roam-buffer-enable+))
+
+(defun xandeer/deactivate-roam-buffer ()
+  (pcase (org-roam-buffer--visibility)
+    ('visible (org-roam-buffer-deactivate))))
 #+END_SRC
 ** Basic
 #+BEGIN_SRC elisp
@@ -20,15 +44,20 @@ roam except journal."
   :hook
   (after-init . org-roam-mode)
   :config
-  (add-hook 'doom-switch-window-hook 'xandeer/auto-toggle-roam-buffer)
-  (add-hook 'doom-switch-buffer-hook 'xandeer/auto-toggle-roam-buffer)
-  :custom
-  (org-roam-capture-templates
+  (advice-add 'org-roam-capture--capture :after #'xandeer/deactivate-roam-buffer)
+  (xandeer/auto-toggle-roam-buffer-enable)
+  (setq org-roam-capture-templates
    '(("d" "default" plain #'org-roam-capture--get-point "%?"
       :file-name "%<%Y%m%d%H%M%S>-${slug}"
       :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: Inbox\n\n"
       :unnarrowed t)))
-  (org-roam-dailies-capture-templates
+  (setq org-roam-capture-immediate-template
+   '("d" "default" plain #'org-roam-capture--get-point "%?"
+      :file-name "%<%Y%m%d%H%M%S>-${slug}"
+      :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: Inbox\n\n"
+      :immediate-finish t
+      :unnarrowed t))
+  (setq org-roam-dailies-capture-templates
    '(("d" "daily" plain (function org-roam-capture--get-point) ""
       :immediate-finish t
       :file-name "journal/%<%Y-%m-%d-%a>"
