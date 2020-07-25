@@ -49,3 +49,12 @@ Insert several file suffix to ~auto-mode-alist~.
 (setq-default fill-column 76)
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 #+END_SRC
+* Windows
+#+BEGIN_SRC elisp
+(defun xandeer/roam-or-projectile-find-file ()
+  (if (xandeer/is-roam-buffer)
+      (org-roam-find-file)
+    (+ivy/projectile-find-file)))
+(advice-add 'evil-window-split :after #'xandeer/roam-or-projectile-find-file)
+(advice-add 'evil-window-vsplit :after #'xandeer/roam-or-projectile-find-file)
+#+END_SRC
