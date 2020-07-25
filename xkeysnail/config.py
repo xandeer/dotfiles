@@ -24,10 +24,12 @@ define_multipurpose_modmap(
         Key.RIGHT_ALT: [Key.ESC, Key.RIGHT_ALT],
         Key.D: [Key.D, Key.LEFT_CTRL],
         Key.F: [Key.F, Key.LEFT_CTRL],
+        Key.X: [Key.X, Key.LEFT_CTRL],
         Key.C: [Key.C, Key.LEFT_CTRL],
         Key.V: [Key.V, Key.LEFT_CTRL],
         Key.J: [Key.J, Key.RIGHT_CTRL],
         Key.K: [Key.K, Key.RIGHT_CTRL],
+        Key.Z: [Key.Z, Key.LEFT_ALT],
         Key.N: [Key.N, Key.RIGHT_CTRL],
     }
 
