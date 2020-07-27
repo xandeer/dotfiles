@@ -51,7 +51,7 @@ Insert several file suffix to ~auto-mode-alist~.
 #+END_SRC
 * Windows
 #+BEGIN_SRC elisp
-(defun xandeer/roam-or-projectile-find-file ()
+(defun xandeer/roam-or-projectile-find-file (&optional count file)
   (if (xandeer/is-roam-buffer)
       (org-roam-find-file)
     (+ivy/projectile-find-file)))
