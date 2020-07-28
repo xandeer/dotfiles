@@ -8,6 +8,7 @@
 
     ../services/clash.nix
     ../services/v2ray.nix
+    ../services/xkeysnail.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -26,6 +27,8 @@
     enable = false;
     configFile = "/etc/v2ray/client.json";
   };
+
+  services.xkeysnail.enable = false;
 
   security.sudo = {
     enable = true;

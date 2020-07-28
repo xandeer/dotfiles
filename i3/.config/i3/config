@@ -133,5 +133,4 @@ exec --no-startup-id fcitx
 
 exec --no-startup-id greenclip daemon
 
-exec setsid sudo xkeysnail -q ~/projects/personal/dotfiles/xkeysnail/config.py >/dev/null 2>&1 < /dev/null &
-
+exec setsid sudo xkeysnail -q --watch ~/projects/personal/dotfiles/xkeysnail/config.py >/dev/null 2>&1 < /dev/null &
