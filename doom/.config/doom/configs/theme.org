@@ -1,6 +1,5 @@
 * Theme
 ** Basic
-
 #+BEGIN_SRC elisp
 (setq
  scroll-margin 0
@@ -12,19 +11,19 @@
 (if (fboundp 'toggle-scroll-bar)
     (toggle-scroll-bar -1))
 #+END_SRC
-
-** Nord Theme
+** Nord Theme (Disabled)
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
-(package! nord-theme)
+(package! nord-theme
+  :disable t)
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(use-package! nord-theme
+(use-package nord-theme
+  :disabled t
   :config
   (load-theme 'nord t))
 #+END_SRC
-
 ** Font
 #+BEGIN_SRC elisp
 (defun xandeer/set-font (en cn en-size cn-size)
