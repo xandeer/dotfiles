@@ -1,13 +1,18 @@
 * Org
-
 #+BEGIN_SRC elisp
 (after! org
+  (add-to-list 'org-emphasis-alist
+               ; set bold face
+               '("*" (:foreground "red" :weight bold)))
+  ; set emphasis support 5 lines
+  (setcar (nthcdr 4 org-emphasis-regexp-components) 5)
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
   (xandeer/set-org-pretty-symbols)
   (remove-hook 'after-save-hook '+literate-recompile-maybe-h)
   (setq org-archive-reversed-order t)
   (setq org-reverse-note-order t))
 #+END_SRC
-
 ** Key Bindings
 #+BEGIN_SRC elisp
 (map! :map org-mode-map
