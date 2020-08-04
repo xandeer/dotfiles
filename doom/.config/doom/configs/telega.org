@@ -19,7 +19,7 @@
          ("M-c" . ivy-telega-chat-with))
   :config
   (telega-mode-line-mode 1)
-  (set-popup-rule! "^\\*Telega Root" :side 'left :size 50 :quit nil :select t)
+  (set-popup-rule! "^\\*Telega Root" :side 'left :size 0.25 :quit nil :select t)
   ;; (set-popup-rule! "^◀\\[.*\\]$" :side 'right :size 94 :quit nil :select t)
   ;; (set-popup-rule! "^◀\\(.*\\)$" :side 'right :size 94 :quit nil :select t)
   ;; (set-popup-rule! "^◀{.*}$" :side 'right :size 94 :quit nil :select t)
@@ -74,6 +74,7 @@
        "k" nil
        "l" nil
        "e" nil
+       "E" #'telega-msg-edit
        "f" nil)))
   (when (eq window-system 'mac)
     ;; emacs-mac have some bug on user avatars
