@@ -10,17 +10,40 @@
 
 # Reference: https://emacs-china.org/t/ivy-read/2432/7
 #+BEGIN_SRC elisp
-(use-package! pinyinlib
+(use-package pinyinlib
   :after ivy
   :commands pinyinlib-build-regexp-string
   :init
   (setq pinyinlib--simplified-char-table 'pinyinlib--simplified-xiaohe)
+  (defun x/pinyin-regexp-helper (str)
+    "Construct pinyin regexp for STR."
+    (cond ((equal str "\\).*?\\(") "\\).*?\\(")
+          (t (pinyinlib-build-regexp-string str t))))
+
+  (defun x/pinyinlib-build-regexp-string (str)
+    "Build a pinyin regexp sequence from STR."
+    (cond ((equal str " ") "\\).*?\\(")
+          ((equal str "") nil)
+          (t str)))
+
+  (defun pinyin-to-utf8 (str)
+    "Convert STR to UTF-8."
+    (cond ((equal 0 (length str)) nil)
+          (t (concat
+              "\\("
+              (mapconcat
+               #'x/pinyinlib-build-regexp-string
+               (remove nil (mapcar #'x/pinyin-regexp-helper (split-string str "")))
+               "")
+              "\\)"))))
+
   (defun eh-ivy-cregexp (str)
     "The regex builder wrapper to support pinyin."
-    (concat
-     (ivy--regex-plus str)
-     "\\|"
-     (pinyinlib-build-regexp-string str)))
+    (let ((trimed (s-join " " (remove "" (split-string str " ")))))
+      (concat
+       (ivy--regex-plus trimed)
+       "\\|"
+       (pinyin-to-utf8 trimed))))
 
   (setq ivy-re-builders-alist
         '((t . eh-ivy-cregexp))))
@@ -32,7 +55,7 @@
 ;; Input prefix ';' to match pinyin
 ;; Refer to  https://github.com/abo-abo/swiper/issues/919 and
 ;; https://github.com/pengpengxp/swiper/wiki/ivy-support-chinese-pinyin
-(use-package! pinyinlib
+(use-package pinyinlib
   :after ivy
   :commands pinyinlib-build-regexp-string
   :config
@@ -41,7 +64,7 @@
   (with-no-warnings
     (defun ivy--regex-pinyin (str)
       "The regex builder wrapper to support pinyin."
-      (or (pinyin-to-utf8 str)
+      (or (pinyin-to-utf8 (s-join " " (remove "" (split-string str " "))))
         (and (fboundp '+ivy-prescient-non-fuzzy)
           (+ivy-prescient-non-fuzzy str))
         (ivy--regex-plus str)))
@@ -60,7 +83,7 @@
         ((equal str "") nil)
         (t str)))
 
-    (defun pinyin-to-utf8 (str)
+    (defun pinyin-to-utf8-with (str)
       "Convert STR to UTF-8 with prefix ';'."
       (cond ((equal 0 (length str)) nil)
         ((equal (substring str 0 1) ";")
