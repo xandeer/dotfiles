@@ -1,6 +1,6 @@
 * Xandeer
-
-** TimeStamp
+** TimeStamp (Disabled)
+#+header: :tangle no
 #+BEGIN_SRC elisp
 (defun xandeer/nth-days-timestamp (n)
   "Return after n days's timestamp like: 2019-05-26 Sun"
@@ -14,8 +14,9 @@
   "Format time string like: 2020-04-20 Monday"
   (format-time-string "%F %A"))
 #+END_SRC
-** Custom Refile
+** Custom Refile (Disabled)
 Refile current headline to the first of its section.
+#+header: :tangle no
 #+BEGIN_SRC elisp
 (defun xandeer/refile-to-first ()
   "Move the current org headline to the first of its section."
@@ -80,16 +81,18 @@ Copied from https://emacs-china.org/t/05-org-as/12092/4
       (capitalize-word 1)
       (buffer-substring start end))))
 #+END_SRC
-** Schedule
+** Schedule (Disabled)
 Generate a string for scheduling on tomorrow.
+#+header: :tangle no
 #+BEGIN_SRC elisp
 (defun xandeer/schedule-tomorrow ()
   "Return scheduled string on tomorrow."
   (format-time-string "SCHEDULED: <%F %a>"
                       (time-add (current-time) (* 24 3600))))
 #+END_SRC
-** Archive
+** Archive (Disabled)
 Define a function to archive tasks with special type.
+#+header: :tangle no
 #+BEGIN_SRC elisp
 (defun xandeer/archive-tasks-of (type)
   "Archive tasks of the type."
@@ -101,6 +104,7 @@ Define a function to archive tasks with special type.
 #+END_SRC
 
 Define an interactive function to archive tasks which are done or canceled.
+#+header: :tangle no
 #+BEGIN_SRC elisp
 (defun xandeer/archive-done-or-canceled ()
   "Archive tasks which are done or canceled."
