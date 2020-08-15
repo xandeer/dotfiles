@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: inactive timestamp
+# name: active timestamp
 # key: t
 # --
 `(%t)`
