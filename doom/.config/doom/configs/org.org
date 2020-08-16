@@ -12,6 +12,7 @@
   (remove-hook 'after-save-hook #'+literate-recompile-maybe-h)
   (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
   (setq org-archive-reversed-order t)
+  (setq org-image-actual-width '(500))
   (setq org-reverse-note-order t))
 #+END_SRC
 ** Key Bindings
