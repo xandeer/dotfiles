@@ -1,0 +1,6 @@
+patch:
+  schema_list:
+    - schema: double_pinyin_flypy
+  ascii_composer/switch_key:
+    Shift_L: commit_code
+  menu/page_size: 9

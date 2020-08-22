@@ -58,13 +58,12 @@ ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
   :when (or IS-LINUX IS-MAC)
   :custom
   (rime-librime-root "~/.local/share/librime")
-  (rime-share-data-dir (expand-file-name "~/.local/share/rime"))
   (rime-user-data-dir (expand-file-name "~/.cache/rime"))
   (rime-show-candidate 'posframe)
   (rime-show-preedit t)
   (rime-cursor "˰")
   (rime-inline-ascii-trigger 'shift-l)
-  (rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "M-f" "M-b" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>"))
+  (rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
   (rime-disable-predicates
     '(rime-predicate-evil-mode-p
       rime-predicate-after-alphabet-char-p
