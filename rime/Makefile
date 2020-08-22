@@ -1,16 +1,21 @@
 UNAME := $(shell uname -s)
 
+DIRS := $(HOME)/.cache/rime
+
 ifeq ($(UNAME), Linux)
-OS_DIR := $(HOME)/.config/fcitx/rime
+DIRS += $(HOME)/.config/fcitx/rime
+OS := linux
 endif
 
 ifeq ($(UNAME), Darwin)
-OS_DIR := $(HOME)/Library/Rime
+DIRS += $(HOME)/Library/Rime
+OS := darwin
 endif
 
-EMACS_DIR := $(HOME)/.cache/rime
 
 .PHONY: install
 install:
-	cp -a $(CURDIR)/*.yaml $(EMACS_DIR)
-	cp -a $(CURDIR)/*.yaml $(OS_DIR)
+	for dir in $(DIRS); do \
+		cp -a $(CURDIR)/*.yaml $$dir; \
+		cp -a $(CURDIR)/$(OS)/*.yaml $$dir; \
+	done
