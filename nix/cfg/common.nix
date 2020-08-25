@@ -39,8 +39,6 @@
 
     font-awesome
     material-icons
-    fira-code-symbols
-    emojione
 
     graphviz
     plantuml
