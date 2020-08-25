@@ -37,8 +37,8 @@
 
 (when (fboundp 'set-fontset-font)
   (if IS-MAC
-      (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 16 18)
-    (xandeer/set-font "Consola Mono" "CloudKaiXingGBK" 30 36)))
+      (xandeer/set-font "Consola Mono" "TsangerJinKai05-6763 W05" 16 18)
+    (xandeer/set-font "Consola Mono" "TsangerJinKai05-6763 W05" 30 36)))
 ; fonts test
 ; 锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷体锐字云字库行楷
 ; HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
