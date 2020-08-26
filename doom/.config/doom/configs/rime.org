@@ -55,6 +55,9 @@ ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
          ("M-i" . rime-inline-ascii))
   :bind (:map ivy-minibuffer-map
          ("M-i" . toggle-input-method))
+  :config
+  (when IS-LINUX
+    (setq rime-share-data-dir (expand-file-name "~/.config/fcitx/rime")))
   :when (or IS-LINUX IS-MAC)
   :custom
   (rime-librime-root "~/.local/share/librime")
