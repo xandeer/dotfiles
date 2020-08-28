@@ -70,6 +70,7 @@
  :desc "Lookup input+"         "k"   #'sdcv-search-input+
 
  :map org-mode-map
+ :desc "Recalculate table"     "C-r" #'org-table-recalculate
  ; roam
  :desc "Roam insert"           "i"   #'org-roam-insert
  :desc "Roam insert immediate" "I"   #'org-roam-insert-immediate
