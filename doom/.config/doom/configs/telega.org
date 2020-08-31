@@ -11,19 +11,17 @@
 #+END_SRC
 
 #+BEGIN_SRC elisp
-(use-package! telega
+(use-package telega
   :commands (telega)
   :defer t
   :hook (telega-chat-mode . doom-mark-buffer-as-real-h)
   :bind (
          ("M-c" . ivy-telega-chat-with))
+  :bind (:map telega-chat-mode-map
+         ("C-c C-f" . xandeer/telega-chatbuf-attach-file))
   :config
   (telega-mode-line-mode 1)
   (set-popup-rule! "^\\*Telega Root" :side 'left :size 0.25 :quit nil :select t)
-  ;; (set-popup-rule! "^◀\\[.*\\]$" :side 'right :size 94 :quit nil :select t)
-  ;; (set-popup-rule! "^◀\\(.*\\)$" :side 'right :size 94 :quit nil :select t)
-  ;; (set-popup-rule! "^◀{.*}$" :side 'right :size 94 :quit nil :select t)
-  ;; (set-popup-rule! "^◀<.*>$" :side 'right :size 94 :quit nil :select t)
   (setq
    telega-proxies
     (list
@@ -32,9 +30,16 @@
    telega-sticker-set-download t
    telega-chat-button-width 28
    telega-cache-dir (expand-file-name "~/Downloads/telega")
-   ; telega-use-tracking t
-   ; telega-known-inline-bots '("@")
    telega-root-fill-column 48)
+
+  (defun xandeer/telega-chatbuf-attach-file (filename &optional preview-p)
+    "Attach FILE as document to the current input."
+    (interactive (list (read-file-name "Attach file: " (expand-file-name "~/temp"))))
+    (let ((ifile (telega-chatbuf--gen-input-file filename 'Document preview-p)))
+      (telega-chatbuf-input-insert
+       (list :@type "inputMessageDocument"
+             :document ifile))))
+
   (when (featurep! :completion ivy)
     (defun ivy-telega-chat-highlight (chat)
     (let ((unread (funcall (telega--tl-prop :unread_count) chat))
