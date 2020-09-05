@@ -29,7 +29,7 @@
        (popup            ; tame sudden yet inevitable temporary windows
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
-       pretty-code       ; replace bits of code with pretty symbols
+       ligatures       ; replace bits of code with pretty symbols
        ;;tabs              ; FIXME an (incomplete) tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
@@ -72,7 +72,6 @@
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
        ;;lsp
-       macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        pass              ; password manager for nerds
@@ -86,6 +85,9 @@
 
        :term
        vterm             ; another terminals in Emacs
+
+       :os
+       macos             ; MacOS-specific commands
 
        :lang
        ;;agda              ; types of types of types of types...
