@@ -8,8 +8,9 @@
 (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
 
 (menu-bar-mode -1)
-(tool-bar-mode -1)
-; This is undefined on Android
+; Them are undefined on Android
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
 (if (fboundp 'toggle-scroll-bar)
     (toggle-scroll-bar -1))
 #+END_SRC
