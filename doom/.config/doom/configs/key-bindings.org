@@ -1,6 +1,10 @@
 * Key Bindings
 
 #+BEGIN_SRC elisp
+(setq mac-right-option-modifier 'meta)
+#+END_SRC
+
+#+BEGIN_SRC elisp
 (map! :leader
   :desc "Switch buffer"  "."    #'switch-to-buffer
   :desc "Select the treemacs window if it is visible"    "z"    #'treemacs-select-window
