@@ -1,7 +1,7 @@
 map('J', 'D');
 map('K', 'S');
 map('t', 'T');
-map('F', 'af');
+map('f', 'af');
 map('h', 'E');
 map('l', 'R');
 map('j', 'd');
