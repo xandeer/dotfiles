@@ -67,6 +67,7 @@
   users.users.kevin.extraGroups = ["adbusers"];
 
   environment.systemPackages = with pkgs; [
+    anki
     chromium
     compton
     dropbox
