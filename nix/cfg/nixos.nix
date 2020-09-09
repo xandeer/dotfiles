@@ -91,6 +91,7 @@
     fcitx-configtool
     sdcv
     librime
+    syncthing
 
     sqlite
 
