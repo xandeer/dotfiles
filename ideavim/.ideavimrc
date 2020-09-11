@@ -14,11 +14,12 @@ inoremap <C-b> <Left>
 inoremap <C-d> <Delete>
 inoremap <C-e> <End>
 inoremap <C-f> <Right>
+inoremap <C-y> "*p
 
 nnoremap <leader>sr :source ~/.ideavimrc<cr>
 
 ; easy system clipboard copy/paste
-noremap <leader>y "*y
-noremap <leader>yy "*Y
-noremap <leader>p "*p
-noremap <leader>P "*P
+noremap y "*y
+noremap yy "*Y
+noremap p "*p
+noremap P "*P
