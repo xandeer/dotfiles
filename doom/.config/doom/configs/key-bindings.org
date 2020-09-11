@@ -25,17 +25,15 @@
  :i "C-p" #'evil-previous-line
  :i "C-n" #'evil-next-line)
 
-(map! :map override
-      ;; override for org mode
-      :i "C-d" #'delete-char
-
-      :gni "M-h" #'+workspace/switch-left
-      :gni "M-l" #'+workspace/switch-right
-
-      :i "C-y" #'yank
-      :i "M-y" #'yank-pop
-      :i "C-r" #'isearch-backward
-      )
+(map!
+ :map override
+ :i "C-d" #'delete-char ;; override for org mode
+ :gni "M-h" #'+workspace/switch-left
+ :gni "M-l" #'+workspace/switch-right
+ :gni "M-;" #'evilnc-comment-or-uncomment-lines
+ :i "C-y" #'yank
+ :i "M-y" #'yank-pop
+ :i "C-r" #'isearch-backward)
 
 ;; (general-evil-setup)
 ;; (general-imap "j"
