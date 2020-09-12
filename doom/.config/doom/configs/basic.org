@@ -59,3 +59,8 @@ Insert several file suffix to ~auto-mode-alist~.
 (advice-add 'evil-window-split :after #'xandeer/roam-or-projectile-find-file)
 (advice-add 'evil-window-vsplit :after #'xandeer/roam-or-projectile-find-file)
 #+END_SRC
+* Others
+#+BEGIN_SRC elisp
+(setq xandeer-indent 2)
+(setq-default standard-indent xandeer-indent)
+#+END_SRC
