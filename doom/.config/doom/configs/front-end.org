@@ -4,5 +4,5 @@
 (setq pug-tab-width xandeer-indent
       css-indent-offset xandeer-indent
      js-indent-level xandeer-indent
-     ts-indent-level xandeer-indent)
+     typescript-indent-level xandeer-indent)
 #+END_SRC
