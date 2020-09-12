@@ -43,8 +43,6 @@
 #+include: "telega.org"
 #+include: "youdao-dictionary.org"
 #+include: "plantuml.org"
-* Front End
-#+include: "front-end.org"
 * Language
 #+include: "kotlin.org"
 * Personal Functions

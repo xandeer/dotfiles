@@ -1,8 +1,0 @@
-* Front End
-
-#+BEGIN_SRC elisp
-(setq pug-tab-width xandeer-indent
-      css-indent-offset xandeer-indent
-     js-indent-level xandeer-indent
-     typescript-indent-level xandeer-indent)
-#+END_SRC
