@@ -43,7 +43,7 @@
     graphviz
     plantuml
 
-    xandeer.dots
+    # xandeer.dots
     # xandeer.v2ray
 
     openjdk8

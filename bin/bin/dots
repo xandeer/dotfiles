@@ -1,0 +1,16 @@
+# ; -*-sh-*-
+#!/bin/sh
+
+function syncDoom() {
+  make -C $HOME/.config/doom
+}
+
+case "$1" in
+  doom|d)
+    syncDoom
+    ;;
+  *)
+    echo "== ! dots: missing or invalid argument ! =="
+    echo "Try again with: doom(d)"
+    exit 2
+esac
