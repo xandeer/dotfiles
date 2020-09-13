@@ -1,16 +1,23 @@
 # ; -*-sh-*-
 #!/bin/sh
 
+DOTS_ROOT=$HOME/projects/personal/dotfiles
+
 function syncDoom() {
-  make -C $HOME/.config/doom
+  make -C $DOTS_ROOT/doom/.config/doom
+}
+
+function syncRime() {
+  make -C $DOTS_ROOT/rime
 }
 
 case "$1" in
   doom|d)
-    syncDoom
-    ;;
+    syncDoom;;
+  rime|r)
+    syncRime;;
   *)
     echo "== ! dots: missing or invalid argument ! =="
-    echo "Try again with: doom(d)"
+    echo "Try again with: doom(d)|rime(r)"
     exit 2
 esac
