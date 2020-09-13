@@ -1,3 +1,4 @@
+# 任何一项配置出错，就会导致部署失败。emacs-rime 部署失败时，不会有提示。
 patch:
   switches:                   # 注意缩进
     - name: simplification
