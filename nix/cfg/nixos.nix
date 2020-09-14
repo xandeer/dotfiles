@@ -16,6 +16,7 @@
 
   networking.networkmanager.enable = true;
   networking.proxy.default = "http://127.0.0.1:8010";
+  networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
   services.openssh.enable = true;
 
   services.clash = {
@@ -88,6 +89,7 @@
     mpd
     upower
     xclip
+    xsel
     fcitx-configtool
     sdcv
     librime
