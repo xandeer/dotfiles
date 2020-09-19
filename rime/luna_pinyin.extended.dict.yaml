@@ -45,6 +45,7 @@ import_tables:
   - luna_pinyin.hanyu
   - luna_pinyin.poetry
   - flypy_double
+  - xandeer
   #- luna_pinyin.cn_en
 ...
 
