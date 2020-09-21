@@ -16,7 +16,7 @@ patch:
   punctuator/import_preset: symbols
   punctuator/half_shape:
     "#": "#"
-    "$": "￥"
+    "$": "¥"
     "<": "《"
     ">": "》"
     "~":  "～"
@@ -44,7 +44,7 @@ patch:
     "\"": {pair: ["『", "』"]}
   punctuator/full_shape:
     "#": "#"
-    "$": "￥"
+    "$": "¥"
     "<": "《"
     ">": "》"
     "~":  "～"
