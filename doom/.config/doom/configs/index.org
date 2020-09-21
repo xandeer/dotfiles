@@ -40,8 +40,10 @@
 # #+include: "beancount.org"
 # #+include: "email.org"
 #+include: "eww.org"
+# #+include: "hledger.org"
+# #+include: "ledger.org"
 #+include: "telega.org"
-#+include: "youdao-dictionary.org"
+# #+include: "youdao-dictionary.org"
 #+include: "plantuml.org"
 * Language
 #+include: "kotlin.org"

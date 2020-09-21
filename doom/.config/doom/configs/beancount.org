@@ -3,7 +3,7 @@
 #+header: :tangle (concat (file-name-directory (buffer-file-name)) "packages.el")
 #+BEGIN_SRC elisp
 (package! beancount
-  :disable t
+  ;; :disable t
   :recipe
   (:host github :repo "beancount/beancount"
          :files ("editors/emacs/beancount.el")))
@@ -11,7 +11,7 @@
 
 #+BEGIN_SRC elisp
 (use-package! beancount
-  :disabled t
+  ;; :disabled t
   :config
     (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode)))
 #+END_SRC
