@@ -7,6 +7,9 @@ elif [ $(uname -s) = 'Darwin' ]; then
     alias p11='export https_proxy=http://localhost:8011'
 fi
 
+alias hf='hledger -f ~/projects/personal/notes/hledger-financial.org'
+alias hh='hledger -f ~/projects/personal/notes/hledger-habit.org'
+
 alias ag='alias | grep'
 alias tn='terminal-notifier -message'
 
