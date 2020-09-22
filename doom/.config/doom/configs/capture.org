@@ -1,6 +1,55 @@
-#+title: Capture
+#+TITLE: Capture
 
 #+BEGIN_SRC elisp
+(after! org-capture
+  (unless (boundp 'org-capture-templates)
+    (defvar org-capture-templates nil))
+
+  (setq org-capture-templates nil)
+
+  (add-to-list 'org-capture-templates
+               '("s" "Stand" plain
+                 (file "hledger-habit.org")
+                 (file "capture-templates/habit-stand.tmpl")
+                 :immediate-finish t
+                 :jump-to-captured t
+                 :empty-lines 1))
+
+  (add-to-list 'org-capture-templates
+               '("i" "Sit" plain
+                 (file "hledger-habit.org")
+                 (file "capture-templates/habit-sit.tmpl")
+                 :immediate-finish t
+                 :jump-to-captured t
+                 :empty-lines 1))
+
+  (add-to-list 'org-capture-templates
+               '("t" "Sit up" plain
+                 (file "hledger-habit.org")
+                 (file "capture-templates/habit-sit-up.tmpl")
+                 :immediate-finish t
+                 :jump-to-captured t
+                 :empty-lines 1))
+
+  (add-to-list 'org-capture-templates
+               '("p" "Push up" plain
+                 (file "hledger-habit.org")
+                 (file "capture-templates/habit-push-up.tmpl")
+                 :immediate-finish t
+                 :jump-to-captured t
+                 :empty-lines 1))
+
+  (add-to-list 'org-capture-templates
+               '("f" "Food" plain
+                 (file "hledger-financial.org")
+                 (file "capture-templates/financial-food.tmpl")
+                 :immediate-finish t
+                 :jump-to-captured t
+                 :empty-lines 1)))
+#+END_SRC
+
+* Deprecated
+#+BEGIN_SRC elisp :exports none
 (after! org-capture
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
