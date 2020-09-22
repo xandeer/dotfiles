@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation rec {
   name = "clash";
-  version = "0.20.0";
+  version = "1.1.0";
 
   # src = fetchurl {
   #   url = "https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-amd64-2020.05.08.gz";
