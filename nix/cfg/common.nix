@@ -36,6 +36,7 @@
     tree
 
     pass
+    hledger
 
     font-awesome
     material-icons
