@@ -94,6 +94,7 @@
     sdcv
     librime
     syncthing
+    imagemagick
 
     sqlite
 
