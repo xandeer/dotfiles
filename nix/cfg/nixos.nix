@@ -109,6 +109,9 @@
     nodejs
     yarn
 
+    symbola
+    twitter-color-emoji
+
     xandeer.clash
     xandeer.greenclip
     xandeer.i3exit
