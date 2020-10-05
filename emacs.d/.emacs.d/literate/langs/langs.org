@@ -1,0 +1,21 @@
+#+PROPERTY: header-args:elisp :tangle (concat temporary-file-directory "xandeer-langs.el")
+
+#+BEGIN_SRC elisp :exports none
+  ;;; xandeer-langs.el --- Xandeer's emacs.d init langs file.  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2020  Xandeer
+
+  ;;; Commentary:
+
+  ;; Xandeer's emacs.d init langs file.
+
+  ;;; Code:
+#+END_SRC
+
+
+* Footer                                                                        :noexport:
+
+#+BEGIN_SRC elisp :exports none
+  (provide 'xandeer-langs)
+  ;;; xandeer-langs.el ends here
+#+END_SRC

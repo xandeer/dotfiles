@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: active timestamp
+# key: t
+# --
+`(%t)`

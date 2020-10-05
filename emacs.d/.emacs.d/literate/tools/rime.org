@@ -1,0 +1,101 @@
+#+PROPERTY: header-args:elisp :tangle (concat temporary-file-directory "xandeer-tools-rime.el")
+
+* Header                                                 :noexport:
+
+#+begin_src elisp
+  ;;; xandeer-tools-rime.el --- Xandeer's Emacs Configuration tools rime file.  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2020  Xandeer
+
+  ;;; Commentary:
+
+  ;; Xandeer's Emacs Configuration Editor Rime.
+
+  ;;; Code:
+#+end_src
+* Prepare
+  :PROPERTIES:
+  :header-args:elisp: :tangle no
+  :END:
+*** [[https://rime.im/download/][Download and install rime]]
+*** [[https://github.com/rime/librime][Librime]]
+**** Mac
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+wget https://github.com/rime/librime/releases/download/1.5.3/rime-1.5.3-osx.zip
+unzip rime-1.5.3-osx.zip -d librime
+cp -a librime/dist ~/.local/share/librime
+#+END_SRC
+**** Nixos
+#+BEGIN_SRC elisp
+(when (eq window-system 'x)
+  ; This may not exist, so I use the following.
+  ; (setq rime-emacs-module-header-root (concat (shell-command-to-string "nix eval --raw '(let pkgs = import <nixpkgs> {}; in with pkgs; lib.getLib emacs)'") "/include"))
+  (setq rime-emacs-module-header-root "/run/current-system/sw/share/emacs/26.3/src"))
+#+END_SRC
+
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -sTf $(nix eval --raw '(let pkgs = import <nixpkgs> {}; in with pkgs; lib.getLib librime)') ~/.local/share/librime
+#+END_SRC
+
+*** Prepare share data
+This could make rime and emacs-rime use the same configuration.
+**** Mac
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -shf /Library/Input\ Methods/Squirrel.app/Contents/SharedSupport/opencc ~/Library/Rime/opencc
+ln -shf ~/Library/Rime ~/.local/share/rime
+#+END_SRC
+**** Nixos
+#+header: :tangle no :results silent
+#+BEGIN_SRC sh
+ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
+#+END_SRC
+* Config
+#+BEGIN_SRC elisp
+  (straight-register-package
+  '(rime :host github
+    :repo "DogLooksGood/emacs-rime"
+    :files ( "Makefile" "*.el" "lib.c")))
+#+END_SRC
+
+#+BEGIN_SRC elisp
+  (straight-use-package 'rime)
+  (straight-use-package 'posframe)
+
+  (leaf rime
+    :require t
+    :bind (("M-i" . toggle-input-method))
+    :bind (:rime-mode-map
+           ("M-I" . rime-force-enable))
+    :bind (:rime-active-mode-map
+           ("M-i" . rime-inline-ascii))
+    :bind (:ivy-minibuffer-map
+           ("M-i" . toggle-input-method))
+    :config
+    (when *is-a-linux*
+      (setq rime-share-data-dir (expand-file-name "~/.config/fcitx/rime")))
+    :when (or *is-a-mac* *is-a-linux*)
+    :custom
+    (rime-librime-root . "~/.local/share/librime")
+    (rime-user-data-dir . "~/.cache/rime")
+    (rime-show-candidate . 'posframe)
+    (rime-show-preedit . t)
+    (rime-cursor . "˰")
+    (rime-inline-ascii-trigger . 'shift-l)
+    (rime-translate-keybindings . '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
+    (rime-disable-predicates .
+     '(rime-predicate-evil-mode-p
+       rime-predicate-after-alphabet-char-p
+       rime-predicate-current-uppercase-letter-p
+       rime-predicate-prog-in-code-p))
+   (default-input-method . "rime"))
+#+END_SRC
+
+* Footer                                                 :noexport:
+
+#+begin_src elisp
+  (provide 'xandeer-tools-rime)
+  ;;; xandeer-tools-rime.el ends here
+#+end_src

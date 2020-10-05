@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: day(week) 15(Sat)
+# key: d
+# --
+`(format-time-string "%d(%a)")`

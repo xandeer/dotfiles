@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Anki Base
+# key: ab
+# --
+**** $1
+:PROPERTIES:
+:ANKI_NOTE_TYPE: Basic
+:ANKI_TAGS: languages
+:END:
+***** Front
+*$1* $0
+***** Back

@@ -1,0 +1,1321 @@
+#+PROPERTY: header-args:elisp :tangle (concat temporary-file-directory "xandeer-editor.el")
+
+Here is the editor's configuration, including keywords: comm, data, diff,
+docs, emacs, extensions, faces, files, help, hypermedia, indentation,
+killing, libs, lists, location, marking, region, navigation, performance,
+vc, and window.
+
+* Header                                                 :noexport:
+
+#+begin_src elisp
+  ;;; xandeer-core.el --- Xandeer's Emacs Configuration editor file.  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2020  Xandeer
+
+  ;;; Commentary:
+
+  ;; Xandeer's Emacs Configuration Editor.
+
+  ;;; Code:
+#+end_src
+
+* Packages
+
+#+begin_src elisp
+  (straight-register-package
+   '(tree-sitter :host github
+                 :repo "ubolonton/emacs-tree-sitter"
+                 :files ("lisp/*.el" "langs/*.el" "langs/queries")))
+
+  (straight-register-package
+   '(point-history :type git
+                   :host github
+                   :repo "blue0513/point-history"))
+
+  (xandeer/s-u-p
+    diff-hl
+    dired-hacks
+    easy-kill
+    ,*eldoc-use*
+    explain-pause-mode
+    expand-region
+    ;; highlight
+    color-identifiers-mode
+    ;; hl-line  builtin
+    highlight-indent-guides
+    rainbow-mode
+    ;; helm
+
+    helpful
+    htmlize
+    indent-tools
+
+    list-unicode-display
+    mmm-mode
+    multiple-cursors
+    page-break-lines
+    ;; paren
+    smartparens
+    rainbow-delimiters
+
+    point-history
+    ;; pretty-mode
+    quick-peek
+    symbol-overlay
+
+    tree-sitter
+    abridge-diff
+    forge
+    gist
+    git-blamed
+    git-gutter
+    git-messenger
+    git-modes
+    git-timemachine
+    magit
+    magit-org-todos
+    magit-todos
+
+    whitespace-cleanup-mode)
+#+end_src
+
+* Configs
+
+** ansi-color
+
+ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape
+sequences like "Esc[30m" into EmacsOverlays, TextProperties, or
+XEmacsExtents with face colours, bold, etc.
+
+https://www.emacswiki.org/emacs/AnsiColor
+
+#+begin_src elisp
+  (xandeer/s-u-p ansi-color)
+  (leaf ansi-color
+    :doc "ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape sequences
+  with face colours, bold, etc."
+    :url "https://www.emacswiki.org/emacs/AnsiColor"
+    :tag "comm" "processes" "terminals" "services"
+    :commands colourise-compilation-buffer
+    :hook ((compilation-filter-hook . colourise-compilation-buffer))
+    :config
+    (eval-and-compile
+      (defun colourise-compilation-buffer ()
+        (when (eq major-mode 'compilation-mode)
+          (ansi-cOLOR-APPLY-on-region compilation-filter-start
+                                      (point-max))))))
+#+end_src
+
+** auto-compress
+
+#+begin_src elisp
+  (leaf jka-cmpr
+    :tag "builtin"
+    :hook (after-init-hook . auto-compression-mode))
+#+end_src
+
+** auto-save
+#+begin_src elisp
+  (straight-register-package
+   '(auto-save :host github
+               :repo "manateelazycat/auto-save"))
+  (straight-use-package 'auto-save)
+  (leaf auto-save
+    :require t
+    :config
+    (setq auto-save-silent t)
+    (setq auto-save-delete-trailing-whitespace t)
+    (setq auto-save-idle 1)
+    (add-hook 'org-capture-mode-hook 'auto-save-disable)
+    (add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
+    (auto-save-enable))
+#+end_src
+** Dash
+
+A modern list library for Emacs.
+
+https://github.com/magnars/dash.el
+
+#+begin_src elisp
+  (xandeer/s-u-p dash)
+  (leaf dash
+    :doc "A modern list library for Emacs."
+    :url "https://github.com/magnars/dash.el"
+    :tag "lists"
+    :defer-config
+    (dash-enable-font-lock))
+#+end_src
+
+** Dired
+
+#+begin_src elisp
+  (leaf xandeer-editor-dired
+    :require t)
+  ;;(require 'xandeer-editor-dired)
+#+end_src
+
+#+include: "editor-dired.org"
+
+** Easy Kill
+
+Provide commands easy-kill and easy-mark to let users kill or mark things easily.
+
+https://github.com/leoliu/easy-kill
+
+#+begin_src elisp
+  (leaf easy-kill
+    :doc "Kill & Mark Things Easily in Emacs."
+    :url "https://github.com/leoliu/easy-kill"
+    :tag "killing" "convenience"
+    :bind (([remap kill-ring-save]
+            . easy-kill)
+           ([remap mark-sexp]
+            . easy-mark)))
+#+end_src
+
+** Eldoc
+
+*** eldoc box
+
+This package displays ElDoc documentations in a childframe.
+
+https://github.com/casouri/eldoc-box
+
+#+begin_src elisp
+  (leaf eldoc-box
+    :doc "This package displays ElDoc documentations in a childframe."
+    :url "https://github.com/casouri/eldoc-box"
+    :tag "extensions"
+    :when (eq *eldoc-use* 'eldoc-box)
+    :hook ((eldoc-mode-hook . eldoc-box-hover-mode)
+           (eldoc-mode-hook . eldoc-box-hover-at-point-mode)))
+#+end_src
+
+*** eldoc overlay
+
+Display eldoc doc with contextual documentation overlay for easy to look.
+
+https://github.com/stardiviner/eldoc-overlay
+
+#+begin_src elisp
+  (leaf eldoc-overlay
+    :doc "Display eldoc doc with contextual documentation overlay for easy to look."
+    :url "https://github.com/stardiviner/eldoc-overlay"
+    :tag "extensions"
+    :when (eq *eldoc-use* 'eldoc-overlay)
+    :hook eldoc-mode-hook)
+#+end_src
+
+** Expand Region
+
+Emacs extension to increase selected region by semantic units.
+
+https://github.com/magnars/expand-region.el
+
+#+begin_src elisp
+  (leaf expand-region
+    :doc "Emacs extension to increase selected region by semantic units."
+    :url "https://github.com/magnars/expand-region.el"
+    :tag "marking region"
+    :bind
+    ("C-=" . er/expand-region))
+#+end_src
+
+** explain-pause-mode
+
+top, but for Emacs.
+
+https://github.com/lastquestion/explain-pause-mode
+
+#+begin_src elisp
+  (leaf explain-pause-mode
+    :doc "top, but for Emacs."
+    :url "https://github.com/lastquestion/explain-pause-mode"
+    :tag "performance" "speed" "config")
+#+end_src
+
+** Files                                           :builtin:files:
+
+#+begin_src elisp
+  (leaf files
+    :tag "builtin" "files"
+    :custom (find-file-visit-truename . t))
+#+end_src
+
+** Fill Column
+
+#+begin_src elisp
+  (leaf fill
+    :doc "Filling text."
+    :tag "emacs")
+#+end_src
+
+*** Unfill
+
+Functions providing the inverse of Emacs' fill-paragraph and fill-region
+
+https://github.com/purcell/unfill
+
+#+begin_src elisp
+  (xandeer/s-u-p unfill)
+  (leaf unfill
+    :doc "Functions providing the inverse of Emacs' fill-paragraph and fill-region"
+    :url "https://github.com/purcell/unfill"
+    :tag "convenience"
+    :bind (("M-q" . unfill-toggle)))
+#+end_src
+
+*** Visual-fill-column
+
+Emacs mode for wrapping visual-line-mode buffers at fill-column.
+
+https://github.com/joostkremers/visual-fill-column
+
+#+begin_src elisp
+  (xandeer/s-u-p visual-fill-column)
+  (leaf visual-fill-column
+    :doc "Emacs mode for wrapping visual-line-mode buffers at fill-column."
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :tag "convenience"
+    :commands maybe-adjust-visual-fill-column
+    :hook (visual-line-mode-hook
+           (visual-fill-column-mode-hook . maybe-adjust-visual-fill-column))
+    :config
+    (defun maybe-adjust-visual-fill-column nil
+      "Readjust visual fill column when the global font size is modified.\nThis is helpful for writeroom-mode, in particular."
+      (if visual-fill-column-mode
+          (add-hook 'after-setting-font-hook 'visual-fill-column--adjust-window nil t)
+        (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
+#+end_src
+
+** Highlight
+
+*** Color Identifiers Mode
+
+Emacs minor mode to highlight each source code identifier uniquely based on its
+name.
+
+https://github.com/ankurdave/color-identifiers-mode
+
+#+begin_src elisp
+  (leaf color-identifiers-mode
+    :doc "Emacs minor mode to highlight each source code identifier uniquely based
+  on its name."
+    :url "https://github.com/ankurdave/color-identifiers-mode"
+    :tag "faces" "languages"
+    :hook prog-mode-hook)
+#+end_src
+
+*** hl-line
+
+Highlight the current line of characters.
+
+https://www.emacswiki.org/emacs/HighlightCurrentLine
+
+#+begin_src elisp
+  (leaf hl-line
+    :doc "Highlight the current line of characters."
+    :url "https://www.emacswiki.org/emacs/HighlightCurrentLine"
+    :tag "faces" "frames" "emulations"
+    :hook ((after-init-hook . global-hl-line-mode)))
+#+end_src
+
+*** Highlight Indent Guides
+
+Emacs minor mode to highlight indentation.
+
+https://github.com/DarthFennec/highlight-indent-guides
+
+#+begin_src elisp
+  (leaf highlight-indent-guides
+    :doc "Emacs minor mode to highlight indentation."
+    :url "https://github.com/DarthFennec/highlight-indent-guides"
+    :tag "faces"
+    :when *highlight-indent-guides*
+    :hook (prog-mode-hook-hook text-mode-hook-hook org-mode-hook-hook)
+    :config
+    (highlight-indent-guides-responsive . nil)
+    (highlight-indent-guides-delay      . 0.5))
+#+end_src
+
+*** Rainbow-Mode
+
+This minor mode sets background color to strings that match color names,
+e.g. #0000ff is displayed in white with a blue background.
+
+#+begin_src elisp
+  (leaf rainbow-mode
+    :doc "Colorize color names in buffers."
+    :url "https://elpa.gnu.org/packages/rainbow-mode.html"
+    :tag "faces"
+    :hook (after-init-hook
+           text-mode-hook
+           org-mode-hook
+           css-mode-hook
+           html-mode-hook
+           prog-mode-hook)
+    :defer-config
+    (when (fboundp 'diminish)
+      (diminish 'rainbow-mode)))
+#+end_src
+
+** Helpful
+
+A better Emacs *help* buffer.
+
+[[https://github.com/Wilfred/helpful]]
+
+#+begin_src elisp
+  (leaf helpful
+    :doc "A better Emacs *help* buffer."
+    :url "https://github.com/Wilfred/helpful"
+    :tag "help" "lisp"
+    :bind (("C-c C-d" . helpful-at-point)))
+           ;; Use ivy instead
+           ;; ([remap describe-function]   . helpful-callable)
+           ;; ([remap describe-variable]   . helpful-variable)
+           ;; ([remap describe-bindings]   . helpful-key)))
+#+end_src
+
+** Htmlize
+
+Convert buffer text and decorations to HTML.
+
+https://github.com/hniksic/emacs-htmlize
+
+#+begin_src elisp
+  (leaf htmlize
+    :doc "Convert buffer text and decorations to HTML."
+    :url "https://github.com/hniksic/emacs-htmlize"
+    :tag "hypermedia" "extensions"
+    :custom (htmlize-pre-style . t))
+#+end_src
+
+** indent-tools
+
+Emacs mode to indent, navigate around and act on indentation units: perfect for
+yaml, python and the like.
+
+https://gitlab.com/emacs-stuff/indent-tools
+
+#+begin_src elisp
+  (leaf indent-tools
+    :doc "Emacs mode to indent, navigate around and act on indentation units:
+  perfect for yaml, python and the like."
+    :url "https://gitlab.com/emacs-stuff/indent-tools"
+    :tag "indentation" "navigation"
+    :bind (("C-c TAB" . indent-tools-hydra/body)))
+#+end_src
+
+** List Unicode Display :convenience:
+
+Provides a command which searches for unicode characters by name, and displays a
+list of matching characters with their names in a buffer.
+
+https://github.com/purcell/list-unicode-display
+
+#+begin_src elisp
+  (leaf list-unicode-display
+    :doc "Search for and list unicode characters in Emacs.
+
+  `list-unicode-display'"
+    :url "https://github.com/purcell/list-unicode-display"
+    :tag "convenience")
+#+end_src
+
+** mmm-mode                    :convenience:faces:languages:tools:
+
+MMM Mode is a minor mode for Emacs that allows Multiple Major Modes to coexist
+in one buffer.
+
+https://github.com/purcell/mmm-mode
+
+#+begin_src elisp
+  (leaf mmm-auto
+    :doc "MMM Mode is a minor mode for Emacs that allows Multiple Major Modes
+  to coexist in one buffer."
+    :url "https://github.com/purcell/mmm-mode"
+    :tag "convenience" "faces" "languages" "tools"
+    :custom
+    (mmm-global-mode
+     . 'buffers-with-submode-classes)
+    (mmm-submode-decoration-level
+     . 2))
+#+end_src
+
+** Multiple Cursors                              :cursors:editing:
+
+Multiple cursors for Emacs.
+
+https://github.com/magnars/multiple-cursors.el
+
+#+begin_src elisp
+  (leaf multiple-cursors
+    :doc "Multiple cursors for Emacs."
+    :url "https://github.com/magnars/multiple-cursors.el"
+    :tag "editing" "cursors"
+    :bind
+    (("C-<"     . mc/mark-previous-like-this)
+     ("C->"     . mc/mark-next-like-this)
+     ("C-+"     . mc/mark-next-like-this)
+     ("C-c C-<" . mc/mark-all-like-this)
+
+     ("C-c m r" . set=rectangular-region-anchor)
+     ("C-c m c" . mc/edit-lines)
+     ("C-c m e" . mc/edit-ends-of-lines)
+     ("C-c m a" . mc/edit-beginnings-of-lines)))
+#+end_src
+
+** Paper Break Lines                           :convenience:faces:
+
+This Emacs library provides a global mode which displays ugly form feed
+characters as tidy horizontal rules.
+
+https://github.com/purcell/page-break-lines
+
+#+begin_src elisp
+  (leaf page-break-lines
+    :doc "Emacs: display ugly ^L page breaks as tidy horizontal lines"
+    :url "https://github.com/purcell/page-break-lines"
+    :tag "convenience" "faces"
+    :hook ((after-init-hook . global-page-break-lines-mode))
+    :defer-config
+    (when (fboundp 'diminish)
+      (diminish 'page-break-lines-mode)))
+#+end_src
+
+** Parens                                        :faces:languages:
+
+#+begin_src elisp
+  (leaf paren
+    :hook (after-init-hook . show-paren-mode))
+#+end_src
+
+*** Rainbow Delimiters             :convenience:faces:lisp:tools:
+
+rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
+delimiters such as parentheses, brackets or braces according to their
+depth. Each successive level is highlighted in a different color. This makes it
+easy to spot matching delimiters, orient yourself in the code, and tell which
+statements are at a given depth.
+
+https://github.com/Fanael/rainbow-delimiters
+
+#+begin_src elisp
+  (leaf rainbow-delimiters
+    :doc "Emacs rainbow delimiters mode"
+    :url "https://github.com/Fanael/rainbow-delimiters"
+    :tag "convenience" "faces" "lisp" "tools"
+    :hook prog-mode-hook org-src-mode-hook)
+#+end_src
+
+*** Smartparens                      :abbrev:convenience:editing:
+
+Minor mode for Emacs that deals with parens pairs and tries to be smart about
+it.
+
+https://github.com/Fuco1/smartparens
+
+#+begin_src elisp
+  (leaf smartparens-config
+    :doc "Minor mode for Emacs that deals with parens pairs and tries to be smart about it."
+    :url "https://github.com/Fuco1/smartparens"
+    :tag "abbrev" "convenience" "editing"
+    :hook (after-init-hook . smartparens-global-mode)
+    :custom (sp-hybrid-kill-entire-symbol . nil))
+#+end_src
+
+** Pretty Font
+
+#+begin_src elisp :tangle no
+  (leaf pretty-font
+    :when (fboundp 'mac-auto-operator-composition-mode)
+    :preface
+    ;; https://github.com/tonsky/FiraCode/wiki/Emacs-instructions
+    ;; This works when using emacs --daemon + emacsclient
+    (add-hook 'after-make-frame-functions (lambda (frame) (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")))
+    ;; This works when using emacs without server/client
+    (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
+    ;; I haven't found one statement that makes both of the above situations work, so I use both for now
+    :config
+    (defun pretty-fonts-set-fontsets (CODE-FONT-ALIST)
+      "Utility to associate many unicode points with specified `CODE-FONT-ALIST'."
+      (--each CODE-FONT-ALIST
+        (-let (((font . codes) it))
+          (--each codes
+            (set-fontset-font nil `(,it . ,it) font)
+            (set-fontset-font t `(,it . ,it) font)))))
+
+    (defun pretty-fonts--add-kwds (FONT-LOCK-ALIST)
+      "Exploits `font-lock-add-keywords'(`FONT-LOCK-ALIST') to apply regex-unicode replacements."
+      (font-lock-add-keywords
+       nil (--map (-let (((rgx uni-point) it))
+                   `(,rgx (0 (progn
+                               (compose-region
+                                (match-beginning 1) (match-end 1)
+                                ,(concat "\t" (list uni-point)))
+                               nil))))
+                 FONT-LOCK-ALIST)))
+
+    (defmacro pretty-fonts-set-kwds (FONT-LOCK-HOOKS-ALIST)
+      "Set regex-unicode replacements to many modes(`FONT-LOCK-HOOKS-ALIST')."
+      `(--each ,FONT-LOCK-HOOKS-ALIST
+         (-let (((font-locks . mode-hooks) it))
+           (--each mode-hooks
+             (add-hook it (-partial 'pretty-fonts--add-kwds
+                                    (symbol-value font-locks)))))))
+
+    (defconst pretty-fonts-fira-font
+      '(;; OPERATORS
+        ;; Pipes
+        ("\\(<|\\)" #Xe14d) ("\\(<>\\)" #Xe15b) ("\\(<|>\\)" #Xe14e) ("\\(|>\\)" #Xe135)
+
+        ;; Brackets
+        ("\\(<\\*\\)" #Xe14b) ("\\(<\\*>\\)" #Xe14c) ("\\(\\*>\\)" #Xe104)
+        ("\\(<\\$\\)" #Xe14f) ("\\(<\\$>\\)" #Xe150) ("\\(\\$>\\)" #Xe137)
+        ("\\(<\\+\\)" #Xe155) ("\\(<\\+>\\)" #Xe156) ("\\(\\+>\\)" #Xe13a)
+
+        ;; Equality
+        ("\\(!=\\)" #Xe10e) ("\\(!==\\)"         #Xe10f) ("\\(=/=\\)" #Xe143)
+        ("\\(/=\\)" #Xe12c) ("\\(/==\\)"         #Xe12d)
+        ("\\(===\\)" #Xe13d) ("[^!/]\\(==\\)[^>]" #Xe13c)
+
+        ;; Equality Special
+        ("\\(||=\\)"  #Xe133) ("[^|]\\(|=\\)" #Xe134)
+        ("\\(~=\\)"   #Xe166)
+        ("\\(\\^=\\)" #Xe136)
+        ("\\(=:=\\)"  #Xe13b)
+
+        ;; Comparisons
+        ("\\(<=\\)" #Xe141) ("\\(>=\\)" #Xe145)
+        ("\\(</\\)" #Xe162) ("\\(</>\\)" #Xe163)
+
+        ;; Shifts
+        ("[^-=]\\(>>\\)" #Xe147) ("\\(>>>\\)" #Xe14a)
+        ("[^-=]\\(<<\\)" #Xe15c) ("\\(<<<\\)" #Xe15f)
+
+        ;; Dots
+        ("\\(\\.-\\)"    #Xe122) ("\\(\\.=\\)" #Xe123)
+        ("\\(\\.\\.<\\)" #Xe125)
+
+        ;; Hashes
+        ("\\(#{\\)"  #Xe119) ("\\(#(\\)"   #Xe11e) ("\\(#_\\)"   #Xe120)
+        ("\\(#_(\\)" #Xe121) ("\\(#\\?\\)" #Xe11f) ("\\(#\\[\\)" #Xe11a)
+
+        ;; REPEATED CHARACTERS
+        ;; 2-Repeats
+        ("\\(||\\)" #Xe132)
+        ("\\(!!\\)" #Xe10d)
+        ("\\(%%\\)" #Xe16a)
+        ("\\(&&\\)" #Xe131)
+
+        ;; 2+3-Repeats
+        ("\\(##\\)"       #Xe11b) ("\\(###\\)"          #Xe11c) ("\\(####\\)" #Xe11d)
+        ("\\(--\\)"       #Xe111) ("\\(---\\)"          #Xe112)
+        ("\\({-\\)"       #Xe108) ("\\(-}\\)"           #Xe110)
+        ("\\(\\\\\\\\\\)" #Xe106) ("\\(\\\\\\\\\\\\\\)" #Xe107)
+        ("\\(\\.\\.\\)"   #Xe124) ("\\(\\.\\.\\.\\)"    #Xe126)
+        ("\\(\\+\\+\\)"   #Xe138) ("\\(\\+\\+\\+\\)"    #Xe139)
+        ("\\(//\\)"       #Xe12f) ("\\(///\\)"          #Xe130)
+        ("\\(::\\)"       #Xe10a) ("\\(:::\\)"          #Xe10b)
+
+        ;; ARROWS
+        ;; Direct
+        ("[^-]\\(->\\)" #Xe114) ("[^=]\\(=>\\)" #Xe13f)
+        ("\\(<-\\)"     #Xe152)
+        ("\\(-->\\)"    #Xe113) ("\\(->>\\)"    #Xe115)
+        ("\\(==>\\)"    #Xe13e) ("\\(=>>\\)"    #Xe140)
+        ("\\(<--\\)"    #Xe153) ("\\(<<-\\)"    #Xe15d)
+        ("\\(<==\\)"    #Xe158) ("\\(<<=\\)"    #Xe15e)
+        ("\\(<->\\)"    #Xe154) ("\\(<=>\\)"    #Xe159)
+
+        ;; Branches
+        ("\\(-<\\)"  #Xe116) ("\\(-<<\\)" #Xe117)
+        ("\\(>-\\)"  #Xe144) ("\\(>>-\\)" #Xe148)
+        ("\\(=<<\\)" #Xe142) ("\\(>>=\\)" #Xe149)
+        ("\\(>=>\\)" #Xe146) ("\\(<=<\\)" #Xe15a)
+
+        ;; Squiggly
+        ("\\(<~\\)" #Xe160) ("\\(<~~\\)" #Xe161)
+        ("\\(~>\\)" #Xe167) ("\\(~~>\\)" #Xe169)
+        ("\\(-~\\)" #Xe118) ("\\(~-\\)"  #Xe165)
+
+        ;; MISC
+        ("\\(www\\)"                   #Xe100)
+        ("\\(<!--\\)"                  #Xe151)
+        ("\\(~@\\)"                    #Xe164)
+        ("[^<]\\(~~\\)"                #Xe168)
+        ("\\(\\?=\\)"                  #Xe127)
+        ("[^=]\\(:=\\)"                #Xe10c)
+        ("\\(/>\\)"                    #Xe12e)
+        ("[^\\+<>]\\(\\+\\)[^\\+<>]"   #Xe16d)
+        ("[^:=]\\(:\\)[^:=]"           #Xe16c)
+        ("\\(<=\\)"                    #Xe157))
+      "Fira font ligatures and their regexes.")
+
+    (mac-auto-operator-composition-mode)
+    (after-x 'dash
+      (pretty-fonts-set-kwds
+       '((pretty-fonts-fira-font prog-mode-hook org-mode-hook)))))
+#+end_src
+
+** Pretty Mode
+
+#+begin_src elisp :tangle no
+  (leaf pretty-mode
+    :commands (turn-on-pretty-mode global-prettify-symbols-mode)
+    :hook (((prog-mode-hook
+             org-mode-hook)
+            . prettify-symbols-mode)
+           (prog-mode-hook
+            . (lambda () (mapc (lambda (pair) (push pair prettify-symbols-alist))
+                          '(;; Data Type             P N
+                            ("Float"  . #x211d)  ;; ℝxxxx
+                            ("float"  . #x211d)  ;; ℝxxx
+                            ("Int"    . #x2124)  ;; ℤxxx
+                            ("int"    . #x2124)  ;; 𝕫xxx
+                            ;; ("String" . #x1d57e)  ;; 𝕊 𝕾
+                            ;; ("string" . #x1d598)  ;; 𝕤 𝖘
+                            ;; ("str"    . #x1d598)  ;; 𝕤 𝖘
+                            ("String" . (#x1d54a (Br . Bl) #x2006))  ;; 𝕊 xxxxxx
+                            ("string" . (#x1d564 (Br . Bl) #x2006))  ;; 𝕤 xxxxxx
+                            ("str"    . (#x1d564 (Br . Bl) #x2006))  ;; 𝕤 xxxx
+                            ("Char"   . #x2102)   ;; ℂx
+                            ("char"   . (#x1d554 (Br . Bl) #x2006))  ;; 𝕔 x
+
+                            ("False"  . #x1d53d)  ;; 𝕱 𝔽
+                            ("True"   . #x1d54b)  ;; 𝕿 𝕋
+
+                            ("Any"    . #x2203)  ;; ∃
+                            ("any"    . #x2203)  ;; ∃
+                            ("any_"   . #x2203)  ;; ∃
+                            ("And"    . (#x2000 (Br . Bl) #x22c0 (Br . Bl) #x2005))  ;; ⋀
+                            ("and"    . (#x2000 (Br . Bl) #x22cf (Br . Bl) #x2005))  ;; ⋏
+                            ("Or"     . #x22c1)  ;; ⋁
+                            ("or"     . #x22cE)  ;; ⋎
+                            ("not"    . #x00ac)  ;; ¬
+                            ("not_"   . #x00ac)  ;; ¬
+
+                            ("All"    . #x2200)  ;; ∀
+                            ("all"    . #x2200)  ;; ∀
+                            ("all_"   . #x2200)  ;; ∀
+                            ("for"    . #x2200)  ;; ∀
+                            ("forall" . #x2200)  ;; ∀
+                            ("forM"   . #x2200)  ;; ∀
+
+                            ("pi"     . #x03c0)  ;; π
+
+                            ("sum"    . #x2211)  ;; ∑
+                            ("Sum"    . #x2211)  ;; ∑
+                            ("Product" . #x220F) ;; ∏
+                            ("product" . #x220F) ;; ∏
+
+                            ("None"   . #x2205)  ;; ∅
+                            ("none"   . #x2205)  ;; ∅
+
+                            ("in"     . #x2286)  ;; ⊆
+                            ("`elem`" . #x2286)  ;; ⊆
+                            ("not in"    . #x2288)  ;; ⊈
+                            ("`notElem`" . #x2288)  ;; ⊈
+
+                            ("return" . (#x21d2 (Br . Bl) #x2006 (Br . Bl) #x2004))  ;; ⇒  x
+                            ("yield"  . (#x21d4 (Br . Bl) #x2004))  ;; ⇔ x
+                            ("pure"   . (#x21f0 (Br . Bl)))))))          ;; ⇰ x
+
+           ((prog-mode-hook
+             emacs-lisp-mode-hook
+             org-mode-hook)
+            . (lambda () (mapc (lambda (pair) (push pair prettify-symbols-alist))
+                          '(;; Global
+                            ;; Pipes
+                            ("<|"  . (?\s (Br . Bl) #Xe14d))
+                            ("<>"  . (?\s (Br . Bl) #Xe15b))
+                            ("<|>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe14e))
+                            ("|>"  . (?\s (Br . Bl) #Xe135))
+
+                            ;; Brackets
+                            ("<*"  . (?\s (Br . Bl) #Xe14b))
+                            ("<*>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe14c))
+                            ("*>"  . (?\s (Br . Bl) #Xe104))
+                            ("<$"  . (?\s (Br . Bl) #Xe14f))
+                            ("<$>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe150))
+                            ("$>"  . (?\s (Br . Bl) #Xe137))
+                            ("<+"  . (?\s (Br . Bl) #Xe155))
+                            ("<+>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe156))
+                            ("+>"  . (?\s (Br . Bl) #Xe13a))
+                            ("[]"  . (#x2005 (Br . Bl) #x1d731 (Br . Bl) #x2005))
+
+                            ;; Equality
+                            ("=/="  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe143))
+                            ("/="   . (?\s (Br . Bl) #Xe12c))
+                            ("/=="  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe12d))
+                            ("/==>" . (?\s (Br . Bl) ?\s (Br . Bl) ?\s (Br . Bl) #Xe13c))
+                            ("!==>" . (?\s (Br . Bl) ?\s (Br . Bl) ?\s (Br . Bl) #Xe13c))
+                            ;; Special
+                            ("||="  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe133))
+                            ("|="   . (?\s (Br . Bl) #Xe134))
+                            ("~="   . (?\s (Br . Bl) #Xe166))
+                            ("^="   . (?\s (Br . Bl) #Xe136))
+                            ("=:="  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe13b))
+
+                            ;; Comparisons
+                            ("</"   . (?\s (Br . Bl) #Xe162))
+                            ("</>"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe163))
+
+                            ;; Shifts
+                            ("=>>"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe147))
+                            ("->>"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe147))
+                            (">>>"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe14a))
+                            (">>>"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe14a))
+                            ("=<<"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15c))
+                            ("-<<"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15c))
+                            ("<<<"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15f))
+
+                            ;; Dots
+                            (".-"   . (?\s (Br . Bl) #Xe122))
+                            (".="   . (?\s (Br . Bl) #Xe123))
+                            ("..<"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe125))
+
+                            ;; Hashes
+                            ("#{"   . (?\s (Br . Bl) #Xe119))
+                            ("#("   . (?\s (Br . Bl) #Xe11e))
+                            ("#_"   . (?\s (Br . Bl) #Xe120))
+                            ("#_("  . (?\s (Br . Bl) #Xe121))
+                            ("#?"   . (?\s (Br . Bl) #Xe11f))
+                            ("#["   . (?\s (Br . Bl) #Xe11a))
+
+                            ;; REPEATED CHARACTERS
+                            ;; 2-Repeats
+                            ("!!"   . (?\s (Br . Bl) #Xe10d))
+                            ("%%"   . (?\s (Br . Bl) #Xe16a))
+
+                            ;; 2+3-Repeats
+                            ("##"   . (?\s (Br . Bl) #Xe11b))
+                            ("###"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe11c))
+                            ("####" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe11d))
+                            ("---"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe112))
+                            ("{-"   . (?\s (Br . Bl) #Xe108))
+                            ("-}"   . (?\s (Br . Bl) #Xe110))
+                            ("\\\\" . (?\s (Br . Bl) #Xe106))
+                            ("\\\\\\" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe107))
+                            (".."   . (?\s (Br . Bl) #Xe124))
+                            ("..."  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe126))
+                            ("+++"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe139))
+                            ("//"   . (?\s (Br . Bl) #Xe12f))
+                            ("///"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe130))
+                            ("::"   . (?\s (Br . Bl) #Xe10a))  ;; 
+                            (":::"  . (?\s (Br . Bl) ?\s (Br . Bl) #Xe10b))
+
+                            ;; Arrows
+                            ;; Direct
+                            ;; ("->"  . (?\s (Br . Bl) #Xe114))  ;; 
+                            ;; ("=>"  . (?\s (Br . Bl) #Xe13f))
+                            ("->>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe115))
+                            ("=>>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe140))
+                            ("<<-" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15d))
+                            ("<<=" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15e))
+                            ("<->" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe154))
+                            ("<=>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe159))
+                            ;; Branches
+                            ("-<"  . (?\s (Br . Bl) #Xe116))
+                            ("-<<" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe117))
+                            (">-"  . (?\s (Br . Bl) #Xe144))
+                            (">>-" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe148))
+                            ("=<<" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe142))
+                            (">=>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe146))
+                            (">>=" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe149))
+                            ("<=<" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe15a))
+                            ;; Squiggly
+                            ("<~"  . (?\s (Br . Bl) #Xe160))
+                            ("<~~" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe161))
+                            ("~>"  . (?\s (Br . Bl) #Xe167))
+                            ("~~>" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe169))
+                            ("-~"  . (?\s (Br . Bl) #Xe118))
+                            ("~-"  . (?\s (Br . Bl) #Xe165))
+
+                            ;; MISC
+                            ("www" . (?\s (Br . Bl) ?\s (Br . Bl) #Xe100))
+                            ("~@"  . (?\s (Br . Bl) #Xe164))
+                            ("~~"  . (?\s (Br . Bl) #Xe168))
+                            ("?="  . (?\s (Br . Bl) #Xe127))
+                            (":="  . (?\s (Br . Bl) #Xe10c))
+                            ("/>"  . (?\s (Br . Bl) #Xe12e))
+                            ("+"   . #Xe16d)
+                            ("(:"  . (?\s (Br . Bl) #Xe16c))))))
+
+
+           (python-mode-hook
+            . (lambda ()
+               (mapc (lambda (pair) (push pair prettify-symbols-alist))
+                     '(;; Syntax
+                       ;;("def"    . (#x1d521 (Br . Bl) #x1d522 (Br . Bl) #x1d523))
+                       ("def"    . #x1D487)  ;; 𝒇 1 111
+                       ("List"   . #x1d543)  ;; 𝕃 𝕷
+                       ("list"   . (#x1d55d (Br . Bl) #x2006 (Br . Bl) #x2005))  ;; 𝕝   𝖑
+                       ("Dict"   . #x1d53B)  ;; 𝔻 𝕯
+                       ("dict"   . #x1d555)  ;; 𝕕 𝖉
+                       ("Set"    . #x1d61a)  ;; 𝔖 𝘚
+                       ("set"    . #x1d634)  ;; 𝔰 𝘴
+                       ("Tuple"  . #x1d61b)  ;; 𝕋 𝕿 𝘛
+                       ("tuple"  . #x1d635)  ;; 𝕥 𝖙 𝘵
+
+                       ("Union"  . #x22c3)  ;; ⋃
+                       ("union"  . #x22c3)))))  ;; ⋃
+
+           (haskell-mode-hook
+            . (lambda ()
+               (mapc (lambda (pair) (push pair prettify-symbols-alist))
+                     '(;; Syntax
+                       ("pure" . (#x21f0 (Br . Bl) #x2006))))))) ;; ⇰  x
+                                         ;; (" . "  . (?\s (Br . Bl) #x2218 (Br . Bl) ?\s (Br . Bl) #x2006)) ;; ∘
+
+    :config
+    (pretty-activate-groups
+     '(:sub-and-superscripts :greek :arithmetic))
+
+    (pretty-deactivate-groups
+     '(:equality :ordering :ordering-double :ordering-triple
+                 :arrows :arrows-twoheaded :punctuation
+                 :logic :sets :arithmetic-double :arithmetic-triple)))
+#+end_src
+
+** Quick Peek :convenience:docs:help:tools:
+
+An inline pop-up library for Emacs Lisp.
+
+https://github.com/cpitclaudel/quick-peek
+
+#+begin_src elisp
+  (leaf quick-peek
+    :doc "An inline pop-up library for Emacs Lisp."
+    :url "https://github.com/cpitclaudel/quick-peek"
+    :tag "convenience" "docs" "help" "tools"
+    :custom-face
+    (quick-peek-border-face  . '((t (:background "#75b79e" :height 0.1))))
+    (quick-peek-padding-face . '((t (:height 0.1)))))
+#+end_src
+
+** Subword :builtin:
+
+#+begin_src elisp
+  (leaf subword
+    :tag "builtin"
+    :hook prog-mode-hook)
+#+end_src
+
+** Symbol Overlay :faces:matching:
+
+Highlight symbols with overlays while providing a keymap for various operations
+about highlighted symbols. It was originally inspired by the package
+highlight-symbol. The fundamental difference is that in symbol-overlay every
+symbol is highlighted by the Emacs built-in function overlay-put rather than the
+font-lock mechanism used in highlight-symbol.
+
+https://github.com/wolray/symbol-overlay
+
+#+begin_src elisp
+  (leaf symbol-overlay
+    :doc "Highlight symbols with keymap-enabled overlays."
+    :url "https://github.com/wolray/symbol-overlay"
+    :tag "faces" "matching"
+    :bind (("M-i"  . symbol-overlay-put)
+           ("M-n"  . symbol-overlay-switch-forward)
+           ("M-p"  . symbol-overlay-switch-backward)
+           ("<f8>" . symbol-overlay-remove-all)
+           ("<f7>" . symbol-overlay-mode)))
+#+end_src
+
+** Tree Sitter :languages:parsers:tools:
+
+~emacs-tree-sitter~ is an Emacs binding for tree-sitter, an incremental parsing
+system.
+
+https://ubolonton.github.io/emacs-tree-sitter/
+
+
+#+begin_src elisp
+  (leaf tree-sitter
+    :doc "emacs-tree-sitter is an Emacs binding for tree-sitter, an incremental parsing
+  system."
+    :url "https://github.com/ubolonton/emacs-tree-sitter"
+    :tag "languagues" "parsers" "tools"
+    :hook (agda-mode-hook
+           shell-mode-hook
+           c-mode-hook
+           c++-mode-hook
+           css-mode-hook
+           haskell-mode-hook
+           html-mode-hook
+           js-mode-hook
+           js2-mode-hook
+           son-mode-hook
+           python-mode-hook
+           ruby-mode-hook
+           rust-mode-hook
+           typescript-mode-hook)
+    :config
+    (require 'tree-sitter-langs)
+    (add-to-list 'tree-sitter-major-mode-language-alist '(mhtml-mode . html)))
+
+  (leaf tree-sitter-hl
+    :hook tree-sitter-after-on-hook)
+#+end_src
+
+** Undo/Redo                                             :editing:
+
+#+begin_src elisp
+  (leaf undo/redo
+    :doc "Undo/redo for emacs"
+    :tag "editing")
+#+end_src
+
+*** Point History
+
+Show the history of points you visited before.
+
+https://github.com/blue0513/point-history
+
+#+begin_src elisp
+  (leaf point-history
+    :doc "Show the history of points you visited before."
+    :url "https://github.com/blue0513/point-history"
+    :tag "editing"
+    :hook after-init-hook
+    :bind (("C-c C-/" . point-history-show))
+    :custom (point-history-ignore-buffer . "^ \\*Minibuf\\|^ \\*point-history-show*"))
+#+end_src
+
+*** Undo Propose            :convenience:files:undo:redo:history:
+
+Navigate the emacs undo history by staging undo's in a temporary buffer.
+
+https://github.com/jackkamm/undo-propose-el
+
+#+begin_src elisp
+  (leaf undo-propose
+    :doc "Navigate the emacs undo history by staging undo's in a temporary buffer."
+    :url "https://github.com/jackkamm/undo-propose-el"
+    :tag "convenience" "files" "undo" "redo" "history"
+    :bind (("C-c u" . undo-propose))
+    :config
+    (undo-propose-wrap undo)
+    (undo-propose-wrap redo))
+#+end_src
+
+** Uniquify                                        :builtin:files:
+
+#+begin_src elisp
+  (leaf uniquify
+    :tag "builtin" "files"
+    :custom
+    (uniquify-buffer-name-style   . 'reverse)
+    (uniquify-separator           . " • ")
+    (uniquify-after-kill-buffer-p . t)
+    (uniquify-ignore-buffers-re   . "^\\*"))
+#+end_src
+
+** Version Control                                  :git:tools:vc:
+
+#+begin_src elisp
+  (leaf version-control
+    :tag "git" "tools" "vc")
+#+end_src
+
+*** abridge-diff                              :diffs:magit:tools:
+
+A simple Emacs package for abridging refined diff hunks (for example in
+magit). Why abridge a diff hunk? Most diffs are line based. If you are working
+on files with very long lines, for example LaTeX files, or text files with full
+paragraphs per line (often using visual-line-mode), line-based diffs can be very
+challenging to read, even with "hunk refining" enabled (highlighting the words
+which changed).
+
+https://github.com/jdtsmith/abridge-diff
+
+#+begin_src elisp
+  (leaf abridge-diff
+    :doc "Emacs package for refining diff hunks with very long lines (as in LaTeX files)."
+    :url "https://github.com/jdtsmith/abridge-diff"
+    :tag "diffs" "magit" "tools"
+    :after magit
+    :init (abridge-diff-mode 1))
+#+end_src
+
+*** Diff-hl (only for dired)
+
+Emacs package for highlighting uncommitted changes
+
+https://github.com/dgutov/diff-hl
+
+#+begin_src elisp
+  (leaf diff-hl
+    :doc "Emacs package for highlighting uncommitted changes"
+    :url "https://github.com/dgutov/diff-hl"
+    :tag "vc" "diff"
+    :hook ((dired-mode-hook         . diff-hl-dired-mode)
+           (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
+           (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
+#+end_src
+
+*** Forge                                          :git:tools:vc:
+
+Work with Git forges from the comfort of Magit.
+
+https://github.com/magit/forge
+
+#+begin_src elisp
+  (leaf forge
+    :doc "Work with Git forges from the comfort of Magit."
+    :url "https://github.com/magit/forge"
+    :tag "git" "tools" "vc")
+#+end_src
+
+*** Git Gutter
+
+#+begin_src elisp
+  (leaf git-gutter
+    :hook (after-init . global-git-gutter-mode)
+    :custom ((git-gutter:visual-line    . t)
+             (git-gutter:disabled-modes . '(asm-mode image-mode))
+             (git-gutter:modified-sign  . "❚")
+             (git-gutter:added-sign     . "✚")
+             (git-gutter:deleted-sign   . "✘"))
+    :bind (("C-x v =" . git-gutter:popup-hunk)
+           ("C-x p"   . git-gutter:previous-hunk)
+           ("C-x n"   . git-gutter:next-hunk)))
+#+end_src
+
+*** Git Messenger                                :convenience:vc:
+
+git-messenger.el provides function that popup commit message at current line.
+
+https://github.com/emacsorphanage/git-messenger
+
+#+begin_src elisp
+  (leaf git-messenger
+    :doc "git-messenger.el provides function that popup commit message at current line."
+    :url "https://github.com/emacsorphanage/git-messenger"
+    :tag "convenience" "vc"
+    :custom (git-messenger:show-detail . t)
+    :bind (:vc-prefix-map
+           ("p" . git-messenger:popup-message)))
+#+end_src
+
+*** Magit                                          :git:tools:vc:
+
+Magit is an interface to the version control system Git, implemented as an Emacs
+package. Magit aspires to be a complete Git porcelain. While we cannot (yet)
+claim that Magit wraps and improves upon each and every Git command, it is
+complete enough to allow even experienced Git users to perform almost all of
+their daily version control tasks directly from within Emacs. While many fine
+Git clients exist, only Magit and Git itself deserve to be called porcelains.
+
+https://github.com/magit/magit
+
+#+begin_src elisp
+  (leaf magit
+    :doc "It's Magit! A Git porcelain inside Emacs."
+    :url "https://github.com/magit/magit"
+    :tag "git" "tools" "vc"
+    :commands magit-status
+    :hook ((magit-popup-mode-hook . no-trailing-whitespace))
+    :custom ((magit-diff-refine-hunk . t)
+             (vc-handled-backends    . nil))
+    :bind (([(meta f12)] . magit-status)  ;; Hint: customize `magit-repository-directories' so that you can use C-u M-F12 to
+           ("C-x g"      . magit-status)
+           ("C-x M-g"    . magit-dispatch-popup)
+           (:magit-status-mode-map
+            ("C-M-<up>"  . magit-section-up))
+           (:vc-prefix-map
+            ("f"         . vc-git-grep))))
+#+end_src
+
+*** Magit Org Todos                         :magit:orgmode:tools:
+
+Get `todo.org` into your magit status.
+
+https://github.com/danielma/magit-org-todos.el
+
+#+begin_src elisp
+  (leaf magit-org-todos
+    :doc "Get `todo.org` into your magit status"
+    :url "https://github.com/danielma/magit-org-todos.el"
+    :tag "magit" "orgmode" "tools"
+    :after magit
+    :require t
+    :config (magit-org-todos-autoinsert))
+#+end_src
+
+*** Magit Todos                                        :magit:vc:
+
+Show source files' TODOs (and FIXMEs, etc) in Magit status buffer.
+
+https://github.com/alphapapa/magit-todos
+
+#+begin_src elisp
+  (leaf magit-todos
+    :doc "Show source files' TODOs (and FIXMEs, etc) in Magit status buffer."
+    :url "https://github.com/alphapapa/magit-todos"
+    :tag "magit" "vc"
+    :custom (magit-todos-exclude-globs . '("*.map")))
+#+end_src
+
+** View Large File
+
+Emacs minor mode that allows viewing, editing, searching and comparing large
+files in batches, trading memory for processor time.
+
+https://github.com/m00natic/vlfi
+
+#+begin_src elisp
+  (leaf vlf
+    :doc "View Large Files in Emacs"
+    :url "https://github.com/m00natic/vlfi"
+    :tag "files" "large files" "utilities"
+    :commands ffap-vlf
+    :init
+    (defun ffap-vlf ()
+      "Find file at point with VLF."
+      (interactive)
+      (let ((file (ffap-file-at-point)))
+        (unless (file-exists-p file)
+          (error "File does not exist: %s" file))
+        (vlf file))))
+#+end_src
+
+** Whitespace :convenience:data:wp:
+
+Visualize blanks (TAB, (HARD) SPACE and NEWLINE).
+
+https://www.emacswiki.org/emacs/WhiteSpace
+
+In Emacs, intelligently call whitespace-cleanup on save.
+
+https://github.com/purcell/whitespace-cleanup-mode
+
+#+begin_src elisp
+  (leaf whitespace
+    :tag "data" "wp"
+    :init
+    (defun no-trailing-whitespace ()
+      "Turn off display of trailing whitespace in this buffer."
+      (setq show-trailing-whitespace nil))
+    :hook
+    ;; But don't show trailing whitespace in SQLi, inf-ruby etc.
+    ((artist-mode-hook
+      picture-mode-hook
+      special-mode-hook
+      Info-mode-hook
+      eww-mode-hook
+      term-mode-hook
+      vterm-mode-hook
+      comint-mode-hook
+      compilation-mode-hook
+      twittering-mode-hook
+      minibuffer-setup-hook
+      fundamental-mode) . no-trailing-whitespace))
+
+
+  (leaf whitespace-cleanup-mode
+    :disabled t
+    :doc "In Emacs, intelligently call whitespace-cleanup on save."
+    :url "https://github.com/purcell/whitespace-cleanup-mode"
+    :tag "convonience"
+    :custom
+    (whitespace-cleanup-mode-only-if-initially-clean . nil)
+    (whitespace-style
+     . '(face tabs spaces trailing space-before-tab
+              newline indentation empty space-after-tab
+              space-mark tab-mark newline-mark))
+    :hook ((after-init-hook . global-whitespace-cleanup-mode))
+    :bind (("<remap> <just-one-space>" . cycle-spacing)))
+#+end_src
+
+** Writeroom Mode
+
+#+begin_src elisp
+  (leaf writeroom-mode
+    :preface
+    (define-minor-mode prose-mode
+      "Set up a buffer for prose editing.
+  This enables or modifies a number of settings so that the
+  experience of editing prose is a little more like that of a
+  typical word processor."
+      nil " Prose" nil
+      (if prose-mode
+          (progn
+            (when (fboundp 'writeroom-mode)
+              (writeroom-mode 1))
+            (setq truncate-lines nil)
+            (setq word-wrap t)
+            (setq cursor-type 'bar)
+            (when (eq major-mode 'org)
+              (kill-local-variable 'buffer-face-mode-face))
+            (buffer-face-mode 1)
+            ;;(delete-selection-mode 1)
+            (set (make-local-variable 'blink-cursor-interval) 0.6)
+            (set (make-local-variable 'show-trailing-whitespace) nil)
+            (set (make-local-variable 'line-spacing) 0.2)
+            (set (make-local-variable 'electric-pair-mode) nil)
+            (ignore-errors (flyspell-mode 1))
+            (visual-line-mode 1))
+        (kill-local-variable 'truncate-lines)
+        (kill-local-variable 'word-wrap)
+        (kill-local-variable 'cursor-type)
+        (kill-local-variable 'show-trailing-whitespace)
+        (kill-local-variable 'line-spacing)
+        (kill-local-variable 'electric-pair-mode)
+        (buffer-face-mode -1)
+        ;; (delete-selection-mode -1)
+        (flyspell-mode -1)
+        (visual-line-mode -1)
+        (when (fboundp 'writeroom-mode)
+          (writeroom-mode 0)))))
+#+end_src
+
+** Yasnipeet
+
+YASnippet is a template system for Emacs. It allows you to type an abbreviation
+and automatically expand it into function templates. Bundled language templates
+include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML, CSS and more. The
+snippet syntax is inspired from TextMate's syntax, you can even import most
+TextMate templates to YASnippet. Watch a demo on YouTube.
+
+https://github.com/joaotavora/yasnippet
+
+#+begin_src elisp
+  (straight-use-package 'yasnippet)
+  (leaf yasnippet
+    :doc "A template system for Emacs"
+    :url "https://github.com/joaotavora/yasnippet"
+    :tag "convenience" "enmulation"
+    :commands (yas-minor-mode)
+    :hook (((prog-mode-hook text-mode-hook) . yas-minor-mode))
+    :config
+    (add-to-list 'yas-snippet-dirs
+                 (concat user-emacs-directory "extra/snippets"))
+    (yas-reload-all))
+#+end_src
+
+** Xandeer
+*** Convert Chinese Quotations
+#+begin_src elisp
+(defun xandeer/convert-chinese-quotations ()
+  "Convert all [“|“] to [『|』] in current buffer."
+  (interactive)
+
+  (goto-char (point-min))
+  (while (re-search-forward "“" nil t)
+    (replace-match "「"))
+
+  (goto-char (point-min))
+  (while (re-search-forward "”" nil t)
+    (replace-match "」")))
+#+end_src
+
+* Footer :noexport:
+
+#+begin_src elisp
+  (provide 'xandeer-editor)
+  ;;; xandeer-editor.el ends here
+#+end_src

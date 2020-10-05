@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: #+begin_comment
+# key: <c
+# type: command
+# --
+(%alias "comment")

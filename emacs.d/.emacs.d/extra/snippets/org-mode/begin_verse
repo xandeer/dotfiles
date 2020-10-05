@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: #+begin_verse
+# key: <v
+# type: command
+# --
+(%alias "verse")

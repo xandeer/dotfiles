@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: #+begin_quote
+# key: <q
+# type: command
+# --
+(%alias "quote")

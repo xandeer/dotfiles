@@ -1,0 +1,532 @@
+#+PROPERTY: header-args:elisp :tangle (concat temporary-file-directory "xandeer-tools.el")
+
+Here is the tools, including buffer, convenience, hyperlink, mac, matching,
+project, and tools.
+
+* Header :noexport:
+
+#+begin_src elisp
+  ;;; xandeer-tools.el --- Xandeer's Emacs Configuration editor file.  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2020  Xandeer
+
+  ;;; Commentary:
+
+  ;; Xandeer's Emacs Configuration Tools.
+
+  ;;; Code:
+#+end_src
+
+* Anzu
+
+anzu.el is an Emacs port of anzu.vim. anzu.el provides a minor mode which
+displays current match and total matches information in the mode-line in
+various search modes.
+
+A little like sed.
+
+https://github.com/emacsorphanage/anzu
+
+#+begin_src elisp
+  (straight-use-package 'anzu)
+  (leaf anzu
+    :doc "anzu.el is an Emacs port of anzu.vim."
+    :url "https://github.com/emacsorphanage/anzu"
+    :hook ((after-init-hook . global-anzu-mode))
+    :bind (([remap query-replace]        . anzu-query-replace)
+           ([remap query-replace-regexp] . anzu-query-replace-regexp)))
+#+end_src
+
+* Avy
+
+Jump to things in Emacs tree-style. A little like easymotion.
+
+https://github.com/abo-abo/avy
+
+#+begin_src elisp
+  (straight-use-package 'avy)
+  (leaf avy
+    :doc "Jump to things in Emacs tree-style."
+    :url "https://github.com/abo-abo/avy"
+    :bind
+    ("C-:"     . avy-goto-char)
+    ("C-'"     . avy-goto-char-2)
+    ("C-`"     . avy-goto-char-2)
+    ("M-g e"   . avy-goto-word-0)
+    ("M-g w"   . avy-goto-word-1)
+    ("C-~"     . avy-goto-word-1)
+    ("C-c C-j" . avy-resume))
+#+end_src
+
+* Beginend
+
+Emacs package to redefine M-< and M-> for some modes
+
+https://github.com/DamienCassou/beginend
+
+#+begin_src elisp
+  (straight-use-package 'beginend)
+  (leaf beginend
+    :doc "Emacs package to redefine M-< and M-> for some modes"
+    :url "https://github.com/DamienCassou/beginend"
+    :hook ((after-init-hook . beginend-global-mode)))
+#+end_src
+
+* Cal China
+#+begin_src elisp
+  (straight-use-package 'cal-china-x)
+  (leaf cal-china-x
+    :require t
+    :config
+    (setq mark-holidays-in-calendar t)
+    (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+    (setq cal-china-x-general-holidays '((holiday-lunar 1 15 "元宵节")))
+    (setq calendar-holidays
+          (append cal-china-x-important-holidays
+                  cal-china-x-general-holidays)))
+#+end_src
+* Company
+
+Modular in-buffer completion framework for Emacs.
+
+https://github.com/company-mode/company-mode
+
+#+begin_src elisp
+  (require 'xandeer-tools-company)
+#+end_src
+
+#+include: "company.org"
+
+* Emojify and all-the-icons
+
+#+begin_src elisp
+  (xandeer/s-u-p
+    (:when (version< emacs-version "27") emojify))
+  (leaf emojify
+    :commands emojify-mode
+    :when (version< emacs-version "27")
+    :hook ((after-init-hook . global-emojify-mode))
+    :custom (emojify-emoji-styles  . '(unicode github))
+            (emojify-display-style . 'unicode))
+
+  (straight-use-package 'all-the-icons)
+  (leaf all-the-icons
+    :custom (inhibit-compacting-font-caches . t))
+#+end_src
+
+* Flycheck
+
+** Autoloads
+
+#+begin_src elisp
+  ;;;###autoload
+  (defun save-buffer-maybe-show-errors ()
+    "Save buffer and show errors if any."
+    (interactive)
+    (save-buffer)
+    (when (not flycheck-current-errors)
+      (flycheck-list-errors)))
+
+  ;;;###autoload
+  (defun xandeer/flycheck-inline-init ()
+    "Flycheck-inline-mode init function"
+    (gsetq flycheck-inline-display-function
+           (lambda (msg pos)
+             (let* ((ov (quick-peek-overlay-ensure-at pos))
+                    (contents (quick-peek-overlay-contents ov)))
+               (setf (quick-peek-overlay-contents ov)
+                     (concat contents (when contents "\n") msg))
+               (quick-peek-update ov)))
+           flycheck-inline-clear-function #'quick-peek-hide))
+#+end_src
+
+** Flycheck
+
+#+begin_src elisp
+  (xandeer/s-u-p flycheck)
+  (leaf flycheck
+    ;; :bind (("C-x C-s" . save-buffer-maybe-show-errors))
+    :hook prog-mode-hook
+    :custom
+    (flycheck-display-errors-function
+     . #'flycheck-display-error-messages-unless-error-list)
+    (flycheck-check-syntax-automatically . '(save idle-change mode-enabled))
+    (flycheck-display-errors-delay       . 0.25)
+    :bind
+    (:flycheck-error-list-mode-map
+     ("C-n" . flycheck-error-list-next-error)
+     ("C-p" . flycheck-error-list-previous-error)
+     ("RET" . flycheck-error-list-goto-error)
+     ([return]  . flycheck-error-list-goto-error))
+    :config
+    (defalias 'show-error-at-point-soon
+      'flycheck-show-error-at-point)
+    (add-to-list 'flycheck-emacs-lisp-checkdoc-variables 'sentence-end-double-space))
+#+end_src
+
+** Flycheck package
+Flycheck checker for elisp package metadata.
+
+https://github.com/purcell/flycheck-package
+
+#+begin_src elisp
+  (xandeer/s-u-p flycheck-package)
+  (leaf flycheck-package
+    :doc "Flycheck checker for elisp package metadata."
+    :url "https://github.com/purcell/flycheck-package"
+    :tag "lisp"
+    :after flycheck
+    :config
+    (flycheck-package-setup))
+#+end_src
+
+** Flycheck inline
+
+#+begin_src elisp
+  (xandeer/s-u-p
+    (:when *flycheck-inline* flycheck-inline quick-peek))
+  (leaf flycheck-inline
+    :hook flycheck-mode-hook
+    :mode-hook (xandeer/flycheck-inline-init))
+#+end_src
+
+* Grab Mac Link
+
+Grab link from Mac Apps and insert it into Emacs.
+
+https://github.com/xuchunyang/grab-mac-link.el
+
+#+begin_src elisp
+  (xandeer/s-u-p
+    (:when *is-a-mac* grab-mac-link))
+  (leaf grab-mac-link
+    :doc "Grab link from Mac Apps."
+    :url "https://github.com/xuchunyang/grab-mac-link.el"
+    :when *is-a-mac*)
+#+end_src
+
+* Grep
+
+#+begin_src elisp
+  (leaf grep
+    :tag "builtin"
+    :custom
+    ((grep-highlight-matches grep-scroll-output) . t))
+#+end_src
+
+* iBuffer
+
+#+include: "ibuffer.org"
+
+#+begin_src elisp
+  (leaf xandeer-tools-ibuffer
+    :require t)
+#+end_src
+
+* imenu list
+
+Emacs plugin to show the current buffer's imenu entries in a seperate buffer.
+
+https://github.com/bmag/imenu-list
+
+#+begin_src elisp
+  (xandeer/s-u-p imenu-list)
+  (leaf imenu-list
+    :doc "Emacs plugin to show the current buffer's imenu entries in a seperate buffer"
+    :url "https://github.com/bmag/imenu-list"
+    :tag "tools" "convenience"
+    :bind (("C-." . imenu-list-smart-toggle))
+    :custom (imenu-list-auto-resize . t))
+#+end_src
+
+* isearch
+
+Isearch, that is, incremental search, is the standard way to search in vanilla
+Emacs.
+
+https://www.emacswiki.org/emacs/IncrementalSearch
+
+#+begin_src elisp
+  ;; (xandeer/s-u-p isearch)
+  (leaf isearch
+    :doc "Isearch, that is, incremental search, is the standard way to search in
+  vanilla Emacs."
+    :url "https://www.emacswiki.org/emacs/IncrementalSearch"
+    :tag "matching"
+    :bind (:isearch-mode-map
+           ([remap isearch-delete-char]
+            . isearch-del-char)
+           ("C-w"
+            . isearch-yank-symbol)
+           ([(control return)]
+            . isearch-exit-other-end)
+           ("C-o"
+            . isearch-occur))
+
+    :defer-config
+    ;; Search back/forth for the symbol at point
+    ;; See http://www.emacswiki.org/emacs/SearchAtPoint
+    (defun isearch-yank-symbol ()
+      "*Put symbol at current point into search string."
+      (interactive)
+      (let ((sym (thing-at-point 'symbol)))
+        (if sym
+            (progn
+              (setq isearch-regexp    t
+                    isearch-string    (regexp-quote sym)
+                    isearch-message   (mapconcat 'isearch-text-char-description isearch-string "")
+                    isearch-yank-flag t))
+          (ding)))
+      (isearch-search-and-update))
+
+    ;; http://www.emacswiki.org/emacs/ZapToISearch
+    (defun isearch-exit-other-end (rbeg rend)
+      "Exit isearch, but at the other end of the search string.
+  This is useful when followed by an immediate kill."
+      (interactive "r")
+      (isearch-exit)
+      (goto-char isearch-other-end)))
+#+end_src
+* Ivy, Counsel and Swiper
+
+#+begin_src elisp
+  (require 'xandeer-tools-ivy)
+#+end_src
+
+#+include: "ivy.org"
+
+* Prescient
+
+☄️ Simple but effective sorting and filtering for Emacs.
+
+https://github.com/raxod502/prescient.el
+
+#+begin_src elisp
+  (straight-use-package 'prescient)
+  (leaf prescient
+    :doc "☄️ Simple but effective sorting and filtering for Emacs."
+    :url "https://github.com/raxod502/prescient.el"
+    :tag "extensions"
+    :hook ((after-init-hook . prescient-persist-mode)))
+#+end_src
+
+* Projectile
+
+Projectile is a project interaction library for Emacs. Its goal is to provide a
+nice set of features operating on a project level without introducing external
+dependencies (when feasible). For instance - finding project files has a
+portable implementation written in pure Emacs Lisp without the use of GNU find
+(but for performance sake an indexing mechanism backed by external commands
+exists as well).
+
+https://github.com/bbatsov/projectile
+
+#+begin_src elisp
+  (xandeer/s-u-p projectile)
+  (leaf projectile
+    :doc "Projectile is a project interaction library for Emacs."
+    :url "https://github.com/bbatsov/projectile"
+    :tag "project" "convenience"
+    :bind ([remap find-tag] . projectile-find-tag)
+    :hook after-init-hook
+    :custom
+    (projectile-indexing-method      . 'hybrid)
+    (projectile-require-project-root . 'prompt)
+    :config
+    (gsetq projectile-project-root-files-top-down-recurring
+           (append '("compile_commands.json"
+                     ".cquery")
+                   projectile-project-root-files-top-down-recurring)))
+#+end_src
+
+* Recentf
+
+Recentf is a minor mode that builds a list of recently opened files.
+
+https://www.emacswiki.org/emacs/RecentFiles
+
+#+begin_src elisp
+  (straight-use-package 'recentf)
+  (leaf recentf
+    :doc "Recentf is a minor mode that builds a list of recently opened files."
+    :url "https://www.emacswiki.org/emacs/RecentFiles"
+    :tag "files"
+    :hook after-init-hook
+    :custom
+    (recentf-filename-handlers
+     . '(;; Text properties inflate the size of recentf's files, and there is
+         ;; no purpose in persisting them, so we strip them out.
+         substring-no-properties
+         ;; Resolve symlinks of local files. Otherwise we get duplicate
+         ;; entries opening symlinks.
+         xandeer--recent-file-truename
+         ;; Replace $HOME with ~, which is more portable, and reduces how much
+         ;; horizontal space the recentf listing uses to list recent files.
+         abbreviate-file-name))
+    (recentf-max-saved-items . 100)
+    (recentf-exclude         . '("/tmp/" "/ssh:"))
+    :config
+    (defun xandeer--recent-file-truename (file)
+      (if (or (file-remote-p file nil t)
+              (not (file-remote-p file)))
+          (file-truename file)
+        file))
+
+    (add-to-list 'recentf-exclude no-littering-var-directory)
+    (add-to-list 'recentf-exclude no-littering-etc-directory))
+#+end_src
+
+* Restclient
+
+#+BEGIN_SRC elisp
+  (xandeer/s-u-p ob-restclient restclient)
+#+END_SRC
+
+* Rime
+
+#+begin_src elisp
+(require 'xandeer-tools-rime)
+#+end_src
+
+#+include: "rime.org"
+
+* Sdcv
+#+begin_src elisp
+  (straight-use-package 'sdcv)
+  (leaf sdcv
+    :commands (sdcv-search-pointer
+               sdcv-search-pointer+
+               sdcv-search-input
+               sdcv-search-input+)
+    :bind
+    ("C-c x l" . sdcv-search-pointer+)
+    ("C-c x k" . sdcv-search-input+)
+    :config
+    (setq sdcv-say-word-p nil
+          sdcv-tooltip-timeout 10
+          sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")
+          sdcv-dictionary-simple-list
+          '(
+            "朗道英汉字典5.0"
+            "朗道汉英字典5.0"
+            "新华字典")
+          sdcv-dictionary-complete-list
+          '(
+            "朗道英汉字典5.0"
+            "朗道汉英字典5.0"
+            "新华字典")))
+#+end_src
+* Treemacs
+
+Treemacs is a file and project explorer similar to NeoTree or vim’s NerdTree, but largely inspired by the Project Explorer in Eclipse. It shows the file system outlines of your projects in a simple tree layout allowing quick navigation and exploration, while also possessing basic file management utilities.
+
+https://github.com/Alexander-Miller/treemacs
+
+#+begin_src elisp
+  (straight-use-package 'treemacs)
+  (leaf treemacs
+    :doc "A tree layout file explorer for Emacs"
+    :url "https://github.com/Alexander-Miller/treemacs"
+    :tag "convenience" "files"
+    :init
+    (after-x 'winum
+      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    :defer-config
+    (gsetq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+           treemacs-deferred-git-apply-delay      0.5
+           treemacs-directory-name-transformer    #'identity
+           treemacs-display-in-side-window        t
+           treemacs-eldoc-display                 t
+           treemacs-file-event-delay              5000
+           treemacs-file-extension-regex          treemacs-last-period-regex-value
+           treemacs-file-follow-delay             0.2
+           treemacs-file-name-transformer         #'identity
+           treemacs-follow-after-init             t
+           treemacs-git-command-pipe              ""
+           treemacs-goto-tag-strategy             'refetch-index
+           treemacs-indentation                   2
+           treemacs-indentation-string            " "
+           treemacs-is-never-other-window         nil
+           treemacs-max-git-entries               5000
+           treemacs-missing-project-action        'ask
+           treemacs-move-forward-on-expand        t
+           treemacs-no-png-images                 nil
+           treemacs-no-delete-other-windows       t
+           treemacs-project-follow-cleanup        nil
+           treemacs-persist-file                  (no-littering-expand-var-file-name "treemacs-persist")
+           treemacs-position                      'left
+           treemacs-recenter-distance             0.1
+           treemacs-recenter-after-file-follow    nil
+           treemacs-recenter-after-tag-follow     nil
+           treemacs-recenter-after-project-jump   'always
+           treemacs-recenter-after-project-expand 'on-distance
+           treemacs-show-cursor                   nil
+           treemacs-show-hidden-files             t
+           treemacs-silent-filewatch              nil
+           treemacs-silent-refresh                nil
+           treemacs-sorting                       'alphabetic-desc
+           treemacs-space-between-root-nodes      t
+           treemacs-tag-follow-cleanup            t
+           treemacs-tag-follow-delay              1.5
+           treemacs-user-mode-line-format         nil
+           treemacs-user-header-line-format       nil
+           treemacs-width                         35)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;; (treemacs-resize-icons 44)
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+
+
+  (straight-use-package 'treemacs-icons-dired)
+  (leaf treemacs-icons-dired
+    :after treemacs dired
+    :config (treemacs-icons-dired-mode))
+
+  (straight-use-package 'treemacs-magit)
+  (leaf treemacs-magit
+    :after treemacs magit)
+
+  (straight-use-package 'treemacs-projectile)
+  (leaf treemacs-projectile
+    :after treemacs projectile)
+#+end_src
+
+* Which Function
+
+#+begin_src elisp
+  (leaf which-func
+    :tag "builtin"
+    :hook after-init-hook)
+#+end_src
+
+* Which Key
+
+Emacs package that displays available keybindings in popup.
+
+https://github.com/justbur/emacs-which-key
+
+#+begin_src elisp
+  (straight-use-package 'which-key)
+  (leaf which-key
+    :doc "Emacs package that displays available keybindings in popup."
+    :url "https://github.com/justbur/emacs-which-key"
+    :tag "help"
+    :custom (which-key-allow-imprecise-window-fit . nil)
+    :hook 'after-init-hook)
+#+end_src
+
+* Footer :noexport:
+
+#+begin_src elisp
+  (provide 'xandeer-tools)
+  ;;; xandeer-tools.el ends here
+#+end_src
