@@ -2,7 +2,7 @@
 # name: comment
 # key: comment
 # --
-#+BEGIN_COMMENT
+#+begin_comment
 $0
 `(%t)`
-#+END_COMMENT
+#+end_comment

@@ -2,6 +2,6 @@
 # name: rust
 # key: rs
 # --
-#+BEGIN_SRC rust
+#+begin_src rust
 $0
-#+END_SRC
+#+end_src

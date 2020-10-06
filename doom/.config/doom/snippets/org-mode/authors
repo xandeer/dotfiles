@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: - authors ::
+# name: - author ::
 # key: -a
 # --
-- authors :: $0
+- author :: $0

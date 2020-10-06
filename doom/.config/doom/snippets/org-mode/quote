@@ -2,7 +2,6 @@
 # name: quote
 # key: quote
 # --
-#+BEGIN_QUOTE
+#+begin_quote
 $0
-`(%t)`
-#+END_QUOTE
+#+end_quote
