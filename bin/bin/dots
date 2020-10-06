@@ -11,9 +11,23 @@ function syncRime() {
   make -C $DOTS_ROOT/rime
 }
 
+function useDoom() {
+  rm $HOME/.emacs.d
+  ln -s $HOME/.local/share/doom.d $HOME/.emacs.d
+}
+
+function useVanilla() {
+  rm $HOME/.emacs.d
+  ln -s $DOTS_ROOT/emacs.d/.emacs.d $HOME/.emacs.d
+}
+
 case "$1" in
   doom|d)
     syncDoom;;
+  dd)
+    useDoom;;
+  dx)
+    useVanilla;;
   rime|r)
     syncRime;;
   *)
