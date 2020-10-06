@@ -79,7 +79,6 @@ vc, and window.
 * Configs
 
 ** ansi-color
-
 ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape
 sequences like "Esc[30m" into EmacsOverlays, TextProperties, or
 XEmacsExtents with face colours, bold, etc.
@@ -104,7 +103,6 @@ https://www.emacswiki.org/emacs/AnsiColor
 #+end_src
 
 ** auto-compress
-
 #+begin_src elisp
   (leaf jka-cmpr
     :tag "builtin"
@@ -128,7 +126,6 @@ https://www.emacswiki.org/emacs/AnsiColor
     (auto-save-enable))
 #+end_src
 ** Dash
-
 A modern list library for Emacs.
 
 https://github.com/magnars/dash.el
@@ -144,17 +141,14 @@ https://github.com/magnars/dash.el
 #+end_src
 
 ** Dired
-
 #+begin_src elisp
   (leaf xandeer-editor-dired
     :require t)
-  ;;(require 'xandeer-editor-dired)
 #+end_src
 
 #+include: "editor-dired.org"
 
 ** Easy Kill
-
 Provide commands easy-kill and easy-mark to let users kill or mark things easily.
 
 https://github.com/leoliu/easy-kill
@@ -171,9 +165,7 @@ https://github.com/leoliu/easy-kill
 #+end_src
 
 ** Eldoc
-
 *** eldoc box
-
 This package displays ElDoc documentations in a childframe.
 
 https://github.com/casouri/eldoc-box
@@ -189,7 +181,6 @@ https://github.com/casouri/eldoc-box
 #+end_src
 
 *** eldoc overlay
-
 Display eldoc doc with contextual documentation overlay for easy to look.
 
 https://github.com/stardiviner/eldoc-overlay
@@ -204,7 +195,6 @@ https://github.com/stardiviner/eldoc-overlay
 #+end_src
 
 ** Expand Region
-
 Emacs extension to increase selected region by semantic units.
 
 https://github.com/magnars/expand-region.el
@@ -219,7 +209,6 @@ https://github.com/magnars/expand-region.el
 #+end_src
 
 ** explain-pause-mode
-
 top, but for Emacs.
 
 https://github.com/lastquestion/explain-pause-mode
@@ -232,7 +221,6 @@ https://github.com/lastquestion/explain-pause-mode
 #+end_src
 
 ** Files                                           :builtin:files:
-
 #+begin_src elisp
   (leaf files
     :tag "builtin" "files"
@@ -240,7 +228,6 @@ https://github.com/lastquestion/explain-pause-mode
 #+end_src
 
 ** Fill Column
-
 #+begin_src elisp
   (leaf fill
     :doc "Filling text."
@@ -248,13 +235,12 @@ https://github.com/lastquestion/explain-pause-mode
 #+end_src
 
 *** Unfill
-
 Functions providing the inverse of Emacs' fill-paragraph and fill-region
 
 https://github.com/purcell/unfill
 
 #+begin_src elisp
-  (xandeer/s-u-p unfill)
+  (straight-use-package 'unfill)
   (leaf unfill
     :doc "Functions providing the inverse of Emacs' fill-paragraph and fill-region"
     :url "https://github.com/purcell/unfill"
@@ -263,13 +249,12 @@ https://github.com/purcell/unfill
 #+end_src
 
 *** Visual-fill-column
-
 Emacs mode for wrapping visual-line-mode buffers at fill-column.
 
 https://github.com/joostkremers/visual-fill-column
 
 #+begin_src elisp
-  (xandeer/s-u-p visual-fill-column)
+  (straight-use-package 'visual-fill-column)
   (leaf visual-fill-column
     :doc "Emacs mode for wrapping visual-line-mode buffers at fill-column."
     :url "https://github.com/joostkremers/visual-fill-column"
@@ -286,9 +271,7 @@ https://github.com/joostkremers/visual-fill-column
 #+end_src
 
 ** Highlight
-
 *** Color Identifiers Mode
-
 Emacs minor mode to highlight each source code identifier uniquely based on its
 name.
 
@@ -304,7 +287,6 @@ https://github.com/ankurdave/color-identifiers-mode
 #+end_src
 
 *** hl-line
-
 Highlight the current line of characters.
 
 https://www.emacswiki.org/emacs/HighlightCurrentLine
@@ -318,7 +300,6 @@ https://www.emacswiki.org/emacs/HighlightCurrentLine
 #+end_src
 
 *** Highlight Indent Guides
-
 Emacs minor mode to highlight indentation.
 
 https://github.com/DarthFennec/highlight-indent-guides
@@ -357,7 +338,6 @@ e.g. #0000ff is displayed in white with a blue background.
 #+end_src
 
 ** Helpful
-
 A better Emacs *help* buffer.
 
 [[https://github.com/Wilfred/helpful]]
@@ -375,7 +355,6 @@ A better Emacs *help* buffer.
 #+end_src
 
 ** Htmlize
-
 Convert buffer text and decorations to HTML.
 
 https://github.com/hniksic/emacs-htmlize
@@ -389,7 +368,6 @@ https://github.com/hniksic/emacs-htmlize
 #+end_src
 
 ** indent-tools
-
 Emacs mode to indent, navigate around and act on indentation units: perfect for
 yaml, python and the like.
 
@@ -405,7 +383,6 @@ https://gitlab.com/emacs-stuff/indent-tools
 #+end_src
 
 ** List Unicode Display :convenience:
-
 Provides a command which searches for unicode characters by name, and displays a
 list of matching characters with their names in a buffer.
 
@@ -421,7 +398,6 @@ https://github.com/purcell/list-unicode-display
 #+end_src
 
 ** mmm-mode                    :convenience:faces:languages:tools:
-
 MMM Mode is a minor mode for Emacs that allows Multiple Major Modes to coexist
 in one buffer.
 
@@ -441,7 +417,6 @@ https://github.com/purcell/mmm-mode
 #+end_src
 
 ** Multiple Cursors                              :cursors:editing:
-
 Multiple cursors for Emacs.
 
 https://github.com/magnars/multiple-cursors.el
@@ -464,7 +439,6 @@ https://github.com/magnars/multiple-cursors.el
 #+end_src
 
 ** Paper Break Lines                           :convenience:faces:
-
 This Emacs library provides a global mode which displays ugly form feed
 characters as tidy horizontal rules.
 
@@ -489,7 +463,6 @@ https://github.com/purcell/page-break-lines
 #+end_src
 
 *** Rainbow Delimiters             :convenience:faces:lisp:tools:
-
 rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
 delimiters such as parentheses, brackets or braces according to their
 depth. Each successive level is highlighted in a different color. This makes it
@@ -507,7 +480,6 @@ https://github.com/Fanael/rainbow-delimiters
 #+end_src
 
 *** Smartparens                      :abbrev:convenience:editing:
-
 Minor mode for Emacs that deals with parens pairs and tries to be smart about
 it.
 
@@ -523,7 +495,6 @@ https://github.com/Fuco1/smartparens
 #+end_src
 
 ** Pretty Font
-
 #+begin_src elisp :tangle no
   (leaf pretty-font
     :when (fboundp 'mac-auto-operator-composition-mode)
@@ -657,7 +628,6 @@ https://github.com/Fuco1/smartparens
 #+end_src
 
 ** Pretty Mode
-
 #+begin_src elisp :tangle no
   (leaf pretty-mode
     :commands (turn-on-pretty-mode global-prettify-symbols-mode)
@@ -877,7 +847,6 @@ https://github.com/Fuco1/smartparens
 #+end_src
 
 ** Quick Peek :convenience:docs:help:tools:
-
 An inline pop-up library for Emacs Lisp.
 
 https://github.com/cpitclaudel/quick-peek
@@ -893,7 +862,6 @@ https://github.com/cpitclaudel/quick-peek
 #+end_src
 
 ** Subword :builtin:
-
 #+begin_src elisp
   (leaf subword
     :tag "builtin"
@@ -901,7 +869,6 @@ https://github.com/cpitclaudel/quick-peek
 #+end_src
 
 ** Symbol Overlay :faces:matching:
-
 Highlight symbols with overlays while providing a keymap for various operations
 about highlighted symbols. It was originally inspired by the package
 highlight-symbol. The fundamental difference is that in symbol-overlay every
@@ -923,7 +890,6 @@ https://github.com/wolray/symbol-overlay
 #+end_src
 
 ** Tree Sitter :languages:parsers:tools:
-
 ~emacs-tree-sitter~ is an Emacs binding for tree-sitter, an incremental parsing
 system.
 
@@ -967,7 +933,6 @@ https://ubolonton.github.io/emacs-tree-sitter/
 #+end_src
 
 *** Point History
-
 Show the history of points you visited before.
 
 https://github.com/blue0513/point-history
@@ -983,7 +948,6 @@ https://github.com/blue0513/point-history
 #+end_src
 
 *** Undo Propose            :convenience:files:undo:redo:history:
-
 Navigate the emacs undo history by staging undo's in a temporary buffer.
 
 https://github.com/jackkamm/undo-propose-el
@@ -1000,7 +964,6 @@ https://github.com/jackkamm/undo-propose-el
 #+end_src
 
 ** Uniquify                                        :builtin:files:
-
 #+begin_src elisp
   (leaf uniquify
     :tag "builtin" "files"
@@ -1019,7 +982,6 @@ https://github.com/jackkamm/undo-propose-el
 #+end_src
 
 *** abridge-diff                              :diffs:magit:tools:
-
 A simple Emacs package for abridging refined diff hunks (for example in
 magit). Why abridge a diff hunk? Most diffs are line based. If you are working
 on files with very long lines, for example LaTeX files, or text files with full
@@ -1039,7 +1001,6 @@ https://github.com/jdtsmith/abridge-diff
 #+end_src
 
 *** Diff-hl (only for dired)
-
 Emacs package for highlighting uncommitted changes
 
 https://github.com/dgutov/diff-hl
@@ -1055,7 +1016,6 @@ https://github.com/dgutov/diff-hl
 #+end_src
 
 *** Forge                                          :git:tools:vc:
-
 Work with Git forges from the comfort of Magit.
 
 https://github.com/magit/forge
@@ -1068,7 +1028,6 @@ https://github.com/magit/forge
 #+end_src
 
 *** Git Gutter
-
 #+begin_src elisp
   (leaf git-gutter
     :hook (after-init . global-git-gutter-mode)
@@ -1083,7 +1042,6 @@ https://github.com/magit/forge
 #+end_src
 
 *** Git Messenger                                :convenience:vc:
-
 git-messenger.el provides function that popup commit message at current line.
 
 https://github.com/emacsorphanage/git-messenger
@@ -1099,7 +1057,6 @@ https://github.com/emacsorphanage/git-messenger
 #+end_src
 
 *** Magit                                          :git:tools:vc:
-
 Magit is an interface to the version control system Git, implemented as an Emacs
 package. Magit aspires to be a complete Git porcelain. While we cannot (yet)
 claim that Magit wraps and improves upon each and every Git command, it is
@@ -1128,7 +1085,6 @@ https://github.com/magit/magit
 #+end_src
 
 *** Magit Org Todos                         :magit:orgmode:tools:
-
 Get `todo.org` into your magit status.
 
 https://github.com/danielma/magit-org-todos.el
@@ -1144,7 +1100,6 @@ https://github.com/danielma/magit-org-todos.el
 #+end_src
 
 *** Magit Todos                                        :magit:vc:
-
 Show source files' TODOs (and FIXMEs, etc) in Magit status buffer.
 
 https://github.com/alphapapa/magit-todos
@@ -1181,14 +1136,9 @@ https://github.com/m00natic/vlfi
 #+end_src
 
 ** Whitespace :convenience:data:wp:
-
 Visualize blanks (TAB, (HARD) SPACE and NEWLINE).
 
 https://www.emacswiki.org/emacs/WhiteSpace
-
-In Emacs, intelligently call whitespace-cleanup on save.
-
-https://github.com/purcell/whitespace-cleanup-mode
 
 #+begin_src elisp
   (straight-use-package 'whitespace)
@@ -1256,7 +1206,6 @@ https://github.com/purcell/whitespace-cleanup-mode
 #+end_src
 
 ** Yasnipeet
-
 YASnippet is a template system for Emacs. It allows you to type an abbreviation
 and automatically expand it into function templates. Bundled language templates
 include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML, CSS and more. The
