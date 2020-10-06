@@ -1,7 +1,6 @@
 #+PROPERTY: header-args:elisp :tangle (concat temporary-file-directory "xandeer-core-mixed.el")
 
 * Header :noexport:
-
 #+begin_src elisp
   ;;; xandeer-core-mixed.el  -*- lexical-binding: t; -*-
 
@@ -15,7 +14,6 @@
 #+end_src
 
 * Disable Some Features
-
 #+begin_src elisp
   (setq use-file-dialog        nil
         use-dialog-box         nil
@@ -24,12 +22,14 @@
   (when (fboundp 'tool-bar-mode)
     (tool-bar-mode -1))
 
+  (when (fboundp 'menu-bar-mode)
+    (menu-bar-mode -1))
+
   (when (fboundp 'set-scroll-bar-mode)
     (set-scroll-bar-mode nil))
 #+end_src
 
 * History, Saving
-
 #+begin_src elisp
   (leaf savehist
     :hook after-init-hook
@@ -46,10 +46,8 @@
          extended-command-history)))
 #+end_src
 * Session
-
 #+begin_src elisp
   (straight-use-package 'session)
-
   (leaf session
     :hook
     (after-init-hook . session-initialize)
@@ -84,8 +82,8 @@
          tags-table-list
          kill-ring)))
 #+end_src
-* macOS Frame
 
+* macOS Frame
 #+begin_src elisp
   (when *is-a-mac*
     (add-to-list 'default-frame-alist
@@ -106,7 +104,6 @@
 #+end_src
 
 * Minibuffer
-
 #+begin_src elisp
   (setq enable-recursive-minibuffers t)
 
@@ -123,7 +120,6 @@
 #+end_src
 
 * Shell
-
 #+begin_src elisp
   (defun xandeer/shell-command-in-view-mode (start end command &optional output-buffer replace &rest other-args)
     "Put \"*Shell Command Output*\" buffers into view-mode."
@@ -131,7 +127,6 @@
       (with-current-buffer "*Shell Command Output*"
         (view-mode 1))))
   (advice-add 'shell-command-on-region :after 'xandeer/shell-command-in-view-mode)
-
 
   (straight-use-package 'exec-path-from-shell)
   (leaf exec-path-from-shell
@@ -184,7 +179,6 @@
 #+end_src
 
 * Text Scale
-
 #+begin_src elisp
   (straight-use-package 'default-text-scale)
   (leaf default-text-scale
@@ -193,7 +187,6 @@
 #+end_src
 
 * Footer :noexport:
-
 #+begin_src elisp
   (provide 'xandeer-core-mixed)
   ;;; xandeer-core-mixed.el ends here

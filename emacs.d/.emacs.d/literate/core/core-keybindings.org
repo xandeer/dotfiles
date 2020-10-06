@@ -117,6 +117,7 @@ https://github.com/magit/transient
   (x/map
    "p" "projectile" "Xandeer projectile keymap"
    "p" #'projectile-switch-project
+   "s" #'xandeer/ivy/project-search
    "f" #'counsel-projectile-find-file)
 #+end_src
 ** macOS Special Key Bindings

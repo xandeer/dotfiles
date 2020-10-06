@@ -16,7 +16,7 @@
 
 * Autoloads
 :PROPERTIES:
-:header-args: elisp :tangle no (concat temporary-file-directory "xandeer-tools-ivy-function.el")
+:header-args: elisp :tangle (concat temporary-file-directory "xandeer-tools-ivy-function.el")
 :END:
 
 #+begin_src elisp :exports none
@@ -34,257 +34,273 @@
 Some of them borrowed from doom-emacs
 
 #+begin_src elisp
-  ;;;###autoload
-  (defun xandeer/ivy-is-workspace-buffer-p (buffer)
-    (let ((buffer (car buffer)))
-      (when (stringp buffer)
-       (setq buffer (get-buffer buffer)))
-      (xandeer/workspace-contains-buffer-p buffer)))
+    ;;;###autoload
+    (defun xandeer/ivy-is-workspace-buffer-p (buffer)
+      (let ((buffer (car buffer)))
+        (when (stringp buffer)
+         (setq buffer (get-buffer buffer)))
+        (xandeer/workspace-contains-buffer-p buffer)))
+
+    ;;;###autoload
+    (defun xandeer/ivy-is-workspace-other-buffer-p (buffer)
+      (let ((buffer (car buffer)))
+        (when (stringp buffer)
+         (setq buffer (get-buffer buffer)))
+        (and (not (eq buffer (current-buffer)))
+           (xandeer/workspace-contains-buffer-p buffer))))
+
+    ;;
+    ;; Library
+    ;;;###autoload
+    (defun xandeer/ivy/switch-buffer-preview ()
+      (let (ivy-use-virtual-buffers ivy--virtual-buffers)
+        (counsel--switch-buffer-update-fn)))
+
+    ;;;###autoload
+    (defalias 'xandeer/ivy/switch-buffer-preview-all #'counsel--switch-buffer-update-fn)
+    ;;;###autoload
+    (defalias 'xandeer/ivy/switch-buffer-unwind      #'counsel--switch-buffer-unwind)
+
+    ;;;###autoload
+    (defun xandeer/ivy--switch-buffer (workspace other)
+      (let ((current (not other))
+            prompt action filter update unwind)
+        (cond ((and workspace current)
+               (setq prompt "Switch to workspace buffer: "
+                     action #'ivy--switch-buffer-action
+                     filter #'xandeer/ivy-is-workspace-other-buffer-p))
+              (workspace
+               (setq prompt "Switch to workspace buffer in other window: "
+                     action #'ivy--switch-buffer-other-window-action
+                     filter #'xandeer/ivy-is-workspace-buffer-p))
+              (current
+               (setq prompt "Switch to buffer: "
+                     action #'ivy--switch-buffer-action))
+              ((setq prompt "Switch to buffer in other window: "
+                     action #'ivy--switch-buffer-other-window-action)))
+        (when xandeer/ivy-buffer-preview
+          (cond ((not (and ivy-use-virtual-buffers
+                        (eq xandeer/ivy-buffer-preview 'everything)))
+                 (setq update #'xandeer/ivy/switch-buffer-preview
+                       unwind #'xandeer/ivy/switch-buffer-unwind))
+                ((setq update #'xandeer/ivy/switch-buffer-preview-all
+                       unwind #'xandeer/ivy/switch-buffer-unwind))))
+        (ivy-read prompt 'internal-complete-buffer
+                  :action action
+                  :predicate filter
+                  :update-fn update
+                  :unwind unwind
+                  :preselect (buffer-name (other-buffer (current-buffer)))
+                  :matcher #'ivy--switch-buffer-matcher
+                  :keymap ivy-switch-buffer-map
+                  ;; NOTE A clever disguise, needed for virtual buffers.
+                  :caller #'ivy-switch-buffer)))
+
+    ;;;###autoload
+    (defun xandeer/ivy/switch-workspace-buffer (&optional arg)
+      "Switch to another buffer within the current workspace.
+    If ARG (universal argument), open selection in other-window."
+      (interactive "P")
+      (xandeer/ivy--switch-buffer t arg))
+
+    ;;;###autoload
+    (defun xandeer/ivy/switch-workspace-buffer-other-window ()
+      "Switch another window to a buffer within the current workspace."
+      (interactive)
+      (xandeer/ivy--switch-buffer t t))
+
+    ;;;###autoload
+    (defun xandeer/ivy/switch-buffer ()
+      "Switch to another buffer."
+      (interactive)
+      (xandeer/ivy--switch-buffer nil nil))
+
+    ;;;###autoload
+    (defun xandeer/ivy/switch-buffer-other-window ()
+      "Switch to another buffer in another window."
+      (interactive)
+      (xandeer/ivy--switch-buffer nil t))
+
+    ;;;###autoload
+    (defun xandeer/ivy-woccur ()
+      "Invoke a wgrep buffer on the current ivy results, if supported."
+      (interactive)
+      (unless (window-minibuffer-p)
+        (user-error "No completion session is active"))
+      (require 'wgrep)
+      (let ((caller (ivy-state-caller ivy-last)))
+        (if-let (occur-fn (plist-get xandeer/ivy-edit-functions caller))
+          (ivy-exit-with-action
+           (lambda (_) (funcall occur-fn)))
+         (if-let (occur-fn (plist-get ivy--occurs-list caller))
+             (let ((buffer (generate-new-buffer
+                            (format "*ivy-occur%s \"%s\"*"
+                                    (if caller (concat " " (prin1-to-string caller)) "")
+                                    ivy-text))))
+               (with-current-buffer buffer
+                 (let ((inhibit-read-only t))
+                   (erase-buffer)
+                   (funcall occur-fn))
+                 (setf (ivy-state-text ivy-last) ivy-text)
+                 (setq ivy-occur-last ivy-last)
+                 (setq-local ivy--directory ivy--directory))
+               (ivy-exit-with-action
+                `(lambda (_)
+                   (pop-to-buffer ,buffer)
+                   (ivy-wgrep-change-to-wgrep-mode))))
+           (user-error "%S doesn't support wgrep" caller)))))
+
+    ;;;###autoload
+    (defun xandeer/ivy-yas-prompt (prompt choices &optional display-fn)
+      (yas-completing-prompt prompt choices display-fn #'ivy-completing-read))
+
+    ;;;###autoload
+    (defun xandeer/ivy-git-grep-other-window-action (x)
+      "Opens the current candidate in another window."
+      (when (string-match "\\`\\(.*?\\):\\([0-9]+\\):\\(.*\\)\\'" x)
+        (select-window
+         (with-ivy-window
+          (let ((file-name   (match-string-no-properties 1 x))
+                (line-number (match-string-no-properties 2 x)))
+            (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
+            (goto-char (point-min))
+            (forward-line (1- (string-to-number line-number)))
+            (re-search-forward (ivy--regex ivy-text t) (line-end-position) t)
+            (run-hooks 'counsel-grep-post-action-hook)
+            (selected-window))))))
+
+    ;;;###autoload
+    (defun xandeer/ivy-confirm-delete-file (x)
+      (dired-delete-file x 'confirm-each-subdirectory))
+
+
+    ;;
+    ;;; File searching
+
+    ;;;###autoload
+    (defun xandeer/ivy/projectile-find-file ()
+      "A more sensible `counsel-projectile-find-file', which will revert to
+    `counsel-find-file' if invoked from $HOME, `counsel-file-jump' if invoked from a
+    non-project, `projectile-find-file' if in a big project (more than
+    `ivy-sort-max-size' files), or `counsel-projectile-find-file' otherwise.
+    The point of this is to avoid Emacs locking up indexing massive file trees."
+      (interactive)
+      ;; Spoof the command so that ivy/counsel will display the (well fleshed-out)
+      ;; actions list for `counsel-find-file' on C-o. The actions list for the other
+      ;; commands aren't as well configured or are empty.
+      (let ((this-command 'counsel-find-file))
+        (call-interactively
+         (cond ((or (file-equal-p default-directory "~")
+                  (when-let (proot (xandeer/project-root))
+                    (file-equal-p proot "~")))
+                #'counsel-find-file)
+
+             ((xandeer/project-p)
+              (let ((files (projectile-current-project-files)))
+                (if (<= (length files) ivy-sort-max-size)
+                    #'counsel-projectile-find-file
+                  #'projectile-find-file)))
+
+             (#'counsel-file-jump)))))
+
+    ;;;###autoload
+    (cl-defun xandeer/ivy-file-search (&key query in all-files (recursive t) prompt args)
+      "Conduct a file search using ripgrep.
+    :query STRING
+      Determines the initial input to search for.
+    :in PATH
+      Sets what directory to base the search out of. Defaults to the current
+      project's root.
+    :recursive BOOL
+      Whether or not to search files recursively from the base directory."
+      (declare (indent defun))
+      (unless (executable-find "rg")
+        (user-error "Couldn't find ripgrep in your PATH"))
+      (require 'counsel)
+      (let* ((this-command 'counsel-rg)
+             (project-root (or (xandeer/project-root) default-directory))
+             (directory (or in project-root))
+             (args (concat (if all-files " -uu")
+                           (unless recursive " --maxdepth 1")
+                           " "
+                           (mapconcat #'shell-quote-argument args " "))))
+        (setq deactivate-mark t)
+        (counsel-rg
+         (or query
+           (when (xandeer/region-active-p)
+             (replace-regexp-in-string
+              "[! |]" (lambda (substr)
+                        (cond ((and (string= substr " ")
+                                  (not *ivy-fuzzy*))
+                               "  ")
+                              ((string= substr "|")
+                               "\\\\\\\\|")
+                              ((concat "\\\\" substr))))
+              (rxt-quote-pcre (xandeer/thing-at-point-or-region)))))
+         directory args
+         (or prompt
+           (format "rg%s [%s]: "
+                   args
+                   (cond ((equal directory default-directory)
+                          "./")
+                         ((equal directory project-root)
+                          (projectile-project-name))
+                         ((file-relative-name directory project-root))))))))
+
+    ;;;###autoload
+    (defun xandeer/ivy/project-search (&optional arg initial-query directory)
+      "Performs a live project search from the project root using ripgrep.
+    If ARG (universal argument), include all files, even hidden or compressed ones,
+    in the search."
+      (interactive "P")
+      (xandeer/ivy-file-search :query initial-query :in directory :all-files arg))
+
+    ;;;###autoload
+    (defun xandeer/ivy/project-search-from-cwd (&optional arg initial-query)
+      "Performs a project search recursively from the current directory.
+    If ARG (universal argument), include all files, even hidden or compressed ones."
+      (interactive "P")
+      (xandeer/ivy/project-search arg initial-query default-directory))
 
   ;;;###autoload
-  (defun xandeer/ivy-is-workspace-other-buffer-p (buffer)
-    (let ((buffer (car buffer)))
-      (when (stringp buffer)
-       (setq buffer (get-buffer buffer)))
-      (and (not (eq buffer (current-buffer)))
-         (xandeer/workspace-contains-buffer-p buffer))))
-
-  ;;
-  ;; Library
-  ;;;###autoload
-  (defun xandeer/ivy/switch-buffer-preview ()
-    (let (ivy-use-virtual-buffers ivy--virtual-buffers)
-      (counsel--switch-buffer-update-fn)))
-
-  ;;;###autoload
-  (defalias 'xandeer/ivy/switch-buffer-preview-all #'counsel--switch-buffer-update-fn)
-  ;;;###autoload
-  (defalias 'xandeer/ivy/switch-buffer-unwind      #'counsel--switch-buffer-unwind)
-
-  ;;;###autoload
-  (defun xandeer/ivy--switch-buffer (workspace other)
-    (let ((current (not other))
-          prompt action filter update unwind)
-      (cond ((and workspace current)
-             (setq prompt "Switch to workspace buffer: "
-                   action #'ivy--switch-buffer-action
-                   filter #'xandeer/ivy-is-workspace-other-buffer-p))
-            (workspace
-             (setq prompt "Switch to workspace buffer in other window: "
-                   action #'ivy--switch-buffer-other-window-action
-                   filter #'xandeer/ivy-is-workspace-buffer-p))
-            (current
-             (setq prompt "Switch to buffer: "
-                   action #'ivy--switch-buffer-action))
-            ((setq prompt "Switch to buffer in other window: "
-                   action #'ivy--switch-buffer-other-window-action)))
-      (when xandeer/ivy-buffer-preview
-        (cond ((not (and ivy-use-virtual-buffers
-                      (eq xandeer/ivy-buffer-preview 'everything)))
-               (setq update #'xandeer/ivy/switch-buffer-preview
-                     unwind #'xandeer/ivy/switch-buffer-unwind))
-              ((setq update #'xandeer/ivy/switch-buffer-preview-all
-                     unwind #'xandeer/ivy/switch-buffer-unwind))))
-      (ivy-read prompt 'internal-complete-buffer
-                :action action
-                :predicate filter
-                :update-fn update
-                :unwind unwind
-                :preselect (buffer-name (other-buffer (current-buffer)))
-                :matcher #'ivy--switch-buffer-matcher
-                :keymap ivy-switch-buffer-map
-                ;; NOTE A clever disguise, needed for virtual buffers.
-                :caller #'ivy-switch-buffer)))
-
-  ;;;###autoload
-  (defun xandeer/ivy/switch-workspace-buffer (&optional arg)
-    "Switch to another buffer within the current workspace.
-  If ARG (universal argument), open selection in other-window."
+  (defun xandeer/search-cwd (&optional arg)
+    "Conduct a text search in files under the current folder.
+  If prefix ARG is set, prompt for a directory to search from."
     (interactive "P")
-    (xandeer/ivy--switch-buffer t arg))
+    (let ((default-directory
+            (if arg (counsel-read-directory-name "Search directory: ")
+              default-directory)))
+      (call-interactively #'xandeer/ivy/project-search-from-cwd)))
 
   ;;;###autoload
-  (defun xandeer/ivy/switch-workspace-buffer-other-window ()
-    "Switch another window to a buffer within the current workspace."
+  (defun xandeer/search-other-cwd ()
+    "Conduct a text search in another directory."
     (interactive)
-    (xandeer/ivy--switch-buffer t t))
-
-  ;;;###autoload
-  (defun xandeer/ivy/switch-buffer ()
-    "Switch to another buffer."
-    (interactive)
-    (xandeer/ivy--switch-buffer nil nil))
-
-  ;;;###autoload
-  (defun xandeer/ivy/switch-buffer-other-window ()
-    "Switch to another buffer in another window."
-    (interactive)
-    (xandeer/ivy--switch-buffer nil t))
-
-  ;;;###autoload
-  (defun xandeer/ivy-woccur ()
-    "Invoke a wgrep buffer on the current ivy results, if supported."
-    (interactive)
-    (unless (window-minibuffer-p)
-      (user-error "No completion session is active"))
-    (require 'wgrep)
-    (let ((caller (ivy-state-caller ivy-last)))
-      (if-let (occur-fn (plist-get xandeer/ivy-edit-functions caller))
-        (ivy-exit-with-action
-         (lambda (_) (funcall occur-fn)))
-       (if-let (occur-fn (plist-get ivy--occurs-list caller))
-           (let ((buffer (generate-new-buffer
-                          (format "*ivy-occur%s \"%s\"*"
-                                  (if caller (concat " " (prin1-to-string caller)) "")
-                                  ivy-text))))
-             (with-current-buffer buffer
-               (let ((inhibit-read-only t))
-                 (erase-buffer)
-                 (funcall occur-fn))
-               (setf (ivy-state-text ivy-last) ivy-text)
-               (setq ivy-occur-last ivy-last)
-               (setq-local ivy--directory ivy--directory))
-             (ivy-exit-with-action
-              `(lambda (_)
-                 (pop-to-buffer ,buffer)
-                 (ivy-wgrep-change-to-wgrep-mode))))
-         (user-error "%S doesn't support wgrep" caller)))))
-
-  ;;;###autoload
-  (defun xandeer/ivy-yas-prompt (prompt choices &optional display-fn)
-    (yas-completing-prompt prompt choices display-fn #'ivy-completing-read))
-
-  ;;;###autoload
-  (defun xandeer/ivy-git-grep-other-window-action (x)
-    "Opens the current candidate in another window."
-    (when (string-match "\\`\\(.*?\\):\\([0-9]+\\):\\(.*\\)\\'" x)
-      (select-window
-       (with-ivy-window
-        (let ((file-name   (match-string-no-properties 1 x))
-              (line-number (match-string-no-properties 2 x)))
-          (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
-          (goto-char (point-min))
-          (forward-line (1- (string-to-number line-number)))
-          (re-search-forward (ivy--regex ivy-text t) (line-end-position) t)
-          (run-hooks 'counsel-grep-post-action-hook)
-          (selected-window))))))
-
-  ;;;###autoload
-  (defun xandeer/ivy-confirm-delete-file (x)
-    (dired-delete-file x 'confirm-each-subdirectory))
+    (xandeer/search-cwd 'other))
 
 
-  ;;
-  ;;; File searching
+    ;;
+    ;;; Wrappers around `counsel-compile'
 
-  ;;;###autoload
-  (defun xandeer/ivy/projectile-find-file ()
-    "A more sensible `counsel-projectile-find-file', which will revert to
-  `counsel-find-file' if invoked from $HOME, `counsel-file-jump' if invoked from a
-  non-project, `projectile-find-file' if in a big project (more than
-  `ivy-sort-max-size' files), or `counsel-projectile-find-file' otherwise.
-  The point of this is to avoid Emacs locking up indexing massive file trees."
-    (interactive)
-    ;; Spoof the command so that ivy/counsel will display the (well fleshed-out)
-    ;; actions list for `counsel-find-file' on C-o. The actions list for the other
-    ;; commands aren't as well configured or are empty.
-    (let ((this-command 'counsel-find-file))
-      (call-interactively
-       (cond ((or (file-equal-p default-directory "~")
-                (when-let (proot (xandeer/project-root))
-                  (file-equal-p proot "~")))
-              #'counsel-find-file)
+    ;;;###autoload
+    (defun xandeer/ivy/compile ()
+      "Execute a compile command from the current buffer's directory."
+      (interactive)
+      (counsel-compile default-directory))
 
-           ((xandeer/project-p)
-            (let ((files (projectile-current-project-files)))
-              (if (<= (length files) ivy-sort-max-size)
-                  #'counsel-projectile-find-file
-                #'projectile-find-file)))
+    ;;;###autoload
+    (defun xandeer/ivy/project-compile ()
+      "Execute a compile command from the current project's root."
+      (interactive)
+      (counsel-compile (projectile-project-root)))
 
-           (#'counsel-file-jump)))))
-
-  ;;;###autoload
-  (cl-defun xandeer/ivy-file-search (&key query in all-files (recursive t) prompt args)
-    "Conduct a file search using ripgrep.
-  :query STRING
-    Determines the initial input to search for.
-  :in PATH
-    Sets what directory to base the search out of. Defaults to the current
-    project's root.
-  :recursive BOOL
-    Whether or not to search files recursively from the base directory."
-    (declare (indent defun))
-    (unless (executable-find "rg")
-      (user-error "Couldn't find ripgrep in your PATH"))
-    (require 'counsel)
-    (let* ((this-command 'counsel-rg)
-           (project-root (or (xandeer/project-root) default-directory))
-           (directory (or in project-root))
-           (args (concat (if all-files " -uu")
-                         (unless recursive " --maxdepth 1")
-                         " "
-                         (mapconcat #'shell-quote-argument args " "))))
-      (setq deactivate-mark t)
-      (counsel-rg
-       (or query
-         (when (xandeer/region-active-p)
-           (replace-regexp-in-string
-            "[! |]" (lambda (substr)
-                      (cond ((and (string= substr " ")
-                                (not *ivy-fuzzy*))
-                             "  ")
-                            ((string= substr "|")
-                             "\\\\\\\\|")
-                            ((concat "\\\\" substr))))
-            (rxt-quote-pcre (xandeer/thing-at-point-or-region)))))
-       directory args
-       (or prompt
-         (format "rg%s [%s]: "
-                 args
-                 (cond ((equal directory default-directory)
-                        "./")
-                       ((equal directory project-root)
-                        (projectile-project-name))
-                       ((file-relative-name directory project-root))))))))
-
-  ;;;###autoload
-  (defun xandeer/ivy/project-search (&optional arg initial-query directory)
-    "Performs a live project search from the project root using ripgrep.
-  If ARG (universal argument), include all files, even hidden or compressed ones,
-  in the search."
-    (interactive "P")
-    (xandeer/ivy-file-search :query initial-query :in directory :all-files arg))
-
-  ;;;###autoload
-  (defun xandeer/ivy/project-search-from-cwd (&optional arg initial-query)
-    "Performs a project search recursively from the current directory.
-  If ARG (universal argument), include all files, even hidden or compressed ones."
-    (interactive "P")
-    (xandeer/ivy/project-search arg initial-query default-directory))
-
-
-  ;;
-  ;;; Wrappers around `counsel-compile'
-
-  ;;;###autoload
-  (defun xandeer/ivy/compile ()
-    "Execute a compile command from the current buffer's directory."
-    (interactive)
-    (counsel-compile default-directory))
-
-  ;;;###autoload
-  (defun xandeer/ivy/project-compile ()
-    "Execute a compile command from the current project's root."
-    (interactive)
-    (counsel-compile (projectile-project-root)))
-
-  ;;;###autoload
-  (defun xandeer/ivy/git-grep-other-window-action ()
-    "Open the current counsel-{ag,rg,git-grep} candidate in other-window."
-    (interactive)
-    (ivy-set-action #'xandeer/ivy-git-grep-other-window-action)
-    (setq ivy-exit 'done)
-    (exit-minibuffer))
+    ;;;###autoload
+    (defun xandeer/ivy/git-grep-other-window-action ()
+      "Open the current counsel-{ag,rg,git-grep} candidate in other-window."
+      (interactive)
+      (ivy-set-action #'xandeer/ivy-git-grep-other-window-action)
+      (setq ivy-exit 'done)
+      (exit-minibuffer))
 #+end_src
 
 #+begin_src elisp :exports none
@@ -382,19 +398,20 @@ Some of them borrowed from doom-emacs
      ([remap swiper]                     . counsel-grep-or-swiper)
      ([remap unicode-chars-list-chars]   . counsel-unicode-char)
      ([remap yank-pop]                   . counsel-yank-pop))
+    ("C-c x s" . xandeer/search-cwd)
+    ("C-c x S" . xandeer/search-other-cwd)
     (:counsel-find-file-map
      ("C-h"  . counsel-up-directory)
      ("C-l" . counsel-down-directory))
     :config
+    (setq counsel-rg-base-command
+          '("rg" "--hidden" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s"))
     ;; Record in jumplist when opening files via counsel-{ag,rg,pt,git-grep}
     ;; (add-hook 'counsel-grep-post-action-hook #'better-jumper-set-jump)
-    ;; (ivy-add-actions
-    ;;  'counsel-rg ; also applies to `counsel-rg'
-    ;;  '(("O" xandeer/ivy-git-grep-other-window-action "open in other window")))
+     (ivy-add-actions
+      'counsel-rg ; also applies to `counsel-rg'
+      '(("O" xandeer/ivy-git-grep-other-window-action "open in other window")))
 
-    ;; Make `counsel-compile' projectile-aware (if you prefer it over
-    ;; `xandeer/ivy/compile' and `xandeer/ivy/project-compile')
-    ;; (add-to-list 'counsel-compile-root-functions #'projectile-project-root)
     (after-x 'savehist
       ;; Persist `counsel-compile' history
       (add-to-list 'savehist-additional-variables 'counsel-compile-history))

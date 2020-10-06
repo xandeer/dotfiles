@@ -17,15 +17,48 @@
 #+begin_src elisp
   (leaf org
     :require t
+    :hook
+    (org-mode-hook . auto-fill-mode)
     :bind
     (:org-mode-map
      ("C-c x C-r" . org-table-recalculate))
+    :custom
+    ;; org appearance
+    ((org-allow-promoting-top-level-subtree
+      org-cycle-level-faces
+      org-fontify-done-headline
+      org-fontify-emphasized-text
+      org-fontify-todo-headline
+      org-fontify-whole-block-delimiter-line
+      org-fontify-whole-heading-line
+      org-hide-emphasis-markers)
+     . t)
+    (org-startup-folded . 'content)
+    (org-confirm-babel-evaluate . nil)
+  :defer-config
+  ;; (nasy/add-company-backend 'org-mode 'company-tabnine)
+  ;; --------
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   `((emacs-lisp . t)
+     (plantuml   . t)
+     (restclient . t)
+     (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
     :config
     (setq org-version "9.5")
     (setq org-directory "~/projects/personal/notes/")
     (setq org-default-notes-file (concat org-directory "notes.org"))
     (setq org-image-actual-width '(500))
     (setq org-adapt-indentation nil)
+    (setq org-emphasis-regexp-components ;; markup chinesee without space
+          (list (concat " \t('\"{"            "[:nonascii:]")
+                (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
+                " \t\r\n,\"'"
+                "."
+                1))
+    (add-to-list 'org-emphasis-alist
+                 ;; set bold face
+                 '("*" (:foreground "#f00056" :weight bold)))
     ;; set emphasis support 5 lines
     (setcar (nthcdr 4 org-emphasis-regexp-components) 5)
     (org-set-emph-re 'org-emphasis-regexp-components
@@ -40,7 +73,7 @@
     :config
     (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
                               (sequence "|" "CANCELED(c@/!)" "SHELVE(s)")))
-    (setq org-agenda-span 'day)
+    (setq org-agenda-span 'week)
     (setq org-agenda-start-day nil)
     (setq org-clock-clocked-in-display 'both)
     (setq org-agenda-start-on-weekday nil)
@@ -49,6 +82,12 @@
                                  "..........."
                                  "- - - - - - - - - - - - - - - - - - - - - - - - - - -"))
     (setq org-agenda-include-diary t)
+    (setq org-agenda-window-setup 'current-window)
+    (setq org-agenda-sorting-strategy
+          '((agenda habit-down time-up user-defined-up effort-up category-keep)
+            (todo category-up effort-up)
+            (tags category-up effort-up)
+            (search category-up)))
     (setq calendar-chinese-celestial-stem
           ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
     (setq calendar-chinese-terrestrial-branch
@@ -171,7 +210,6 @@
     (:org-mode-map
      ("C-c x C-b" . org-journal-open-pervious-entry)
      ("C-c x C-f" . org-journal-open-next-entry)
-     ("C-c x s" . org-journal-search-forever)
      ("C-c x C-s" . org-journal-schedule-view))
     :config
     (setq org-journal-file-format "%Y-%m-%d-%a.org")

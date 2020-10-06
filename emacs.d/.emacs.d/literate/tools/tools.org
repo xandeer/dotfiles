@@ -18,7 +18,6 @@ project, and tools.
 #+end_src
 
 * Anzu
-
 anzu.el is an Emacs port of anzu.vim. anzu.el provides a minor mode which
 displays current match and total matches information in the mode-line in
 various search modes.
@@ -37,14 +36,14 @@ https://github.com/emacsorphanage/anzu
            ([remap query-replace-regexp] . anzu-query-replace-regexp)))
 #+end_src
 
-* Avy
-
+* Avy and Ace-Pinyin
 Jump to things in Emacs tree-style. A little like easymotion.
 
 https://github.com/abo-abo/avy
 
 #+begin_src elisp
   (straight-use-package 'avy)
+  (straight-use-package 'ace-pinyin)
   (leaf avy
     :doc "Jump to things in Emacs tree-style."
     :url "https://github.com/abo-abo/avy"
@@ -54,8 +53,14 @@ https://github.com/abo-abo/avy
     ("C-`"     . avy-goto-char-2)
     ("M-g e"   . avy-goto-word-0)
     ("M-g w"   . avy-goto-word-1)
-    ("C-~"     . avy-goto-word-1)
+    ("M-g l"   . avy-goto-line)
+    ("M-g M-g" . avy-goto-word-1)
     ("C-c C-j" . avy-resume))
+
+  (leaf ace-pinyin
+    :after avy
+    :config
+    (ace-pinyin-global-mode 1)
 #+end_src
 
 * Beginend
@@ -377,15 +382,15 @@ https://www.emacswiki.org/emacs/RecentFiles
 #+end_src
 
 * Restclient
-
-#+BEGIN_SRC elisp
-  (xandeer/s-u-p ob-restclient restclient)
-#+END_SRC
+#+begin_src elisp
+  (straight-use-package 'restclient)
+  (straight-use-package 'ob-restclient)
+#+end_src
 
 * Rime
-
 #+begin_src elisp
-(require 'xandeer-tools-rime)
+  (when (or *is-a-mac* *is-a-linux*)
+    (require 'xandeer-tools-rime))
 #+end_src
 
 #+include: "rime.org"
@@ -416,6 +421,39 @@ https://www.emacswiki.org/emacs/RecentFiles
             "朗道汉英字典5.0"
             "新华字典")))
 #+end_src
+* Smart Input Source
+#+begin_src elisp
+  (when (or *is-a-mac* *is-a-linux*)
+    (straight-use-package 'sis)
+    (leaf sis
+      ;; :hook
+      ;; enable the /follow context/ and /inline region/ mode for specific buffers
+      ;; (((text-mode prog-mode) . sis-follow-context-mode)
+      ;;  ((text-mode prog-mode) . sis-inline-mode))
+      :config
+      (sis-ism-lazyman-config
+       nil
+       "rime"
+       'native)
+      :custom
+      ;; enable the /cursor color/ mode
+      ((;;sis-global-cursor-color-mode
+        ;; enable the /respect/ mode
+        sis-global-respect-mode
+        ;; enable the /follow context/ mode for all buffers
+        sis-global-follow-context-mode t
+        ;; enable the /inline english/ mode for all buffers
+        sis-global-inline-mode)
+       . t)))
+#+end_src
+* Telega
+#+begin_src elisp
+  (when (or *is-a-mac* *is-a-linux*)
+    (require 'xandeer-tools-telega))
+#+end_src
+
+#+include: "telega.org"
+
 * Treemacs
 
 Treemacs is a file and project explorer similar to NeoTree or vim’s NerdTree, but largely inspired by the Project Explorer in Eclipse. It shows the file system outlines of your projects in a simple tree layout allowing quick navigation and exploration, while also possessing basic file management utilities.

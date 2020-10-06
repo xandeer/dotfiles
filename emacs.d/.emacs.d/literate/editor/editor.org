@@ -20,7 +20,6 @@ vc, and window.
 #+end_src
 
 * Packages
-
 #+begin_src elisp
   (straight-register-package
    '(tree-sitter :host github
@@ -74,9 +73,7 @@ vc, and window.
     git-timemachine
     magit
     magit-org-todos
-    magit-todos
-
-    whitespace-cleanup-mode)
+    magit-todos)
 #+end_src
 
 * Configs
@@ -1194,6 +1191,7 @@ In Emacs, intelligently call whitespace-cleanup on save.
 https://github.com/purcell/whitespace-cleanup-mode
 
 #+begin_src elisp
+  (straight-use-package 'whitespace)
   (leaf whitespace
     :tag "data" "wp"
     :init
@@ -1214,25 +1212,9 @@ https://github.com/purcell/whitespace-cleanup-mode
       twittering-mode-hook
       minibuffer-setup-hook
       fundamental-mode) . no-trailing-whitespace))
-
-
-  (leaf whitespace-cleanup-mode
-    :disabled t
-    :doc "In Emacs, intelligently call whitespace-cleanup on save."
-    :url "https://github.com/purcell/whitespace-cleanup-mode"
-    :tag "convonience"
-    :custom
-    (whitespace-cleanup-mode-only-if-initially-clean . nil)
-    (whitespace-style
-     . '(face tabs spaces trailing space-before-tab
-              newline indentation empty space-after-tab
-              space-mark tab-mark newline-mark))
-    :hook ((after-init-hook . global-whitespace-cleanup-mode))
-    :bind (("<remap> <just-one-space>" . cycle-spacing)))
 #+end_src
 
 ** Writeroom Mode
-
 #+begin_src elisp
   (leaf writeroom-mode
     :preface

@@ -14,17 +14,11 @@
   ;;; Code:
 #+end_src
 
-* Package
-
-  #+begin_src elisp
-    (xandeer/s-u-p dashboard doom-themes)
-  #+end_src
-
 * Configs
-
 ** Dashboard
 
 #+begin_src elisp
+  (straight-use-package 'dashboard)
   (leaf dashboard
     :commands dashboard-setup-startup-hook
     :bind
@@ -65,11 +59,11 @@
                 "Config"
                 "Config File"
                 (lambda (&rest _) (let ((upath (expand-file-name "custom/user-config.el" user-emacs-directory)))
-                                   (epath (expand-file-name "custom/user-config-example.el" user-emacs-directory)))
-                               (when (and (file-exists-p epath)
-                                         (not (file-exists-p upath)))
-                                 (copy-file epath upath))
-                               (find-file upath)))))))
+                                    (epath (expand-file-name "custom/user-config-example.el" user-emacs-directory)))
+                  (when (and (file-exists-p epath)
+                             (not (file-exists-p upath)))
+                    (copy-file epath upath))
+                  (find-file upath)))))))
     (defun xandeer/dashboard-refresh ()
       "Refresh dashboard buffer."
       (interactive)
@@ -89,8 +83,8 @@
 #+end_src
 
 ** doom Theme
-
 #+begin_src elisp
+  (straight-use-package 'doom-themes)
   (leaf doom-themes
     :custom ((doom-dracula-brighter-comments
               doom-dracula-colorful-headers
@@ -105,7 +99,6 @@
 #+end_src
 
 ** Font
-
 #+begin_src elisp
   (defun xandeer/set--font (frame)
     "Xandeer set font for `FRAME'."
@@ -147,11 +140,7 @@
       (set-face-attribute 'mode-line-inactive nil
                           :font (font-spec :name   *font*
                                            :weight 'normal
-                                           :size   15))
-      (set-face-attribute 'tab-line nil
-                          :font (font-spec :name   *font*
-                                           :weight 'normal
-                                           :size   12))))
+                                           :size   15))))
 
   (defun xandeer/set-font (&rest _)
     "Xandeer set font."
@@ -176,15 +165,12 @@
 #+end_src
 
 ** Mode Line
-
 #+begin_src elisp
   (straight-use-package 'minions)
   (leaf minions
     :hook after-init-hook
     :custom (minions-mode-line-lighter . "✬"))
 #+end_src
-
-# #+include: "spaceline.org"
 
 #+begin_src elisp
   (straight-use-package 'doom-modeline)
@@ -195,68 +181,37 @@
     ((doom-modeline-height                      . 25)
      (doom-modeline-bar-width                   . 3)
      (doom-modeline-window-width-limit          . fill-column)
-     (doom-modeline-project-detection           . 'project)  ;; changed
-     (doom-modeline-buffer-file-name-style      . 'auto)
-     ((doom-modeline-icon                       ;; changed
+     (doom-modeline-project-detection           . 'project)
+     (doom-modeline-buffer-file-name-style      . 'truncate-with-project)
+     ((doom-modeline-icon
        doom-modeline-major-mode-icon
        doom-modeline-major-mode-color-icon
        doom-modeline-buffer-state-icon
        doom-modeline-buffer-modification-icon
-       doom-modeline-unicode-fallback           ;; changed
-       doom-modeline-minor-modes                ;; changed
-       doom-modeline-enable-word-count)         ;; changed
+       doom-modeline-unicode-fallback
+       doom-modeline-minor-modes
+       doom-modeline-enable-word-count)
       . t)
      (doom-modeline-continuous-word-count-modes . '(markdown-mode gfm-mode org-mode text-mode))
-     (doom-modeline-buffer-encoding             . nil)  ;; changed
+     (doom-modeline-buffer-encoding             . nil)
      (doom-modeline-indent-info                 . nil)
-     (doom-modeline-checker-simple-format       . nil)  ;; changed
+     (doom-modeline-checker-simple-format       . nil)
      (doom-modeline-number-limit                . 99)
      (doom-modeline-vcs-max-length              . 12)
-     (doom-modeline-persp-name                  . nil)  ;; changed
+     (doom-modeline-persp-name                  . nil)
      (doom-modeline-display-default-persp-name  . nil)
      (doom-modeline-lsp                         . t)
      (doom-modeline-github                      . t)
      `(doom-modeline-github-interval            . ,(* 30 60))
-     (doom-modeline-modal-icon                  . t)
-
-     ((doom-modeline-env-version
-       doom-modeline-env-enable-python
-       doom-modeline-env-enable-ruby
-       doom-modeline-env-enable-perl
-       doom-modeline-env-enable-go
-       doom-modeline-env-enable-elixir
-       doom-modeline-env-enable-rust)
-      . t)
-
-     (doom-modeline-env-python-executable . "python")
-     (doom-modeline-env-ruby-executable   . "ruby")
-     (doom-modeline-env-perl-executable   . "perl")
-     (doom-modeline-env-go-executable     . "go")
-     (doom-modeline-env-elixir-executable . "iex")
-     (doom-modeline-env-rust-executable   . "rustc")
-
-     (doom-modeline-env-load-string . "...")
-
-     (doom-modeline-mu4e        . t)
-     (doom-modeline-irc         . t)
-     (doom-modeline-irc-stylize . 'identity)))
+     (doom-modeline-modal-icon                  . t)))
 #+end_src
 
 ** Nasy Theme
-
 #+begin_src elisp
   (leaf nasy-theme)
 #+end_src
 
-** Tab Line (Disabled)
-
-#+begin_src elisp :tangle no
-  (add-hook #'after-init-hook #'global-tab-line-mode)
-  (gsetq tab-line-close-tab-function #'kill-buffer)
-#+end_src
-
 * Footer                                                              :noexport:
-
 #+begin_src elisp
   (provide 'xandeer-ui)
   ;;; xandeer-ui.el ends here

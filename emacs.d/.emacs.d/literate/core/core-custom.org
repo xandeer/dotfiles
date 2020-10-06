@@ -5,7 +5,6 @@ Here includes all of the customizable variables and faces of my configuration.
 You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 
 * Header :noexport:
-
 #+begin_src elisp
   ;;; xandeer-core-custom.el  -*- lexical-binding: t; -*-
 
@@ -19,7 +18,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 * Custom Config Hooks
-
 #+begin_src elisp
   (defvar xandeer/config-before-hook nil
     "Hooks to run config functions before load custom.el.")
@@ -91,7 +89,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
     :group 'xandeer
     :type 'boolean)
 
-  (defcustom *debug* t
+  (defcustom *debug* nil
     "Whether to use debug or not."
     :group 'xandeer
     :type 'boolean)
@@ -164,7 +162,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
    :group 'xandeer
    :type 'string)
 
-  (defcustom *font-size* 16.0
+  (defcustom *font-size* (if *is-a-mac* 16.0 30.0)
    "The main font.  After change it, run `M-x xandeer/set-font' to see the effect."
    :group 'xandeer
    :type 'float)
@@ -179,7 +177,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
    :group 'xandeer
    :type 'string)
 
-  (defcustom *font-size-cjk* 18.0
+  (defcustom *font-size-cjk* (if *is-a-mac* 18.0 36.0)
    "The cjk font.  After change it, run `M-x xandeer/set-font' to see the effect."
    :group 'xandeer
    :type 'float)
@@ -201,9 +199,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 * Default Settings
-
 ** Emacs
-
 #+begin_src elisp
   (leaf xandeer-emacs-settings
     :init
@@ -213,13 +209,11 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Company
-
 #+begin_src elisp
   (setq-default company-idle-delay .5)
 #+end_src
 
 ** Cursor
-
 #+begin_src elisp
   (setq-default
     blink-cursor-interval .6
@@ -235,7 +229,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Parens
-
 #+begin_src elisp
   (setq-default
    show-paren-style                                'parenthesis
@@ -245,7 +238,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Scrolling
-
 #+begin_src elisp
   (setq hscroll-margin                  7
         scroll-margin                   7
@@ -257,13 +249,11 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Shell
-
 #+begin_src elisp
   (setq-default shell-file-name "/bin/zsh")
 #+end_src
 
 ** Start
-
 #+begin_src elisp
   (setq-default
    ;; initial-scratch-message     (concat ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n")
@@ -275,11 +265,10 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Visual
-
 #+begin_src elisp
   (setq-default
    fill-column                    76
-   visual-fill-column-width       100
+   visual-fill-column-width       80
    word-wrap                      t
    highlight-indent-guides-method 'column
    tab-width                      8
@@ -287,7 +276,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Indent
-
 #+begin_src elisp
   (setq xandeer-indent 2)
   (setq-default standard-indent xandeer-indent)
@@ -299,7 +287,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Whitespace
-
 #+begin_src elisp
   (setq-default
    whitespace-line-column 76
@@ -309,7 +296,6 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Mess
-
 #+begin_src elisp
   (setq-default
      bookmark-default-file (no-littering-expand-var-file-name ".bookmarks.el")
@@ -341,88 +327,17 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
 #+end_src
 
 ** Config After initialization
-
 #+begin_src elisp
   (defun xandeer/config-after ()
     "Set configuration need to be set after init."
     (setq-default
-     ;; helm-allow-mouse                  t
-     ;; helm-follow-mode-persistent       t
-     ;; helm-move-to-line-cycle-in-source nil
-     ;; helm-source-names-using-follow    '("Buffers" "kill-buffer" "Occur")
      debug-on-error *debug*))
 
 
   (add-hook 'xandeer/config-after-hook  #'xandeer/config-after)
 #+end_src
 
-** Custom Faces
-
-##+begin_src elisp :exports none
-  (defun xandeer/set-face ()
-    "Set custom face."
-    (after-x 'org
-      (set-face-attribute 'org-meta-line        nil
-                          :slant 'italic)
-      (set-face-attribute 'org-block-begin-line nil
-                          :slant 'italic)
-      (set-face-attribute 'org-block-end-line   nil
-                          :slant 'italic)
-
-      (when *org-headline-rescale*
-        (set-face-attribute 'org-level-1 nil
-                            :height  1.5
-                            :inherit 'outline-1)
-        (set-face-attribute 'org-level-2 nil
-                            :height  1.3
-                            :inherit 'outline-2)
-        (set-face-attribute 'org-level-3 nil
-                            :height  1.2
-                            :inherit 'outline-3)
-        (set-face-attribute 'org-level-4 nil
-                            :height  1.1
-                            :inherit 'outline-4)))
-
-    (set-face-attribute 'font-lock-comment-face nil
-                        :slant 'italic)
-    (set-face-attribute 'font-lock-keyword-face nil
-                        :slant 'italic)
-    (set-face-attribute 'font-lock-builtin-face nil
-                        :slant 'italic)
-    (set-face-attribute 'show-paren-match       nil
-                        :background "#a1de93"
-                        :foreground "#705772"
-                        :weight     'ultra-bold)
-
-    (after-x 'tab-line
-      (set-face-attribute 'tab-line nil
-                          :background "#303946"
-                          :foreground "#F4FFC9")
-
-      (set-face-attribute 'tab-line-tab nil
-                          :background "#3C78D8")
-
-      (set-face-attribute 'tab-line-tab-current nil
-                          :background "#FFFC67"
-                          :foreground "#222831"
-                          :inherit    'tab-line-tab)
-
-      (set-face-attribute 'tab-line-tab-inactive nil
-                          :background "#5FF967"
-                          :foreground "#222831"
-                          :inherit 'tab-line-tab))
-
-    (after-x 'smartparens-config
-      (set-face-attribute 'sp-show-pair-match-face nil
-                          :background "#a1de93"
-                          :foreground "#705772"
-                          :weight     'ultra-bold)))
-
-  (add-hook 'xandeer/config-after-hook #'xandeer/set-face)
-#+end_src
-
 * Footer :noexport:
-
 #+begin_src elisp
   (provide 'xandeer-core-custom)
   ;;; xandeer-core-custom.el ends here
