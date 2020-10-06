@@ -43,6 +43,10 @@ https://github.com/abo-abo/avy
 
 #+begin_src elisp
   (straight-use-package 'avy)
+
+  (straight-register-package
+   '(pinyinlib :host github
+               :repo "xlshiz/pinyinlib.el"))
   (straight-use-package 'ace-pinyin)
   (leaf avy
     :doc "Jump to things in Emacs tree-style."
@@ -60,7 +64,7 @@ https://github.com/abo-abo/avy
   (leaf ace-pinyin
     :after avy
     :config
-    (ace-pinyin-global-mode 1)
+    (ace-pinyin-global-mode 1))
 #+end_src
 
 * Beginend
