@@ -14,7 +14,6 @@
 #+END_SRC
 
 * Some Default Settings
-
 Some default settings are here, including ~debug-on-error~, ~message-log-max~,
 ~load-prefer-newer~ and ~ad-redefinition-action~.
 
@@ -34,7 +33,6 @@ If this os is macOS?
 #+END_SRC
 
 * Proxy
-
 #+BEGIN_SRC elisp
 (setq url-proxy-services
    '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
@@ -43,7 +41,6 @@ If this os is macOS?
 #+END_SRC
 
 * Packages Manager
-
 I use [[https://github.com/raxod502/straight.el][straight.el]] as my packages manager.
 
 At the same time, I use [[https://github.com/conao3/leaf.el][leaf.el]] to manage packages' loading.
@@ -131,7 +128,6 @@ At the same time, I use [[https://github.com/conao3/leaf.el][leaf.el]] to manage
 #+END_SRC
 
 * Load Path
-
 Literate config will generate emacslisp files to ~config~ folder.  However, we use
 straight.el to handle them, we do not need to add them to ~load-path~ manually.
 
@@ -156,7 +152,6 @@ Also, there is a custom directory.
 #+END_SRC
 
 * Benchmark-init
-
 This is a simple benchmark of calls to Emacs require and load functions. It can
 be used to keep track of where time is being spent during Emacs startup in order
 to optimize startup times.
@@ -173,7 +168,6 @@ https://github.com/dholm/benchmark-init-el
 #+END_SRC
 
 * Garbage Collection
-
 Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection.
 
 https://gitlab.com/koral/gcmh
@@ -193,20 +187,11 @@ https://gitlab.com/koral/gcmh
 #+END_SRC
 
 * No Littering
-
 https://github.com/emacscollective/no-littering
 
 #+BEGIN_SRC elisp
   (straight-use-package 'no-littering)
   (require 'no-littering)
-#+END_SRC
-
-* Load Org
-
-When using straight.el, the org version is needed to custom set.
-
-#+BEGIN_SRC elisp
-  (straight-use-package 'org-plus-contrib)
 #+END_SRC
 
 * Footer :noexport:

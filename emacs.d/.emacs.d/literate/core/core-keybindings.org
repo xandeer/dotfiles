@@ -223,6 +223,7 @@ https://github.com/magit/transient
 #+begin_src elisp
   (x/map
    "f" "file" "Xandeer file keymap"
+   "r" #'counsel-recentf
    "f" #'counsel-projectile-find-file)
 #+end_src
 

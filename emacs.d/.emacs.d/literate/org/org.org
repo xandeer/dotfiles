@@ -35,17 +35,16 @@
      . t)
     (org-startup-folded . 'content)
     (org-confirm-babel-evaluate . nil)
-  :defer-config
-  ;; (nasy/add-company-backend 'org-mode 'company-tabnine)
-  ;; --------
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   `((emacs-lisp . t)
-     (plantuml   . t)
-     (restclient . t)
-     (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
+    :defer-config
+    ;; (nasy/add-company-backend 'org-mode 'company-tabnine)
+    ;; --------
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     `((emacs-lisp . t)
+       (plantuml   . t)
+       (restclient . t)
+       (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
     :config
-    (setq org-version "9.5")
     (setq org-directory "~/projects/personal/notes/")
     (setq org-default-notes-file (concat org-directory "notes.org"))
     (setq org-image-actual-width '(500))
@@ -63,6 +62,12 @@
     (setcar (nthcdr 4 org-emphasis-regexp-components) 5)
     (org-set-emph-re 'org-emphasis-regexp-components
                      org-emphasis-regexp-components))
+  (defun reset-filling ()
+    (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
+                                    "\\|^\\(#\\+end_.*\\)")))
+      (setq-local paragraph-start paragraph-ending)
+      (setq-local paragraph-separate paragraph-ending)))
+  (advice-add 'org-setup-filling :after #'reset-filling)
 #+end_src
 * Agenda
 #+begin_src elisp
