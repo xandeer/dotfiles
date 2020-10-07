@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: elisp block
-# key: elisp
+# key: el
 # --
 #+begin_src elisp
 $0

@@ -2,3 +2,5 @@ config
 init.el
 straight
 var
+
+.yas-compiled-snippets.el

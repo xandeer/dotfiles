@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: - link ::
-# key: -l
+# key: l
 # --
 - link :: $0
