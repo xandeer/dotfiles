@@ -401,6 +401,12 @@ https://www.emacswiki.org/emacs/RecentFiles
 
 * Sdcv
 #+begin_src elisp
+  (straight-register-package
+  '(sdcv :host github
+    :repo "manateelazycat/sdcv"))
+#+end_src
+
+#+begin_src elisp
   (straight-use-package 'sdcv)
   (leaf sdcv
     :commands (sdcv-search-pointer
@@ -411,20 +417,16 @@ https://www.emacswiki.org/emacs/RecentFiles
     ("C-c x l" . sdcv-search-pointer+)
     ("C-c x k" . sdcv-search-input+)
     :config
+    (set-face-attribute 'sdcv-tooltip-face nil
+                        :foreground "#E0F0E9")
     (setq sdcv-say-word-p nil
           sdcv-tooltip-timeout 10
-          sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")
-          sdcv-dictionary-simple-list
-          '(
-            "朗道英汉字典5.0"
-            "朗道汉英字典5.0"
-            "新华字典")
-          sdcv-dictionary-complete-list
-          '(
-            "朗道英汉字典5.0"
-            "朗道汉英字典5.0"
-            "新华字典")))
+          sdcv-dictionary-data-dir  (expand-file-name "~/.stardict"))
 #+end_src
+
+#+RESULTS:
+: sdcv
+
 * Smart Input Source
 #+begin_src elisp
   (when (or *is-a-mac* *is-a-linux*)
