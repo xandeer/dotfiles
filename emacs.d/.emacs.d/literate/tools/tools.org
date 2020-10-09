@@ -100,7 +100,6 @@ https://github.com/DamienCassou/beginend
                   cal-china-x-general-holidays)))
 #+end_src
 * Company
-
 Modular in-buffer completion framework for Emacs.
 
 https://github.com/company-mode/company-mode
@@ -111,8 +110,15 @@ https://github.com/company-mode/company-mode
 
 #+include: "company.org"
 
+* Disable Mouse
+#+begin_src elisp
+  (straight-use-package 'disable-mouse)
+  (leaf disable-mouse
+    :require t
+    :config
+    (global-disable-mouse-mode))
+#+end_src
 * Emojify and all-the-icons
-
 #+begin_src elisp
   (xandeer/s-u-p
     (:when (version< emacs-version "27") emojify))
