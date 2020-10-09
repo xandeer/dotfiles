@@ -309,7 +309,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 * Config
-
 #+begin_src elisp
   (defvar xandeer/ivy-buffer-preview 'everything
     "If non-nil, preview buffers while switching, à la `counsel-switch-buffer'.
@@ -326,7 +325,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 ** ivy
-
 #+begin_src elisp
   (straight-use-package 'ivy)
   (leaf ivy
@@ -358,7 +356,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 ** ivy-xref
-
 #+begin_src elisp
   (straight-use-package 'ivy-xref)
   (leaf ivy-xref
