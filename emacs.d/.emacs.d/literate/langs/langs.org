@@ -30,6 +30,8 @@
   (leaf tide
     :after typescript-mode company flycheck
     :require t
+    :bind
+    ("C-x f". tide-format)
     :defer-config
     (xandeer/add-company-backend 'typescript-mode 'company-tabnine)
     :hook
