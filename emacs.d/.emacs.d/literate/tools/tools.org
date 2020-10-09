@@ -421,7 +421,7 @@ https://www.emacswiki.org/emacs/RecentFiles
                         :foreground "#E0F0E9")
     (setq sdcv-say-word-p nil
           sdcv-tooltip-timeout 10
-          sdcv-dictionary-data-dir  (expand-file-name "~/.stardict"))
+          sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")))
 #+end_src
 
 #+RESULTS:
