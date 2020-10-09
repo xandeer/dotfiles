@@ -88,20 +88,6 @@
 
 
   ;;;###autoload
-  (defun xandeer/company-complete ()
-    "Bring up the completion popup. If only one result, complete it."
-    (interactive)
-    (require 'company)
-    (when (ignore-errors
-            (/= (point)
-                (cdr (bounds-of-thing-at-point 'symbol))))
-      (save-excursion (insert " ")))
-    (when (and (company-manual-begin)
-               (= company-candidates-length 1))
-      (company-complete-common)))
-
-
-  ;;;###autoload
   (defun xandeer/company-has-completion-p ()
     "Return non-nil if a completion candidate exists at point."
     (and (company-manual-begin)
@@ -208,9 +194,8 @@
 #+end_src
 
 ** Company Mode
-
 #+begin_src elisp
-  (xandeer/s-u-p company)
+  (straight-use-package 'company)
   (leaf company
     :hook prog-mode-hook
     :bind
@@ -218,7 +203,7 @@
     ("M-C-/"   . xandeer/company-complete)
     ("C-<tab>" . xandeer/company-complete)
     (:company-mode-map
-     ("M-/" . xandeer/company-complete))
+    ("M-/" . company-tabnine))
     (:company-active-map
      ("M-/" . company-other-backend)
      ("C-n" . company-select-next)
@@ -247,6 +232,7 @@
     (make-variable-buffer-local 'xandeer/prev-whitespace-mode)
     (defvar xandeer/show-trailing-whitespace nil)
     (make-variable-buffer-local 'xandeer/show-trailing-whitespace)
+    (global-company-mode)
     (defun pre-popup-draw ()
       "Turn off whitespace mode before showing company complete tooltip"
       (if whitespace-mode
@@ -268,17 +254,15 @@
 #+end_src
 
 ** Company Prescient
-
 #+begin_src elisp
-  (xandeer/s-u-p company-prescient)
+  (straight-use-package 'company-prescient)
   (leaf company-prescient
     :hook company-mode-hook)
 #+end_src
 
 ** Company Quickhelp
-
 #+begin_src elisp
-  (xandeer/s-u-p company-quickhelp)
+  (straight-use-package 'company-quickhelp)
   (leaf company-quickhelp
     :when (not *c-box*)
     :bind
@@ -290,25 +274,34 @@
 #+end_src
 
 ** Company Tabnine
-
 #+begin_src elisp
-  (xandeer/s-u-p company-tabnine)
+  (straight-use-package 'company-tabnine)
   (leaf company-tabnine
+    :after company
+    :require t
+    :config
+    (add-to-list 'company-backends #'company-tabnine)
+    ;; The free version of TabNine is good enough,
+    ;; and below code is recommended that TabNine not always
+    ;; prompt me to purchase a paid version in a large project.
+    (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
+      (let ((company-message-func (ad-get-arg 0)))
+        (when (and company-message-func
+                   (stringp (funcall company-message-func)))
+          (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
+            ad-do-it))))
     :custom
     `(company-tabnine-log-file-path
       . ,(concat company-tabnine-binaries-folder "/log")))
 #+end_src
-
 ** Company Flx
-
 #+begin_src elisp
-  (xandeer/s-u-p company-flx)
+  (straight-use-package 'company-flx)
   (leaf company-flx
     :hook company-mode-hook)
 #+end_src
 
 ** Company Box
-
 #+begin_src elisp
   (xandeer/s-u-p
     (:when *c-box* company-box))

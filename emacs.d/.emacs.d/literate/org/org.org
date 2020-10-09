@@ -15,6 +15,7 @@
 
 * Org
 #+begin_src elisp
+  (straight-use-package 'org-plus-contrib)
   (leaf org
     :require t
     :hook
@@ -36,7 +37,7 @@
     (org-startup-folded . 'content)
     (org-confirm-babel-evaluate . nil)
     :defer-config
-    ;; (nasy/add-company-backend 'org-mode 'company-tabnine)
+    (xandeer/add-company-backend 'org-mode 'company-tabnine)
     ;; --------
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -45,6 +46,7 @@
        (restclient . t)
        (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
     :config
+    (setq org-version "9.5")
     (setq org-directory "~/projects/personal/notes/")
     (setq org-default-notes-file (concat org-directory "notes.org"))
     (setq org-image-actual-width '(500))
@@ -69,6 +71,7 @@
       (setq-local paragraph-separate paragraph-ending)))
   (advice-add 'org-setup-filling :after #'reset-filling)
 #+end_src
+
 * Agenda
 #+begin_src elisp
   (leaf org-agenda
