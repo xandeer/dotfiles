@@ -363,7 +363,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 ** counsel
-
 #+begin_src elisp
   (straight-use-package 'counsel)
   (leaf counsel
@@ -431,7 +430,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 ** counsel-projectile
-
 #+begin_src elisp
     (straight-use-package 'counsel-projectile)
     (leaf counsel-projectile
@@ -450,7 +448,6 @@ Some of them borrowed from doom-emacs
 #+end_src
 
 ** ivy-prescient
-
 #+begin_src elisp
   (straight-use-package 'ivy-prescient)
   (leaf ivy-prescient
