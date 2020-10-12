@@ -331,7 +331,7 @@ Some of them borrowed from doom-emacs
     :hook after-init-hook
     :custom
     ((ivy-wrap                         . t)
-     (ivy-auto-shrink-minibuffer-alist . '((t . t)))
+     (ivy-auto-shrink-minibuffer-alist . '((t . nil)))
      (ivy-height                       . 15)
      (ivy-fixed-height-minibuffer      . nil)
      (projectile-completion-system     . 'ivy)
