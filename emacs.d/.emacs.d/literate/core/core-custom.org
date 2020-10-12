@@ -162,7 +162,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
    :group 'xandeer
    :type 'string)
 
-  (defcustom *font-size* (if *is-a-mac* 16.0 30.0)
+  (defcustom *font-size* 16.0
    "The main font.  After change it, run `M-x xandeer/set-font' to see the effect."
    :group 'xandeer
    :type 'float)
@@ -177,7 +177,7 @@ You can custom it in @@html: <span>@@ ~custom/user-config.el~ @@html: </span>@@
    :group 'xandeer
    :type 'string)
 
-  (defcustom *font-size-cjk* (if *is-a-mac* 18.0 36.0)
+  (defcustom *font-size-cjk* 18.0
    "The cjk font.  After change it, run `M-x xandeer/set-font' to see the effect."
    :group 'xandeer
    :type 'float)
