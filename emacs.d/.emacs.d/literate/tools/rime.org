@@ -75,6 +75,7 @@ ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
            ("M-i" . toggle-input-method))
     :config
     (when *is-a-linux*
+      (setq rime-emacs-module-header-root "/run/current-system/sw/share/emacs/26.3/src")
       (setq rime-share-data-dir (expand-file-name "~/.config/fcitx/rime")))
     :when (or *is-a-mac* *is-a-linux*)
     :custom
@@ -86,11 +87,11 @@ ln -sTf ~/.config/fcitx/rime ~/.local/share/rime
     (rime-inline-ascii-trigger . 'shift-l)
     (rime-translate-keybindings . '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
     (rime-disable-predicates .
-     '(rime-predicate-evil-mode-p
-       rime-predicate-after-alphabet-char-p
-       rime-predicate-current-uppercase-letter-p
-       rime-predicate-prog-in-code-p))
-   (default-input-method . "rime"))
+                             '(rime-predicate-evil-mode-p
+                               rime-predicate-after-alphabet-char-p
+                               rime-predicate-current-uppercase-letter-p
+                               rime-predicate-prog-in-code-p))
+    (default-input-method . "rime"))
 #+END_SRC
 
 * Footer                                                 :noexport:
