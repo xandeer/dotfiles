@@ -333,7 +333,7 @@ Some of them borrowed from doom-emacs
     ((ivy-wrap                         . t)
      (ivy-auto-shrink-minibuffer-alist . '((t . nil)))
      (ivy-height                       . 15)
-     (ivy-fixed-height-minibuffer      . nil)
+     (ivy-fixed-height-minibuffer      . t)
      (projectile-completion-system     . 'ivy)
      ;; disable magic slash on non-match
      (ivy-magic-slash-non-match-action . nil)
