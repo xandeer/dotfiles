@@ -93,6 +93,7 @@
     xsel
     fcitx-configtool
     sdcv
+    tldr
     librime
     syncthing
     imagemagick
