@@ -72,7 +72,8 @@
     chromium
     compton
     dropbox
-    emacs
+    # emacs
+    emacs27
     feh
     firefox
     fontmatrix
