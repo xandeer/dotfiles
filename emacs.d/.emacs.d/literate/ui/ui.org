@@ -135,12 +135,12 @@
       (set-face-attribute 'mode-line nil
                           :font (font-spec :name   *font*
                                            :weight 'normal
-                                           :size   15))
+                                           :size   (if *is-a-mac* 15 25)))
 
       (set-face-attribute 'mode-line-inactive nil
                           :font (font-spec :name   *font*
                                            :weight 'normal
-                                           :size   15))))
+                                           :size   (if *is-a-mac* 15 25)))))
 
   (defun xandeer/set-font (&rest _)
     "Xandeer set font."
