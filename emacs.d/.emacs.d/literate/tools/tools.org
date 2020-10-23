@@ -443,6 +443,7 @@ https://www.emacswiki.org/emacs/RecentFiles
   (when (or *is-a-mac* *is-a-linux*)
     (straight-use-package 'sis)
     (leaf sis
+      :disabled t
       ;; :hook
       ;; enable the /follow context/ and /inline region/ mode for specific buffers
       ;; (((text-mode prog-mode) . sis-follow-context-mode)
