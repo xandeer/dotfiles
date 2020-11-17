@@ -78,6 +78,12 @@
     :require t
     :bind
     ("C-c x a" . org-agenda-list)
+    (:org-agenda-mode-map
+     ("p" . org-agenda-previous-item)
+     ("n" . org-agenda-next-item)
+     ("T" . org-agenda-goto-today)
+     ("i" . org-agenda-clock-in)
+     ("o" . org-agenda-clock-goto))
     :config
     (setq org-todo-keywords '((sequence "TODO(t)" "|" "DELEGATE(e)" "DONE(d)")
                               (sequence "|" "CANCELED(c@/!)" "SHELVE(s)")))
