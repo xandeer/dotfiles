@@ -18,6 +18,8 @@ alias n='npm'
 alias y='yarn'
 alias s='scd'
 alias rmrf='rm -rf'
+alias rmd='rm ~/temp/donut/{*.apk,*.zip,*.txt}'
+alias rms='rm ~/temp/screenshot/*.png'
 
 alias cat='bat'
 alias ping='prettyping --nolegend'
