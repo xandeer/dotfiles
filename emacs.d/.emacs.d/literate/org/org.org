@@ -37,7 +37,7 @@
     (org-startup-folded . 'content)
     (org-confirm-babel-evaluate . nil)
     :defer-config
-    (xandeer/add-company-backend 'org-mode 'company-tabnine)
+    ; (xandeer/add-company-backend 'org-mode 'company-tabnine)
     ;; --------
     (org-babel-do-load-languages
      'org-babel-load-languages

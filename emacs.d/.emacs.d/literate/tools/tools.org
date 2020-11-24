@@ -99,16 +99,16 @@ https://github.com/DamienCassou/beginend
           (append cal-china-x-important-holidays
                   cal-china-x-general-holidays)))
 #+end_src
-* Company
+* Company (Disabled)
 Modular in-buffer completion framework for Emacs.
 
 https://github.com/company-mode/company-mode
 
 #+begin_src elisp
-  (require 'xandeer-tools-company)
+;  (require 'xandeer-tools-company)
 #+end_src
 
-#+include: "company.org"
+# #+include: "company.org"
 
 * Disable Mouse
 #+begin_src elisp
