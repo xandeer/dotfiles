@@ -140,6 +140,33 @@
           (capitalize-word 1)
           (buffer-substring start end)))))
 #+end_src
+* Calendar
+#+begin_src elisp
+  (defun forward-one-day-in-calendar ()
+    (interactive)
+    (org-eval-in-calendar '(calendar-forward-day 1)))
+
+  (defun backward-one-day-in-calendar ()
+    (interactive)
+    (org-eval-in-calendar '(calendar-backward-day 1)))
+
+  (defun forward-one-week-in-calendar ()
+    (interactive)
+    (org-eval-in-calendar '(calendar-forward-week 1)))
+
+  (defun backward-one-week-in-calendar ()
+    (interactive)
+    (org-eval-in-calendar '(calendar-backward-week 1)))
+
+  (leaf org
+    :bind
+    (:org-read-date-minibuffer-local-map
+     ("C-h" . backward-one-day-in-calendar)
+     ("C-l" . forward-one-day-in-calendar)
+     ("C-j" . forward-one-week-in-calendar)
+     ("C-k" . backward-one-week-in-calendar)))
+#+end_src
+
 * Capture
 #+begin_src elisp
   (leaf org-capture
