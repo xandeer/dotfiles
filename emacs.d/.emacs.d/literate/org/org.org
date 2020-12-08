@@ -37,11 +37,12 @@
     (org-startup-folded . 'content)
     (org-confirm-babel-evaluate . nil)
     :defer-config
-    ; (xandeer/add-company-backend 'org-mode 'company-tabnine)
+    ;; (xandeer/add-company-backend 'org-mode 'company-tabnine)
     ;; --------
     (org-babel-do-load-languages
      'org-babel-load-languages
      `((emacs-lisp . t)
+       (scheme . t)
        (plantuml   . t)
        (restclient . t)
        (,(if (locate-library "ob-sh") 'sh 'shell) . t)))

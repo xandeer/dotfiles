@@ -23,6 +23,13 @@
     (kotlin-mode-hook . flycheck-kotlin-setup))
 #+end_src
 
+* Scheme
+#+begin_src elisp
+  (straight-use-package 'geiser)
+  (leaf geiser
+    :config
+    (setq geiser-active-implementations '(guile)))
+#+end_src
 * Typescript
 #+begin_src elisp
   (straight-use-package 'typescript-mode)

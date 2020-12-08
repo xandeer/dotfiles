@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: scheme block
+# key: ss
+# --
+#+begin_src scheme :results output
+$0
+#+end_src
