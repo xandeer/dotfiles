@@ -194,7 +194,10 @@ https://github.com/emacscollective/no-littering
   (straight-use-package 'no-littering)
   (require 'no-littering)
 #+END_SRC
-
+* Start daemon
+#+begin_src elisp
+  (server-start)
+#+end_src
 * Footer :noexport:
 
 #+BEGIN_SRC elisp :exports none
