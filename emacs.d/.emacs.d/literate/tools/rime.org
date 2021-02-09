@@ -22,8 +22,9 @@
 **** Mac
 #+header: :tangle no :results silent
 #+BEGIN_SRC sh
-wget https://github.com/rime/librime/releases/download/1.5.3/rime-1.5.3-osx.zip
-unzip rime-1.5.3-osx.zip -d librime
+wget https://github.com/rime/librime/releases/download/1.7.2/rime-1.7.2-osx.zip -O rime-osx.zip
+unzip rime-osx.zip -d librime
+rm -rf ~/.local/share/librime
 cp -a librime/dist ~/.local/share/librime
 #+END_SRC
 **** Nixos
