@@ -67,6 +67,8 @@
 (straight-use-package 'disable-mouse)
 (leaf disable-mouse
   :require t
+  :pre-setq
+  (disable-mouse-wheel-events . nil)
   :config
   (global-disable-mouse-mode))
 
