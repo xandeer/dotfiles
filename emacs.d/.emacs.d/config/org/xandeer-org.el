@@ -53,8 +53,12 @@
               "."
               1))
   (add-to-list 'org-emphasis-alist
-               ;; set bold face
-               '("*" (:foreground "#f00056" :weight bold)))
+               ;; set emphasis face
+               '(
+                 "*"
+                 (
+                  ;; :weight bold
+                  :foreground "#f00056")))
   ;; set emphasis support 16 lines
   (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
   (org-set-emph-re 'org-emphasis-regexp-components
