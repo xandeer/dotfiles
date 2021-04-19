@@ -45,6 +45,7 @@
   (setq org-default-notes-file (concat org-directory "notes.org"))
   (setq org-image-actual-width '(500))
   (setq org-adapt-indentation nil)
+  (setq org-startup-indented t)
   (setq org-emphasis-regexp-components ;; markup chinesee without space
         (list (concat " \t('\"{"            "[:nonascii:]")
               (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
