@@ -9,9 +9,9 @@
 ;;; Code:
 
 (straight-register-package
-'(rime :host github
-  :repo "DogLooksGood/emacs-rime"
-  :files ( "Makefile" "*.el" "lib.c")))
+ '(rime :host github
+        :repo "DogLooksGood/emacs-rime"
+        :files ( "Makefile" "*.el" "lib.c")))
 
 (straight-use-package 'rime)
 (straight-use-package 'posframe)
@@ -42,6 +42,9 @@
                            '(rime-predicate-evil-mode-p
                              rime-predicate-after-alphabet-char-p
                              rime-predicate-current-uppercase-letter-p
+                             meow-normal-mode-p
+                             rime-predicate-hydra-p
+                             rime-predicate-ace-window-p
                              rime-predicate-prog-in-code-p))
   (default-input-method . "rime"))
 
