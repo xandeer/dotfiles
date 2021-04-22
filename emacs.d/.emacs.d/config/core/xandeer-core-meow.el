@@ -1,0 +1,165 @@
+;;; xandeer-core-meow.el  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2021  Xandeer
+
+;;; Commentary:
+
+;; Xandeer's Emacs Configuration Core meow.
+
+;;; Code:
+
+(defun xr/meow-setqs ()
+  (setq meow-replace-state-name-list
+        '((normal . "Ꮚ•ꈊ•Ꮚ")
+          (insert . "Ꮚ`ꈊ´Ꮚ")
+          (keypad . "Ꮚ'ꈊ'Ꮚ")
+          (motion . "Ꮚ-ꈊ-Ꮚ")))
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
+
+(defun xr/meow-define-motion-keys ()
+  (meow-motion-overwrite-define-key
+   '("j" . meow-next)
+   '("k" . meow-prev)))
+
+(defun xr/meow-define-leader-keys ()
+  (meow-leader-define-key
+   ;; SPC j/k will run the original command in MOTION state.
+   '("j" . meow-motion-origin-command)
+   '("k" . meow-motion-origin-command)
+   ;; high frequency keybindings
+   '("e" . "C-x C-e")
+   '(")" . "C-)")
+   '("}" . "C-}")
+   '("." . "M-.")
+   '("," . "M-,")
+   ;; window management
+   '("w" . other-window)
+   '("W" . delete-window)
+   '("o" . delete-other-windows)
+   '("s" . xandeer/split-window)
+   ;; high frequency commands
+   '(";" . comment-dwim)
+   '("k" . kill-this-buffer)
+   '("p" . project-find-file)
+   '("d" . dired)
+   '("b" . switch-to-buffer)
+   '("r" . deadgrep)
+   '("f" . org-roam-find-file)
+   '("i" . imenu)
+   '("a" . magit)
+   ;; toggles
+   '("t" . org-journal-open-current-journal-file)
+   '("L" . display-line-numbers-mode)
+   '("T" . telega)
+   '("R" . org-roam-mode)
+   ;; Use SPC (0-9) for digit arguments.
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet)))
+
+(defun xr/meow-define-normal-keys ()
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '("," . meow-beginning-of-thing)
+   '("." . meow-end-of-thing)
+   '("[" . meow-last-buffer)
+   '("a" . meow-append)
+   '("A" . meow-append-at-end)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("C" . meow-change-save)
+   '("d" . meow-C-d)
+   '("D" . meow-backward-delete)
+   '("e" . meow-next-word)
+   '("E" . scroll-up-line)
+   '("f" . meow-find-expand)
+   '("F" . meow-find-expand)
+   '("g" . meow-cancel)
+   '("G" . meow-end-of-buffer)
+   '("h" . meow-left-expand)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-insert-at-begin)
+   '("j" . meow-next-expand)
+   '("J" . avy-goto-line)
+   '("k" . meow-prev-expand)
+   '("K" . meow-prev-expand)
+   '("l" . meow-right-expand)
+   '("L" . meow-line)
+   '("m" . meow-join)
+   '("M" . meow-extend)
+   '("n" . meow-search)
+   '("N" . meow-pop-search)
+   '("o" . meow-open-below)
+   '("O" . meow-open-above)
+   '("p" . meow-yank)
+   '("P" . meow-yank-pop)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-block)
+   '("R" . meow-swap-grab)
+   '("s" . meow-kill)
+   '("t" . meow-till-expand)
+   '("T" . meow-till-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-page-down)
+   '("V" . meow-page-up)
+   '("w" . avy-goto-word-1)
+   '("W" . meow-mark-symbol)
+   '("x" . meow-line)
+   '("X" . meow-kmacro-lines)
+   '("y" . meow-save)
+   '("Y" . meow-sync-grab)
+   '("z" . meow-pop-selection)
+   '("Z" . meow-pop-all-selection)
+   '("&" . meow-query-replace)
+   '("%" . meow-query-replace-regexp)
+   '("'" . repeat)
+   '("\\" . quoted-insert)
+   '("\/" . meow-visit)
+   ;;     '("<escape>" . meow-last-buffer)
+   '("<escape>" . meow-cancel)
+   '("<f3>" . meow-start-kmacro)
+   '("<f4>" . meow-end-or-call-kmacro)))
+
+(defun xr/meow-setup ()
+  (xr/meow-setqs)
+  (xr/meow-define-motion-keys)
+  (xr/meow-define-leader-keys)
+  (xr/meow-define-normal-keys))
+
+(straight-register-package
+ '(meow :host github
+        :repo "DogLooksGood/meow"
+        :files ("*.el")))
+(straight-use-package 'meow)
+
+(leaf meow
+  :init
+  (meow-global-mode 1)
+  :config
+  (xr/meow-setup))
+
+(provide 'xandeer-core-meow)
+;;; xandeer-core-meow.el ends here
