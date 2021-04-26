@@ -8,69 +8,6 @@
 
 ;;; Code:
 
-(straight-use-package 'dashboard)
-(leaf dashboard
-  :commands dashboard-setup-startup-hook
-  :bind
-  ("<f5>" . xandeer/dashboard-refresh)
-  (:dashboard-mode-map
-   ("g"              . xandeer/dashboard-refresh)
-   ("<down-mouse-1>" . nil)
-   ("<mouse-1>"      . widget-button-click)
-   ("<mouse-2>"      . widget-button-click)
-   ("<up>"           . widget-backward)
-   ("<down>"         . (lambda () (interactive) (widget-forward 1))))
-  :hook ((dashboard-mode-hook . (lambda () (gsetq-local tab-width 1)))
-         (after-init-hook     . dashboard-setup-startup-hook))
-  :custom
-  (dashboard-org-agenda-categories . '("Calendar" "Tasks" "Appointments"))
-  `(dashboard-startup-banner       . ,(concat user-emacs-directory "ue.png"))
-  (dashboard-items . '((recents   . 10)
-                       (bookmarks . 5)
-                       ;; (registers . 5)
-                       ;; (agenda    . 5)
-                       (projects  . 10)))
-  ((dashboard-center-content
-    dashboard-show-shortcuts
-    dashboard-set-heading-icons
-    dashboard-set-file-icons
-    dashboard-set-init-info
-    show-week-agenda-p
-    dashboard-set-navigator) . t)
-  :init
-  (after-x 'all-the-icons
-    (setq dashboard-navigator-buttons
-          `(;; line1
-            ((,(all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0)
-              "Source"
-              "Source Page"
-              (lambda (&rest _) (browse-url "https://github.com/xandeer/dotfiles/")))
-             (,(all-the-icons-octicon "gear" :height 1.1 :v-adjust 0.0)
-              "Config"
-              "Config File"
-              (lambda (&rest _) (let ((upath (expand-file-name "custom/user-config.el" user-emacs-directory)))
-                                  (epath (expand-file-name "custom/user-config-example.el" user-emacs-directory)))
-                (when (and (file-exists-p epath)
-                           (not (file-exists-p upath)))
-                  (copy-file epath upath))
-                (find-file upath)))))))
-  (defun xandeer/dashboard-refresh ()
-    "Refresh dashboard buffer."
-    (interactive)
-    (unless (get-buffer dashboard-buffer-name)
-      (generate-new-buffer "*dashboard*"))
-    (dashboard-refresh-buffer))
-
-  (defun xandeer/fw2 (&rest _)
-    "Forward 2 chars."
-    (interactive "p")
-    (forward-char 2))
-  :advice
-  (:after dashboard-next-line     xandeer/fw2)
-  (:after widget-forward          xandeer/fw2)
-  (:after dashboard-previous-line xandeer/fw2)
-  (:after widget-backward         xandeer/fw2))
-
 (straight-use-package 'doom-themes)
 (leaf doom-themes
   :custom ((doom-dracula-brighter-comments

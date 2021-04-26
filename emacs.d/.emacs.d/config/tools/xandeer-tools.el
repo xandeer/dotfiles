@@ -64,14 +64,6 @@
 
 ;  (require 'xandeer-tools-company)
 
-(straight-use-package 'disable-mouse)
-(leaf disable-mouse
-  :require t
-  :pre-setq
-  (disable-mouse-wheel-events . nil)
-  :config
-  (global-disable-mouse-mode))
-
 (xandeer/s-u-p
   (:when (version< emacs-version "27") emojify))
 (leaf emojify
@@ -229,33 +221,6 @@ This is useful when followed by an immediate kill."
                  projectile-project-root-files-top-down-recurring)))
 
 (straight-use-package 'recentf)
-(leaf recentf
-  :doc "Recentf is a minor mode that builds a list of recently opened files."
-  :url "https://www.emacswiki.org/emacs/RecentFiles"
-  :tag "files"
-  :hook after-init-hook
-  :custom
-  (recentf-filename-handlers
-   . '(;; Text properties inflate the size of recentf's files, and there is
-       ;; no purpose in persisting them, so we strip them out.
-       substring-no-properties
-       ;; Resolve symlinks of local files. Otherwise we get duplicate
-       ;; entries opening symlinks.
-       xandeer--recent-file-truename
-       ;; Replace $HOME with ~, which is more portable, and reduces how much
-       ;; horizontal space the recentf listing uses to list recent files.
-       abbreviate-file-name))
-  (recentf-max-saved-items . 100)
-  (recentf-exclude         . '("/tmp/" "/ssh:"))
-  :config
-  (defun xandeer--recent-file-truename (file)
-    (if (or (file-remote-p file nil t)
-            (not (file-remote-p file)))
-        (file-truename file)
-      file))
-
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory))
 
 (straight-use-package 'restclient)
 (straight-use-package 'ob-restclient)

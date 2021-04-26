@@ -1,19 +1,13 @@
-;;; xandeer-core-meow.el  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2021  Xandeer
-
+;;; init-meow.el --- Meow keybindings -*- lexical-binding: t; -*-
 ;;; Commentary:
-
-;; Xandeer's Emacs Configuration Core meow.
-
 ;;; Code:
 
+
+;; There's a bug when reload it.
+(delete-directory (expand-file-name "straight/build/meow" user-emacs-directory) t)
+(straight-use-package 'meow)
+
 (defun xr/meow-setqs ()
-  (setq meow-replace-state-name-list
-        '((normal . "Ꮚ•ꈊ•Ꮚ")
-          (insert . "Ꮚ`ꈊ´Ꮚ")
-          (keypad . "Ꮚ'ꈊ'Ꮚ")
-          (motion . "Ꮚ-ꈊ-Ꮚ")))
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
 
 (defun xr/meow-define-motion-keys ()
@@ -43,15 +37,13 @@
    '("p" . project-find-file)
    '("d" . dired)
    '("b" . switch-to-buffer)
-   '("r" . deadgrep)
    '("f" . org-roam-find-file)
    '("i" . imenu)
    '("a" . magit)
    ;; toggles
-   '("t" . org-journal-open-current-journal-file)
    '("L" . display-line-numbers-mode)
-   '("T" . telega)
-   '("R" . org-roam-mode)
+   '("t" . telega)
+   '("r" . org-roam-mode)
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -88,23 +80,23 @@
    '("B" . meow-back-symbol)
    '("c" . meow-change)
    '("C" . meow-change-save)
-   '("d" . meow-C-d)
-   '("D" . meow-backward-delete)
+   '("d" . meow-page-down)
+   '("D" . meow-page-up)
    '("e" . meow-next-word)
    '("E" . scroll-up-line)
    '("f" . meow-find-expand)
    '("F" . meow-find-expand)
-   '("g" . meow-cancel)
+   '("g" . meow-begin-of-buffer)
    '("G" . meow-end-of-buffer)
-   '("h" . meow-left-expand)
+   '("h" . meow-left)
    '("H" . meow-left-expand)
    '("i" . meow-insert)
    '("I" . meow-insert-at-begin)
-   '("j" . meow-next-expand)
+   '("j" . meow-next)
    '("J" . avy-goto-line)
-   '("k" . meow-prev-expand)
+   '("k" . meow-prev)
    '("K" . meow-prev-expand)
-   '("l" . meow-right-expand)
+   '("l" . meow-right)
    '("L" . meow-line)
    '("m" . meow-join)
    '("M" . meow-extend)
@@ -127,7 +119,7 @@
    '("V" . meow-page-up)
    '("w" . avy-goto-word-1)
    '("W" . meow-mark-symbol)
-   '("x" . meow-line)
+   '("x" . delete-char)
    '("X" . meow-kmacro-lines)
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
@@ -149,17 +141,8 @@
   (xr/meow-define-leader-keys)
   (xr/meow-define-normal-keys))
 
-(straight-register-package
- '(meow :host github
-        :repo "DogLooksGood/meow"
-        :files ("*.el")))
-(straight-use-package 'meow)
+(meow-global-mode 1)
+(xr/meow-setup)
 
-(leaf meow
-  :init
-  (meow-global-mode 1)
-  :config
-  (xr/meow-setup))
-
-(provide 'xandeer-core-meow)
-;;; xandeer-core-meow.el ends here
+(provide 'init-meow)
+;;; init-meow.el ends here

@@ -16,7 +16,5 @@
 
 (require 'xandeer-core-window)
 
-(require 'xandeer-core-meow)
-
 (provide 'xandeer-core)
 ;;; xandeer-core.el ends here
