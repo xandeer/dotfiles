@@ -5,7 +5,7 @@
 ;; save a list of open files in ~/.emacs.d/var/.emacs.desktop
 (setq desktop-path (list no-littering-var-directory)
       desktop-auto-save-timeout 600)
-(desktop-save-mode 1)
+;(desktop-save-mode 1)
 
 (defun xr/time-subtract-millis (b a)
   (* 1000.0 (float-time (time-subtract b a))))
@@ -31,12 +31,12 @@
 (advice-add 'desktop-create-buffer :around 'xr/desktop-time-buffer-create)
 
 ;; Restore histories and registers after saving
-(setq-default history-length 1000)
+(setq-default history-length 10)
 (add-hook 'after-init-hook 'savehist-mode)
 
 (straight-use-package 'session)
 (setq session-save-file (no-littering-expand-var-file-name ".session"))
-(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|\\.git/[A-Z_]+\\'\\)")
+(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
 (setq session-save-file-coding-system 'utf-8)
 
 (add-hook 'after-init-hook 'session-initialize)
@@ -50,7 +50,7 @@
         (dired-regexp-history     . 20)
         (extended-command-history . 30)
         (face-name-history        . 20)
-        (file-name-history        . 100)
+        (file-name-history        . 10)
         (grep-find-history        . 30)
         (grep-history             . 30)
         (ivy-history              . 100)

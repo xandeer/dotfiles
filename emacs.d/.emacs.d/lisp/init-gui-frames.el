@@ -11,6 +11,8 @@
 (setq-default
  window-resize-pixelwise t
  frame-resize-pixelwise t)
+(add-to-list 'default-frame-alist '(height . 100))
+(add-to-list 'default-frame-alist '(width . 100))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))

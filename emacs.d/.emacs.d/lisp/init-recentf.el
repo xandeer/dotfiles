@@ -15,5 +15,6 @@
               '(substring-no-properties
                 ;; Replace $HOME with ~.
                 abbreviate-file-name))
+
 (provide 'init-recentf)
 ;;; init-recentf.el ends here

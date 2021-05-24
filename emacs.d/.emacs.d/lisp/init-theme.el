@@ -1,11 +1,5 @@
-;;; xandeer-ui.el --- Xandeer's Emacs Configuration editor file.  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2020  Xandeer
-
+;;; init-theme.el --- init-theme -*- lexical-binding: t -*-
 ;;; Commentary:
-
-;; Xandeer's Emacs Configuration UI.
-
 ;;; Code:
 
 (straight-use-package 'doom-themes)
@@ -21,7 +15,7 @@
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
 
-(defun xandeer/set--font (frame)
+(defun xr/set--font (frame)
   "Xandeer set font for `FRAME'."
   (when (display-graphic-p)
     (set-face-attribute
@@ -63,22 +57,21 @@
                                          :weight 'normal
                                          :size   (if *is-a-mac* 15 25)))))
 
-(defun xandeer/set-font (&rest _)
+(defun xr/set-font (&rest _)
   "Xandeer set font."
   (interactive)
-  (xandeer/set--font nil))
+  (xr/set--font nil))
 
+(add-hook #'after-init-hook #'xr/set-font)
+(add-hook #'after-make-frame-functions   #'xr/set-font)
+(add-hook #'server-after-make-frame-hook #'xr/set-font)
 
-(add-hook #'after-init-hook #'xandeer/set-font)
-(add-hook #'after-make-frame-functions   #'xandeer/set-font)
-(add-hook #'server-after-make-frame-hook #'xandeer/set-font)
-
-(defun xandeer/load-theme ()
+(defun xr/load-theme ()
   "Xandeer load theme function"
   (when *theme*
     (load-theme *theme* t)))
 
-(add-hook #'after-init-hook #'xandeer/load-theme)
+(add-hook #'after-init-hook #'xr/load-theme)
 
 (straight-use-package 'minions)
 (leaf minions
@@ -101,10 +94,9 @@
      doom-modeline-buffer-state-icon
      doom-modeline-buffer-modification-icon
      doom-modeline-unicode-fallback
-     doom-modeline-minor-modes
-     doom-modeline-enable-word-count)
+     doom-modeline-minor-modes)
     . t)
-   (doom-modeline-continuous-word-count-modes . '(markdown-mode gfm-mode org-mode text-mode))
+   (doom-modeline-enable-word-count . nil)
    (doom-modeline-buffer-encoding             . nil)
    (doom-modeline-indent-info                 . nil)
    (doom-modeline-checker-simple-format       . nil)
@@ -117,7 +109,5 @@
    `(doom-modeline-github-interval            . ,(* 30 60))
    (doom-modeline-modal-icon                  . t)))
 
-(leaf nasy-theme)
-
-(provide 'xandeer-ui)
-;;; xandeer-ui.el ends here
+(provide 'init-theme)
+;;; init-theme.el ends here

@@ -8,13 +8,11 @@
 
 ;;; Code:
 
-(require 'xandeer-core-custom)
+; (require 'xandeer-core-custom)
 
-(require 'xandeer-core-keybindings)
+; (require 'xandeer-core-keybindings)
 
-(require 'xandeer-core-mixed)
-
-(require 'xandeer-core-window)
+; (require 'xandeer-core-mixed)
 
 (provide 'xandeer-core)
 ;;; xandeer-core.el ends here

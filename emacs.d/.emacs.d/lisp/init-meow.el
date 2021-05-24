@@ -117,7 +117,7 @@
    '("U" . meow-undo-in-selection)
    '("v" . meow-page-down)
    '("V" . meow-page-up)
-   '("w" . avy-goto-word-1)
+   '("w" . xr/ace-pinyin-goto-word-1)
    '("W" . meow-mark-symbol)
    '("x" . delete-char)
    '("X" . meow-kmacro-lines)
@@ -135,14 +135,28 @@
    '("<f3>" . meow-start-kmacro)
    '("<f4>" . meow-end-or-call-kmacro)))
 
+(defun xr/meow-enable-local-insert ()
+  "Set insert as default mode."
+  (setq-default meow-normal-mode nil)
+  (setq-default meow-insert-mode t))
+
 (defun xr/meow-setup ()
+  "Meow setup."
   (xr/meow-setqs)
   (xr/meow-define-motion-keys)
   (xr/meow-define-leader-keys)
   (xr/meow-define-normal-keys))
 
-(meow-global-mode 1)
-(xr/meow-setup)
+(advice-add 'meow--global-enable :after 'xr/meow-enable-local-insert)
+
+(leaf meow
+  :require t
+  :init
+  (meow-global-mode 1)
+  :bind
+  ("C-x C-r" . meow-block)
+  :config
+  (xr/meow-setup))
 
 (provide 'init-meow)
 ;;; init-meow.el ends here

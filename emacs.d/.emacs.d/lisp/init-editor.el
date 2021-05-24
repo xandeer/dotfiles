@@ -1,11 +1,5 @@
-;;; xandeer-core.el --- Xandeer's Emacs Configuration editor file.  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2020  Xandeer
-
+;;; init-editor.el --- init-editor -*- lexical-binding: t -*-
 ;;; Commentary:
-
-;; Xandeer's Emacs Configuration Editor.
-
 ;;; Code:
 
 (straight-register-package
@@ -18,51 +12,36 @@
                  :host github
                  :repo "blue0513/point-history"))
 
-(xandeer/s-u-p
-  diff-hl
-  dired-hacks
-  easy-kill
-  *eldoc-use*
-  explain-pause-mode
-  expand-region
-  ;; highlight
-  color-identifiers-mode
-  ;; hl-line  builtin
-  highlight-indent-guides
-  rainbow-mode
-  ;; helm
+(straight-use-package 'diff-hl)
+(straight-use-package 'dired-hacks)
+(straight-use-package 'easy-kill)
+(straight-use-package 'explain-pause-mode)
+(straight-use-package 'expand-region)
+(straight-use-package 'color-identifiers-mode)
+(straight-use-package 'highlight-indent-guides)
+(straight-use-package 'rainbow-mode)
+(straight-use-package 'helpful)
+(straight-use-package 'htmlize)
+(straight-use-package 'indent-tools)
+(straight-use-package 'list-unicode-display)
+(straight-use-package 'mmm-mode)
+(straight-use-package 'page-break-lines)
+(straight-use-package 'smartparens)
+(straight-use-package 'rainbow-delimiters)
+(straight-use-package 'point-history)
+(straight-use-package 'quick-peek)
+(straight-use-package 'symbol-overlay)
+(straight-use-package 'tree-sitter)
+(straight-use-package 'abridge-diff)
+(straight-use-package 'git-blamed)
+(straight-use-package 'git-messenger)
+(straight-use-package 'git-modes)
+(straight-use-package 'git-timemachine)
+(straight-use-package 'magit)
+(straight-use-package 'magit-org-todos)
+(straight-use-package 'magit-todos)
 
-  helpful
-  htmlize
-  indent-tools
-
-  list-unicode-display
-  mmm-mode
-  multiple-cursors
-  page-break-lines
-  ;; paren
-  smartparens
-  rainbow-delimiters
-
-  point-history
-  ;; pretty-mode
-  quick-peek
-  symbol-overlay
-
-  tree-sitter
-  abridge-diff
-  forge
-  gist
-  git-blamed
-  git-gutter
-  git-messenger
-  git-modes
-  git-timemachine
-  magit
-  magit-org-todos
-  magit-todos)
-
-(xandeer/s-u-p ansi-color)
+(straight-use-package 'ansi-color)
 (leaf ansi-color
   :doc "ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape sequences
 with face colours, bold, etc."
@@ -95,17 +74,6 @@ with face colours, bold, etc."
   (add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
   (auto-save-enable))
 
-(xandeer/s-u-p dash)
-(leaf dash
-  :doc "A modern list library for Emacs."
-  :url "https://github.com/magnars/dash.el"
-  :tag "lists"
-  :defer-config
-  (dash-enable-font-lock))
-
-(leaf xandeer-editor-dired
-  :require t)
-
 (leaf easy-kill
   :doc "Kill & Mark Things Easily in Emacs."
   :url "https://github.com/leoliu/easy-kill"
@@ -115,19 +83,20 @@ with face colours, bold, etc."
          ([remap mark-sexp]
           . easy-mark)))
 
+
+(straight-use-package 'eldoc-box)
 (leaf eldoc-box
   :doc "This package displays ElDoc documentations in a childframe."
   :url "https://github.com/casouri/eldoc-box"
   :tag "extensions"
-  :when (eq *eldoc-use* 'eldoc-box)
   :hook ((eldoc-mode-hook . eldoc-box-hover-mode)
          (eldoc-mode-hook . eldoc-box-hover-at-point-mode)))
 
 (leaf eldoc-overlay
+  :disabled t
   :doc "Display eldoc doc with contextual documentation overlay for easy to look."
   :url "https://github.com/stardiviner/eldoc-overlay"
   :tag "extensions"
-  :when (eq *eldoc-use* 'eldoc-overlay)
   :hook eldoc-mode-hook)
 
 (leaf expand-region
@@ -213,10 +182,6 @@ on its name."
   :url "https://github.com/Wilfred/helpful"
   :tag "help" "lisp"
   :bind (("C-c C-d" . helpful-at-point)))
-         ;; Use ivy instead
-         ;; ([remap describe-function]   . helpful-callable)
-         ;; ([remap describe-variable]   . helpful-variable)
-         ;; ([remap describe-bindings]   . helpful-key)))
 
 (leaf htmlize
   :doc "Convert buffer text and decorations to HTML."
@@ -233,7 +198,6 @@ perfect for yaml, python and the like."
 
 (leaf list-unicode-display
   :doc "Search for and list unicode characters in Emacs.
-
 `list-unicode-display'"
   :url "https://github.com/purcell/list-unicode-display"
   :tag "convenience")
@@ -248,21 +212,6 @@ to coexist in one buffer."
    . 'buffers-with-submode-classes)
   (mmm-submode-decoration-level
    . 2))
-
-(leaf multiple-cursors
-  :doc "Multiple cursors for Emacs."
-  :url "https://github.com/magnars/multiple-cursors.el"
-  :tag "editing" "cursors"
-  :bind
-  (("C-<"     . mc/mark-previous-like-this)
-   ("C->"     . mc/mark-next-like-this)
-   ("C-+"     . mc/mark-next-like-this)
-   ("C-c C-<" . mc/mark-all-like-this)
-
-   ("C-c m r" . set=rectangular-region-anchor)
-   ("C-c m c" . mc/edit-lines)
-   ("C-c m e" . mc/edit-ends-of-lines)
-   ("C-c m a" . mc/edit-beginnings-of-lines)))
 
 (leaf page-break-lines
   :doc "Emacs: display ugly ^L page breaks as tidy horizontal lines"
@@ -384,22 +333,6 @@ system."
          (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
          (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
 
-(leaf forge
-  :doc "Work with Git forges from the comfort of Magit."
-  :url "https://github.com/magit/forge"
-  :tag "git" "tools" "vc")
-
-(leaf git-gutter
-  :hook (after-init . global-git-gutter-mode)
-  :custom ((git-gutter:visual-line    . t)
-           (git-gutter:disabled-modes . '(asm-mode image-mode))
-           (git-gutter:modified-sign  . "❚")
-           (git-gutter:added-sign     . "✚")
-           (git-gutter:deleted-sign   . "✘"))
-  :bind (("C-x v =" . git-gutter:popup-hunk)
-         ("C-x p"   . git-gutter:previous-hunk)
-         ("C-x n"   . git-gutter:next-hunk)))
-
 (leaf git-messenger
   :doc "git-messenger.el provides function that popup commit message at current line."
   :url "https://github.com/emacsorphanage/git-messenger"
@@ -514,6 +447,7 @@ typical word processor."
 
 (straight-use-package 'yasnippet)
 (leaf yasnippet
+  :disabled t
   :doc "A template system for Emacs"
   :url "https://github.com/joaotavora/yasnippet"
   :tag "convenience" "enmulation"
@@ -524,19 +458,6 @@ typical word processor."
                (concat user-emacs-directory "extra/snippets"))
   (yas-reload-all))
 
-(defun xr/replace-in-buffer (old new)
-  "Replace the string OLD with string NEW."
-  (goto-char (point-min))
-  (while (re-search-forward old nil t)
-    (replace-match new)))
-(defun xandeer/convert-chinese-quotations ()
-  "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
-  (interactive)
 
-  (xr/replace-in-buffer "‘" "『")
-  (xr/replace-in-buffer "’" "』")
-  (xr/replace-in-buffer "“" "「")
-  (xr/replace-in-buffer "”" "」"))
-
-(provide 'xandeer-editor)
-;;; xandeer-editor.el ends here
+(provide 'init-editor)
+;;; init-editor.el ends here

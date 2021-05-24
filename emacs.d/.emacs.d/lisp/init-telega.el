@@ -1,11 +1,5 @@
-;;; xandeer-tools-telega.el --- Xandeer's Emacs Configuration tools telega file.  -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2020  Xandeer
-
+;;; init-telega.el --- Xandeer's Emacs Configuration tools telega file.  -*- lexical-binding: t; -*-
 ;;; Commentary:
-
-;; Xandeer's Emacs Configuration Editor Telega.
-
 ;;; Code:
 
 (straight-register-package
@@ -19,10 +13,10 @@
 (leaf telega
   :commands (telega)
   :bind
-  ("M-c" . telega-chat-with)
+  ("M-c" . xr/telega-chat-with)
   :bind
   (:telega-chat-mode-map
-   ("C-c C-f" . xandeer/telega-chatbuf-attach-file))
+   ("C-c C-f" . xr/telega-chatbuf-attach-file))
   :config
   (telega-mode-line-mode 1)
   (setq telega-chat-fill-column 65)
@@ -38,7 +32,14 @@
    telega-root-fill-column 48)
   (setq telega-completing-read-function 'ivy-completing-read)
 
-  (defun xandeer/telega-chatbuf-attach-file (filename &optional preview-p)
+  (defun xr/telega-chat-with ()
+    "Start chatting."
+    (interactive)
+    (xr/enable-pinyin)
+    (call-interactively 'telega-chat-with)
+    (xr/disable-pinyin))
+
+  (defun xr/telega-chatbuf-attach-file (filename &optional preview-p)
     "Attach FILE as document to the current input."
     (interactive (list (read-file-name "Attach file: " (expand-file-name "~/temp"))))
     (let ((ifile (telega-chatbuf--gen-input-file filename 'Document preview-p)))
@@ -52,18 +53,18 @@
       (message (format "Installed version: %s, latest version: %s."
                        required-version ts-version))))
 
-(add-hook 'telega-chat-mode-hook
-          (lambda ()
-            (set (make-local-variable 'company-backends)
-                 (append '(telega-company-emoji
-                           telega-company-username
-                           telega-company-hashtag)
-                         (when (telega-chat-bot-p telega-chatbuf--chat)
-                           '(telega-company-botcmd))))))
+  (add-hook 'telega-chat-mode-hook
+            (lambda ()
+              (set (make-local-variable 'company-backends)
+                   (append '(telega-company-emoji
+                             telega-company-username
+                             telega-company-hashtag)
+                           (when (telega-chat-bot-p telega-chatbuf--chat)
+                             '(telega-company-botcmd))))))
 
-(when *is-a-mac*
-  ;; emacs-mac have some bug on user avatars
-  (setq telega-user-use-avatars nil)))
+  (when *is-a-mac*
+    ;; emacs-mac have some bug on user avatars
+    (setq telega-user-use-avatars nil)))
 
-(provide 'xandeer-tools-telega)
-;;; xandeer-tools-telega.el ends here
+(provide 'init-telega)
+;;; init-telega.el ends here

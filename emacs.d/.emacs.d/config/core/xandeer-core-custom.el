@@ -188,8 +188,6 @@ overlay means use eldoc-overlay.")
     :custom
     (custom-raised-buttons . t)))
 
-(setq-default company-idle-delay .5)
-
 (setq-default
   blink-cursor-interval .6
   blink-matching-paren  t
