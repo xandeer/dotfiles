@@ -89,8 +89,7 @@ with face colours, bold, etc."
   :doc "This package displays ElDoc documentations in a childframe."
   :url "https://github.com/casouri/eldoc-box"
   :tag "extensions"
-  :hook ((eldoc-mode-hook . eldoc-box-hover-mode)
-         (eldoc-mode-hook . eldoc-box-hover-at-point-mode)))
+  :hook (eldoc-mode-hook . eldoc-box-hover-at-point-mode))
 
 (leaf eldoc-overlay
   :disabled t
