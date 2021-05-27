@@ -4,9 +4,11 @@
 
 (defun xr/replace-in-buffer (old new)
   "Replace the string OLD with string NEW."
-  (goto-char (point-min))
-  (while (re-search-forward old nil t)
-    (replace-match new)))
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward old nil t)
+      (replace-match new))))
+
 (defun xr/convert-chinese-quotations ()
   "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
   (interactive)
