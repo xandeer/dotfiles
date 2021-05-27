@@ -36,57 +36,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(defmacro xandeer/s-u-p (&rest packages)
-  "Straight use multiple PACKAGES.
-
-Usage:
-
-    \(xandeer/s-u-p nil t 'avy avx *eldoc-use* (avy :type git)
-                 (:when nil ax3) (:when t 'axx ax2) (:when t axy 'axy2))
-
-to
-
-    \(progn
-       (straight-use-package 'avy)
-       (straight-use-package 'avx)
-       (if *eldoc-use*
-           (progn
-             (straight-use-package *eldoc-use*)))
-       (straight-use-package
-        '(avy :type git))
-       nil
-       (progn
-         (straight-use-package 'axx)
-         (straight-use-package 'ax2))
-       (progn
-         (straight-use-package 'axy)
-         (straight-use-package 'axy2)))"
-  (declare (indent defun))
-  `(progn
-     ,@(cl-loop for package in packages
-                when (and package
-                         (not (eq package t)))
-                collect
-                (cond ((and (symbolp package)
-                           (or (not (boundp package))
-                              (fboundp package)))
-                       `(straight-use-package ',package))
-                      ((symbolp package)
-                       `(when ,package
-                          (straight-use-package ,package)))
-                      ((consp package)
-                       (let ((fst (car package))
-                             (rst (cdr package)))
-                         (cond ((eq :when fst)
-                                `(when ,(car rst)
-                                   (xandeer/s-u-p ,@(cdr rst))))
-                               ((eq 'quote fst)
-                                `(straight-use-package ,package))
-                               (t `(straight-use-package ',package)))))
-                      (t nil)))))
-
-
-(xandeer/s-u-p leaf leaf-keywords)
+(straight-use-package 'leaf)
+(straight-use-package 'leaf-keywords)
 (leaf-keywords-init)
 
 ;; Feature `straight-x' from package `straight' provides
@@ -95,16 +46,6 @@ to
 (leaf straight-x
   ;; Add an autoload for this extremely useful command.
   :commands (straight-x-fetch-all))
-
-(defmacro xandeer/local-repo (repo)
-  "Xandeer load local REPO."
-  (let ((n-repo (format "xandeer-%s" (symbol-name repo))))
-    `(progn
-       (straight-use-package
-        '(,(intern n-repo)
-          :local-repo ,(expand-file-name
-                        (format "config/%s" (symbol-name repo))
-                        user-emacs-directory))))))
 
 (straight-use-package 'benchmark-init)
 (leaf benchmark-init
@@ -118,7 +59,7 @@ to
   :doc "Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection."
   :url "https://gitlab.com/koral/gcmh"
   :custom
-  (gcmh-verbose             . t)
+  (gcmh-verbose             . nil)
   (gcmh-lows-cons-threshold . #x800000)
   (gcmh-high-cons-threshold . gc-cons-threshold)
   (gcmh-idle-delay          . 3600)
@@ -127,8 +68,6 @@ to
 
 (straight-use-package 'no-littering)
 (require 'no-littering)
-
-(server-start)
 
 (provide 'init-bootstrap)
 ;;; init-bootstrap.el ends here
