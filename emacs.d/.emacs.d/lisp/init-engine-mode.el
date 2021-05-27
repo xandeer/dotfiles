@@ -7,9 +7,9 @@
    :host github
    :repo "hrs/engine-mode"
    :branch "main"))
-(straight-use-package 'engine-mode)
 
 (leaf engine-mode
+  :straight t
   :config
   (engine-mode t)
   (setq browse-url-generic-program (executable-find "open"))

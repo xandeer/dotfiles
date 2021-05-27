@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'company)
 (leaf company
+  :straight t
   :hook (after-init-hook . global-company-mode)
   :init
   (setq tab-always-indent 'complete)

@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'doom-themes)
 (leaf doom-themes
+  :straight t
   :custom ((doom-dracula-brighter-comments
             doom-dracula-colorful-headers
             doom-dracula-comment-bg) . t)
@@ -73,13 +73,13 @@
 
 (add-hook #'after-init-hook #'xr/load-theme)
 
-(straight-use-package 'minions)
 (leaf minions
+  :straight t
   :hook after-init-hook
   :custom (minions-mode-line-lighter . "✬"))
 
-(straight-use-package 'doom-modeline)
 (leaf doom-modeline
+  :straight t
   :hook after-init-hook
   :defun doom-modeline-def-segment
   :custom

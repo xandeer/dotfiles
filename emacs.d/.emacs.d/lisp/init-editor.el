@@ -12,37 +12,14 @@
                  :host github
                  :repo "blue0513/point-history"))
 
-(straight-use-package 'diff-hl)
 (straight-use-package 'dired-hacks)
-(straight-use-package 'easy-kill)
-(straight-use-package 'explain-pause-mode)
-(straight-use-package 'expand-region)
-(straight-use-package 'color-identifiers-mode)
-(straight-use-package 'highlight-indent-guides)
-(straight-use-package 'rainbow-mode)
-(straight-use-package 'helpful)
-(straight-use-package 'htmlize)
-(straight-use-package 'indent-tools)
-(straight-use-package 'list-unicode-display)
 (straight-use-package 'mmm-mode)
-(straight-use-package 'page-break-lines)
-(straight-use-package 'smartparens)
-(straight-use-package 'rainbow-delimiters)
-(straight-use-package 'point-history)
-(straight-use-package 'quick-peek)
-(straight-use-package 'symbol-overlay)
-(straight-use-package 'tree-sitter)
-(straight-use-package 'abridge-diff)
 (straight-use-package 'git-blamed)
-(straight-use-package 'git-messenger)
 (straight-use-package 'git-modes)
 (straight-use-package 'git-timemachine)
-(straight-use-package 'magit)
-(straight-use-package 'magit-org-todos)
-(straight-use-package 'magit-todos)
 
-(straight-use-package 'ansi-color)
 (leaf ansi-color
+  :straight t
   :doc "ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape sequences
 with face colours, bold, etc."
   :url "https://www.emacswiki.org/emacs/AnsiColor"
@@ -63,8 +40,8 @@ with face colours, bold, etc."
 (straight-register-package
  '(auto-save :host github
              :repo "manateelazycat/auto-save"))
-(straight-use-package 'auto-save)
 (leaf auto-save
+  :straight t
   :require t
   :config
   (setq auto-save-silent t)
@@ -75,6 +52,7 @@ with face colours, bold, etc."
   (auto-save-enable))
 
 (leaf easy-kill
+  :straight t
   :doc "Kill & Mark Things Easily in Emacs."
   :url "https://github.com/leoliu/easy-kill"
   :tag "killing" "convenience"
@@ -83,9 +61,8 @@ with face colours, bold, etc."
          ([remap mark-sexp]
           . easy-mark)))
 
-
-(straight-use-package 'eldoc-box)
 (leaf eldoc-box
+  :straight t
   :doc "This package displays ElDoc documentations in a childframe."
   :url "https://github.com/casouri/eldoc-box"
   :tag "extensions"
@@ -99,6 +76,7 @@ with face colours, bold, etc."
   :hook eldoc-mode-hook)
 
 (leaf expand-region
+  :straight t
   :doc "Emacs extension to increase selected region by semantic units."
   :url "https://github.com/magnars/expand-region.el"
   :tag "marking region"
@@ -106,6 +84,7 @@ with face colours, bold, etc."
   ("C-=" . er/expand-region))
 
 (leaf explain-pause-mode
+  :straight t
   :doc "top, but for Emacs."
   :url "https://github.com/lastquestion/explain-pause-mode"
   :tag "performance" "speed" "config")
@@ -118,15 +97,15 @@ with face colours, bold, etc."
   :doc "Filling text."
   :tag "emacs")
 
-(straight-use-package 'unfill)
 (leaf unfill
+  :straight t
   :doc "Functions providing the inverse of Emacs' fill-paragraph and fill-region"
   :url "https://github.com/purcell/unfill"
   :tag "convenience"
   :bind (("M-q" . unfill-toggle)))
 
-(straight-use-package 'visual-fill-column)
 (leaf visual-fill-column
+  :straight t
   :doc "Emacs mode for wrapping visual-line-mode buffers at fill-column."
   :url "https://github.com/joostkremers/visual-fill-column"
   :tag "convenience"
@@ -141,6 +120,7 @@ with face colours, bold, etc."
       (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
 
 (leaf color-identifiers-mode
+  :straight t
   :doc "Emacs minor mode to highlight each source code identifier uniquely based
 on its name."
   :url "https://github.com/ankurdave/color-identifiers-mode"
@@ -154,6 +134,7 @@ on its name."
   :hook ((after-init-hook . global-hl-line-mode)))
 
 (leaf highlight-indent-guides
+  :straight t
   :doc "Emacs minor mode to highlight indentation."
   :url "https://github.com/DarthFennec/highlight-indent-guides"
   :tag "faces"
@@ -163,6 +144,7 @@ on its name."
   (highlight-indent-guides-delay      . 0.5))
 
 (leaf rainbow-mode
+  :straight t
   :doc "Colorize color names in buffers."
   :url "https://elpa.gnu.org/packages/rainbow-mode.html"
   :tag "faces"
@@ -177,18 +159,21 @@ on its name."
     (diminish 'rainbow-mode)))
 
 (leaf helpful
+  :straight t
   :doc "A better Emacs *help* buffer."
   :url "https://github.com/Wilfred/helpful"
   :tag "help" "lisp"
   :bind (("C-c C-d" . helpful-at-point)))
 
 (leaf htmlize
+  :straight t
   :doc "Convert buffer text and decorations to HTML."
   :url "https://github.com/hniksic/emacs-htmlize"
   :tag "hypermedia" "extensions"
   :custom (htmlize-pre-style . t))
 
 (leaf indent-tools
+  :straight t
   :doc "Emacs mode to indent, navigate around and act on indentation units:
 perfect for yaml, python and the like."
   :url "https://gitlab.com/emacs-stuff/indent-tools"
@@ -213,6 +198,7 @@ to coexist in one buffer."
    . 2))
 
 (leaf page-break-lines
+  :straight t
   :doc "Emacs: display ugly ^L page breaks as tidy horizontal lines"
   :url "https://github.com/purcell/page-break-lines"
   :tag "convenience" "faces"
@@ -225,12 +211,14 @@ to coexist in one buffer."
   :hook (after-init-hook . show-paren-mode))
 
 (leaf rainbow-delimiters
+  :straight t
   :doc "Emacs rainbow delimiters mode"
   :url "https://github.com/Fanael/rainbow-delimiters"
   :tag "convenience" "faces" "lisp" "tools"
   :hook prog-mode-hook org-src-mode-hook)
 
-(leaf smartparens-config
+(leaf smartparens
+  :straight t
   :doc "Minor mode for Emacs that deals with parens pairs and tries to be smart about it."
   :url "https://github.com/Fuco1/smartparens"
   :tag "abbrev" "convenience" "editing"
@@ -238,6 +226,7 @@ to coexist in one buffer."
   :custom (sp-hybrid-kill-entire-symbol . nil))
 
 (leaf quick-peek
+  :straight t
   :doc "An inline pop-up library for Emacs Lisp."
   :url "https://github.com/cpitclaudel/quick-peek"
   :tag "convenience" "docs" "help" "tools"
@@ -250,6 +239,7 @@ to coexist in one buffer."
   :hook prog-mode-hook)
 
 (leaf symbol-overlay
+  :straight t
   :doc "Highlight symbols with keymap-enabled overlays."
   :url "https://github.com/wolray/symbol-overlay"
   :tag "faces" "matching"
@@ -260,6 +250,7 @@ to coexist in one buffer."
          ("<f7>" . symbol-overlay-mode)))
 
 (leaf tree-sitter
+  :straight t
   :doc "emacs-tree-sitter is an Emacs binding for tree-sitter, an incremental parsing
 system."
   :url "https://github.com/ubolonton/emacs-tree-sitter"
@@ -290,6 +281,7 @@ system."
   :tag "editing")
 
 (leaf point-history
+  :straight t
   :doc "Show the history of points you visited before."
   :url "https://github.com/blue0513/point-history"
   :tag "editing"
@@ -314,10 +306,8 @@ system."
   (uniquify-after-kill-buffer-p . t)
   (uniquify-ignore-buffers-re   . "^\\*"))
 
-(leaf version-control
-  :tag "git" "tools" "vc")
-
 (leaf abridge-diff
+  :straight t
   :doc "Emacs package for refining diff hunks with very long lines (as in LaTeX files)."
   :url "https://github.com/jdtsmith/abridge-diff"
   :tag "diffs" "magit" "tools"
@@ -325,6 +315,7 @@ system."
   :init (abridge-diff-mode 1))
 
 (leaf diff-hl
+  :straight t
   :doc "Emacs package for highlighting uncommitted changes"
   :url "https://github.com/dgutov/diff-hl"
   :tag "vc" "diff"
@@ -333,6 +324,7 @@ system."
          (magit-post-refresh-hook . diff-hl-magit-post-refresh)))
 
 (leaf git-messenger
+  :straight t
   :doc "git-messenger.el provides function that popup commit message at current line."
   :url "https://github.com/emacsorphanage/git-messenger"
   :tag "convenience" "vc"
@@ -341,6 +333,7 @@ system."
          ("p" . git-messenger:popup-message)))
 
 (leaf magit
+  :straight t
   :doc "It's Magit! A Git porcelain inside Emacs."
   :url "https://github.com/magit/magit"
   :tag "git" "tools" "vc"
@@ -357,6 +350,7 @@ system."
           ("f"         . vc-git-grep))))
 
 (leaf magit-org-todos
+  :straight t
   :doc "Get `todo.org` into your magit status"
   :url "https://github.com/danielma/magit-org-todos.el"
   :tag "magit" "orgmode" "tools"
@@ -365,6 +359,7 @@ system."
   :config (magit-org-todos-autoinsert))
 
 (leaf magit-todos
+  :straight t
   :doc "Show source files' TODOs (and FIXMEs, etc) in Magit status buffer."
   :url "https://github.com/alphapapa/magit-todos"
   :tag "magit" "vc"
@@ -384,8 +379,8 @@ system."
         (error "File does not exist: %s" file))
       (vlf file))))
 
-(straight-use-package 'whitespace)
 (leaf whitespace
+  :straight t
   :tag "data" "wp"
   :init
   (defun no-trailing-whitespace ()
@@ -444,8 +439,8 @@ typical word processor."
       (when (fboundp 'writeroom-mode)
         (writeroom-mode 0)))))
 
-(straight-use-package 'yasnippet)
 (leaf yasnippet
+  :straight t
   :disabled t
   :doc "A template system for Emacs"
   :url "https://github.com/joaotavora/yasnippet"
@@ -456,7 +451,6 @@ typical word processor."
   (add-to-list 'yas-snippet-dirs
                (concat user-emacs-directory "extra/snippets"))
   (yas-reload-all))
-
 
 (provide 'init-editor)
 ;;; init-editor.el ends here

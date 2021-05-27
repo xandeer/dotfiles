@@ -9,18 +9,16 @@
    :host github
    :repo "magnars/dash.el"
    :tag "2.18.1"))
-(straight-use-package 'dash)
 (leaf dash
+  :straight t
   :doc "A modern list library for Emacs."
   :url "https://github.com/magnars/dash.el"
   :tag "lists"
   :defer-config
   (dash-enable-font-lock))
 
-(straight-use-package 'lsp-mode)
-(straight-use-package 'lsp-ui)
-
 (leaf lsp-mode
+  :straight t
   :require t
   :hook typescript-mode-hook
   :hook
@@ -30,6 +28,7 @@
    ("C-x C-r" . lsp-rename)))
 
 (leaf lsp-ui
+  :straight t
   :after lsp-mode
   :require t
   :bind

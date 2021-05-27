@@ -38,26 +38,21 @@
 
 (straight-use-package 'leaf)
 (straight-use-package 'leaf-keywords)
-(leaf-keywords-init)
+(leaf leaf-keywords
+  :config
+  (leaf-keywords-init))
 
-;; Feature `straight-x' from package `straight' provides
-;; experimental/unstable extensions to straight.el which are not yet
-;; ready for official inclusion.
-(leaf straight-x
-  ;; Add an autoload for this extremely useful command.
-  :commands (straight-x-fetch-all))
-
-(straight-use-package 'benchmark-init)
 (leaf benchmark-init
   :doc "This is a simple benchmark of calls to Emacs require and load functions."
   :url "https://github.com/dholm/benchmark-init-el"
+  :straight t
   :hook ((after-init . benchmark-init/deactivate))
   :init (benchmark-init/activate))
 
-(straight-use-package 'gcmh)
 (leaf gcmh
   :doc "Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection."
   :url "https://gitlab.com/koral/gcmh"
+  :straight t
   :custom
   (gcmh-verbose             . nil)
   (gcmh-lows-cons-threshold . #x800000)
@@ -66,8 +61,9 @@
   :config
   (gcmh-mode))
 
-(straight-use-package 'no-littering)
-(require 'no-littering)
+(leaf no-littering
+  :straight t
+  :require t)
 
 (provide 'init-bootstrap)
 ;;; init-bootstrap.el ends here

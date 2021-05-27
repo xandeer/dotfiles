@@ -2,9 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'general)
-
 (leaf general
+  :straight t
   :doc "More convenient key definitions in emacs."
   :url "https://github.com/noctuid/general.el"
   :commands gsetq gsetq-local gsetq-default

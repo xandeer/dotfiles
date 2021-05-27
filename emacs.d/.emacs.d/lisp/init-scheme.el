@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'geiser)
 (leaf geiser
+  :straight t
   :config
   (setq geiser-active-implementations '(guile)))
 

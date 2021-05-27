@@ -21,10 +21,8 @@
 
 (setq org-archive-location "archive/%s_archive::* Archived Tasks")
 
-(straight-use-package 'restclient)
-(straight-use-package 'ob-restclient)
-(straight-use-package 'org-plus-contrib)
 (leaf org
+  :straight org-plus-contrib restclient ob-restclient
   :require t
   :hook
   (org-mode-hook . auto-fill-mode)

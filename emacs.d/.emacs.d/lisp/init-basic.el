@@ -47,11 +47,6 @@
 (when *is-a-mac*
   (setq line-move-visual nil))
 
-(straight-use-package 'default-text-scale)
-(leaf default-text-scale
-  :commands default-text-scale-mode
-  :hook after-init-hook)
-
 (setq enable-recursive-minibuffers t)
 
 (add-hook #'after-init-hook #'(lambda () (minibuffer-depth-indicate-mode 1)))
@@ -84,10 +79,10 @@
    truncate-lines                 nil
    truncate-partial-width-windows nil)
 
-(setq-default shell-file-name "/bin/zsh")
-(straight-use-package 'exec-path-from-shell)
 (leaf exec-path-from-shell
+  :straight t
   :init
+  (setq-default shell-file-name "/bin/zsh")
   ;; Non-Forking Shell Command To String
   ;; https://github.com/bbatsov/projectile/issues/1044
   ;;--------------------------------------------------------------------------
@@ -141,16 +136,16 @@
   (setq display-time-format " <%H:%M>")
   :hook (after-init-hook . display-time-mode))
 
-(straight-use-package 'all-the-icons)
 (leaf all-the-icons
+  :straight t
   :custom (inhibit-compacting-font-caches . t))
 
 (leaf which-func
   :tag "builtin"
   :hook after-init-hook)
 
-(straight-use-package 'which-key)
 (leaf which-key
+  :straight t
   :doc "Emacs package that displays available keybindings in popup."
   :url "https://github.com/justbur/emacs-which-key"
   :tag "help"

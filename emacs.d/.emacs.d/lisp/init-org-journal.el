@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'org-journal)
 (leaf org-journal
+  :straight t
   :require t
   :after org
   :init

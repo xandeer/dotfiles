@@ -2,12 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'org-roam)
 (leaf org-roam
+  :straight t
   :require t
   :after org
-  :hook
-  (after-init . org-roam-mode)
+  :hook (after-init . org-roam-mode)
   :bind
   ("C-c x M-r" . org-roam-random-note)
   ("C-c r" . org-roam-capture)

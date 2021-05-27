@@ -2,9 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'switch-window)
-
 (leaf switch-window
+  :straight t
   :doc "Offer a *visual* way to choose a window to switch to."
   :url "https://github.com/dimitri/switch-window"
   :bind

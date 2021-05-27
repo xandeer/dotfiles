@@ -9,8 +9,8 @@
           ;; :branch "master"
           :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
 
-(straight-use-package 'telega)
 (leaf telega
+  :straight t
   :commands (telega)
   :bind
   ("M-c" . xr/telega-chat-with)

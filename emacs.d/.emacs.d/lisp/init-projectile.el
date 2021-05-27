@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'projectile)
 (leaf projectile
+  :straight t
   :doc "Projectile is a project interaction library for Emacs."
   :url "https://github.com/bbatsov/projectile"
   :tag "project" "convenience"

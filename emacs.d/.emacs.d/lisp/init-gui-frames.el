@@ -62,12 +62,15 @@
             (setq line-spacing 0)))
 
 ;; Change global font size easily
-(straight-use-package 'default-text-scale)
-(add-hook 'after-init-hook 'default-text-scale-mode)
+(leaf default-text-scale
+  :straight t
+  :commands default-text-scale-mode
+  :hook after-init-hook)
 
-(straight-use-package 'disable-mouse)
-(setq disable-mouse-wheel-events nil)
-(global-disable-mouse-mode)
+(leaf disable-mouse
+  :straight t
+  :init (setq disable-mouse-wheel-events nil)
+  :config (global-disable-mouse-mode))
 
 (provide 'init-gui-frames)
 ;;; init-gui-frames.el ends here

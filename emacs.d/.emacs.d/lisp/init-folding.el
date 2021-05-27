@@ -2,15 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'origami)
 (leaf origami
+  :straight t
   :require t
   :bind
   (:origami-mode-map
    ("C-c x z". origami-toggle-node))
   :config
   (global-origami-mode))
-
 
 (provide 'init-folding)
 ;;; init-folding.el ends here

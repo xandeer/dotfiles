@@ -5,7 +5,6 @@
 
 ;; There's a bug when reload it.
 (delete-directory (expand-file-name "straight/build/meow" user-emacs-directory) t)
-(straight-use-package 'meow)
 
 (defun xr/meow-setqs ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
@@ -150,6 +149,7 @@
 (advice-add 'meow--global-enable :after 'xr/meow-enable-local-insert)
 
 (leaf meow
+  :straight t
   :require t
   :init
   (meow-global-mode 1)

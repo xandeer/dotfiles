@@ -6,8 +6,8 @@
 '(sdcv :host github
   :repo "manateelazycat/sdcv"))
 
-(straight-use-package 'sdcv)
 (leaf sdcv
+  :straight t
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input

@@ -13,10 +13,8 @@
         :repo "DogLooksGood/emacs-rime"
         :files ( "Makefile" "*.el" "lib.c")))
 
-(straight-use-package 'rime)
-(straight-use-package 'posframe)
-
 (leaf rime
+  :straight t posframe
   :bind (("M-i" . toggle-input-method))
   :bind (:rime-mode-map
          ("M-I" . rime-force-enable))

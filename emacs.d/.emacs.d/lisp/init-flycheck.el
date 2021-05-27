@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'flycheck)
 (leaf flycheck
+  :straight t
   ;; :bind (("C-x C-s" . save-buffer-maybe-show-errors))
   :hook prog-mode-hook
   :custom
@@ -22,8 +22,8 @@
     'flycheck-show-error-at-point)
   (add-to-list 'flycheck-emacs-lisp-checkdoc-variables 'sentence-end-double-space))
 
-(straight-use-package 'flycheck-package)
 (leaf flycheck-package
+  :straight t
   :doc "Flycheck checker for elisp package metadata."
   :url "https://github.com/purcell/flycheck-package"
   :tag "lisp"

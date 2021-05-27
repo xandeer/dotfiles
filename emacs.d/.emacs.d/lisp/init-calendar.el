@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'cal-china-x)
 (leaf cal-china-x
+  :straight t
   :require t
   :config
   (setq mark-holidays-in-calendar t)

@@ -2,9 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'typescript-mode)
-(straight-use-package 'tide)
 (leaf tide
+  :straight t typescript-mode
   :after typescript-mode flycheck company
   :require t
   :bind

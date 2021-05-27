@@ -2,19 +2,21 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq-default
- recentf-max-saved-items 1000
- recentf-exclude '("/tmp/" "/ssh:"))
+(leaf no-littering
+  :init
+  (setq-default
+   recentf-max-saved-items 1000
+   recentf-exclude '("/tmp/" "/ssh:"))
+  :config
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory)
 
-(add-to-list 'recentf-exclude no-littering-var-directory)
-(add-to-list 'recentf-exclude no-littering-etc-directory)
+  (add-hook 'after-init-hook 'recentf-mode)
 
-(add-hook 'after-init-hook 'recentf-mode)
-
-(setq-default recentf-filename-handlers
-              '(substring-no-properties
-                ;; Replace $HOME with ~.
-                abbreviate-file-name))
+  (setq-default recentf-filename-handlers
+                '(substring-no-properties
+                  ;; Replace $HOME with ~.
+                  abbreviate-file-name)))
 
 (provide 'init-recentf)
 ;;; init-recentf.el ends here

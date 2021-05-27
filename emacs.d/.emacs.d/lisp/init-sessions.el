@@ -34,12 +34,13 @@
 (setq-default history-length 10)
 (add-hook 'after-init-hook 'savehist-mode)
 
-(straight-use-package 'session)
-(setq session-save-file (no-littering-expand-var-file-name ".session"))
-(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
-(setq session-save-file-coding-system 'utf-8)
-
-(add-hook 'after-init-hook 'session-initialize)
+(leaf session
+  :straight t
+  :hook (after-init-hook . session-initialize)
+  :config
+  (setq session-save-file (no-littering-expand-var-file-name ".session"))
+  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
+  (setq session-save-file-coding-system 'utf-8))
 
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also

@@ -2,10 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-
-(straight-use-package 'kotlin-mode)
-(straight-use-package 'flycheck-kotlin)
-(leaf flycheck-kotlin
+(leaf kotlin
+  :straight kotlin-mode flycheck-kotlin
   :hook
   (kotlin-mode-hook . flycheck-kotlin-setup))
 
