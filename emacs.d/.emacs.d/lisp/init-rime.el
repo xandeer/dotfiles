@@ -42,6 +42,7 @@
        rime-predicate-current-uppercase-letter-p
        meow-normal-mode-p
        xr/ace-mode-p
+       xr/org-heading-beginning-p
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
        rime-predicate-prog-in-code-p)))
