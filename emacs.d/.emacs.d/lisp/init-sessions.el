@@ -38,7 +38,7 @@
   :straight t
   :hook (after-init-hook . session-initialize)
   :config
-  (setq session-save-file (no-littering-expand-var-file-name ".session"))
+  (setq session-save-file (no-littering-expand-var-file-name "session"))
   (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
   (setq session-save-file-coding-system 'utf-8))
 
