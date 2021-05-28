@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq-default debug-on-error         t
+(setq-default debug-on-error         nil
               message-log-max        t
               load-prefer-newer      t
               ad-redefinition-action 'accept
