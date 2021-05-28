@@ -33,11 +33,16 @@
   (setq telega-completing-read-function 'ivy-completing-read)
 
   (defun xr/telega-chat-with ()
-    "Start chatting."
+    "If telega server is live start chatting, else start telega."
     (interactive)
-    (xr/enable-pinyin)
-    (call-interactively 'telega-chat-with)
-    (xr/disable-pinyin))
+    (if (telega-server-live-p)
+        (progn
+          (xr/enable-pinyin)
+          (call-interactively 'telega-chat-with)
+          (xr/disable-pinyin))
+      (progn
+        (telega 1)
+        (message "Telega starting..."))))
 
   (defun xr/telega-chatbuf-attach-file (filename &optional preview-p)
     "Attach FILE as document to the current input."
