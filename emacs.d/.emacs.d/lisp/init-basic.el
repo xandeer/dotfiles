@@ -133,6 +133,8 @@
   :doc "Show Time at modeline."
   :require t
   :init
+  (setq display-time-mail-string "")
+  (setq display-time-default-load-average nil)
   (setq display-time-format " <%H:%M>")
   :hook (after-init-hook . display-time-mode))
 

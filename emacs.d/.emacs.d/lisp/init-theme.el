@@ -4,9 +4,10 @@
 
 (leaf doom-themes
   :straight t
-  :custom ((doom-dracula-brighter-comments
-            doom-dracula-colorful-headers
-            doom-dracula-comment-bg) . t)
+  :custom
+  ((doom-dracula-brighter-comments
+    doom-dracula-colorful-headers
+    doom-dracula-comment-bg) . t)
   :config
   (with-eval-after-load 'treemacs
     (doom-themes-treemacs-config)
@@ -67,14 +68,16 @@
 (add-hook #'server-after-make-frame-hook #'xr/set-font)
 
 (defun xr/load-theme ()
-  "Xandeer load theme function"
+  "Xandeer load theme function."
   (when *theme*
-    (load-theme *theme* t)))
+    (load-theme *theme* t)
+    (setq doom-modeline-minor-modes nil)))
 
 (add-hook #'after-init-hook #'xr/load-theme)
 
 (leaf minions
   :straight t
+  :disabled t
   :hook after-init-hook
   :custom (minions-mode-line-lighter . "✬"))
 
@@ -83,31 +86,21 @@
   :hook after-init-hook
   :defun doom-modeline-def-segment
   :custom
-  ((doom-modeline-height                      . 25)
-   (doom-modeline-bar-width                   . 3)
-   (doom-modeline-window-width-limit          . fill-column)
-   (doom-modeline-project-detection           . 'project)
-   (doom-modeline-buffer-file-name-style      . 'truncate-with-project)
-   ((doom-modeline-icon
-     doom-modeline-major-mode-icon
-     doom-modeline-major-mode-color-icon
-     doom-modeline-buffer-state-icon
-     doom-modeline-buffer-modification-icon
-     doom-modeline-unicode-fallback
-     doom-modeline-minor-modes)
-    . t)
-   (doom-modeline-enable-word-count . nil)
-   (doom-modeline-buffer-encoding             . nil)
-   (doom-modeline-indent-info                 . nil)
-   (doom-modeline-checker-simple-format       . nil)
-   (doom-modeline-number-limit                . 99)
-   (doom-modeline-vcs-max-length              . 12)
-   (doom-modeline-persp-name                  . nil)
-   (doom-modeline-display-default-persp-name  . nil)
-   (doom-modeline-lsp                         . t)
-   (doom-modeline-github                      . t)
-   `(doom-modeline-github-interval            . ,(* 30 60))
-   (doom-modeline-modal-icon                  . t)))
+  (doom-modeline-height                      . 25)
+  (doom-modeline-bar-width                   . 3)
+  (doom-modeline-window-width-limit          . fill-column)
+  (doom-modeline-project-detection           . 'project)
+  (doom-modeline-buffer-file-name-style      . 'truncate-with-project)
+  ((doom-modeline-icon
+    doom-modeline-major-mode-icon
+    doom-modeline-major-mode-color-icon
+    doom-modeline-buffer-state-icon
+    doom-modeline-buffer-modification-icon)
+   . t)
+  ((doom-modeline-segment--buffer-encoding
+    doom-modeline-minor-modes
+    doom-modeline-persp-name)
+   . nil))
 
 (provide 'init-theme)
 ;;; init-theme.el ends here
