@@ -5,10 +5,11 @@
 (straight-register-package
  '(telega :host github
           :repo "zevlg/telega.el"
-          :branch "telega-tdlib-150"
-          ;; :branch "master"
-          :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")))
+          ;; :tag "v0.7.15"
+          :branch "releases"))
+;;          :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")
 
+;; dependencies: brew install tdlib ffmpeg
 (leaf telega
   :straight t
   :commands (telega)
@@ -21,6 +22,7 @@
   (telega-mode-line-mode 1)
   (setq telega-chat-fill-column 65)
   (setq telega-emoji-use-images nil)
+  (setq-default telega-chat-scroll-scroll-conservatively 101)
   (setq
    telega-proxies
    (list
