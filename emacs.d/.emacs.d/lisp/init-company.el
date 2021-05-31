@@ -12,7 +12,7 @@
   (dolist (backend '(company-eclim company-semantic))
     (delq backend company-backends))
   (setq-default company-dabbrev-code-other-buffers 'all
-                company-idle-delay .3
+                company-idle-delay .1
                 company-tooltip-align-annotations t))
  ;; (diminish 'company-mode))
 
