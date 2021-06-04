@@ -19,7 +19,7 @@
   (switch-window-timeout        . nil)
   :config
   (defun xr/roam-or-projectile-find-file (&optional count file)
-    (if (xr/is-roam-buffer)
+    (if (xr/roam-buffer-p)
         (xr/roam-find-file)
       (counsel-projectile-find-file)))
 

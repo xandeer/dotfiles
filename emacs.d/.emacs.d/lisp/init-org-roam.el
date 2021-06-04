@@ -46,13 +46,13 @@
   (defun xr/roam-find-file ()
     (interactive)
     (xr/enable-pinyin)
-    (call-interactively 'org-roam-find-file)
-    (xr/disable-pinyin))
+    (call-interactively 'org-roam-find-file))
 
-  (defun xr/is-roam-buffer ()
+  (defun xr/roam-buffer-p ()
+    "Whether the current is in roam directory."
     (and (buffer-file-name) (s-contains? (expand-file-name org-roam-directory) (buffer-file-name))))
 
-                                        ; Override the original, duplicate tags after title to make search easier.
+  ;; Override the original, duplicate tags after title to make search easier.
   (defun org-roam--get-title-path-completions ()
     "Return an alist for completion. The car is the displayed title for
 completion, and the cdr is the to the file."

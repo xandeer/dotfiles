@@ -115,6 +115,8 @@
   :straight t
   :hook ivy-mode-hook
   :mode-hook (prescient-persist-mode 1)
+  :bind
+  ("C-x b" . xr/switch-buffer)
   :custom
   (ivy-prescient-retain-classic-highlighting . t)
   :config
@@ -124,12 +126,16 @@
   (defun xr/disable-pinyin ()
     (interactive)
     (setq prescient-filter-method '(literal regexp initialism)))
+  (defun xr/switch-buffer ()
+    "Switch to another buffer."
+    (interactive)
+    (xr/enable-pinyin)
+    (call-interactively 'ivy-switch-buffer))
   (xr/disable-pinyin)
+  (add-hook 'minibuffer-exit-hook 'xr/disable-pinyin)
   :advice
   (:before org-roam-insert xr/enable-pinyin)
-  (:before swiper-isearch xr/enable-pinyin)
-  (:after org-roam-insert xr/disable-pinyin)
-  (:after swiper-isearch xr/disable-pinyin))
+  (:before swiper-isearch xr/enable-pinyin))
 
 (leaf all-the-icons-ivy-rich
   :straight t
@@ -223,8 +229,7 @@ If prefix ARG is set, prompt for a directory to search from."
   (let ((default-directory
           (if arg (counsel-read-directory-name "Search directory: ")
             default-directory)))
-    (call-interactively #'xr/ivy/project-search-from-cwd))
-  (xr/disable-pinyin))
+    (call-interactively #'xr/ivy/project-search-from-cwd)))
 
 ;;;###autoload
 (defun xr/search-other-cwd ()
