@@ -28,6 +28,8 @@
   (org-mode-hook . auto-fill-mode)
   :bind
   (:org-mode-map
+   ("M-p" . org-previous-visible-heading)
+   ("M-n" . org-next-visible-heading)
    ("C-c x C-r" . org-table-recalculate))
   :custom
   ;; org appearance
