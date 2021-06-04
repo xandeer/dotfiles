@@ -5,6 +5,9 @@
 (leaf ivy
   :straight t
   :hook after-init-hook
+  :bind
+  (:ivy-minibuffer-map
+   ("TAB" . ivy-alt-done))
   :custom
   ((ivy-wrap                         . t)
    (ivy-auto-shrink-minibuffer-alist . '((t . nil)))
