@@ -81,7 +81,7 @@ with face colours, bold, etc."
   :url "https://github.com/magnars/expand-region.el"
   :tag "marking region"
   :bind
-  ("C-=" . er/expand-region))
+  ("C-+" . er/expand-region))
 
 (leaf explain-pause-mode
   :straight t
