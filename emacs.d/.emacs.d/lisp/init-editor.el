@@ -250,7 +250,9 @@ to coexist in one buffer."
          ("<f7>" . symbol-overlay-mode)))
 
 (leaf tree-sitter
+  :disabled t
   :straight t
+  :require t
   :doc "emacs-tree-sitter is an Emacs binding for tree-sitter, an incremental parsing
 system."
   :url "https://github.com/ubolonton/emacs-tree-sitter"
@@ -270,10 +272,10 @@ system."
          rust-mode-hook
          typescript-mode-hook)
   :config
-  (require 'tree-sitter-langs)
   (add-to-list 'tree-sitter-major-mode-language-alist '(mhtml-mode . html)))
 
 (leaf tree-sitter-hl
+  :disabled t
   :hook tree-sitter-after-on-hook)
 
 (leaf undo/redo
