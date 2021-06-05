@@ -158,6 +158,18 @@ on its name."
   (when (fboundp 'diminish)
     (diminish 'rainbow-mode)))
 
+(leaf rainbow-identifiers
+  :straight t
+  :hook (after-init-hook
+         text-mode-hook
+         org-mode-hook
+         css-mode-hook
+         html-mode-hook
+         prog-mode-hook)
+  :defer-config
+  (when (fboundp 'diminish)
+    (diminish 'rainbow-identifiers-mode)))
+
 (leaf helpful
   :straight t
   :doc "A better Emacs *help* buffer."
