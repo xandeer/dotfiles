@@ -55,6 +55,7 @@
 (require 'init-lsp)
 (require 'init-git)
 (require 'init-meow)
+(require 'init-pass)
 (require 'init-projectile)
 (require 'init-rime)
 (require 'init-skeleton)
