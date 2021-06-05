@@ -11,6 +11,7 @@
   :config
   (dolist (backend '(company-eclim company-semantic))
     (delq backend company-backends))
+  (setq company-minimum-prefix-length 1)
   (setq-default company-dabbrev-code-other-buffers 'all
                 company-idle-delay .1
                 company-tooltip-align-annotations t))
