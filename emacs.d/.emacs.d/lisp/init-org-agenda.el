@@ -10,6 +10,7 @@
   ("C-c x a" . org-agenda)
   ("C-c a" . org-agenda-list)
   ("C-c t" . xr/find-gtd)
+  ;; (org-agenda 'C "x")
   (:org-agenda-mode-map
    ("M-l" . xr/agenda-toggle-clock-log)
    ("q" . meow-last-buffer)
@@ -22,7 +23,7 @@
   (defun xr/find-gtd ()
     "Find file in gtd."
     (interactive)
-    (find-file (expand-file-name "gtd" org-directory)))
+    (counsel-find-file (expand-file-name "gtd" org-directory)))
   :config
   (setq org-agenda-files `(,(expand-file-name "gtd/" org-directory)
                            ,(expand-file-name "journal/" org-directory)))
@@ -56,11 +57,8 @@
   (setq org-agenda-persistent-filter t)
   (setq org-agenda-show-future-repeats 'next)
   (setq org-agenda-start-on-weekday 1)
+  (setq org-agenda-start-with-clockreport-mode t)
   (setq org-agenda-use-time-grid nil)
-  (setq org-agenda-time-grid '((daily today require-timed)
-                               (600 900 1200 1500 1800 2100)
-                               "..........."
-                               "- - - - - - - - - - - - - - - - - - - - - - - - - - -"))
   (setq org-agenda-clock-consistency-checks
         (quote (:max-duration "4:00"
                               :min-duration 0
@@ -70,10 +68,10 @@
   (setq diary-file (expand-file-name "gtd/standard-diary" org-directory))
   (setq org-agenda-window-setup 'other-window)
   (setq org-agenda-sorting-strategy
-        '((agenda time-up user-defined-up effort-up category-keep)
-          (todo category-up effort-up)
-          (tags category-up effort-up)
-          (search category-up)))
+        '((agenda time-up category-keep)
+          (todo category-keep)
+          (tags category-keep)
+          (search category-keep)))
   (setq org-agenda-dim-blocked-tasks nil)
   (setq org-agenda-compact-blocks t)
   (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
@@ -85,13 +83,15 @@
         (quote (("n" "Notes" tags "NOTE"
                  ((org-agenda-overriding-header "Notes")
                   (org-tags-match-list-sublevels t)))
+                ("p" "Phone Calls" tags "PHONE"
+                 ((org-agenda-overriding-header "Phone Calls")
+                 (org-tags-match-list-sublevels nil)))
                 ("h" "Habits" tags-todo "STYLE=\"habit\""
                  ((org-agenda-overriding-header "Habits")
                   (org-agenda-sorting-strategy
                    '(todo-state-down effort-up category-keep))))
-                (" " "Agenda"
-                 ((agenda "" nil)
-                  (tags-todo "-CANCELLED/!NEXT"
+                ("x" "Agenda"
+                 ((tags-todo "-CANCELLED/!NEXT"
                              ((org-agenda-overriding-header (concat "Project Next Tasks"
                                                                     (if bh/hide-scheduled-and-waiting-next-tasks
                                                                         ""
