@@ -4,11 +4,10 @@
 
 (leaf ts
   :straight typescript-mode tide
-  :after typescript-mode flycheck company
-  :require t
   :bind
   ("C-x f". tide-format)
   (:tide-mode-map
+   :package tide
    ("M-." . lsp-ui-peek-find-definitions)
    ("M-," . lsp-ui-peek-find-references))
   :hook
