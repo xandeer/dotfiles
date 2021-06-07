@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf tide
-  :straight t typescript-mode
+(leaf ts
+  :straight typescript-mode tide
   :after typescript-mode flycheck company
   :require t
   :bind
