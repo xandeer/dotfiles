@@ -28,11 +28,15 @@
     wget
 
     bat
+    exa
+    fd
     fzf
     htop
     lsof
     neofetch
     ripgrep
+    skim
+    starship
     tree
 
     pass
