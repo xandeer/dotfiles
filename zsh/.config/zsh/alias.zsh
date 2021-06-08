@@ -10,14 +10,22 @@ fi
 alias hf='hledger -f ~/projects/personal/notes/hledger-financial.org'
 alias hh='hledger -f ~/projects/personal/notes/hledger-habit.org'
 
+alias grep='rg'
 alias ag='alias | grep'
 alias tn='terminal-notifier -message'
+
+alias l='exa -lFh'
+alias la='exa -lFhA'
+alias ldot='exa -ld .*'
+alias ls='exa'
+
+alias find='fd'
 
 alias m='make'
 alias n='npm'
 alias y='yarn'
 alias s='scd'
-alias rmrf='rm -rf'
+alias rmrf='trash'
 alias rmd='trash ~/temp/donut/{*.apk,*.zip,*.txt}'
 alias rms='trash ~/temp/screenshot/*.png'
 
