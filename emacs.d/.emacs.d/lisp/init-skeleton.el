@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(add-hook 'org-mode-hook (lambda () (abbrev-mode 1)))
 (setq skeleton-end-newline nil)
 ;;; Skeletons
 (define-skeleton xr/org-block
@@ -63,6 +62,8 @@
 (leaf hydra
   :straight t
   :require t
+  :bind
+  ("C-c M-x" . xr/hydra-skeleton/body)
   :config
   (defhydra xr/hydra-skeleton nil
     "Insert Skeleton"
@@ -75,17 +76,19 @@
     ("k" xr/org-block-kt "kotlin" :exit t)
     ("t" xr/text-time "timestamp" :exit t)))
 
-(global-set-key (kbd "C-c M-x") #'xr/hydra-skeleton/body)
-
-(define-abbrev fundamental-mode-abbrev-table "t" "" 'xr/text-time)
-(define-abbrev org-mode-abbrev-table "t" "" 'xr/text-time)
-(define-abbrev org-mode-abbrev-table "b" "" 'xr/org-block)
-(define-abbrev org-mode-abbrev-table "src" "" 'xr/org-block-src)
-(define-abbrev org-mode-abbrev-table "d" "" 'xr/text-day)
-(define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)
-(define-abbrev org-mode-abbrev-table "sh" "" 'xr/org-block-sh)
-(define-abbrev org-mode-abbrev-table "kt" "" 'xr/org-block-kt)
-(define-abbrev emacs-lisp-mode-abbrev-table "h" "" 'xr/el-template)
+(leaf abbrev
+  :hook
+  ((fundamental-mode-hook org-mode-hook emacs-lisp-mode-hook) . abbrev-mode)
+  :config
+  (define-abbrev fundamental-mode-abbrev-table "tt" "" 'xr/text-time)
+  (define-abbrev org-mode-abbrev-table "tt" "" 'xr/text-time)
+  (define-abbrev org-mode-abbrev-table "bb" "" 'xr/org-block)
+  (define-abbrev org-mode-abbrev-table "ssrc" "" 'xr/org-block-src)
+  (define-abbrev org-mode-abbrev-table "dd" "" 'xr/text-day)
+  (define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)
+  (define-abbrev org-mode-abbrev-table "sh" "" 'xr/org-block-sh)
+  (define-abbrev org-mode-abbrev-table "kt" "" 'xr/org-block-kt)
+  (define-abbrev emacs-lisp-mode-abbrev-table "h" "" 'xr/el-template))
 
 (provide 'init-skeleton)
 ;;; init-skeleton.el ends here
