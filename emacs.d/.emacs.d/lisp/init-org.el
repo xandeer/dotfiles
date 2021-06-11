@@ -125,16 +125,20 @@
   (setq org-use-speed-commands t)
   (setq org-speed-commands-user
         '(("Outline Navigation")
+          ("j" org-speed-move-safe 'org-next-visible-heading)
+          ("k" org-speed-move-safe 'org-previous-visible-heading)
           ("B" . ignore)
           ("F" . ignore)
 
           ("Outline Visibility")
-          ("c" . ignore)
           ("C" . ignore)
 
           ("Outline Structure Editing")
 
           ("Clock Commands")
+          ("c" . org-clock-goto)
+          ("i" . org-clock-in)
+          ("o" . org-clock-out)
           ("J" . org-clock-goto)
           ("S" . org-schedule)
 
@@ -149,7 +153,8 @@
           ("Agenda Views etc")
           ("q" . org-agenda-list)
 
-          ("Misc"))))
+          ("Misc")
+          ("o" . org-open-at-point))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
