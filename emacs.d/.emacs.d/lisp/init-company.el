@@ -8,6 +8,10 @@
   :init
   (setq tab-always-indent 'complete)
   (add-to-list 'completion-styles 'initials t)
+  :custom
+  (company-dabbrev-downcase . nil)
+  (company-dabbrev-ignore-case . 'keep)
+  (company-dabbrev-code-ignore-case . t)
   :config
   (dolist (backend '(company-eclim company-semantic))
     (delq backend company-backends))
