@@ -110,7 +110,7 @@
    ("C-k" . backward-one-week-in-calendar))
   :config
   (setq org-return-follows-link t)
-  (setq org-attach-directory ".attach/")
+  (setq org-attach-id-dir (expand-file-name ".attach/" org-directory))
   (setq org-attach-store-link-p 'file)
   (setq org-clone-delete-id t)
   (setq org-list-allow-alphabetical t)
