@@ -27,21 +27,23 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain #'org-roam-capture--get-point "%?"
            :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n\n"
+           :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
            :unnarrowed t)))
   (setq org-roam-capture-immediate-template
         '("d" "default" plain #'org-roam-capture--get-point "%?"
           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-          :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n\n"
+          :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
           :immediate-finish t
           :unnarrowed t))
   (setq org-roam-dailies-capture-templates
-        '(("d" "daily" entry #'org-roam-capture--get-point "* <%<%Y-%m-%d %R>> %?"
+        `(("d" "daily" entry
+           #'org-roam-capture--get-point "* <%<%Y-%m-%d %R>> %?"
+           :olp (,(format-time-string "%Y"))
            :clock-in t
            :clock-resume t
            :jump-to-captured t
-           :file-name "journal/%<%Y-%m-%d-%a>"
-           :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%Y-%m-%d, %A>\n#+STARTUP: content\n\n")))
+           :file-name "journal/%<%Y-%m-%d>"
+           :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %d>\n#+STARTUP: content\n\n")))
 
   (defun xr/roam-find-file ()
     (interactive)
