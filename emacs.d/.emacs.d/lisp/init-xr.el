@@ -41,5 +41,10 @@ When FORWARD, don't go to min point."
 When FORWARD, don't go to min point."
   (xr/replace-in-buffer "\\[\\[.*\\]\\[\\(.*\\)\\]\\]" "\\1" forward))
 
+(defun xr/delete-current-buffer ()
+  "Delete the current buffer."
+  (interactive)
+  (delete-file (buffer-name)))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
