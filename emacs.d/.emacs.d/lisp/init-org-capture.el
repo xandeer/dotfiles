@@ -45,7 +45,7 @@
   (add-to-list 'org-capture-templates
                '("h" "Habit" entry
                  (file "gtd/inbox.org")
-                 "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n\n%U\n%a"))
+                 "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n\n%U\n"))
 
   (add-to-list 'org-capture-templates
                '("w" "org-protocol" entry
@@ -56,14 +56,14 @@
   (add-to-list 'org-capture-templates
                '("n" "note" entry
                  (file "gtd/inbox.org")
-                 "* %? :NOTE:\n%U\n%a\n"
+                 "* %? :NOTE:\n%U\n"
                  :clock-in t
                  :clock-resume t))
 
   (add-to-list 'org-capture-templates
                '("c" "todo" entry
                  (file "gtd/inbox.org")
-                 "* TODO %?\n%U\n%a\n"
+                 "* TODO %?\n%U\n"
                  :clock-in t
                  :clock-resume t))
 
