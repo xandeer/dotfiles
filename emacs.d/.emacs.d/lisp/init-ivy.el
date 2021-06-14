@@ -3,7 +3,7 @@
 ;;; Code:
 
 (leaf ivy
-  :straight t
+  :straight t wgrep
   :hook after-init-hook
   :bind
   (:ivy-minibuffer-map
