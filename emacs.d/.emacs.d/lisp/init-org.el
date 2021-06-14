@@ -134,6 +134,7 @@
           ("C" . ignore)
 
           ("Outline Structure Editing")
+          ("A" . org-insert-heading-after-current)
 
           ("Clock Commands")
           ("c" . org-clock-goto)
