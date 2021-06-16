@@ -32,11 +32,14 @@
     fd
     fzf
     htop
+    jq
     lsof
+    ncdu
     neofetch
     ripgrep
     skim
     starship
+    tldr
     tree
 
     pass
