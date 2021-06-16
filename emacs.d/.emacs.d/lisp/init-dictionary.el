@@ -3,11 +3,15 @@
 ;;; Code:
 
 (straight-register-package
-'(sdcv :host github
-  :repo "manateelazycat/sdcv"))
+ '(sdcv :host github
+        :repo "manateelazycat/sdcv"))
 
-(leaf sdcv
-  :straight t
+(straight-register-package
+ '(english-teacher :host github
+                   :repo "loyalpartner/english-teacher.el"))
+
+(leaf dic
+  :straight sdcv english-teacher go-translate
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
@@ -20,7 +24,20 @@
                       :foreground "#E0F0E9")
   (setq sdcv-say-word-p nil
         sdcv-tooltip-timeout 10
-        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")))
+        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict"))
+  :custom
+  (english-teacher-backend . 'google)
+  (english-teacher-show-result-function . 'english-teacher-eldoc-show-result-function)
+  :hook
+  ((Info-mode-hook
+    Man-mode-hook
+    ;; help-mode
+    Woman-mode-hook)
+   . english-teacher-follow-mode)
+  :config
+  (setq go-translate-base-url "https://translate.google.cn")
+  (setq go-translate-local-language "zh-CN")
+  (setq go-translate-token-current (cons 430675 2721866130)))
 
 (provide 'init-dictionary)
 ;;; init-dictionary.el ends here
