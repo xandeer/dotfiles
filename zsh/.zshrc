@@ -216,4 +216,6 @@ fi
 zplug load
 echo "Zsh plugins loaded."
 
+export NIX_PATH=darwin-config=$HOME/.nixpkgs/darwin-configuration.nix:$HOME/.nix-defexpr/channels:$NIX_PATH
+
 # [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
