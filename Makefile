@@ -5,7 +5,8 @@ TERMUX_CHECK := termux-setup-storage
 IS_TERMUX := $(shell command -v $(TERMUX_CHECK))
 
 UNAME := $(shell uname -s)
-CONFIGS := doom fonts git mr tmux zsh ideavim bin
+# CONFIGS := doom fonts git mr tmux zsh ideavim bin
+CONFIGS := fonts git mr tmux zsh bin
 
 ifneq ($(IS_TERMUX),)
 UNAME := TERMUX
