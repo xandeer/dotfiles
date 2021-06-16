@@ -32,6 +32,7 @@
     fd
     fzf
     htop
+    httpie
     jq
     lsof
     ncdu
