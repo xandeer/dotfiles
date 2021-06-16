@@ -1,15 +1,6 @@
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
 
-[projects/personal/nix-config]
-checkout = git clone 'git@github.com:xandeer/nix-config.git' 'nix-config'
-
-[projects/personal/v2ray-config]
-checkout = git clone 'git@github.com:xandeer/v2ray-config.git' 'v2ray-config'
-
-[projects/personal/rust-road]
-checkout = git clone 'git@github.com:xandeer/rust-road.git' 'rust-road'
-
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
 
