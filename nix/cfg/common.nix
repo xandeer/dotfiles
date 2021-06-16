@@ -51,7 +51,9 @@
     # xandeer.dots
     # xandeer.v2ray
 
-    openjdk8
+    yarn
+
+    # openjdk8
     python3
   #   (python3.withPackages(ps: with ps; [
   #     pip
