@@ -82,7 +82,7 @@
 (leaf exec-path-from-shell
   :straight t
   :init
-  (setq-default shell-file-name "/bin/zsh")
+  (setq-default shell-file-name "bash")
   ;; Non-Forking Shell Command To String
   ;; https://github.com/bbatsov/projectile/issues/1044
   ;;--------------------------------------------------------------------------
@@ -120,14 +120,19 @@
               (or (apply 'try-call-process args) (apply this-fn args))))
             (apply fn args)))
 
-  (advice-add 'projectile-find-file :around 'call-with-quick-shell-command)
+  ;; (advice-add 'projectile-find-file :around 'call-with-quick-shell-command)
   :custom
   (shell-command-switch . "-ic")
-  (shell-file-name      . "zsh")
+  (shell-file-name      . "bash")
   ((exec-path-from-shell-arguments
     exec-path-from-shell-check-startup-files) . nil)
   :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (setq exec-path
+        (append '("/run/current-system/sw/bin"
+                  "~/.nix-profile/bin")
+                (split-string "@PATH@" ":")
+                exec-path)))
 
 (leaf time
   :doc "Show Time at modeline."
