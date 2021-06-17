@@ -107,15 +107,11 @@
   (with-eval-after-load 'prescient
     (gsetq counsel-projectile-sort-files t)))
 
-(leaf prescient
-  :straight t
+;; There's a bug after v5.0, so after clone, check to v5.0.
+(leaf ivy-prescient
   :doc "☄️ Simple but effective sorting and filtering for Emacs."
   :url "https://github.com/raxod502/prescient.el"
-  :tag "extensions"
-  :hook ((after-init-hook . prescient-persist-mode)))
-
-(leaf ivy-prescient
-  :straight t
+  :straight t prescient
   :hook ivy-mode-hook
   :mode-hook (prescient-persist-mode 1)
   :bind
