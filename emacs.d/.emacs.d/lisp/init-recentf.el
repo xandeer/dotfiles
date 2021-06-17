@@ -7,11 +7,10 @@
   (setq-default
    recentf-max-saved-items 1000
    recentf-exclude '("/tmp/" "/ssh:"))
+  :hook (after-init-hook . recentf-mode)
   :config
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory)
-
-  (add-hook 'after-init-hook 'recentf-mode)
 
   (setq-default recentf-filename-handlers
                 '(substring-no-properties
