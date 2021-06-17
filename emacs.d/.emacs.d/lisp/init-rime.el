@@ -22,6 +22,8 @@
          ("M-i" . rime-inline-ascii))
   :bind (:ivy-minibuffer-map
          ("M-i" . toggle-input-method))
+  :custom
+  (default-input-method . "rime")
   :config
   (when *is-a-linux*
     (setq rime-emacs-module-header-root "/nix/store/m0bvchfp8b8ddnpjqn36n82f1wgl3qza-emacs-27.1/include")
@@ -43,8 +45,7 @@
        xr/org-heading-beginning-p
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
-       rime-predicate-prog-in-code-p)))
-  (setq default-input-method "rime"))
+       rime-predicate-prog-in-code-p))))
 
 (provide 'init-rime)
 ;;; init-rime.el ends here
