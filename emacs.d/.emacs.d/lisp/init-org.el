@@ -15,11 +15,18 @@
         org-protocol
         org-w3m))
 
+(straight-register-package
+ '(valign
+   :host github
+   :repo "casouri/valign"))
+
 (leaf org
-  :straight restclient ob-restclient
+  :straight restclient ob-restclient valign
   :require t
   :hook
   (org-mode-hook . auto-fill-mode)
+  (org-mode-hook . valign-mode)
+  (org-agenda-mode-hook . valign-mode)
   :bind
   (:org-mode-map
    ("M-p" . org-previous-visible-heading)
