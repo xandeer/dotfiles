@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf ts
-  :straight typescript-mode tide
+(leaf typescript-mode
+  :straight t tide
   :bind
   ("C-x f". tide-format)
   (:tide-mode-map

@@ -8,7 +8,7 @@
   :after org
   :hook (after-init . org-roam-mode)
   :bind
-  ("C-c x M-r" . org-roam-random-note)
+  ("C-c x r" . org-roam-random-note)
   ("C-c r" . org-roam-capture)
   ("C-c x y" . org-roam-dailies-yesterday)
   ("C-c x f" . xr/roam-find-file)
@@ -16,7 +16,7 @@
   (:org-mode-map
    ("C-c x i" . org-roam-insert))
   (:org-roam-mode-map
-   ("C-c x r" . org-roam)
+   ("C-c x M-r" . org-roam)
    ("C-c x g" . org-roam-graph))
   :config
   ;; (advice-add 'org-roam-capture--capture :after #'xr/deactivate-roam-buffer)

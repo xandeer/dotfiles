@@ -10,8 +10,8 @@
  '(english-teacher :host github
                    :repo "loyalpartner/english-teacher.el"))
 
-(leaf dic
-  :straight sdcv english-teacher go-translate
+(leaf sdcv
+  :straight t english-teacher go-translate
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
