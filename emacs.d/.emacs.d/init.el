@@ -71,7 +71,10 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(server-start)
+;; instead by below:
+;; brew services start d12frosted/emacs-plus/emacs-plus@27
+(unless *is-a-mac*
+  (server-start))
 
 (provide 'init)
 
