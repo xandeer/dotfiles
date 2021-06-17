@@ -2,27 +2,21 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq org-modules (quote (ol-docview
-                          ol-info
-                          ol-elisp-symbol
-                          org-toc
-                          org-id
-                          org-info
-                          org-jsinfo
-                          org-habit
-                          org-inlinetask
-                          org-protocol
-                          org-w3m)))
-
-;; global Effort estimate values
-;; global STYLE property values for completion
-(setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-                                    ("STYLE_ALL" . "habit"))))
-
-(setq org-archive-location "archive/%s_archive::* Archived Tasks")
+(setq org-modules
+      '(ol-docview
+        ol-info
+        ol-elisp-symbol
+        org-toc
+        org-id
+        org-info
+        org-jsinfo
+        org-habit
+        org-inlinetask
+        org-protocol
+        org-w3m))
 
 (leaf org
-  :straight org-plus-contrib restclient ob-restclient
+  :straight restclient ob-restclient
   :require t
   :hook
   (org-mode-hook . auto-fill-mode)
@@ -45,8 +39,6 @@
   (org-startup-folded . 'content)
   (org-confirm-babel-evaluate . nil)
   :defer-config
-  ;; (xandeer/add-company-backend 'org-mode 'company-tabnine)
-  ;; --------
   (org-babel-do-load-languages
    'org-babel-load-languages
    `((emacs-lisp . t)
@@ -55,12 +47,17 @@
      (restclient . t)
      (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
   :config
-  (setq org-version "9.5")
   (setq org-directory "~/projects/personal/notes/")
   (setq org-default-notes-file (concat org-directory "notes.org"))
   (setq org-image-actual-width '(500))
   (setq org-adapt-indentation nil)
   (setq org-startup-indented t)
+  ;; global Effort estimate values
+  ;; global STYLE property values for completion
+  (setq org-global-properties
+        '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+          ("STYLE_ALL" . "habit")))
+  (setq org-archive-location "archive/%s_archive::* Archived Tasks")
   (setq org-emphasis-regexp-components ;; markup chinesee without space
         (list (concat " \t('\"{"            "[:nonascii:]")
               (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
@@ -69,11 +66,9 @@
               1))
   (add-to-list 'org-emphasis-alist
                ;; set emphasis face
-               '(
-                 "*"
-                 (
-                  ;; :weight bold
-                  :foreground "#f00056")))
+               '("*"
+                 ;; :weight bold
+                 (:foreground "#f00056")))
   ;; set emphasis support 16 lines
   (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
   (org-set-emph-re 'org-emphasis-regexp-components
@@ -120,8 +115,9 @@
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
   (setq org-cycle-separator-lines 0)
-  (setq org-blank-before-new-entry '((heading)
-                                     (plain-list-item . auto)))
+  (setq org-blank-before-new-entry
+        '((heading)
+          (plain-list-item . auto)))
   (setq org-use-speed-commands t)
   (setq org-speed-commands-user
         '(("Outline Navigation")
