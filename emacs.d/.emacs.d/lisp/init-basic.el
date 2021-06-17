@@ -120,9 +120,9 @@
               (or (apply 'try-call-process args) (apply this-fn args))))
             (apply fn args)))
 
-  ;; (advice-add 'projectile-find-file :around 'call-with-quick-shell-command)
+  (advice-add 'projectile-find-file :around 'call-with-quick-shell-command)
   :custom
-  (shell-command-switch . "-ic")
+  (shell-command-switch . "-c")
   (shell-file-name      . "bash")
   ((exec-path-from-shell-arguments
     exec-path-from-shell-check-startup-files) . nil)
