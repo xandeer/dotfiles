@@ -31,7 +31,7 @@
   (add-to-list 'org-capture-templates
                '("p" "Phone call" entry
                  (file+headline "gtd/inbox.org" "Phone calls")
-                 "* PHONE %T %? :PHONE:\n%a\n"
+                 "* PHONE %T %? :PHONE:\n"
                  :clock-in t
                  :clock-resume t))
 
