@@ -6,11 +6,6 @@ export DOTS_DIR=$HOME/projects/personal/dotfiles
 export EDITOR="emacsclient"
 export GIT_EDITOR=vim
 
-# nvm
-export NVM_DIR=$HOME/.nvm
-[ -s "$NVM_DIR/nvm.sh" ] && \. $NVM_DIR/nvm.sh  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. $NVM_DIR/bash_completion  # This loads nvm bash_completion
-
 # fuzzy
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
