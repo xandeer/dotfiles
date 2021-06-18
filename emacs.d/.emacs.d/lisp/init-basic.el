@@ -128,8 +128,10 @@
     exec-path-from-shell-check-startup-files) . nil)
   :config
   (exec-path-from-shell-initialize)
+  (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
   (setq exec-path
         (append `("/run/current-system/sw/bin"
+                  "/usr/local/bin"
                   ,(expand-file-name ".nix-profile/bin" "~"))
                 exec-path)))
 
