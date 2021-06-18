@@ -5,9 +5,8 @@
 (straight-register-package
  '(telega :host github
           :repo "zevlg/telega.el"
-          ;; :tag "v0.7.15"
+          ;; :commit "9008565"
           :branch "releases"))
-;;          :files (:defaults "README.md" "etc" "server" "Makefile" "test.el")
 
 ;; dependencies: brew install tdlib ffmpeg
 (leaf telega
