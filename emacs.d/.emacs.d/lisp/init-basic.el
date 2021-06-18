@@ -129,9 +129,8 @@
   :config
   (exec-path-from-shell-initialize)
   (setq exec-path
-        (append '("/run/current-system/sw/bin"
-                  "~/.nix-profile/bin")
-                (split-string "@PATH@" ":")
+        (append `("/run/current-system/sw/bin"
+                  ,(expand-file-name ".nix-profile/bin" "~"))
                 exec-path)))
 
 (leaf time
