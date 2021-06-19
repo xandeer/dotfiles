@@ -43,7 +43,7 @@
            :clock-resume t
            :jump-to-captured t
            :file-name "journal/%<%Y-%m-%d>"
-           :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %d>\n#+STARTUP: content\n\n")))
+           :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n")))
 
   (defun xr/roam-find-file ()
     (interactive)
