@@ -35,6 +35,7 @@ MACHINE_DIR := $(CURDIR)/nix/machines/$(MACHINE)
 
 .PHONY: install
 install: ## Install the dotfiles by stow.
+	mkdir -p $(HOME)/.local/share
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
