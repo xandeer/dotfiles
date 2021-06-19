@@ -24,12 +24,13 @@
          ("M-i" . toggle-input-method))
   :custom
   (default-input-method . "rime")
+  (rime-librime-root    . "~/.local/share/librime/dist")
+  (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share")
+  (rime-user-data-dir   . "~/.cache/rime")
   :config
   (when *is-a-linux*
     (setq rime-emacs-module-header-root "/nix/store/m0bvchfp8b8ddnpjqn36n82f1wgl3qza-emacs-27.1/include")
     (setq rime-share-data-dir (expand-file-name "~/.config/fcitx/rime")))
-  (setq rime-librime-root "~/.local/share/librime")
-  (setq rime-user-data-dir "~/.cache/rime")
   (setq rime-show-candidate 'posframe)
   (setq rime-show-preedit t)
   (setq rime-cursor "˰")
