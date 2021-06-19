@@ -58,7 +58,6 @@
    ([remap info-lookup-symbol]         . counsel-info-lookup-symbol)
    ([remap load-theme]                 . counsel-load-theme)
    ([remap locate]                     . counsel-locate)
-   ([remap org-set-tags-command]       . counsel-org-tag)
    ([remap recentf-open-files]         . counsel-recentf)
    ([remap set-variable]               . counsel-set-variable)
    ([remap swiper]                     . counsel-grep-or-swiper)

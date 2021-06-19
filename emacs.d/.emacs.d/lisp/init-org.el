@@ -24,13 +24,13 @@
   :straight restclient ob-restclient valign
   :require t
   :hook
-  (org-mode-hook . auto-fill-mode)
-  (org-mode-hook . valign-mode)
+  (org-mode-hook        . auto-fill-mode)
+  (org-mode-hook        . valign-mode)
   (org-agenda-mode-hook . valign-mode)
   :bind
   (:org-mode-map
-   ("M-p" . org-previous-visible-heading)
-   ("M-n" . org-next-visible-heading)
+   ("M-p"       . org-previous-visible-heading)
+   ("M-n"       . org-next-visible-heading)
    ("C-c x C-r" . org-table-recalculate))
   :custom
   ;; org appearance
@@ -43,27 +43,39 @@
     org-fontify-whole-heading-line
     org-hide-emphasis-markers)
    . t)
-  (org-startup-folded . 'content)
+  (org-startup-folded         . 'content)
   (org-confirm-babel-evaluate . nil)
   :defer-config
   (org-babel-do-load-languages
    'org-babel-load-languages
    `((emacs-lisp . t)
-     (scheme . t)
+     (scheme     . t)
      (plantuml   . t)
      (restclient . t)
-     (,(if (locate-library "ob-sh") 'sh 'shell) . t)))
+     (shell      . t)))
   :config
   (setq org-directory "~/projects/personal/notes/")
   (setq org-default-notes-file (concat org-directory "notes.org"))
   (setq org-image-actual-width '(500))
   (setq org-adapt-indentation nil)
   (setq org-startup-indented t)
+  (setq org-tag-alist '((:startgroup)
+                        ("@home"     . ?h)
+                        ("@office"   . ?o)
+                        (:startgroup)
+                        ("Mon"       . ?m)
+                        ("Tue"       . ?t)
+                        ("Wed"       . ?w)
+                        ("Thu"       . ?T)
+                        ("Fri"       . ?f)
+                        ("Sat"       . ?s)
+                        ("Sun"       . ?S)
+                        (:endgroup)))
   ;; global Effort estimate values
   ;; global STYLE property values for completion
   (setq org-global-properties
         '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-          ("STYLE_ALL" . "habit")))
+          ("STYLE_ALL"  . "habit")))
   (setq org-archive-location "archive/%s_archive::* Archived Tasks")
   (setq org-emphasis-regexp-components ;; markup chinesee without space
         (list (concat " \t('\"{"            "[:nonascii:]")
@@ -112,7 +124,7 @@
    ("C-k" . backward-one-week-in-calendar))
   :config
   (setq org-return-follows-link t)
-  (setq org-attach-id-dir (expand-file-name ".attach/" org-directory))
+  (setq org-attach-id-dir (expand-file-name " . attach/" org-directory))
   (setq org-attach-store-link-p 'file)
   (setq org-clone-delete-id t)
   (setq org-list-allow-alphabetical t)
@@ -137,7 +149,9 @@
           ("C" . ignore)
 
           ("Outline Structure Editing")
-          ("A" . org-insert-heading-after-current)
+          ("a" . org-insert-heading-after-current)
+          ("A" . org-archive-subtree-default-with-confirmation)
+          ("," . org-set-tags-command)
 
           ("Clock Commands")
           ("c" . org-clock-goto)
@@ -151,7 +165,6 @@
           ("1" . ignore)
           ("2" . ignore)
           ("3" . ignore)
-          ("," . ignore)
           ("z" . org-add-note)
 
           ("Agenda Views etc")
@@ -161,4 +174,4 @@
           ("o" . org-open-at-point))))
 
 (provide 'init-org)
-;;; init-org.el ends here
+;;;
