@@ -60,9 +60,6 @@
   (setq org-adapt-indentation nil)
   (setq org-startup-indented t)
   (setq org-tag-alist '((:startgroup)
-                        ("@home"     . ?h)
-                        ("@office"   . ?o)
-                        (:startgroup)
                         ("Mon"       . ?m)
                         ("Tue"       . ?t)
                         ("Wed"       . ?w)
@@ -70,6 +67,9 @@
                         ("Fri"       . ?f)
                         ("Sat"       . ?s)
                         ("Sun"       . ?S)
+                        (:startgroup)
+                        ("@home"     . ?h)
+                        ("@office"   . ?o)
                         (:endgroup)))
   ;; global Effort estimate values
   ;; global STYLE property values for completion
