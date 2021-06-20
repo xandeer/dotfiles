@@ -19,7 +19,7 @@
            :base-directory ,xr/publish-base-dir
            :publishing-directory ,xr/publish-pub-dir
            :recursive t
-           :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang"
+           :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
            :base-extension "org"
            :publishing-function org-html-publish-to-html
            :style-include-default nil
@@ -31,7 +31,7 @@
           ("xandeer-extra"
            :base-directory ,xr/publish-base-dir
            :publishing-directory ,xr/publish-pub-dir
-           :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang"
+           :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
            :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
            :publishing-function org-publish-attachment
            :recursive t
