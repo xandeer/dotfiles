@@ -1,0 +1,17 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 部署位置：
+# ~/.config/ibus/rime  (Linux)
+# ~/Library/Rime  (Mac OS)
+# %APPDATA%\Rime  (Windows)
+#
+# 於重新部署後生效
+#
+
+---
+name: local
+version: "2021.06.20"
+sort: by_weight
+use_preset_vocabulary: true
+...
