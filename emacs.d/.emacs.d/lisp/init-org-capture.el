@@ -68,6 +68,13 @@
                  :clock-resume t))
 
   (add-to-list 'org-capture-templates
+               '("F" "Monthly Financial" plain
+                 (file "hledger-financial.org")
+                 (file "capture-templates/monthly-financial.tmpl")
+                 :jump-to-captured t
+                 :immediate-finish t))
+
+  (add-to-list 'org-capture-templates
                '("f" "Financial" plain
                  (file "hledger-financial.org")
                  (file "capture-templates/financial.tmpl")
