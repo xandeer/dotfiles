@@ -11,7 +11,7 @@
                    :repo "loyalpartner/english-teacher.el"))
 
 (leaf sdcv
-  :straight t english-teacher go-translate
+  :straight t english-teacher
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
@@ -33,11 +33,21 @@
     Man-mode-hook
     ;; help-mode
     Woman-mode-hook)
-   . english-teacher-follow-mode)
+   . english-teacher-follow-mode))
+
+(leaf go-translate
+  :straight t
+  :bind
+  ("C-c x g" . go-translate)
   :config
+  (setq go-translate-token-current (cons 430675 2721866130))
   (setq go-translate-base-url "https://translate.google.cn")
   (setq go-translate-local-language "zh-CN")
-  (setq go-translate-token-current (cons 430675 2721866130)))
+  (setq go-translate-target-language "en")
+  (setq go-translate-buffer-follow-p t)       ; 翻译完成后，总是将光标切换到翻译结果窗口
+  (setq go-translate-buffer-source-fold-p t)  ; 在结果页面，折叠源文本。可以通过回车或鼠标点击展开
+  (setq go-translate-buffer-line-wrap-p nil)  ; 在结果页面，不允许过长的行折行显示
+  (setq go-translate-extra-directions '(("zh-CN" . "zh-TW"))))
 
 (provide 'init-dictionary)
 ;;; init-dictionary.el ends here

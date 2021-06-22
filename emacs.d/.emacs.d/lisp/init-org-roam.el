@@ -16,8 +16,7 @@
   (:org-mode-map
    ("C-c x i" . org-roam-insert))
   (:org-roam-mode-map
-   ("C-c x M-r" . org-roam)
-   ("C-c x g" . org-roam-graph))
+   ("C-c x M-r" . org-roam))
   :config
   ;; (advice-add 'org-roam-capture--capture :after #'xr/deactivate-roam-buffer)
   ;; (xr/auto-toggle-roam-buffer-enable)
