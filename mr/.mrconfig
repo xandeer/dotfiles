@@ -1,14 +1,26 @@
+[DEFAULT]
+jobs = 8
+
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+commit = echo "skip dotfiles"
 
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+
+[projects/personal/pub]
+checkout = git clone 'git@github.com:xandeer/pub.git' 'pub'
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
 
 [projects/personal/xandeer.github.io]
 checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
 
 [.password-store]
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
+commit = echo "skip password store"
 
 [projects/others/zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
+commit = echo "skip zplug"

@@ -1,21 +1,23 @@
 if [ $(uname -s) = 'Linux' ]; then
     alias ors='sudo nixos-rebuild switch'
-    alias rv='sudo systemctl restart v2ray'
 elif [ $(uname -s) = 'Darwin' ]; then
     alias ors='darwin-rebuild switch'
-    alias rv='sudo launchctl stop org.nixos.v2ray; sudo launchctl start org.nixos.v2ray'
-    alias p11='export https_proxy=http://localhost:8011'
+    alias p11='export https_proxy=http://localhost:8010'
 fi
+
+unalias cp
+unalias mv
+unalias rm
 
 alias hf='hledger -f ~/projects/personal/notes/hledger-financial.org'
 alias hh='hledger -f ~/projects/personal/notes/hledger-habit.org'
 
 alias grep='rg'
-alias ag='alias | grep'
+alias ag='alias | rg'
 alias tn='terminal-notifier -message'
 
 alias l='exa -lFh'
-alias la='exa -lFhA'
+alias la='exa -lFha'
 alias ldot='exa -ld .*'
 alias ls='exa'
 
@@ -25,6 +27,7 @@ alias m='make'
 alias n='npm'
 alias y='yarn'
 alias s='scd'
+alias rm='trash'
 alias rmrf='trash'
 alias rmd='trash ~/temp/donut/{*.apk,*.zip,*.txt}'
 alias rms='trash ~/temp/screenshot/*.png'
@@ -37,16 +40,9 @@ alias -g F='| fzf'
 alias -g G='| rg'
 
 # mr
-alias mu='cd ~;mr -j 9 update;cd -'
-alias mp='commit_and_push notes; commit_and_push xandeer.github.io'
-
-function commit_and_push() {
-    cd ~/projects/personal/$1 \
-        && git add --all \
-        && git commit -m "$(date +'manual: [%F %a %T]')"
-    git push
-    cd -
-}
+alias mr='mr -d ~'
+alias mu='mr -d ~ update'
+alias mc='mr -d ~ commit'
 
 # git
 alias gam='git add --all;git commit -m'
@@ -80,7 +76,3 @@ alias tma='tmux attach'
 alias tmn='tmux new -s $(basename $(pwd))'
 alias tmr='tmux new -s ranger'
 alias tmu='tmux list-sessions'
-
-unalias cp
-unalias mv
-unalias rm
