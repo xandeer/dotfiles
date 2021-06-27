@@ -32,7 +32,7 @@
            :base-directory ,xr/publish-base-dir
            :publishing-directory ,xr/publish-pub-dir
            :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
-           :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
+           :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp"
            :publishing-function org-publish-attachment
            :recursive t
            :with-author nil)
@@ -41,3 +41,4 @@
 
 (provide 'init-org-publish)
 ;;; init-org-publish.el ends here
+(org-link-types)
