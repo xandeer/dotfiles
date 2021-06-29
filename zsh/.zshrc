@@ -14,6 +14,8 @@ zplug "mafredri/zsh-async", from:github, use:async.zsh
 # zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme, from:github, at:next, as:theme
 zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 
+zplug "hchbaw/zce.zsh", from:github, use:zce.zsh
+
 # Miscellaneous commands
 zplug "k4rthik/git-cal", as:command
 zplug "peco/peco", as:command, from:gh-r, use:"*${(L)$(uname -s)}*amd64*"
@@ -27,17 +29,10 @@ zplug "lib/theme-and-appearance",         from:oh-my-zsh
 zplug "plugins/common-aliases",           from:oh-my-zsh
 zplug "plugins/zsh_reload",               from:oh-my-zsh
 
-if [[ $OSTYPE = (linux)* ]]; then
-    # zplug "plugins/dnf",                  from:oh-my-zsh, if:"(( $+commands[dnf] ))"
-    # zplug "plugins/mock",                 from:oh-my-zsh, if:"(( $+commands[mock] ))"
-fi
-
 if [[ $OSTYPE = (darwin)* ]]; then
     zplug "lib/clipboard",                from:oh-my-zsh
     zplug "plugins/osx",                  from:oh-my-zsh
     zplug "plugins/brew",                 from:oh-my-zsh, if:"(( $+commands[brew] ))"
-    # zplug "plugins/macports",             from:oh-my-zsh, if:"(( $+commands[port] ))"
-    #zplug "plugins/xcode",                from:oh-my-zsh
 fi
 
 zplug "plugins/adb",                      from:oh-my-zsh, if:"(( $+commands[adb] ))"
@@ -51,8 +46,6 @@ zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git]
 zplug "plugins/gitignore",                from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/golang",                   from:oh-my-zsh, if:"(( $+commands[go] ))"
 zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[gradle] ))"
-zplug "plugins/node",                     from:oh-my-zsh, if:"(( $+commands[node] ))"
-zplug "plugins/npm",                      from:oh-my-zsh, if:"(( $+commands[npm] ))"
 zplug "plugins/nvm",                      from:oh-my-zsh, if:"(( $+commands[nvm] ))"
 zplug "plugins/pass",                     from:oh-my-zsh, if:"(( $+commands[pass] ))"
 zplug "plugins/rust",                     from:oh-my-zsh, if:"(( $+commands[rust] ))"
@@ -62,7 +55,6 @@ zplug "plugins/scd",                      from:oh-my-zsh
 export FPATH=$FPATH:$ZPLUG_REPOS/robbyrussell/oh-my-zsh/plugins/scd
 zplug "plugins/systemd",                  from:oh-my-zsh, if:"(( $+commands[systemctl] ))"
 zplug "plugins/yarn",                     from:oh-my-zsh
-zplug "plugins/yum",                      from:oh-my-zsh, if:"(( $+commands[yum] ))"
 
 
 # Warn you when you run a command that you've set an alias for without
@@ -126,6 +118,8 @@ if zplug check "zsh-users/zsh-history-substring-search"; then
     bindkey '^[[B' history-substring-search-down
     bindkey -M emacs '^P' history-substring-search-up
     bindkey -M emacs '^N' history-substring-search-down
+    bindkey -M vicmd '^p' history-substring-search-up
+    bindkey -M vicmd '^n' history-substring-search-down
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
 fi
@@ -191,25 +185,21 @@ fi
 if zplug check "denysdovhan/spaceship-prompt"; then
     SPACESHIP_PROMPT_ORDER=(
     time        # Time stampts section (Disabled)
-    # user          # Username section
     dir           # Current directory section
-    # host          # Hostname section
     git           # Git section (git_branch + git_status)
     exec_time     # Execution time
     line_sep      # Line break
-    # battery       # Battery level and status
     jobs          # Background jobs indicator
     char
     )
 
-    # SPACESHIP_RPROMPT_ORDER=(
-    # exit_code     # Exit code section
-    # time
-    # )
-
     SPACESHIP_TIME_SHOW=true
     SPACESHIP_EXIT_CODE_SHOW=true
     SPACESHIP_EXEC_TIME_SHOW=true
+fi
+
+if zplug check "hchbaw/zce.zsh"; then
+  bindkey "\eg" zce
 fi
 
 # Then, source plugins and add commands to $PATH
