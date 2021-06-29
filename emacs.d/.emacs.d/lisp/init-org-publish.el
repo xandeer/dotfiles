@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf org-pub
+(leaf org
   :init
   (setq org-alphabetical-lists t)
   (require 'ox-html)
@@ -13,7 +13,7 @@
   (setq org-publish-timestamp-directory (no-littering-expand-var-file-name "org/timestamps"))
 
   (setq xr/publish-base-dir "~/projects/personal/notes")
-  (setq xr/publish-pub-dir "~/projects/personal/pub")
+  (setq xr/publish-pub-dir "~/projects/personal/xandeer.github.io")
   (setq org-publish-project-alist
         `(("xandeer-org"
            :base-directory ,xr/publish-base-dir
@@ -23,7 +23,10 @@
            :base-extension "org"
            :publishing-function org-html-publish-to-html
            :style-include-default nil
-           :html-head "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>"
+           :html-head ,(concat
+                        "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>"
+                        "<meta charset=\"utf-8\">"
+                        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
            :auto-sitemap t
            :sitemap-filename "index.org"
            :with-author nil
