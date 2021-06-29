@@ -8,6 +8,7 @@ fi
 unalias cp
 unalias mv
 unalias rm
+unalias duf
 
 alias hf='hledger -f ~/projects/personal/notes/hledger-financial.org'
 alias hh='hledger -f ~/projects/personal/notes/hledger-habit.org'

@@ -27,8 +27,11 @@
     vim
     wget
 
+    ag
     bat
+    broot
     exa
+    duf
     fd
     fzf
     htop
