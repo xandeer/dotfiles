@@ -33,7 +33,7 @@
  visual-fill-column-width       80
  word-wrap                      t
  highlight-indent-guides-method 'column
- tab-width                      8
+ tab-width                      2
  tooltip-delay                  1.5)
 
 (setq xr/indent 2)
@@ -44,9 +44,7 @@
 (setq typescript-indent-level xr/indent)
 (setq-default sh-indentation xr/indent)
 
-(when *is-a-mac*
-  (setq line-move-visual nil))
-
+(setq line-move-visual nil)
 (setq enable-recursive-minibuffers t)
 
 (add-hook #'after-init-hook #'(lambda () (minibuffer-depth-indicate-mode 1)))
@@ -61,7 +59,7 @@
                           lines-tail empty))
 
 (setq-default
-   bookmark-default-file (no-littering-expand-var-file-name ".bookmarks.el")
+   bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
    buffers-menu-max-size 30
    case-fold-search      t
    column-number-mode    t
