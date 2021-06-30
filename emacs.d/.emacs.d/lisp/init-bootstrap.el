@@ -9,7 +9,6 @@
               gc-cons-threshold      #x8100000)
 
 (defconst *is-a-mac* (eq system-type 'darwin))
-(defconst *is-a-linux* (eq system-type 'gnu/linux))
 
 (setq url-proxy-services
    '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
