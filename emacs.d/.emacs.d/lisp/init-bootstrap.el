@@ -3,10 +3,7 @@
 ;;; Code:
 
 (setq-default debug-on-error         nil
-              message-log-max        t
-              load-prefer-newer      t
-              ad-redefinition-action 'accept
-              gc-cons-threshold      #x8100000)
+              load-prefer-newer      t)
 
 (setq url-proxy-services
    '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
@@ -39,19 +36,14 @@
   :config
   (leaf-keywords-init))
 
-(leaf benchmark-init
-  :doc "This is a simple benchmark of calls to Emacs require and load functions."
-  :url "https://github.com/dholm/benchmark-init-el"
-  :straight t
-  :hook ((after-init . benchmark-init/deactivate))
-  :init (benchmark-init/activate))
-
 (leaf gcmh
   :doc "Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection."
   :url "https://gitlab.com/koral/gcmh"
   :straight t
+  :init
+  (setq-default gc-cons-threshold #x8100000)
   :custom
-  (gcmh-verbose             . nil)
+  (gcmh-verbose             . t)
   (gcmh-lows-cons-threshold . #x800000)
   (gcmh-high-cons-threshold . gc-cons-threshold)
   (gcmh-idle-delay          . 3600)
