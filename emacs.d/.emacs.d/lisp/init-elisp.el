@@ -27,5 +27,14 @@
   :disabled t
   :straight t)
 
+(leaf flycheck-package
+  :straight t
+  :doc "Flycheck checker for elisp package metadata."
+  :url "https://github.com/purcell/flycheck-package"
+  :tag "lisp"
+  :after flycheck
+  :config
+  (flycheck-package-setup))
+
 (provide 'init-elisp)
 ;;; init-elisp.el ends here

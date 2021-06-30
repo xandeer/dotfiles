@@ -4,7 +4,6 @@
 
 (leaf flycheck
   :straight t
-  ;; :bind (("C-x C-s" . save-buffer-maybe-show-errors))
   :hook prog-mode-hook
   :custom
   (flycheck-display-errors-function
@@ -21,15 +20,5 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point)
   (add-to-list 'flycheck-emacs-lisp-checkdoc-variables 'sentence-end-double-space))
-
-(leaf flycheck-package
-  :straight t
-  :doc "Flycheck checker for elisp package metadata."
-  :url "https://github.com/purcell/flycheck-package"
-  :tag "lisp"
-  :after flycheck
-  :config
-  (flycheck-package-setup))
-
 (provide 'init-flycheck)
 ;;; init-flycheck.el ends here
