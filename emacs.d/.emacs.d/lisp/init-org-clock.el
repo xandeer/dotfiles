@@ -3,7 +3,6 @@
 ;;; Code:
 
 (leaf org
-  :require t
   :bind
   ("C-c x c" . org-clock-goto)
   ("C-c x I" . org-clock-in-last)

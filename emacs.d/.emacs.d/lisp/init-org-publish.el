@@ -5,7 +5,6 @@
 (leaf org
   :init
   (setq org-alphabetical-lists t)
-  (require 'ox-html)
   :config
   (setq org-html-inline-images t)
   (setq org-html-head-include-default-style nil)

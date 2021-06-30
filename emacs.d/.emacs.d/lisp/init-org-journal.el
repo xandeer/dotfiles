@@ -12,10 +12,6 @@
   (setq org-journal-follow-mode t)
   :bind
   ("C-c x t" . org-journal-open-current-journal-file)
-  (:org-mode-map
-   ("C-c x C-b" . org-journal-open-pervious-entry)
-   ("C-c x C-f" . org-journal-open-next-entry)
-   ("C-c x C-s" . org-journal-schedule-view))
   :config
   (setq org-journal-file-format "%Y-%m-%d.org")
   (setq org-journal-dir (expand-file-name "journal" org-directory))
