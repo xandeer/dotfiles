@@ -18,6 +18,11 @@
 (straight-use-package 'git-modes)
 (straight-use-package 'git-timemachine)
 
+;; Delete multiple consecutive blank characters at once
+(leaf hungry-delete
+  :straight t
+  :hook (prog-mode-hook . global-hungry-delete-mode))
+
 (leaf ansi-color
   :straight t
   :doc "ansi-color.el translates ANSI SGR (Select Graphic Rendition) escape sequences
