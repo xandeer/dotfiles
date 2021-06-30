@@ -4,7 +4,6 @@
 
 (setq-default lexical-binding t)
 
-;;------------------------------------------------------------------------------
 ;; Bootstrap
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-bootstrap)
@@ -62,18 +61,12 @@
 (require 'init-rime)
 (require 'init-skeleton)
 (require 'init-telega)
-;;----------------------------------------------------------------------------
-;; Epilogue
-;;----------------------------------------------------------------------------
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
-
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; instead by below:
-;; brew services start d12frosted/emacs-plus/emacs-plus@27
-(unless *is-a-mac*
+(unless server-mode
   (server-start))
 
 (provide 'init)

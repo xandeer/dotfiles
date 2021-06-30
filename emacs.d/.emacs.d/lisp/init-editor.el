@@ -30,7 +30,7 @@ with face colours, bold, etc."
   :url "https://www.emacswiki.org/emacs/AnsiColor"
   :tag "comm" "processes" "terminals" "services"
   :commands colourise-compilation-buffer
-  :hook ((compilation-filter-hook . colourise-compilation-buffer))
+  :hook (compilation-filter-hook . colourise-compilation-buffer)
   :config
   (eval-and-compile
     (defun colourise-compilation-buffer ()
