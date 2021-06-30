@@ -10,7 +10,7 @@
   :bind
   ("C-c x r" . org-roam-random-note)
   ("C-c r" . org-roam-capture)
-  ("C-c x y" . org-roam-dailies-yesterday)
+  ("C-c x y" . org-roam-dailies-find-yesterday)
   ("C-c x f" . xr/roam-find-file)
   ("C-c x j" . org-roam-dailies-capture-today)
   (:org-mode-map
