@@ -60,16 +60,12 @@
  "f" #'counsel-projectile-find-file)
 
 (leaf mac-keybind
-  :tag "virtual"
-  :when *is-a-mac*
   :custom
   (mac-option-modifier        . 'meta)
   (mac-command-modifier       . 'hyper)
   (mac-right-command-modifier . 'super)
   (mac-function-modifier      . 'super)
   :bind
-  ("C-z" . stop-minimizing-window)
-
    ;; cursor Movement
   ("H-<up>"   . beginning-of-buffer)
   ("H-<down>" . end-of-buffer)

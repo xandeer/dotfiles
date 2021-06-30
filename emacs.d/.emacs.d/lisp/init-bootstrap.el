@@ -8,8 +8,6 @@
               ad-redefinition-action 'accept
               gc-cons-threshold      #x8100000)
 
-(defconst *is-a-mac* (eq system-type 'darwin))
-
 (setq url-proxy-services
    '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
      ("http" . "localhost:8010")

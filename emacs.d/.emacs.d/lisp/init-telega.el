@@ -65,11 +65,7 @@
                              telega-company-username
                              telega-company-hashtag)
                            (when (telega-chat-bot-p telega-chatbuf--chat)
-                             '(telega-company-botcmd))))))
-
-  (when *is-a-mac*
-    ;; emacs-mac have some bug on user avatars
-    (setq telega-user-use-avatars nil)))
+                             '(telega-company-botcmd)))))))
 
 (provide 'init-telega)
 ;;; init-telega.el ends here

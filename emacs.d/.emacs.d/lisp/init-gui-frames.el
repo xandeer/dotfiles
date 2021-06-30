@@ -37,18 +37,12 @@
     (when (and (<= frame-alpha-lower-limit newalpha) (>= 100 newalpha))
       (modify-frame-parameters frame (list (cons 'alpha newalpha))))))
 
-;; TODO: use seethru package instead?
-;(global-set-key (kbd "M-C-8") (lambda () (interactive) (xr/adjust-opacity nil -2)))
-;(global-set-key (kbd "M-C-9") (lambda () (interactive) (xr/adjust-opacity nil 2)))
-;(global-set-key (kbd "M-C-7") (lambda () (interactive) (modify-frame-parameters nil `((alpha . 100)))))
-
-(when *is-a-mac*
-  (add-to-list 'default-frame-alist
-               '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist
-               '(ns-appearance . dark))
-  (add-to-list 'default-frame-alist
-               '(alpha . (80 . 75))))
+(add-to-list 'default-frame-alist
+             '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist
+             '(ns-appearance . dark))
+(add-to-list 'default-frame-alist
+             '(alpha . (80 . 75)))
 
 (setq frame-title-format
       '((:eval (if (buffer-file-name)

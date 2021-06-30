@@ -36,31 +36,25 @@
                         frame
                         'prepend))
 
-    (if *is-a-mac*
-         ;; For NS/Cocoa
-        (set-fontset-font t
-                           'symbol
-                           (font-spec :family "Apple Color Emoji")
-                           frame
-                           'append)
-       ;; For Linux
-      (set-fontset-font t
-                        'symbol
-                        (font-spec :family "Symbola")
-                        frame
-                        'prepend))
+
+    ;; For NS/Cocoa
+    (set-fontset-font t
+                      'symbol
+                      (font-spec :family "Apple Color Emoji")
+                      frame
+                      'append)
 
     (set-face-attribute 'mode-line nil
                         :font (font-spec
                                :name   *font*
                                :weight 'normal
-                               :size   (if *is-a-mac* 15 25)))
+                               :size   15))
 
     (set-face-attribute 'mode-line-inactive nil
                         :font (font-spec
                                :name   *font*
                                :weight 'normal
-                               :size   (if *is-a-mac* 15 25)))))
+                               :size   15))))
 
 (defun xr/set-font (&rest _)
   "Xandeer set font."

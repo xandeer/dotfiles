@@ -85,9 +85,8 @@
   (add-to-list 'ivy-sort-functions-alist '(counsel-imenu))
 
   ;; `counsel-locate'
-  (when *is-a-mac*
-    ;; Use spotlight on mac by default since it doesn't need any additional setup
-    (setq counsel-locate-cmd #'counsel-locate-cmd-mdfind))
+  ;; Use spotlight on mac by default since it doesn't need any additional setup
+  (setq counsel-locate-cmd #'counsel-locate-cmd-mdfind)
 
   ;; `counsel-find-file'
   (setq counsel-find-file-ignore-regexp "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)"))
