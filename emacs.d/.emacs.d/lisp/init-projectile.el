@@ -7,7 +7,11 @@
   :doc "Projectile is a project interaction library for Emacs."
   :url "https://github.com/bbatsov/projectile"
   :tag "project" "convenience"
-  :bind ([remap find-tag] . projectile-find-tag)
+  :bind
+  ([remap find-tag] . projectile-find-tag)
+  ("C-c p f" . counsel-projectile-find-file)
+  ("C-c p p" . projectile-switch-project)
+  ("C-c p s" . xr/ivy/project-search)
   :hook after-init-hook
   :custom
   (projectile-indexing-method      . 'hybrid)

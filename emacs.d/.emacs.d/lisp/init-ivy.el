@@ -65,6 +65,8 @@
    ([remap yank-pop]                   . counsel-yank-pop))
   ("C-c x s" . xr/search-cwd)
   ("C-c x S" . xr/search-other-cwd)
+  ("C-c f f" . counsel-projectile-find-file)
+  ("C-c f r" . counsel-recentf)
   (:counsel-find-file-map
    ("C-h"  . counsel-up-directory)
    ("C-l" . counsel-down-directory))
