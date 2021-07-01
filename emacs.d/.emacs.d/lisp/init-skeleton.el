@@ -28,7 +28,7 @@
 (define-skeleton xr/org-block-sh
   "Insert a org sh block"
   ""
-  "#+begin_src sh\n"
+  "#+begin_src shell\n"
   _ - \n
   "#+end_src\n")
 
