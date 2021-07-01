@@ -126,7 +126,7 @@
     exec-path-from-shell-check-startup-files) . nil)
   :config
   (exec-path-from-shell-initialize)
-  (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+  (setenv "PATH" (concat "/usr/local/bin:/run/current-system/sw/bin:" (getenv "PATH")))
   (setq exec-path
         (append `("/run/current-system/sw/bin"
                   "/usr/local/bin"
