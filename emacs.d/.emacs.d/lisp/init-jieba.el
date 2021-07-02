@@ -9,6 +9,7 @@
    :files ("*.el" "*.json" "*.js")))
 
 ;; 使用 jieba 中文分词
+;; prepare: cd ~/.emacs.d/straight/repos/jieba.el; yarn
 (leaf jieba
   :straight t
   :commands jieba-mode
