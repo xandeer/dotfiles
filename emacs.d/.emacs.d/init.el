@@ -38,7 +38,6 @@
 (require 'init-elisp)
 (require 'init-kt)
 (require 'init-scheme)
-(require 'init-ts)
 (require 'init-web)
 
 ;; tools

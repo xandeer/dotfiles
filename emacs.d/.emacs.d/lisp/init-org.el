@@ -46,13 +46,10 @@
   (org-startup-folded         . 'content)
   (org-confirm-babel-evaluate . nil)
   :defer-config
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   `((emacs-lisp . t)
-     (scheme     . t)
-     (plantuml   . t)
-     (restclient . t)
-     (shell      . t)))
+  (add-to-list 'org-babel-load-languages '(shell . t))
+  (add-to-list 'org-babel-load-languages '(restclient . t))
+  (add-to-list 'org-babel-load-languages '(plantuml . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
   :config
   (setq org-directory "~/projects/personal/notes/")
   (setq org-default-notes-file (concat org-directory "notes.org"))

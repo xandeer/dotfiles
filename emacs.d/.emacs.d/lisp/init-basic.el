@@ -36,13 +36,7 @@
  tab-width                      2
  tooltip-delay                  1.5)
 
-(setq xr/indent 2)
-(setq-default standard-indent xr/indent)
-(setq pug-tab-width xr/indent)
-(setq css-indent-offset xr/indent)
-(setq js-indent-level xr/indent)
-(setq typescript-indent-level xr/indent)
-(setq-default sh-indentation xr/indent)
+(setq-default standard-indent 2)
 
 (setq line-move-visual nil)
 (setq enable-recursive-minibuffers t)
