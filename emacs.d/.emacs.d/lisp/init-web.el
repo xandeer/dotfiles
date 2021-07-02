@@ -3,7 +3,7 @@
 ;;; Code:
 
 (leaf web
-  :straight web-mode counsel-css company-web json-mode
+  :straight web-mode counsel-css company-web
   :hook (css-mode-hook . counsel-css-imenu-setup)
   :mode (("\\.js\\'" "\\.html\\'" "\\.vue\\'") . web-mode))
 
@@ -11,7 +11,7 @@
   :custom
   (css-indent-offset . 2))
 
-(leaf js
+(leaf js-mode
   :mode
   ("\\.js\\'" . js-mode)
   :hook (js-mode-hook . lsp)

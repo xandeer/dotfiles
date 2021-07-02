@@ -36,6 +36,7 @@
 
 ;; languages
 (require 'init-elisp)
+(require 'init-json)
 (require 'init-kt)
 (require 'init-scheme)
 (require 'init-web)
