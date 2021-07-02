@@ -52,6 +52,7 @@
 (require 'init-folding)
 (require 'init-imenu-list)
 (require 'init-ivy)
+(require 'init-jieba)
 (require 'init-lsp)
 (require 'init-git)
 (require 'init-meow)
