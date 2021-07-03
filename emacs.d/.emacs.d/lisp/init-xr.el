@@ -14,6 +14,9 @@ Default use `point-min` or `point-max`."
   (save-excursion
     (goto-char beg)
     (while (re-search-forward old end t)
+      ;; After replace, end will change.
+      (when (match-string 1)
+        (setq end (+ end (- (length (match-string 1)) (length (match-string 0))))))
       (replace-match new))))
 
 (defun xr/convert-chinese-quotations ()
@@ -47,12 +50,14 @@ Default use `point-min` or `point-max`."
 
 (defun xr/remove-links (beg end)
   "Remove links between BEG and END."
+  (interactive "r")
   (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
 
 (defun xr/delete-current-buffer ()
   "Delete the current buffer."
   (interactive)
-  (delete-file (buffer-name)))
+  (delete-file (buffer-name))
+  (kill-buffer (buffer-name)))
 
 (provide 'init-xr)
 ;;; init-xr.el ends here
