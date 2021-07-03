@@ -12,12 +12,17 @@ Default use `point-min` or `point-max`."
   (if (> beg end)
       (let (mid) (setq mid end end beg beg mid)))
   (save-excursion
-    (goto-char beg)
-    (while (re-search-forward old end t)
-      ;; After replace, end will change.
-      (when (match-string 1)
-        (setq end (+ end (- (length (match-string 1)) (length (match-string 0))))))
-      (replace-match new))))
+    (goto-char end)
+    (insert
+     (let ((buf (current-buffer)))
+       (with-temp-buffer
+         (switch-to-buffer (current-buffer) nil t)
+         (insert-buffer-substring buf beg end)
+         (goto-char (point-min))
+         (while (re-search-forward old nil t)
+           (replace-match new))
+         (buffer-string))))
+    (delete-region beg end)))
 
 (defun xr/convert-chinese-quotations ()
   "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
@@ -51,13 +56,15 @@ Default use `point-min` or `point-max`."
 (defun xr/remove-links (beg end)
   "Remove links between BEG and END."
   (interactive "r")
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
   (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
 
 (defun xr/delete-current-buffer ()
   "Delete the current buffer."
   (interactive)
   (delete-file (buffer-name))
-  (kill-buffer (buffer-name)))
+  (kill-current-buffer))
 
 (provide 'init-xr)
 ;;; init-xr.el ends here
