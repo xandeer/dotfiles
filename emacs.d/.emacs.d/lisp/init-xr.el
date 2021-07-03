@@ -2,24 +2,28 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun xr/replace-in-buffer (old new &optional forward)
+(defun xr/replace (old new &optional beg end)
   "Replace the string OLD with string NEW.
-When FORWARD, don't go to min point."
-  (unless forward (setq forward nil))
+BEG means begin point, END meas end point.
+Default use `point-min` or `point-max`."
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
+
+  (if (> beg end)
+      (let (mid) (setq mid end end beg beg mid)))
   (save-excursion
-    (unless forward
-      (goto-char (point-min)))
-    (while (re-search-forward old nil t)
+    (goto-char beg)
+    (while (re-search-forward old end t)
       (replace-match new))))
 
 (defun xr/convert-chinese-quotations ()
   "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
   (interactive)
 
-  (xr/replace-in-buffer "‘" "『")
-  (xr/replace-in-buffer "’" "』")
-  (xr/replace-in-buffer "“" "「")
-  (xr/replace-in-buffer "”" "」"))
+  (xr/replace "‘" "『")
+  (xr/replace "’" "』")
+  (xr/replace "“" "「")
+  (xr/replace "”" "」"))
 
 ;;;###autoload
 (defun xr/org-heading-beginning-p ()
@@ -27,19 +31,23 @@ When FORWARD, don't go to min point."
   (and (org-at-heading-p) (= (line-beginning-position) (point))))
 
 (defun xr/remove-links-forward ()
-  "Remove links in after current point."
+  "Remove links after current point."
   (interactive)
-  (xr/remove-links t))
+  (xr/remove-links (point) (point-max)))
+
+(defun xr/remove-links-backward ()
+  "Remove links before current point."
+  (interactive)
+  (xr/remove-links (point-min) (point)))
 
 (defun xr/remove-links-in-buffer ()
   "Remove links in the current buffer."
   (interactive)
-  (xr/remove-links nil))
+  (xr/remove-links (point-min) (point-max)))
 
-(defun xr/remove-links (forward)
-  "Remove links after current point.
-When FORWARD, don't go to min point."
-  (xr/replace-in-buffer "\\[\\[.*\\]\\[\\(.*\\)\\]\\]" "\\1" forward))
+(defun xr/remove-links (beg end)
+  "Remove links between BEG and END."
+  (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
 
 (defun xr/delete-current-buffer ()
   "Delete the current buffer."
