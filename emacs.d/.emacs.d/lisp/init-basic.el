@@ -152,6 +152,19 @@
   :custom (which-key-allow-imprecise-window-fit . nil)
   :hook 'after-init-hook)
 
+(leaf keyfreq
+  :straight t
+  :config
+  (setq keyfreq-excluded-commands
+        '(self-insert-command
+          forward-char
+          backward-char
+          previous-line
+          next-line
+          newline-and-indent))
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
 ;;;###autoload
 (defun xr/insert-current-filename ()
   "Insert current buffer filename."
