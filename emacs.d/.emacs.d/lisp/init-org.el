@@ -20,13 +20,18 @@
    :host github
    :repo "casouri/valign"))
 
+(leaf valign
+  :straight t
+  :hook
+  ;; In documents with more than 10 tables, it will be very stuck.
+  ;; (org-mode-hook        . valign-mode)
+  (org-agenda-mode-hook . valign-mode))
+
 (leaf org
-  :straight restclient ob-restclient valign
+  :straight restclient ob-restclient
   :require t
   :hook
-  (org-mode-hook        . auto-fill-mode)
-  (org-mode-hook        . valign-mode)
-  (org-agenda-mode-hook . valign-mode)
+  (org-mode-hook . auto-fill-mode)
   :bind
   (:org-mode-map
    ("M-p"       . org-previous-visible-heading)
