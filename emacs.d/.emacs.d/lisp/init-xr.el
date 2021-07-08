@@ -66,5 +66,31 @@ Default use `point-min` or `point-max`."
   (delete-file (buffer-name))
   (kill-current-buffer))
 
+(defun xr/convert-evernote ()
+  "Remove timestamp and replace quotations."
+  (interactive)
+  (org-mark-subtree)
+  (forward-line 1)
+  (xr/replace " \\{4,\\}[0-9]\\{4\\}-.*:[0-9]\\{2\\}" "" (region-beginning) (region-end))
+  (org-mark-subtree)
+  (forward-line 1)
+  (xr/replace "\n\\{1\\}" "\n\n" (region-beginning) (region-end))
+  (org-mark-subtree)
+  (forward-line 1)
+  (xr/replace "\n\\{3,\\}" "\n\n" (region-beginning) (region-end))
+  (org-mark-subtree)
+  (forward-line 1)
+  (reverse-region (region-beginning) (region-end))
+  (xr/convert-chinese-quotations)
+  (mark-whole-buffer)
+  (unfill-toggle))
+
+(defun xr/fill-subtree ()
+  "Toggle fill in current subtree."
+  (interactive)
+  (save-excursion
+    (org-mark-subtree)
+    (unfill-toggle)))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
