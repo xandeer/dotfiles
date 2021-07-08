@@ -51,7 +51,7 @@ with face colours, bold, etc."
   :config
   (setq auto-save-silent t)
   (setq auto-save-delete-trailing-whitespace t)
-  (setq auto-save-idle 1)
+  (setq auto-save-idle 5)
   (add-hook 'org-capture-mode-hook 'auto-save-disable)
   (add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
   (auto-save-enable))
