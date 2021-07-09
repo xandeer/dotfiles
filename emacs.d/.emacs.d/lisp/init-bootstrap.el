@@ -40,14 +40,13 @@
   :doc "Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection."
   :url "https://gitlab.com/koral/gcmh"
   :straight t
-  :init
-  (setq-default gc-cons-threshold #x8100000)
   :custom
   (gcmh-verbose             . t)
   (gcmh-lows-cons-threshold . #x800000)
-  (gcmh-high-cons-threshold . gc-cons-threshold)
+  (gcmh-high-cons-threshold . #x8100000)
   (gcmh-idle-delay          . 3600)
-  :config
+  :defer-config
+  (setq-default gc-cons-threshold #x8100000)
   (gcmh-mode))
 
 (leaf no-littering
