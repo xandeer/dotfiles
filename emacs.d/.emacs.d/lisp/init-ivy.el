@@ -46,27 +46,31 @@
   (counsel-describe-function-function . #'helpful-callable)
   (counsel-describe-variable-function . #'helpful-variable)
   :bind
-  (([remap apropos]                    . counsel-apropos)
-   ([remap bookmark-jump]              . counsel-bookmark)
-   ([remap describe-bindings]          . counsel-descbinds)
-   ([remap describe-function]          . counsel-describe-function)
-   ([remap describe-variable]          . counsel-describe-variable)
-   ([remap describe-face]              . counsel-faces)
-   ([remap execute-extended-command]   . counsel-M-x)
-   ([remap find-file]                  . counsel-find-file)
-   ([remap imenu]                      . counsel-imenu)
-   ([remap info-lookup-symbol]         . counsel-info-lookup-symbol)
-   ([remap load-theme]                 . counsel-load-theme)
-   ([remap locate]                     . counsel-locate)
-   ([remap recentf-open-files]         . counsel-recentf)
-   ([remap set-variable]               . counsel-set-variable)
-   ([remap swiper]                     . counsel-grep-or-swiper)
-   ([remap unicode-chars-list-chars]   . counsel-unicode-char)
-   ([remap yank-pop]                   . counsel-yank-pop))
+  (([remap apropos]                  . counsel-apropos)
+   ([remap bookmark-jump]            . counsel-bookmark)
+   ([remap describe-bindings]        . counsel-descbinds)
+   ([remap describe-function]        . counsel-describe-function)
+   ([remap describe-variable]        . counsel-describe-variable)
+   ([remap describe-face]            . counsel-faces)
+   ([remap execute-extended-command] . counsel-M-x)
+   ([remap find-file]                . counsel-find-file)
+   ([remap imenu]                    . counsel-imenu)
+   ([remap info-lookup-symbol]       . counsel-info-lookup-symbol)
+   ([remap load-theme]               . counsel-load-theme)
+   ([remap locate]                   . counsel-locate)
+   ([remap recentf-open-files]       . counsel-recentf)
+   ([remap set-variable]             . counsel-set-variable)
+   ([remap swiper]                   . counsel-grep-or-swiper)
+   ([remap switch-to-buffer]         . counsel-buffer-or-recentf)
+   ([remap unicode-chars-list-chars] . counsel-unicode-char)
+   ([remap yank-pop]                 . counsel-yank-pop))
+  ("C-x C-b" . counsel-switch-buffer-other-window)
+  ("C-c b"   . counsel-buffer-or-recentf)
+  ("C-c C-b" . xr/counsel-buffer-or-recentf-other-window)
   ("C-j"     . nil)
-  ("C-j f"   . counsel-find-function)
-  ("C-j v"   . counsel-find-variable)
-  ("C-j l"   . counsel-find-library)
+  ("C-j f"   . find-function)
+  ("C-j v"   . find-variable)
+  ("C-j l"   . find-library)
   ("C-s"     . swiper)
   ("C-c C-r" . ivy-resume)
   ("C-c x s" . xr/search-cwd)
@@ -77,6 +81,16 @@
    ("C-h" . counsel-up-directory)
    ("C-l" . counsel-down-directory))
   :config
+  (defun xr/counsel-buffer-or-recentf-other-window ()
+    "Switch to recent file in another window."
+    (interactive)
+    (ivy-read "Switch to buffer or recentf in another window:"
+              (counsel-buffer-or-recentf-candidates)
+              :action (lambda (s)
+                        (if (bufferp s)
+                            (switch-to-buffer-other-window s)
+                          (find-file-other-window s)))
+              :caller 'xr/counsel-buffer-or-recentf-other-window))
   (setq counsel-rg-base-command
         '("rg" "--hidden" "-M" "240" "--with-filename" "--no-heading" "--line-number" "--color" "never" "%s"))
   ;; Record in jumplist when opening files via counsel-{ag,rg,pt,git-grep}
@@ -120,10 +134,6 @@
   :straight t prescient
   :hook ivy-mode-hook
   :mode-hook (prescient-persist-mode 1)
-  :bind
-  ([remap switch-to-buffer] . xr/switch-buffer)
-  ([remap switch-to-buffer-other-window] . xr/switch-buffer-other-window)
-  ("C-x C-b" . xr/switch-buffer-other-window)
   :custom
   (ivy-prescient-retain-classic-highlighting . t)
   :config
@@ -133,21 +143,9 @@
   (defun xr/disable-pinyin ()
     (interactive)
     (setq prescient-filter-method '(literal regexp initialism)))
-  (defun xr/switch-buffer ()
-    "Switch to another buffer."
-    (interactive)
-    (xr/enable-pinyin)
-    (call-interactively 'ivy-switch-buffer))
-  (defun xr/switch-buffer-other-window ()
-    "Switch to another buffer in other window."
-    (interactive)
-    (xr/enable-pinyin)
-    (call-interactively 'ivy-switch-buffer-other-window))
   (xr/disable-pinyin)
   (add-hook 'minibuffer-exit-hook 'xr/disable-pinyin)
-  :advice
-  (:before org-roam-insert xr/enable-pinyin)
-  (:before swiper-isearch xr/enable-pinyin))
+  (add-hook 'minibuffer-setup-hook 'xr/enable-pinyin))
 
 (leaf all-the-icons-ivy-rich
   :straight t
@@ -237,7 +235,6 @@
   "Conduct a text search in files under the current folder.
 If prefix ARG is set, prompt for a directory to search from."
   (interactive "P")
-  (xr/enable-pinyin)
   (let ((default-directory
           (if arg (counsel-read-directory-name "Search directory: ")
             default-directory)))

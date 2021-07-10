@@ -37,9 +37,7 @@
     "If telega server is live start chatting, else start telega."
     (interactive)
     (if (telega-server-live-p)
-        (progn
-          (xr/enable-pinyin)
-          (call-interactively 'telega-chat-with))
+        (call-interactively 'telega-chat-with)
       (progn
         (telega 1)
         (message "Telega starting..."))))

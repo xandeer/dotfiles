@@ -11,7 +11,7 @@
   ("C-c x r" . org-roam-random-note)
   ("C-c r" . org-roam-capture)
   ("C-c x y" . org-roam-dailies-find-yesterday)
-  ("C-c x f" . xr/roam-find-file)
+  ("C-c x f" . org-roam-find-file)
   ("C-c x j" . org-roam-dailies-capture-today)
   (:org-mode-map
    ("C-c x i" . org-roam-insert))
@@ -43,11 +43,6 @@
            :jump-to-captured t
            :file-name "journal/%<%Y-%m-%d>"
            :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n")))
-
-  (defun xr/roam-find-file ()
-    (interactive)
-    (xr/enable-pinyin)
-    (call-interactively 'org-roam-find-file))
 
   (defun xr/roam-buffer-p ()
     "Whether the current is in roam directory."
