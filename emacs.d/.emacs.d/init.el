@@ -16,8 +16,6 @@
 
 ;; ui
 (require 'init-window)
-(require 'init-frame-hooks)
-(require 'init-gui-frames)
 (require 'init-recentf)
 (require 'init-sessions)
 (require 'init-theme)
