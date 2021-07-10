@@ -68,6 +68,12 @@
 (unless server-mode
   (server-start))
 
+;; chores
+(require 'init-mouse)
+
+(require 'init-gc)
+(toggle-frame-maximized)
+
 (provide 'init)
 
 ;; Local Variables:

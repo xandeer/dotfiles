@@ -73,12 +73,6 @@
 
 (add-hook #'after-init-hook #'xr/load-theme)
 
-(leaf minions
-  :straight t
-  :disabled t
-  :hook after-init-hook
-  :custom (minions-mode-line-lighter . "✬"))
-
 (leaf doom-modeline
   :straight t
   :hook after-init-hook
@@ -100,61 +94,10 @@
     doom-modeline-persp-name)
    . nil))
 
-(straight-register-package
- '(svg-tag-mode
-   :host github
-   :branch "main"
-   :repo "rougier/svg-tag-mode"
-   :files ("svg-tag-mode.el")))
-(leaf svg-tag-mode
+(leaf default-text-scale
   :straight t
-  :require t
-  :disabled t
-  :config
-  (defface svg-tag-note-face
-    '((t :foreground "black" :background "white" :box "black"
-         :family "Roboto Mono" :weight light :height 120))
-    "Face for note tag" :group nil)
-
-  (defface svg-tag-keyboard-face
-    '((t :foreground "#333333" :background "#f9f9f9" :box "#333333"
-         :family "Roboto Mono" :weight light :height 120))
-    "Face for keyboard bindings tag" :group nil)
-
-  (defface svg-tag-org-face
-    '((t :foreground "#333333" :background "#fffff0" :box "#333333"
-         :family "Roboto Mono" :weight light :height 120))
-    "Face for keyboard bindings tag" :group nil)
-
-  (setq svg-tag-todo
-        (svg-tag-make "TODO" nil 1 1 2))
-
-  (setq svg-tag-note
-        (svg-tag-make "NOTE" 'svg-tag-note-face 2 0 2))
-
-  (defun svg-tag-round (text)
-    (svg-tag-make (substring text 1 -1) 'svg-tag-note-face 1 1 12))
-
-  (defun svg-tag-quasi-round (text)
-    (svg-tag-make (substring text 1 -1) 'svg-tag-note-face 1 1 8))
-
-  (defun svg-tag-keyboard (text)
-    (svg-tag-make (substring text 1 -1) 'svg-tag-keyboard-face 1 1 2))
-
-  (defun svg-tag-org (text)
-    (svg-tag-make (substring text 1 -1) 'svg-tag-org-face 1 1 2))
-
-  (setq svg-tag-tags
-        '(("@[0-9a-zA-Z]+:"               . svg-tag-org)
-          ("TODO"                         . svg-tag-todo)
-          ("NOTE"                         . svg-tag-note)
-          (":TODO:"                       . svg-tag-todo)
-          (":NOTE:"                       . svg-tag-note)
-          ("\([0-9a-zA-Z]\)"              . svg-tag-round)
-          ("\([0-9a-zA-Z][0-9a-zA-Z]\)"   . svg-tag-quasi-round)
-          ("|[0-9a-zA-Z- ⇥></%⌘^→←↑↓]+?|" . svg-tag-keyboard)))
-
-  (svg-tag-mode 1))
+  :commands default-text-scale-mode
+  :hook after-init-hook)
 
 (provide 'init-theme)
 ;;; init-theme.el ends here
