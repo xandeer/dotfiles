@@ -2,6 +2,20 @@
 ;;; Commentary:
 ;;; Code:
 
+(defun ns-auto-titlebar-set-frame (frame &rest _)
+  "Set ns-appearance frame parameter for FRAME to match its background-mode parameter."
+  (when (display-graphic-p frame)
+    (let ((mode (frame-parameter frame 'background-mode)))
+      (modify-frame-parameters frame `((ns-transparent-titlebar . t) (ns-appearance . ,mode))))))
+
+(defun ns-auto-titlebar-set-all-frames (&rest _)
+  "Set ns-appearance frame parameter for all frames to match their background-mode parameter."
+    (mapc 'ns-auto-titlebar-set-frame (frame-list)))
+
+(add-hook 'after-init-hook 'ns-auto-titlebar-set-all-frames)
+(add-hook 'after-make-frame-functions 'ns-auto-titlebar-set-frame)
+(advice-add 'frame-set-background-mode :after 'ns-auto-titlebar-set-frame)
+
 (leaf doom-themes
   :straight t
   :custom
@@ -9,9 +23,6 @@
     doom-dracula-colorful-headers
     doom-dracula-comment-bg) . t)
   :config
-  (with-eval-after-load 'treemacs
-    (doom-themes-treemacs-config)
-    (setq doom-themes-treemacs-theme "doom-colors"))
   (doom-themes-visual-bell-config)
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))

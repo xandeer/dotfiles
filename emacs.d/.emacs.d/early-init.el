@@ -23,9 +23,6 @@
         (width . 100)
         (height . 100)
         (alpha . (85 . 60))
-        (ns-appearance . dark)
-        (ns-transparent-titlebar . t)
         (vertical-scroll-bars . nil)))
-
 (provide 'early-init)
 ;;; early-init.el ends here
