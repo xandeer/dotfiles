@@ -11,7 +11,7 @@
   :config
   (with-eval-after-load 'treemacs
     (doom-themes-treemacs-config)
-    (gsetq doom-themes-treemacs-theme "doom-colors"))
+    (setq doom-themes-treemacs-theme "doom-colors"))
   (doom-themes-visual-bell-config)
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))

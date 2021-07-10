@@ -17,7 +17,7 @@
   (projectile-indexing-method      . 'hybrid)
   (projectile-require-project-root . 'prompt)
   :config
-  (gsetq projectile-project-root-files-top-down-recurring
+  (setq projectile-project-root-files-top-down-recurring
          (append '("compile_commands.json"
                    ".cquery")
                  projectile-project-root-files-top-down-recurring)))

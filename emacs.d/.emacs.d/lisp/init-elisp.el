@@ -3,12 +3,6 @@
 ;;; Code:
 
 (leaf elisp-mode
-  :bind
-  (:emacs-lisp-mode-map
-   ("C-j"   . nil)
-   ("C-j f" . find-function)
-   ("C-j v" . find-variable)
-   ("C-j l" . find-library))
   :init
   (setq-default enable-local-variables :safe))
 

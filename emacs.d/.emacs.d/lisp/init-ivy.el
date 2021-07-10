@@ -6,6 +6,7 @@
   :straight t wgrep
   :hook after-init-hook
   :bind
+  ("C-r" . ivy-resume)
   (:ivy-minibuffer-map
    ("TAB" . ivy-alt-done))
   :custom
@@ -48,12 +49,11 @@
   (([remap apropos]                    . counsel-apropos)
    ([remap bookmark-jump]              . counsel-bookmark)
    ([remap describe-bindings]          . counsel-descbinds)
-   ([remap describe-face]              . counsel-faces)
    ([remap describe-function]          . counsel-describe-function)
    ([remap describe-variable]          . counsel-describe-variable)
+   ([remap describe-face]              . counsel-faces)
    ([remap execute-extended-command]   . counsel-M-x)
    ([remap find-file]                  . counsel-find-file)
-   ([remap find-library]               . counsel-find-library)
    ([remap imenu]                      . counsel-imenu)
    ([remap info-lookup-symbol]         . counsel-info-lookup-symbol)
    ([remap load-theme]                 . counsel-load-theme)
@@ -63,12 +63,18 @@
    ([remap swiper]                     . counsel-grep-or-swiper)
    ([remap unicode-chars-list-chars]   . counsel-unicode-char)
    ([remap yank-pop]                   . counsel-yank-pop))
+  ("C-j"     . nil)
+  ("C-j f"   . counsel-find-function)
+  ("C-j v"   . counsel-find-variable)
+  ("C-j l"   . counsel-find-library)
+  ("C-s"     . swiper)
+  ("C-c C-r" . ivy-resume)
   ("C-c x s" . xr/search-cwd)
   ("C-c x S" . xr/search-other-cwd)
   ("C-c f f" . counsel-projectile-find-file)
   ("C-c f r" . counsel-recentf)
   (:counsel-find-file-map
-   ("C-h"  . counsel-up-directory)
+   ("C-h" . counsel-up-directory)
    ("C-l" . counsel-down-directory))
   :config
   (setq counsel-rg-base-command
@@ -105,7 +111,7 @@
    ([remap projectile-switch-project]   . counsel-projectile-switch-project))
   :config
   (with-eval-after-load 'prescient
-    (gsetq counsel-projectile-sort-files t)))
+    (setq counsel-projectile-sort-files t)))
 
 ;; There's a bug after v5.0, so after clone, check to v5.0.
 (leaf ivy-prescient
@@ -115,7 +121,9 @@
   :hook ivy-mode-hook
   :mode-hook (prescient-persist-mode 1)
   :bind
-  ("C-x b" . xr/switch-buffer)
+  ([remap switch-to-buffer] . xr/switch-buffer)
+  ([remap switch-to-buffer-other-window] . xr/switch-buffer-other-window)
+  ("C-x C-b" . xr/switch-buffer-other-window)
   :custom
   (ivy-prescient-retain-classic-highlighting . t)
   :config
@@ -130,6 +138,11 @@
     (interactive)
     (xr/enable-pinyin)
     (call-interactively 'ivy-switch-buffer))
+  (defun xr/switch-buffer-other-window ()
+    "Switch to another buffer in other window."
+    (interactive)
+    (xr/enable-pinyin)
+    (call-interactively 'ivy-switch-buffer-other-window))
   (xr/disable-pinyin)
   (add-hook 'minibuffer-exit-hook 'xr/disable-pinyin)
   :advice
