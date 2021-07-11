@@ -21,10 +21,7 @@
   ("H-c" . kill-ring-save)
   ("H-s" . save-buffer)
   ("H-z" . undo)
-  ("H-w" . delete-window)
-  ("H-1" . delete-other-windows)
-  ("H-n" . make-frame)
-  ("H-d" . delete-frame))
+  ("H-n" . make-frame))
 
 (provide 'init-keybindings)
 ;;; init-keybindings.el ends here
