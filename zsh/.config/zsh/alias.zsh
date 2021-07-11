@@ -39,6 +39,7 @@ alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias -g F='| fzf'
 alias -g G='| rg'
+alias freq='zsh_stats'
 
 # mr
 alias mr='mr -d ~'
