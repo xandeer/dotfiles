@@ -21,7 +21,7 @@ function update-path() {
     export SDK_DIR=~/Android/Sdk
   fi
 
-  export JAVA_HOME=/usr/local/opt/openjdk
+  export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jre/jdk/Contents/Home
 
   export PATH=$PATH:$SDK_DIR/platform-tools
   export PATH=$PATH:$SDK_DIR/tools
