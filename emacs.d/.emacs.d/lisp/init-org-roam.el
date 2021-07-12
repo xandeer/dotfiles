@@ -6,7 +6,9 @@
   :straight t
   :require t
   :after org
-  :hook (after-init . org-roam-mode)
+  :hook
+  (after-init-hook . org-roam-mode)
+  (org-mode-hook   . xr/enable-valign-when-weekly)
   :bind
   ("C-c x r" . org-roam-random-note)
   ("C-c r" . org-roam-capture)
@@ -18,8 +20,12 @@
   (:org-roam-mode-map
    ("C-c x M-r" . org-roam))
   :config
-  ;; (advice-add 'org-roam-capture--capture :after #'xr/deactivate-roam-buffer)
-  ;; (xr/auto-toggle-roam-buffer-enable)
+  (defun xr/has-roam-tag (tag &optional file)
+    "Check whether TAG is included in the FILE."
+    (-contains? (org-roam--extract-tags file) tag))
+  (defun xr/enable-valign-when-weekly ()
+    (when (xr/has-roam-tag "weekly")
+      (valign-mode)))
   (setq org-roam-directory  org-directory)
   (setq-default org-roam-buffer-width 0.25)
   (setq org-roam-db-location (expand-file-name "~/.cache/roam.db"))
