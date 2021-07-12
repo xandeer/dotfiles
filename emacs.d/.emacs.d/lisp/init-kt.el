@@ -3,7 +3,7 @@
 ;;; Code:
 
 (leaf kotlin-mode
-  :straight flycheck-kotlin
+  :straight flycheck-kotlin t
   :hook
   (kotlin-mode-hook . flycheck-kotlin-setup)
   :init
