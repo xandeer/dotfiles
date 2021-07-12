@@ -2,19 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq org-modules
-      '(ol-docview
-        ol-info
-        ol-elisp-symbol
-        org-toc
-        org-id
-        org-info
-        org-jsinfo
-        org-habit
-        org-inlinetask
-        org-protocol
-        org-w3m))
-
 (straight-register-package
  '(valign
    :host github
@@ -38,6 +25,17 @@
    ("M-n"       . org-next-visible-heading)
    ("C-c x C-r" . org-table-recalculate))
   :custom
+  (org-modules . '(ol-docview
+                   ol-info
+                   ol-elisp-symbol
+                   org-toc
+                   org-id
+                   org-info
+                   org-jsinfo
+                   org-habit
+                   org-inlinetask
+                   org-protocol
+                   org-w3m))
   ;; org appearance
   ((org-allow-promoting-top-level-subtree
     org-cycle-level-faces
