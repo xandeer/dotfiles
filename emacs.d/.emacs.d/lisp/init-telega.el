@@ -18,7 +18,7 @@
   (:telega-chat-mode-map
    ("C-c C-f" . xr/telega-chatbuf-attach-file))
   :config
-  (telega-mode-line-mode 1)
+  ;; (telega-mode-line-mode 1)
   (setq telega-chat-fill-column 65)
   (setq telega-emoji-use-images nil)
   (setq-default telega-chat-scroll-scroll-conservatively 101)

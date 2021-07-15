@@ -86,6 +86,7 @@
 
 (leaf doom-modeline
   :straight t
+  :disabled t
   :hook after-init-hook
   :defun doom-modeline-def-segment
   :custom
@@ -104,6 +105,23 @@
     doom-modeline-minor-modes
     doom-modeline-persp-name)
    . nil))
+
+(straight-register-package
+ '(awesome-tray :host github
+                :repo "manateelazycat/awesome-tray"))
+(leaf awesome-tray
+  :straight t
+  :custom
+  (awesome-tray-active-modules
+   . '("git"
+       ;; "file-path"
+       ;; "buffer-name"
+       "location"
+       "mode-name"
+       "date"))
+  :config
+  (setq-default mode-line-format nil)
+  (awesome-tray-mode 1))
 
 (leaf default-text-scale
   :straight t
