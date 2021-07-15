@@ -8,6 +8,7 @@
   :after org
   :hook
   (after-init-hook . org-roam-mode)
+  (org-mode-hook   . xr/enable-valign-when-valign)
   (org-mode-hook   . xr/enable-valign-when-weekly)
   :bind
   ("C-c x r" . org-roam-random-note)
@@ -25,6 +26,9 @@
     (-contains? (org-roam--extract-tags file) tag))
   (defun xr/enable-valign-when-weekly ()
     (when (xr/has-roam-tag "weekly")
+      (valign-mode)))
+  (defun xr/enable-valign-when-valign ()
+    (when (xr/has-roam-tag "valign")
       (valign-mode)))
   (setq org-roam-directory  org-directory)
   (setq-default org-roam-buffer-width 0.25)
