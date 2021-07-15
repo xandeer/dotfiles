@@ -117,10 +117,18 @@
        ;; "file-path"
        ;; "buffer-name"
        "location"
+       "input-method"
        "mode-name"
        "date"))
   :config
   (setq-default mode-line-format nil)
+
+  ;; Override to make it use selected frame's width
+  (defun awesome-tray-get-frame-width ()
+    "Only calculating a main Frame width, to avoid wrong width when new frame, such as `snails'."
+    (with-selected-frame (selected-frame) ;(car (last (frame-list)))
+      (frame-width)))
+
   (awesome-tray-mode 1))
 
 (leaf default-text-scale
