@@ -8,8 +8,9 @@
   :custom
   (org-html-inline-images              . t)
   (org-html-head-include-default-style . nil)
+  (org-html-html5-fancy                . t)
   (org-export-headline-levels          . 6)
-  (org-publish-timestamp-directory     . `,(no-littering-expand-var-file-name "org/timestamps"))
+  (org-publish-timestamp-directory     . `,(no-littering-expand-var-file-name "org/timestamps/"))
   (org-publish-project-alist
    . `(("xandeer-org"
         :base-directory ,xr/publish-base-dir
@@ -20,23 +21,29 @@
         :publishing-function org-html-publish-to-html
         :style-include-default nil
         :html-head ,(concat
-                     "<link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\"/>"
+                     "<link rel=\"stylesheet\" href=\"static/x.css\" type=\"text/css\"/>"
                      "<meta charset=\"utf-8\">"
                      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
+        :html-postamble ,(concat
+                          "<div class=\"links\">"
+                          "<a href=\"index.html\">Home</a>"
+                          "<a href=\"20210629191000-000_index.html\">000</a>"
+                          "</div>"
+                          "<script src=\"static/x.js\" type=\"text/javascript\"></script>")
         :auto-sitemap t
         :sitemap-filename "index.org"
         :with-author nil
         :with-creator nil)
-       ("xandeer-extra"
+       ("xandeer-static"
         :base-directory ,xr/publish-base-dir
         :publishing-directory ,xr/publish-pub-dir
         :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
-        :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp"
+        :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js"
         :publishing-function org-publish-attachment
         :recursive t
         :with-author nil)
        ("xandeer"
-        :components ("xandeer-extra" "xandeer-org")))))
+        :components ("xandeer-static" "xandeer-org")))))
 
 (provide 'init-org-publish)
 ;;; init-org-publish.el ends here
