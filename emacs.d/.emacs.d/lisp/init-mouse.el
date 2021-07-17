@@ -4,6 +4,7 @@
 
 (leaf disable-mouse
   :straight t
+  :require t
   :init
   (setq disable-mouse-wheel-events nil)
   :bind
