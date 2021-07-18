@@ -124,6 +124,7 @@
   (setq exec-path
         (append `("/run/current-system/sw/bin"
                   "/usr/local/bin"
+                  ,(expand-file-name ".bin" "~")
                   ,(expand-file-name ".nix-profile/bin" "~"))
                 exec-path)))
 

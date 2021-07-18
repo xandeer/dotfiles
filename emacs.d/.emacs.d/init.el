@@ -33,6 +33,7 @@
 (require 'init-org-roam)
 
 ;; languages
+(require 'init-clojure)
 (require 'init-elisp)
 (require 'init-json)
 (require 'init-kt)
