@@ -43,7 +43,22 @@
         :recursive t
         :with-author nil)
        ("xandeer"
-        :components ("xandeer-static" "xandeer-org")))))
+        :components ("xandeer-static" "xandeer-org"))))
+  :config
+  ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+intl/chinese/packages.el
+  (defun chinese/post-init-org ()
+    (defadvice org-html-paragraph (before org-html-paragraph-advice
+                                          (paragraph contents info) activate)
+      "Join consecutive Chinese lines into a single long line without
+unwanted space when exporting org-mode to html."
+      (let* ((origin-contents (ad-get-arg 1))
+             (fix-regexp "[[:multibyte:]]")
+             (fixed-contents
+              (replace-regexp-in-string
+               (concat
+                "\\(" fix-regexp "\\) *\n *\\(" fix-regexp "\\)") "\\1\\2" origin-contents)))
+        (ad-set-arg 1 fixed-contents))))
+  (chinese/post-init-org))
 
 (provide 'init-org-publish)
 ;;; init-org-publish.el ends here
