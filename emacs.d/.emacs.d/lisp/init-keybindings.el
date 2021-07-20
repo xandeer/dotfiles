@@ -9,18 +9,22 @@
   (mac-right-command-modifier . 'super)
   (mac-function-modifier      . 'super)
   :bind
-  ([remap newline] . newline-and-indent)
-   ;; cursor Movement
+  ([remap newline]                . newline-and-indent)
+  ([remap move-beginning-of-line] . xr/smart-beginning-of-line)
+
   ("H-<up>"   . beginning-of-buffer)
   ("H-<down>" . end-of-buffer)
   ("H-l"      . goto-line)
 
    ;; text Operations
   ("H-a" . mark-whole-buffer)
-  ("H-v" . yank)
   ("H-c" . kill-ring-save)
+  ("H-d" . xr/duplicate-line)
   ("H-s" . save-buffer)
+  ("H-v" . yank)
+
   ("H-z" . undo)
+
   ("H-n" . make-frame))
 
 (provide 'init-keybindings)
