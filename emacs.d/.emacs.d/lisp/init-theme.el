@@ -18,12 +18,20 @@
 
 (leaf doom-themes
   :straight t
+  :hook
+  (after-init-hook . xr/load-theme)
   :custom
   ((doom-dracula-brighter-comments
     doom-dracula-colorful-headers
     doom-dracula-comment-bg) . t)
   :config
   (doom-themes-visual-bell-config)
+
+  (defun xr/load-theme ()
+    "Xandeer load theme function."
+    (load-theme 'doom-dracula t)
+    (setq doom-modeline-minor-modes nil))
+
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
 
@@ -33,39 +41,27 @@
     (set-face-attribute
      'default nil
      :font (font-spec
-            :name   *font*
-            :weight *font-weight*
-            :size   *font-size*))
+            :name   "Consola Mono"
+            :weight 'normal
+            :size   16))
 
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         (font-spec
-                         :name   *font-cjk*
-                         :weight *font-weight-cjk*
-                         :size   *font-size-cjk*)
+                         :name   "PingFang SC"
+                         :weight 'normal
+                         :size   16)
                         frame
                         'prepend))
 
-
     ;; For NS/Cocoa
-    (set-fontset-font t
-                      'symbol
-                      (font-spec :family "Apple Color Emoji")
-                      frame
-                      'append)
-
-    (set-face-attribute 'mode-line nil
-                        :font (font-spec
-                               :name   *font*
-                               :weight 'normal
-                               :size   15))
-
-    (set-face-attribute 'mode-line-inactive nil
-                        :font (font-spec
-                               :name   *font*
-                               :weight 'normal
-                               :size   15))))
+    (set-fontset-font
+     t
+     'symbol
+     (font-spec :family "Apple Color Emoji")
+     frame
+     'append)))
 
 (defun xr/set-font (&rest _)
   "Xandeer set font."
@@ -75,36 +71,6 @@
 (add-hook #'after-init-hook #'xr/set-font)
 (add-hook #'after-make-frame-functions   #'xr/set-font)
 (add-hook #'server-after-make-frame-hook #'xr/set-font)
-
-(defun xr/load-theme ()
-  "Xandeer load theme function."
-  (when *theme*
-    (load-theme *theme* t)
-    (setq doom-modeline-minor-modes nil)))
-
-(add-hook #'after-init-hook #'xr/load-theme)
-
-(leaf doom-modeline
-  :straight t
-  :disabled t
-  :hook after-init-hook
-  :defun doom-modeline-def-segment
-  :custom
-  (doom-modeline-height                      . 25)
-  (doom-modeline-bar-width                   . 3)
-  (doom-modeline-window-width-limit          . fill-column)
-  (doom-modeline-project-detection           . 'project)
-  (doom-modeline-buffer-file-name-style      . 'truncate-with-project)
-  ((doom-modeline-icon
-    doom-modeline-major-mode-icon
-    doom-modeline-major-mode-color-icon
-    doom-modeline-buffer-state-icon
-    doom-modeline-buffer-modification-icon)
-   . t)
-  ((doom-modeline-segment--buffer-encoding
-    doom-modeline-minor-modes
-    doom-modeline-persp-name)
-   . nil))
 
 (straight-register-package
  '(awesome-tray :host github

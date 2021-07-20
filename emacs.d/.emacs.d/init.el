@@ -8,7 +8,6 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-bootstrap)
 (require 'init-keybindings)
-(require 'init-custom)
 (require 'init-xr)
 
 (require 'init-basic)
