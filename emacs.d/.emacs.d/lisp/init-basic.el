@@ -120,11 +120,12 @@
     exec-path-from-shell-check-startup-files) . nil)
   :config
   (exec-path-from-shell-initialize)
+  (setenv "JAVA_HOME" "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home")
   (setenv "PATH" (concat "/usr/local/bin:/run/current-system/sw/bin:" (getenv "PATH")))
   (setq exec-path
         (append `("/run/current-system/sw/bin"
                   "/usr/local/bin"
-                  ,(expand-file-name ".bin" "~")
+                  ,(expand-file-name "bin" "~")
                   ,(expand-file-name ".nix-profile/bin" "~"))
                 exec-path)))
 
