@@ -1,26 +1,4 @@
-{:user {:plugins [[lein-try "0.4.3"]
-                  [com.gfredericks/lein-shorthand "0.4.1"]
-                  ;; [venantius/ultra "0.6.0"]
-                  [jonase/eastwood "0.3.5"]
-                  [lein-ancient "0.7.0"]
-                  ]
-
-        :dependencies [[alembic "0.3.2"]
-                       [vvvvalvalval/scope-capture "0.3.2"]
-                       [spieden/spyscope "0.1.7"]
-                       ;; https://github.com/jiacai2050/fs
-                       [org.clojars.jiacai/fs "1.4.6"]
-                       ;; https://github.com/magnars/java-time-literals
-                       ;; [java-time-literals "2018-04-06"]
-                       [clj-kondo "2020.06.21"]]
-        :injections [(require 'spyscope.core)
-                     ;; (require 'java-time-literals.core)
-                     ]
-
-        :aliases {"lint" ["eastwood"]
-                  "lint2" ["run" "-m" "clj-kondo.main" "--lint" "src"]}
-        ;; :ultra {:repl false}
-        :repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
+{:user {:repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
         :plugin-repositories ^:replace [["tsing-clojars-pl" "https://mirrors.tuna.tsinghua.edu.cn/clojars"
                                          "hw-central-pl" "https://mirrors.huaweicloud.com/repository/maven/"]]
         :mirrors {"central" {:name "hw-central"
