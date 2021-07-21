@@ -6,6 +6,8 @@
   :straight t
   :require t
   :after org
+  :hook
+  (org-journal-mode-hook . (lambda () (visual-line-mode -1)))
   :init
   (setq org-journal-file-format "%Y-%m-%d.org")
   ;; I don't know why this doesn't work.
