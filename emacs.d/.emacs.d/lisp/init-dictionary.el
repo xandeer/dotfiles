@@ -11,7 +11,7 @@
                    :repo "loyalpartner/english-teacher.el"))
 
 (leaf sdcv
-  :straight t english-teacher
+  :straight t
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
@@ -24,7 +24,11 @@
                       :foreground "#E0F0E9")
   (setq sdcv-say-word-p nil
         sdcv-tooltip-timeout 10
-        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict"))
+        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")))
+
+(leaf english-teacher
+  :straight t
+  :commands english-teacher-follow-mode
   :custom
   (english-teacher-backend . 'google)
   (english-teacher-show-result-function . 'english-teacher-eldoc-show-result-function)
