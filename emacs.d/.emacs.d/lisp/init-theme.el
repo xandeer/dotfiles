@@ -77,25 +77,47 @@
                 :repo "manateelazycat/awesome-tray"))
 (leaf awesome-tray
   :straight t
+  :init
+  (setq-default mode-line-format nil)
   :custom
   (awesome-tray-active-modules
    . '("git"
        ;; "file-path"
        ;; "buffer-name"
        "location"
-       "input-method"
+       "rime-active"
+       "rime-inactive"
        "mode-name"
        "date"))
   :config
-  (setq-default mode-line-format nil)
+  (awesome-tray-mode 1)
+
+  (defun xr/rime-active-info ()
+    (if (and (equal current-input-method "rime")
+             (bound-and-true-p rime-mode)
+             (rime--should-enable-p)
+             (not (rime--should-inline-ascii-p)))
+        rime-title
+      ""))
+
+  (defun xr/rime-inactive-info ()
+    (if (and (equal current-input-method "rime")
+             (bound-and-true-p rime-mode)
+             (or (not (rime--should-enable-p))
+                 (rime--should-inline-ascii-p)))
+        rime-title
+      ""))
+
+  (add-to-list 'awesome-tray-module-alist
+               '("rime-active" . (xr/rime-active-info rime-indicator-face)))
+  (add-to-list 'awesome-tray-module-alist
+               '("rime-inactive" . (xr/rime-inactive-info rime-indicator-dim-face)))
 
   ;; Override to make it use selected frame's width
   (defun awesome-tray-get-frame-width ()
     "Only calculating a main Frame width, to avoid wrong width when new frame, such as `snails'."
     (with-selected-frame (selected-frame) ;(car (last (frame-list)))
-      (frame-width)))
-
-  (awesome-tray-mode 1))
+      (frame-width))))
 
 (leaf default-text-scale
   :straight t
