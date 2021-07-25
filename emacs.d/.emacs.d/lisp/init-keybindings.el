@@ -6,7 +6,7 @@
   :custom
   (mac-option-modifier        . 'meta)
   (mac-command-modifier       . 'hyper)
-  (mac-right-command-modifier . 'super)
+  (mac-right-command-modifier . 'hyper)
   (mac-function-modifier      . 'super)
   :bind
   ([remap newline]                . newline-and-indent)
