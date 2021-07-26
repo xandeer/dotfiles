@@ -39,7 +39,7 @@
     (if (telega-server-live-p)
         (call-interactively 'telega-chat-with)
       (progn
-        (telega 1)
+        (telega)
         (message "Telega starting..."))))
 
   (defun xr/telega-chatbuf-attach-file (filename &optional preview-p)
