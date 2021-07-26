@@ -6,7 +6,7 @@ IS_TERMUX := $(shell command -v $(TERMUX_CHECK))
 
 UNAME := $(shell uname -s)
 # CONFIGS := doom fonts git mr tmux zsh ideavim bin
-CONFIGS := git mr tmux zsh bin emacs.d lein
+CONFIGS := git mr tmux zsh bin emacs.d lein stardict
 
 ifneq ($(IS_TERMUX),)
 UNAME := TERMUX
