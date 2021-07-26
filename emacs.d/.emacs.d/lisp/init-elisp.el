@@ -6,6 +6,18 @@
   :init
   (setq-default enable-local-variables :safe))
 
+(leaf helpful
+  :straight t
+  :doc "A better Emacs *help* buffer."
+  :url "https://github.com/Wilfred/helpful"
+  :tag "help" "lisp"
+  :bind (("C-c C-d" . helpful-at-point)))
+
+(leaf elisp-demos
+  :straight t
+  :advice
+  (:after helpful-update elisp-demos-advice-helpful-update))
+
 (leaf elisp-def
   :straight t
   :bind

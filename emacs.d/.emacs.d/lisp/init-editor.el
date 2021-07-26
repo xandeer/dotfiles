@@ -175,13 +175,6 @@ on its name."
   (when (fboundp 'diminish)
     (diminish 'rainbow-identifiers-mode)))
 
-(leaf helpful
-  :straight t
-  :doc "A better Emacs *help* buffer."
-  :url "https://github.com/Wilfred/helpful"
-  :tag "help" "lisp"
-  :bind (("C-c C-d" . helpful-at-point)))
-
 (leaf htmlize
   :straight t
   :doc "Convert buffer text and decorations to HTML."
