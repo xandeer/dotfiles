@@ -14,10 +14,11 @@
     (switch-to-buffer (other-buffer)))
   :bind*
   ([remap kill-buffer]            . kill-current-buffer)
-  ([remap newline]                . newline-and-indent)
+  :bind
   ([remap move-beginning-of-line] . xr/smart-beginning-of-line)
+  ([remap newline]                . newline-and-indent)
 
-  ("M-[" .  xr/switch-to-last-buffer)
+  ("M-[" . xr/switch-to-last-buffer)
 
   ("H-<up>"   . beginning-of-buffer)
   ("H-<down>" . end-of-buffer)
