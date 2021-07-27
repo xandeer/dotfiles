@@ -1,4 +1,13 @@
-{:user {:repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
+{:user {:dependencies
+        [[com.cemerick/pomegranate "0.4.0"]]
+
+        :injections
+        [(defn add-dependency [dep-vec]
+           (require 'cemerick.pomegranate)
+           ((resolve 'cemerick.pomegranate/add-dependencies)
+            :coordinates [dep-vec]))]
+
+        :repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
         :plugin-repositories ^:replace [["tsing-clojars-pl" "https://mirrors.tuna.tsinghua.edu.cn/clojars"
                                          "hw-central-pl" "https://mirrors.huaweicloud.com/repository/maven/"]]
         :mirrors {"central" {:name "hw-central"
