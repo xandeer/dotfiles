@@ -2,9 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(global-set-key (kbd "C-x k") #'kill-current-buffer)
-(global-set-key (kbd "M-[") (lambda () (interactive) (switch-to-buffer (other-buffer))))
-
 (setq-default
   blink-cursor-interval .6
   blink-matching-paren  t
@@ -23,10 +20,7 @@
       scroll-step                     3
       scroll-conservatively           100000
       scroll-preserve-screen-position 'always
-      scroll-error-top-bottom         t
-      mac-mouse-wheel-smooth-scroll   nil)
-
-(setq-default initial-scratch-message "")
+      scroll-error-top-bottom         t)
 
 (setq-default
  fill-column                    76
@@ -38,7 +32,6 @@
 
 (setq-default standard-indent 2)
 
-(setq line-move-visual nil)
 (setq enable-recursive-minibuffers t)
 
 (add-hook #'after-init-hook #'(lambda () (minibuffer-depth-indicate-mode 1)))
@@ -54,17 +47,13 @@
 
 (setq-default
    bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
-   buffers-menu-max-size 30
    case-fold-search      t
-   column-number-mode    t
-   dired-dwim-target     t
    ediff-split-window-function 'split-window-horizontally
    ediff-window-setup-function 'ediff-setup-windows-plain
    indent-tabs-mode      nil
-   line-move-visual      t
    make-backup-files     nil
    mouse-yank-at-point   t
-   require-final-newline t
+   require-final-newline nil
    save-interprogram-paste-before-kill t
    set-mark-command-repeat-pop    t
    tab-always-indent              'complete
@@ -75,9 +64,8 @@
   :straight t
   :init
   (setq-default shell-file-name "bash")
-  ;; Non-Forking Shell Command To String
-  ;; https://github.com/bbatsov/projectile/issues/1044
-  ;;--------------------------------------------------------------------------
+  (setenv "PATH" (concat "/usr/local/bin:/run/current-system/sw/bin:" (getenv "PATH")))
+  (setenv "JAVA_HOME" "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home")
 
   (defun call-process-to-string (program &rest args)
     (with-temp-buffer
@@ -120,23 +108,8 @@
     exec-path-from-shell-check-startup-files) . nil)
   :config
   (exec-path-from-shell-initialize)
-  (setenv "JAVA_HOME" "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home")
-  (setenv "PATH" (concat "/usr/local/bin:/run/current-system/sw/bin:" (getenv "PATH")))
-  (setq exec-path
-        (append `("/run/current-system/sw/bin"
-                  "/usr/local/bin"
-                  ,(expand-file-name "bin" "~")
-                  ,(expand-file-name ".nix-profile/bin" "~"))
-                exec-path)))
-
-(leaf time
-  :doc "Show Time at modeline."
-  :require t
-  :init
-  (setq display-time-mail-string "")
-  (setq display-time-default-load-average nil)
-  (setq display-time-format " <%H:%M>")
-  :hook (after-init-hook . display-time-mode))
+  (add-to-list 'exec-path (expand-file-name "~/bin"))
+  (add-to-list 'exec-path (expand-file-name "~/.nix-profile/bin")))
 
 (leaf all-the-icons
   :straight t
@@ -148,11 +121,8 @@
 
 (leaf which-key
   :straight t
-  :doc "Emacs package that displays available keybindings in popup."
-  :url "https://github.com/justbur/emacs-which-key"
-  :tag "help"
   :custom (which-key-allow-imprecise-window-fit . nil)
-  :hook 'after-init-hook)
+  :hook after-init-hook)
 
 (leaf keyfreq
   :straight t

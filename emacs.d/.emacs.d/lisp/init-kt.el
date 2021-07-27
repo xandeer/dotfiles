@@ -7,9 +7,9 @@
   :hook
   (kotlin-mode-hook . flycheck-kotlin-setup)
   :init
-  (add-to-list 'exec-path (expand-file-name
-        "server/build/install/server/bin"
-        "~/projects/others/kotlin-language-server"))
+  (add-to-list 'exec-path
+               (expand-file-name
+                "~/projects/others/kotlin-language-server/server/build/install/server/bin"))
   :custom
   (kotlin-tab-width . 2))
 

@@ -8,15 +8,22 @@
   (mac-command-modifier       . 'hyper)
   (mac-right-command-modifier . 'hyper)
   (mac-function-modifier      . 'super)
-  :bind
+  :init
+  (defun xr/switch-to-last-buffer ()
+    (interactive)
+    (switch-to-buffer (other-buffer)))
+  :bind*
+  ([remap kill-buffer]            . kill-current-buffer)
   ([remap newline]                . newline-and-indent)
   ([remap move-beginning-of-line] . xr/smart-beginning-of-line)
+
+  ("M-[" .  xr/switch-to-last-buffer)
 
   ("H-<up>"   . beginning-of-buffer)
   ("H-<down>" . end-of-buffer)
   ("H-l"      . goto-line)
 
-   ;; text Operations
+  ;; text Operations
   ("H-a" . mark-whole-buffer)
   ("H-c" . kill-ring-save)
   ("H-d" . xr/duplicate-line)

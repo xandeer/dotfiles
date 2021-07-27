@@ -3,14 +3,12 @@
 ;;; Code:
 
 (leaf dired
-  :doc "DiredMode is the mode of a Dired buffer."
-  :url "https://www.emacswiki.org/emacs/DiredMode"
-  :tag "files"
   :bind
   (:dired-mode-map
    ([mouse-2] . dired-find-file)
    ("C-c C-p" . wdired-change-to-wdired-mode))
   :custom
+  (dired-dwim-target . t)
   `(insert-directory-program . ,(or (executable-find "gls")
                                    (executable-find "ls")))
   (dired-recursive-deletes  . 'top))
