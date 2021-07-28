@@ -7,6 +7,7 @@
 ;; Bootstrap
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-bootstrap)
+(require 'init-exec-path)
 (require 'init-keybindings)
 (require 'init-xr)
 

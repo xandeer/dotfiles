@@ -60,57 +60,6 @@
    truncate-lines                 nil
    truncate-partial-width-windows nil)
 
-(leaf exec-path-from-shell
-  :straight t
-  :init
-  (setq-default shell-file-name "bash")
-  (setenv "PATH" (concat "/usr/local/bin:/run/current-system/sw/bin:" (getenv "PATH")))
-  (setenv "JAVA_HOME" "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home")
-
-  (defun call-process-to-string (program &rest args)
-    (with-temp-buffer
-      (apply 'call-process program nil (current-buffer) nil args)
-      (buffer-string)))
-
-  (defun get-call-process-args-from-shell-command (command)
-    (cl-destructuring-bind
-        (the-command . args) (split-string command " ")
-      (let ((binary-path (executable-find the-command)))
-        (when binary-path
-          (cons binary-path args)))))
-
-  (defun shell-command-to-string (command)
-    (let ((call-process-args
-           (get-call-process-args-from-shell-command command)))
-      (if call-process-args
-          (apply 'call-process-to-string call-process-args)
-        (shell-command-to-string command))))
-
-  (defun try-call-process (command)
-    (let ((call-process-args
-           (get-call-process-args-from-shell-command command)))
-      (if call-process-args
-          (apply 'call-process-to-string call-process-args))))
-
-  (advice-add 'shell-command-to-string :before-until 'try-call-process)
-
-  (defun call-with-quick-shell-command (fn &rest args)
-    (noflet ((shell-command-to-string
-              (&rest args)
-              (or (apply 'try-call-process args) (apply this-fn args))))
-            (apply fn args)))
-
-  (advice-add 'projectile-find-file :around 'call-with-quick-shell-command)
-  :custom
-  (shell-command-switch . "-c")
-  (shell-file-name      . "bash")
-  ((exec-path-from-shell-arguments
-    exec-path-from-shell-check-startup-files) . nil)
-  :config
-  (exec-path-from-shell-initialize)
-  (add-to-list 'exec-path (expand-file-name "~/bin"))
-  (add-to-list 'exec-path (expand-file-name "~/.nix-profile/bin")))
-
 (leaf all-the-icons
   :straight t
   :custom (inhibit-compacting-font-caches . t))
