@@ -81,13 +81,12 @@
   (setq-default mode-line-format nil)
   :custom
   (awesome-tray-active-modules
-   . '("git"
-       ;; "file-path"
-       ;; "buffer-name"
-       "location"
+   . '("buffer-name"
        "rime-active"
        "rime-inactive"
+       "location"
        "mode-name"
+       "git"
        "date"))
   :config
   (awesome-tray-mode 1)
@@ -108,10 +107,24 @@
         rime-title
       ""))
 
+  (defface xr/rime-active-face
+    '((((background light))
+       :foreground "#0061cc" :bold t)
+      (t
+       :foreground "#007aff" :bold t))
+    "Face for rime active in awesome tray")
+
+  (defface xr/rime-inactive-face
+    '((((background light))
+       :foreground "#717175" :bold t)
+      (t
+       :foreground "#8e8e93" :bold t))
+    "Face for rime inactive in awesome tray")
+
   (add-to-list 'awesome-tray-module-alist
-               '("rime-active" . (xr/rime-active-info rime-indicator-face)))
+               '("rime-active" . (xr/rime-active-info xr/rime-active-face)))
   (add-to-list 'awesome-tray-module-alist
-               '("rime-inactive" . (xr/rime-inactive-info rime-indicator-dim-face)))
+               '("rime-inactive" . (xr/rime-inactive-info xr/rime-inactive-face)))
 
   ;; Override to make it use selected frame's width
   (defun awesome-tray-get-frame-width ()
