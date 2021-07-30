@@ -2,21 +2,24 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
+(straight-use-package
  '(valign
    :host github
    :repo "casouri/valign"))
 
 (leaf valign
-  :straight t
+  :after org
   :hook
   ;; In documents with more than 10 tables, it will be very stuck.
   ;; (org-mode-hook        . valign-mode)
   (org-agenda-mode-hook . valign-mode))
 
+(straight-use-package 'restclient)
+(straight-use-package 'ob-restclient)
+
+(straight-use-package '(org :type built-in))
+
 (leaf org
-  :straight restclient ob-restclient
-  :require t
   :hook
   (org-mode-hook . auto-fill-mode)
   :bind
@@ -27,15 +30,12 @@
   :custom
   (org-modules . '(ol-docview
                    ol-info
-                   ol-elisp-symbol
                    org-toc
                    org-id
-                   org-info
-                   org-jsinfo
                    org-habit
                    org-inlinetask
                    org-protocol
-                   org-w3m))
+                   ol-w3m))
   ;; org appearance
   ((org-allow-promoting-top-level-subtree
     org-cycle-level-faces
@@ -174,4 +174,4 @@
           ("o" . org-open-at-point))))
 
 (provide 'init-org)
-;;;
+;;; init-org.el ends here
