@@ -19,6 +19,7 @@
   ([remap newline]                . newline-and-indent)
 
   ("M-[" . xr/switch-to-last-buffer)
+  ("C-z" . ns-next-frame)
 
   ("H-<up>"   . beginning-of-buffer)
   ("H-<down>" . end-of-buffer)
