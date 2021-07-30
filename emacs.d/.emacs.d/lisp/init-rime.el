@@ -15,7 +15,7 @@
 
 (leaf rime
   :straight t posframe
-  :bind (("M-i" . toggle-input-method))
+  :bind ("M-i" . toggle-input-method)
   :bind (:rime-mode-map
          ("M-I" . rime-force-enable))
   :bind (:rime-active-mode-map
