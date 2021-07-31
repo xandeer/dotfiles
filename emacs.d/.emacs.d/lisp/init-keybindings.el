@@ -2,7 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf leaf
+
+(leaf which-key
+  :straight t
+  :custom
+  (which-key-allow-imprecise-window-fit . nil)
+  :hook after-init-hook
   :custom
   (mac-option-modifier        . 'meta)
   (mac-command-modifier       . 'hyper)
@@ -35,6 +40,19 @@
   ("H-z" . undo)
 
   ("H-n" . make-frame))
+
+(leaf keyfreq
+  :straight t
+  :config
+  (setq keyfreq-excluded-commands
+        '(self-insert-command
+          forward-char
+          backward-char
+          previous-line
+          next-line
+          newline-and-indent))
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
 
 (provide 'init-keybindings)
 ;;; init-keybindings.el ends here

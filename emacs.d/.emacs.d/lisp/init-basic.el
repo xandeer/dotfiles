@@ -3,34 +3,12 @@
 ;;; Code:
 
 (setq-default
-  blink-cursor-interval .6
-  blink-matching-paren  t
-  cursor-in-non-selected-windows t)
-(blink-cursor-mode 1)
-
-(setq-default
- show-paren-style                                'parenthesis
- sp-autoinsert-quote-if-followed-by-closing-pair t
- sp-base-key-bindings                            'paredit
- sp-show-pair-from-inside                        t)
-
-(setq hscroll-margin                  3
-      scroll-margin                   3
-      hscroll-step                    3
-      scroll-step                     3
-      scroll-conservatively           100000
-      scroll-preserve-screen-position 'always
-      scroll-error-top-bottom         t)
-
-(setq-default
- fill-column                    76
  visual-fill-column-width       80
- word-wrap                      t
- highlight-indent-guides-method 'column
- tab-width                      2
- tooltip-delay                  1.5)
-
-(setq-default standard-indent 2)
+ fill-column 76
+ word-wrap   t
+ tab-width   2
+ standard-indent  2
+ tooltip-delay    1.5)
 
 (setq enable-recursive-minibuffers t)
 
@@ -40,25 +18,15 @@
 (delete-selection-mode t)
 
 (setq-default
- whitespace-line-column 76
- whitespace-style       '(face spaces tabs newline
-                          space-mark tab-mark newline-mark
-                          lines-tail empty))
-
-(setq-default
    bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
    case-fold-search      t
-   ediff-split-window-function 'split-window-horizontally
-   ediff-window-setup-function 'ediff-setup-windows-plain
    indent-tabs-mode      nil
    make-backup-files     nil
-   mouse-yank-at-point   t
    require-final-newline nil
    save-interprogram-paste-before-kill t
    set-mark-command-repeat-pop    t
-   tab-always-indent              'complete
-   truncate-lines                 nil
-   truncate-partial-width-windows nil)
+   tab-always-indent              t
+   truncate-lines                 nil)
 
 (leaf all-the-icons
   :straight t
@@ -67,24 +35,6 @@
 (leaf which-func
   :tag "builtin"
   :hook after-init-hook)
-
-(leaf which-key
-  :straight t
-  :custom (which-key-allow-imprecise-window-fit . nil)
-  :hook after-init-hook)
-
-(leaf keyfreq
-  :straight t
-  :config
-  (setq keyfreq-excluded-commands
-        '(self-insert-command
-          forward-char
-          backward-char
-          previous-line
-          next-line
-          newline-and-indent))
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
 
 ;;;###autoload
 (defun xr/insert-current-filename ()

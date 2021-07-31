@@ -112,6 +112,5 @@ If point was already at that position, move point to beginning of line."
     (and (= oldpos (point))
          (beginning-of-line))))
 
-
 (provide 'init-xr)
 ;;; init-xr.el ends here

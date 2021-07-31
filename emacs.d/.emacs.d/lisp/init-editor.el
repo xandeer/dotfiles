@@ -46,20 +46,20 @@
 (leaf auto-save
   :straight t
   :require t
-  :config
-  (setq auto-save-silent t)
-  (setq auto-save-delete-trailing-whitespace t)
-  (setq auto-save-idle 5)
-  (add-hook 'org-capture-mode-hook 'auto-save-disable)
-  (add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
-  (auto-save-enable))
+  :custom
+  (auto-save-idle                       . 5)
+  (auto-save-silent                     . t)
+  (auto-save-delete-trailing-whitespace . t)
+  :hook
+  (org-capture-mode-hook             . auto-save-disable)
+  (org-capture-prepare-finalize-hook . auto-save-enable)
+  (after-init-hook                   . auto-save-enable))
 
 (leaf easy-kill
   :straight t
-  :bind (([remap kill-ring-save]
-          . easy-kill)
-         ([remap mark-sexp]
-          . easy-mark)))
+  :bind
+  ([remap kill-ring-save] . easy-kill)
+  ([remap mark-sexp]      . easy-mark))
 
 (leaf eldoc-box
   :straight t
@@ -72,7 +72,7 @@
 (leaf expand-region
   :straight t
   :bind
-  ("C-+" . er/expand-region))
+  ("C-;" . er/expand-region))
 
 (leaf explain-pause-mode
   :straight t)
@@ -89,8 +89,8 @@
 (leaf visual-fill-column
   :straight t
   :commands maybe-adjust-visual-fill-column
-  :hook (visual-line-mode-hook
-         (visual-fill-column-mode-hook . maybe-adjust-visual-fill-column))
+  :hook
+  ((visual-line-mode-hook visual-fill-column-mode-hook) . maybe-adjust-visual-fill-column)
   :config
   (defun maybe-adjust-visual-fill-column nil
     "Readjust visual fill column when the global font size is modified.\nThis is helpful for writeroom-mode, in particular."
@@ -253,25 +253,25 @@
       (vlf file))))
 
 (leaf whitespace
+  :disabled t
   :straight t
   :init
   (defun no-trailing-whitespace ()
     "Turn off display of trailing whitespace in this buffer."
     (setq show-trailing-whitespace nil))
+  :custom
+  (whitespace-line-column . 76)
+  (whitespace-style
+   . '(face spaces tabs space-mark tab-mark empty))
   :hook
   ;; But don't show trailing whitespace in SQLi, inf-ruby etc.
-  ((artist-mode-hook
-    picture-mode-hook
+  ((picture-mode-hook
     special-mode-hook
     Info-mode-hook
     eww-mode-hook
-    term-mode-hook
-    vterm-mode-hook
-    comint-mode-hook
-    compilation-mode-hook
-    twittering-mode-hook
     minibuffer-setup-hook
-    fundamental-mode) . no-trailing-whitespace))
+    fundamental-mode-hook) . no-trailing-whitespace)
+  (after-init-hook . global-whitespace-mode))
 
 (leaf writeroom-mode
   :preface
