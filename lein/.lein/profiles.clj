@@ -1,6 +1,9 @@
 {:user {:dependencies
         [[com.cemerick/pomegranate "0.4.0"]]
 
+        :plugins
+        [[luminus/lein-template "4.14"]]
+
         :injections
         [(defn add-dependency [dep-vec]
            (require 'cemerick.pomegranate)
