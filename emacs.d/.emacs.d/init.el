@@ -75,6 +75,10 @@
 (require 'init-gc)
 (toggle-frame-maximized)
 
+(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-exists-p local-file)
+    (load-file local-file)))
+
 (provide 'init)
 
 ;; Local Variables:
