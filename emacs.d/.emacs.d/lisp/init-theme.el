@@ -21,16 +21,12 @@
   :hook
   (after-init-hook . xr/load-theme)
   :custom
-  ((doom-dracula-brighter-comments
-    doom-dracula-colorful-headers
-    doom-dracula-comment-bg) . t)
+  ((xr-vibrant-brighter-comments
+    xr-vibrant-comment-bg) . t)
   :config
-  (doom-themes-visual-bell-config)
-
   (defun xr/load-theme ()
     "Xandeer load theme function."
-    (load-theme 'doom-dracula t)
-    (setq doom-modeline-minor-modes nil))
+    (load-theme 'xr-vibrant t))
 
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
