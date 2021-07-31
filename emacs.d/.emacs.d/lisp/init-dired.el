@@ -14,9 +14,7 @@
   (dired-recursive-deletes  . 'top))
 
 (leaf dired-hacks
-  :doc "Collection of useful dired additions"
-  :url "https://github.com/Fuco1/dired-hacks"
-  :tag "files")
+  :straight t)
 
 (leaf dired-filter
   :tag "files"

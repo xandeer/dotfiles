@@ -4,8 +4,6 @@
 
 (leaf switch-window
   :straight t
-  :doc "Offer a *visual* way to choose a window to switch to."
-  :url "https://github.com/dimitri/switch-window"
   :bind
   ("C-x x"                    . window-swap-states)
   ("H-o"                      . switch-window)

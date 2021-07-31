@@ -4,9 +4,6 @@
 
 (leaf projectile
   :straight t
-  :doc "Projectile is a project interaction library for Emacs."
-  :url "https://github.com/bbatsov/projectile"
-  :tag "project" "convenience"
   :bind
   ([remap find-tag] . projectile-find-tag)
   ("C-c p f" . counsel-projectile-find-file)

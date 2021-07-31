@@ -35,7 +35,7 @@
   :after clojure-mode
   :hook
   (clojure-mode-hook . cider-mode)
-  (cider-mode-hook . xr/cider-hook)
+  ;; (cider-mode-hook . xr/cider-hook)
   :config
   (defun xr/cider-hook ()
     (add-hook 'before-save-hook 'cider-format-buffer nil t))

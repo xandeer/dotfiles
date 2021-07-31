@@ -10,10 +10,11 @@
 
 (leaf engine-mode
   :straight t
+  :custom
+  (browse-url-generic-program . `,(executable-find "open"))
+  (engine/browser-function . 'browse-url-generic)
   :config
   (engine-mode t)
-  (setq browse-url-generic-program (executable-find "open"))
-  (setq engine/browser-function 'browse-url-generic)
   (defengine github
     "https://github.com/search?ref=simplesearch&q=%s"
     :keybinding "u")

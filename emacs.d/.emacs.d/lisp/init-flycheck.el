@@ -20,5 +20,6 @@
   (defalias 'show-error-at-point-soon
     'flycheck-show-error-at-point)
   (add-to-list 'flycheck-emacs-lisp-checkdoc-variables 'sentence-end-double-space))
+
 (provide 'init-flycheck)
 ;;; init-flycheck.el ends here

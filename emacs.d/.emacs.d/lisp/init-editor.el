@@ -2,21 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(tree-sitter :host github
-               :repo "ubolonton/emacs-tree-sitter"
-               :files ("lisp/*.el" "langs/*.el" "langs/queries")))
-
-(straight-register-package
- '(point-history :type git
-                 :host github
-                 :repo "blue0513/point-history"))
-
-(straight-use-package 'dired-hacks)
 (straight-use-package 'mmm-mode)
-(straight-use-package 'git-blamed)
-(straight-use-package 'git-modes)
-(straight-use-package 'git-timemachine)
 
 ;; Delete multiple consecutive blank characters at once
 (leaf hungry-delete
@@ -103,12 +89,12 @@
   :hook prog-mode-hook)
 
 (leaf hl-line
-  :hook ((after-init-hook . global-hl-line-mode)))
+  :hook (after-init-hook . global-hl-line-mode))
 
 (leaf highlight-indent-guides
   :straight t
   :hook (prog-mode-hook-hook text-mode-hook-hook org-mode-hook-hook)
-  :config
+  :custom
   (highlight-indent-guides-responsive . nil)
   (highlight-indent-guides-delay      . 0.5))
 
@@ -187,6 +173,11 @@
          ("<f8>" . symbol-overlay-remove-all)
          ("<f7>" . symbol-overlay-mode)))
 
+(straight-register-package
+ '(point-history :type git
+                 :host github
+                 :repo "blue0513/point-history"))
+
 (leaf point-history
   :straight t
   :hook after-init-hook
@@ -207,39 +198,6 @@
   (uniquify-separator           . " • ")
   (uniquify-after-kill-buffer-p . t)
   (uniquify-ignore-buffers-re   . "^\\*"))
-
-(leaf abridge-diff
-  :straight t
-  :after magit
-  :init (abridge-diff-mode 1))
-
-(leaf diff-hl
-  :straight t
-  :hook
-  (dired-mode-hook         . diff-hl-dired-mode)
-  (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
-  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
-
-(leaf git-messenger
-  :straight t
-  :custom (git-messenger:show-detail . t)
-  :bind
-  (:vc-prefix-map
-   ("p" . git-messenger:popup-message)))
-
-(leaf magit
-  :straight t
-  :commands magit-status
-  :hook (magit-popup-mode-hook . no-trailing-whitespace)
-  :custom ((magit-diff-refine-hunk . t)
-           (vc-handled-backends    . nil))
-  :bind
-  ("C-x g"      . magit-status)
-  ("C-x M-g"    . magit-dispatch-popup)
-  (:magit-status-mode-map
-   ("C-M-<up>"  . magit-section-up))
-  (:vc-prefix-map
-   ("f"         . vc-git-grep)))
 
 (leaf vlf
   :commands ffap-vlf

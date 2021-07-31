@@ -13,8 +13,8 @@
 (leaf jieba
   :straight t
   :commands jieba-mode
-  :init
-  (jieba-mode))
+  :hook
+  (after-init-hook . jieba-mode))
 
 (provide 'init-jieba)
 ;;; init-jieba.el ends here

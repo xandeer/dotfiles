@@ -3,8 +3,6 @@
 ;;; Code:
 
 (leaf gcmh
-  :doc "Use GCMH --  the Garbage Collector Magic Hack -- to adjust garbage collection."
-  :url "https://gitlab.com/koral/gcmh"
   :straight t
   :hook after-init-hook
   :init

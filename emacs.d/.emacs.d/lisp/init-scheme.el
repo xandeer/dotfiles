@@ -3,6 +3,7 @@
 ;;; Code:
 
 (leaf geiser
+  :disabled t
   :straight t
   :config
   (setq geiser-active-implementations '(guile)))
