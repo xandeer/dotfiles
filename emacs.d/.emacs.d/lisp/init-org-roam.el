@@ -12,11 +12,13 @@
   (org-mode-hook   . xr/enable-valign-when-weekly)
   :bind
   ("C-c x r" . org-roam-random-note)
-  ("C-c r" . org-roam-capture)
+  ("C-c r"   . org-roam-capture)
   ("C-c x y" . org-roam-dailies-find-yesterday)
   ("C-c x f" . org-roam-find-file)
+  ("H-f"     . org-roam-find-file)
   ("C-c x j" . org-roam-dailies-capture-today)
   (:org-mode-map
+   ("H-i"     . org-roam-insert)
    ("C-c x i" . org-roam-insert))
   (:org-roam-mode-map
    ("C-c x M-r" . org-roam))
