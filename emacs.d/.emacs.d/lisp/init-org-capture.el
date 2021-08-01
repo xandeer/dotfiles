@@ -10,28 +10,26 @@
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
 
+  (defun xr/find-phone-insertion-point ()
+    "Positions point at current month heading in file"
+    (interactive)
+    (beginning-of-buffer)
+
+    (if (search-forward (format-time-string "* %Y\n** %B") nil t)
+        (progn
+          (end-of-line)
+          (insert "\n"))
+      (progn
+        (beginning-of-buffer)
+        (re-search-forward "^$")
+        (insert (format-time-string "* %Y\n** %B\n")))))
+
   (setq org-capture-templates nil)
-
   (add-to-list 'org-capture-templates
-               '("s" "Stand" plain
-                 (file "hledger-habit.org")
-                 (file "capture-templates/habit-stand.tmpl")
-                 :immediate-finish t
-                 :jump-to-captured t
-                 :empty-lines 1))
-
-  (add-to-list 'org-capture-templates
-               '("i" "Sit" plain
-                 (file "hledger-habit.org")
-                 (file "capture-templates/habit-sit.tmpl")
-                 :immediate-finish t
-                 :jump-to-captured t
-                 :empty-lines 1))
-
-  (add-to-list 'org-capture-templates
-               '("p" "Phone call" entry
-                 (file+headline "gtd/inbox.org" "Phone calls")
-                 "* PHONE %T %? :PHONE:\n"
+               '("p" "Phone call" plain
+                 (file+function "gtd/phone.org" xr/find-phone-insertion-point)
+                 "*** PHONE %T %? :PHONE:\n"
+                 :prepend t
                  :clock-in t
                  :clock-resume t))
 
@@ -65,7 +63,8 @@
                  (file "gtd/inbox.org")
                  "* TODO %?\n%U\n"
                  :clock-in t
-                 :clock-resume t))
+                 :clock-resume t
+                 :empty-lines-before 1))
 
   (add-to-list 'org-capture-templates
                '("F" "Monthly Financial" plain
