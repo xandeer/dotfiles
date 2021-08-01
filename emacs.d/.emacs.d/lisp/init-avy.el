@@ -80,8 +80,8 @@ enclose literal substrings with capture groups."
 
 (leaf avy
   :straight t
-  :doc "Jump to things in Emacs tree-style."
-  :url "https://github.com/abo-abo/avy"
+  :bind*
+  ("M-j" . xr/ace-pinyin-goto-word-1)
   :bind
   ("M-g a"   . beginning-of-buffer)
   ("M-g e"   . end-of-buffer)
@@ -89,8 +89,7 @@ enclose literal substrings with capture groups."
   ("M-g M-e" . end-of-buffer-other-window)
   ("M-g v"   . scroll-other-window)
   ("M-g M-v" . scroll-other-window-down)
-  ("M-g l"   . avy-goto-line)
-  ("M-g M-g" . xr/ace-pinyin-goto-word-1))
+  ("M-g l"   . avy-goto-line))
 
 (setq xr/ace-mode nil)
 ;;;###autoload
