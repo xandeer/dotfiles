@@ -46,6 +46,8 @@
   :config
   (setq keyfreq-excluded-commands
         '(self-insert-command
+          org-self-insert-command
+          disable-mouse--handle
           forward-char
           backward-char
           previous-line
