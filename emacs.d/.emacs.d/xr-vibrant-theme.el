@@ -163,7 +163,7 @@ determine the exact padding."
 
    ;; org-mode
    (org-hide :foreground hidden)
-   
+
    ((outline-1 &override) :foreground level1)
    (outline-2 :inherit 'outline-1 :foreground level2)
    (outline-3 :inherit 'outline-1 :foreground level3)
@@ -204,8 +204,8 @@ determine the exact padding."
 
    ;; tooltip and company
    (tooltip              :background bg-alt :foreground fg)
-   (company-tooltip-selection     :background base3)
-   
+   (company-tooltip-selection     :background base4)
+
    (solaire-org-hide-face :foreground hidden-alt))
   ;; --- extra variables --------------------
   ;; ()
