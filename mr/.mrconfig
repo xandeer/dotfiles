@@ -1,6 +1,10 @@
 [DEFAULT]
 jobs = 8
 
+[projects/personal/hs]
+checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
+commit = echo "skip hs"
+
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
 commit = echo "skip dotfiles"
