@@ -19,6 +19,7 @@
     (switch-to-buffer (other-buffer)))
   :bind*
   ([remap kill-buffer]            . kill-current-buffer)
+  ([remap comment-dwim]           . comment-line)
   :bind
   ([remap move-beginning-of-line] . xr/smart-beginning-of-line)
   ([remap newline]                . newline-and-indent)
