@@ -4,8 +4,6 @@
 
 (leaf exec-path-from-shell
   :straight t
-  ;:init
-  ;(setenv "JAVA_HOME" "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home")
   :custom
   (exec-path-from-shell-check-startup-files . nil)
   :config
