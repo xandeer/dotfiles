@@ -33,7 +33,6 @@
   :straight t
   :require t
   :custom
-  (auto-save-idle                       . 5)
   (auto-save-silent                     . t)
   (auto-save-delete-trailing-whitespace . t)
   :hook
