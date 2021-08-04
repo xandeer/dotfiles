@@ -3,6 +3,7 @@
 ;;; Code:
 
 (leaf skeleton
+  :after hydra
   :config
   (setq skeleton-end-newline nil)
 
@@ -70,25 +71,22 @@
     ";;; Code:\n\n"
     _ - \n
     "\n(provide '" (string-remove-suffix ".el" (buffer-name)) ")\n"
-    ";;; " (buffer-name) " ends here"))
+    ";;; " (buffer-name) " ends here")
 
-(leaf hydra
-  :straight t
-  :require t
-  :after skeleton
-  :bind
+  :bind*
   ("C-c M-x" . xr/hydra-skeleton/body)
-  :config
-  (defhydra xr/hydra-skeleton nil
-    "Insert Skeleton"
-    ("b" xr/org-block "block" :exit t)
-    ("c" xr/org-block-src "code" :exit t)
-    ("d" xr/text-day "day: 14(Fri)" :exit t)
-    ("e" xr/org-block-elisp "elisp" :exit t)
-    ("h" xr/el-template "elisp template" :exit t)
-    ("s" xr/org-block-sh "sh" :exit t)
-    ("k" xr/org-block-kt "kotlin" :exit t)
-    ("t" xr/text-time "timestamp" :exit t)))
+  :hydra
+  (xr/hydra-skeleton
+   nil
+   "Insert Skeleton"
+   ("b" xr/org-block "block" :exit t)
+   ("c" xr/org-block-src "code" :exit t)
+   ("d" xr/text-day "day: 14(Fri)" :exit t)
+   ("e" xr/org-block-elisp "elisp" :exit t)
+   ("h" xr/el-template "elisp template" :exit t)
+   ("s" xr/org-block-sh "sh" :exit t)
+   ("k" xr/org-block-kt "kotlin" :exit t)
+   ("t" xr/text-time "timestamp" :exit t)))
 
 (leaf abbrev
   :after skeleton

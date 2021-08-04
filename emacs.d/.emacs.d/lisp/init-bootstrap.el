@@ -40,5 +40,10 @@
   :straight t
   :require t)
 
+;; https://github.com/abo-abo/hydra/wiki/
+(leaf hydra
+  :straight t
+  :require t)
+
 (provide 'init-bootstrap)
 ;;; init-bootstrap.el ends here
