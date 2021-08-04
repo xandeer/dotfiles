@@ -2,14 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf origami
-  :straight t
-  :require t
-  :bind
-  (:origami-mode-map
-   ("C-c x z". origami-toggle-node))
-  :config
-  (global-origami-mode))
+(leaf hideshow
+  :hook
+  ((emacs-lisp-mode-hook
+    js-mode-hook
+    typescript-mode-hook
+    kotlin-mode-hook
+    cider-mode-hook)
+   . hs-minor-mode))
 
 (provide 'init-folding)
 ;;; init-folding.el ends here
