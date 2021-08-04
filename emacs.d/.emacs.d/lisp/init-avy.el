@@ -80,8 +80,6 @@ enclose literal substrings with capture groups."
 
 (leaf avy
   :straight t
-  :bind*
-  ("M-j" . xr/ace-pinyin-goto-word-1)
   :bind
   ("M-g a"   . beginning-of-buffer)
   ("M-g e"   . end-of-buffer)
@@ -98,9 +96,10 @@ enclose literal substrings with capture groups."
   (bound-and-true-p xr/ace-mode))
 (leaf ace-pinyin
   :straight t
-  :after avy
+  :hook (after-init-hook . ace-pinyin-global-mode)
+  :bind*
+  ("M-j" . xr/ace-pinyin-goto-word-1)
   :config
-  (ace-pinyin-global-mode 1)
   (defun xr/ace-pinyin-goto-word-1 ()
     "Ace-pinyin replacement of `avy-goto-word-1'."
     (interactive)

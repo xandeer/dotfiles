@@ -152,7 +152,6 @@
 
 (leaf smartparens
   :straight t
-  :after hydra
   :bind* ("C-c s" . hydra-sp/body)
   :hook (after-init-hook . smartparens-global-mode)
   :custom (sp-hybrid-kill-entire-symbol . nil)
