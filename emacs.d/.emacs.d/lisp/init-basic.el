@@ -8,173 +8,31 @@
  word-wrap   t
  tab-width   2
  standard-indent  2
- tooltip-delay    1.5)
+ tooltip-delay    1.5
+ case-fold-search      t
+ indent-tabs-mode      nil
+ make-backup-files     nil
+ ;; require-final-newline nil
+ bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
+ save-interprogram-paste-before-kill t
+ set-mark-command-repeat-pop    t
+ tab-always-indent              t
+ truncate-lines                 nil)
 
 (setq enable-recursive-minibuffers t)
-
-(add-hook #'after-init-hook #'(lambda () (minibuffer-depth-indicate-mode 1)))
 (fset 'yes-or-no-p 'y-or-n-p)
-(global-auto-revert-mode t)
-(delete-selection-mode t)
 
-(setq-default
-   bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
-   case-fold-search      t
-   indent-tabs-mode      nil
-   make-backup-files     nil
-   require-final-newline nil
-   save-interprogram-paste-before-kill t
-   set-mark-command-repeat-pop    t
-   tab-always-indent              t
-   truncate-lines                 nil)
+(defun xr/enable-basic-modes ()
+  "Enable some basic modes after init."
+  (minibuffer-depth-indicate-mode)
+  (global-auto-revert-mode)
+  (delete-selection-mode)
+  (which-function-mode))
+(add-hook #'after-init-hook #'xr/enable-basic-modes)
 
 (leaf all-the-icons
   :straight t
   :custom (inhibit-compacting-font-caches . t))
-
-(leaf which-func
-  :tag "builtin"
-  :hook after-init-hook)
-
-;;;###autoload
-(defun xr/insert-current-filename ()
-  "Insert current buffer filename."
-  (interactive)
-  (insert (file-relative-name buffer-file-name)))
-
-;;;###autoload
-(defun xr/lsp-format-region-or-buffer ()
-  "Format the buffer (or selection) with LSP."
-  (interactive)
-  (unless (bound-and-true-p lsp-mode)
-    (user-error "Not in an LSP buffer"))
-  (call-interactively
-   (if (xr/region-active-p)
-       #'lsp-format-region
-     #'lsp-format-buffer)))
-
-;;;###autoload
-(defun xr/project-p (&optional dir)
-  "Return t if DIR (defaults to `default-directory') is a valid project."
-  (and (xr/project-root dir)
-       t))
-
-;;;###autoload
-(defun xr/project-root (&optional dir)
-  "Return the project root of DIR (defaults to `default-directory').
-Returns nil if not in a project."
-  (let ((projectile-project-root (unless dir projectile-project-root))
-        projectile-require-project-root)
-    (projectile-project-root dir)))
-
-;;;###autoload
-(defun xr/delete-backward-word (arg)
-  "Like `backward-kill-word', but doesn't affect the kill-ring."
-  (interactive "p")
-  (let (kill-ring)
-    (backward-kill-word arg)))
-
-;;;###autoload
-(defun xr/region-active-p ()
-  "Return non-nil if selection is active."
-  (declare (side-effect-free t))
-  (use-region-p))
-
-;;;###autoload
-(defun xr/region-beginning ()
-  "Return beginning position of selection."
-  (declare (side-effect-free t))
-  (region-beginning))
-
-;;;###autoload
-(defun xr/region-end ()
-  "Return end position of selection."
-  (declare (side-effect-free t))
-  (region-end))
-
-;;;###autoload
-(defun xr/thing-at-point-or-region (&optional thing prompt)
-  "Grab the current selection, THING at point, or xref identifier at point.
-Returns THING if it is a string. Otherwise, if nothing is found at point and
-PROMPT is non-nil, prompt for a string (if PROMPT is a string it'll be used as
-the prompting string). Returns nil if all else fails.
-NOTE: Don't use THING for grabbing symbol-at-point. The xref fallback is smarter
-in some cases."
-  (declare (side-effect-free t))
-  (cond ((stringp thing)
-         thing)
-        ((xr/region-active-p)
-         (buffer-substring-no-properties
-          (xr/region-beginning)
-          (xr/region-end)))
-        (thing
-         (thing-at-point thing t))
-        ((require 'xref nil t)
-         ;; A little smarter than using `symbol-at-point', though in most cases,
-         ;; xref ends up using `symbol-at-point' anyway.
-         (xref-backend-identifier-at-point (xref-find-backend)))
-        (prompt
-         (read-string (if (stringp prompt) prompt "")))))
-
-;;;###autoload
-(defalias 'default/newline #'newline)
-
-;;;###autoload
-(defun default/newline-above ()
-  "Insert an indented new line before the current one."
-  (interactive)
-  (beginning-of-line)
-  (save-excursion (newline))
-  (indent-according-to-mode))
-
-;;;###autoload
-(defun default/newline-below ()
-  "Insert an indented new line after the current one."
-  (interactive)
-  (end-of-line)
-  (newline-and-indent))
-
-;;;###autoload
-(defun default/yank-pop ()
-  "Interactively select what text to insert from the kill ring."
-  (interactive)
-  (call-interactively
-   (cond ((fboundp 'counsel-yank-pop)    #'counsel-yank-pop)
-         ((fboundp 'helm-show-kill-ring) #'helm-show-kill-ring)
-         ((error "No kill-ring search backend available. Enable ivy or helm!")))))
-
-;;;###autoload
-(defun default/yank-buffer-filename ()
-  "Copy the current buffer's path to the kill ring."
-  (interactive)
-  (if-let* ((filename (or buffer-file-name (bound-and-true-p list-buffers-directory))))
-      (message (kill-new (abbreviate-file-name filename)))
-    (error "Couldn't find filename in current buffer")))
-
-;;;###autoload
-(defun default/insert-file-path (arg)
-  "Insert the file name (absolute path if prefix ARG).
-If `buffer-file-name' isn't set, uses `default-directory'."
-  (interactive "P")
-  (let ((path (or buffer-file-name default-directory)))
-    (insert
-     (if arg
-         (abbreviate-file-name path)
-       (file-name-nondirectory path)))))
-
-;;;###autoload
-(defun default/newline-indent-and-continue-comments-a ()
-  "A replacement for `newline-and-indent'.
-Continues comments if executed from a commented line, with special support for
-languages with weak native comment continuation support (like C-family
-languages)."
-  (interactive)
-  (if (and (sp-point-in-comment)
-           comment-line-break-function)
-      (funcall comment-line-break-function nil)
-    (delete-horizontal-space t)
-    (newline nil t)
-    (indent-according-to-mode)))
 
 (provide 'init-basic)
 ;;; init-basic.el ends here

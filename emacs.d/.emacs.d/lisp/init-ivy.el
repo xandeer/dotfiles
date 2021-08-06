@@ -67,10 +67,6 @@
   ("C-x C-b" . counsel-switch-buffer-other-window)
   ("C-c b"   . counsel-buffer-or-recentf)
   ("C-c C-b" . xr/counsel-buffer-or-recentf-other-window)
-  ("C-j"     . nil)
-  ("C-j f"   . find-function)
-  ("C-j v"   . find-variable)
-  ("C-j l"   . find-library)
   ("C-s"     . swiper)
   ("C-c C-r" . ivy-resume)
   ("C-c x s" . xr/search-cwd)
@@ -168,10 +164,57 @@
   (:before counsel-M-x xr/ivy-rich-reload)
   (:override all-the-icons-ivy-rich-align-icons xr/all-the-icons-ivy-rich-align-icons))
 
+(leaf pcre2el
+  :straight t)
 (leaf ivy-rich
   :straight t
   :init (ivy-rich-mode 1))
-    ;;;###autoload
+
+
+;;;###autoload
+(defun xr/region-active-p ()
+  "Return non-nil if selection is active."
+  (declare (side-effect-free t))
+  (use-region-p))
+
+;;;###autoload
+(defun xr/region-beginning ()
+  "Return beginning position of selection."
+  (declare (side-effect-free t))
+  (region-beginning))
+
+;;;###autoload
+(defun xr/region-end ()
+  "Return end position of selection."
+  (declare (side-effect-free t))
+  (region-end))
+
+;;;###autoload
+(defun xr/thing-at-point-or-region (&optional thing prompt)
+  "Grab the current selection, THING at point, or xref identifier at point.
+Returns THING if it is a string.  Otherwise, if nothing is found
+at point and PROMPT is non-nil, prompt for a string (if PROMPT is
+a string it'll be used as the prompting string).  Returns nil if
+all else fails.
+NOTE: Don't use THING for grabbing `symbol-at-point`.  The xref
+fallback is smarter in some cases."
+  (declare (side-effect-free t))
+  (cond ((stringp thing)
+         thing)
+        ((xr/region-active-p)
+         (buffer-substring-no-properties
+          (xr/region-beginning)
+          (xr/region-end)))
+        (thing
+         (thing-at-point thing t))
+        ((require 'xref nil t)
+         ;; A little smarter than using `symbol-at-point', though in most cases,
+         ;; xref ends up using `symbol-at-point' anyway.
+         (xref-backend-identifier-at-point (xref-find-backend)))
+        (prompt
+         (read-string (if (stringp prompt) prompt "")))))
+
+;;;###autoload
 (cl-defun xr/ivy-file-search (&key query in all-files (recursive t) prompt args)
   "Conduct a file search using ripgrep.
   :query STRING
@@ -185,6 +228,12 @@
   (unless (executable-find "rg")
     (user-error "Couldn't find ripgrep in your PATH"))
   (require 'counsel)
+  (defun xr/project-root (&optional dir)
+  "Return the project root of DIR (defaults to `default-directory').
+Returns nil if not in a project."
+  (let ((projectile-project-root (unless dir projectile-project-root))
+        projectile-require-project-root)
+    (projectile-project-root dir)))
   (let* ((this-command 'counsel-rg)
          (project-root (or (xr/project-root) default-directory))
          (directory (or in project-root))

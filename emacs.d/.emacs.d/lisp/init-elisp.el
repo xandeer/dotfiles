@@ -2,14 +2,30 @@
 ;;; Commentary:
 ;;; Code:
 
+(leaf helpful
+  :straight t
+  :bind ("C-j" . hydra-elisp-find-func/body)
+  :hydra
+  (hydra-elisp-find-func
+   (:hint nil :exit t)
+   "
+Find the definition near point:
+_f_: Function    _v_: Variable     _l_: Library
+
+_d_: Helpful at point
+
+Cancel: _q_ cancel
+"
+   ("d" helpful-at-point)
+   ("f" find-function)
+   ("v" find-variable)
+   ("l" find-library)
+
+   ("q" nil)))
+
 (leaf elisp-mode
   :init
   (setq-default enable-local-variables :safe))
-
-(leaf helpful
-  :straight t
-  :bind
-  ("C-c C-d" . helpful-at-point))
 
 (leaf elisp-demos
   :straight t
