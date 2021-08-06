@@ -6,7 +6,6 @@
   :straight t
   :hook (after-init-hook . global-company-mode)
   :init
-  (setq tab-always-indent 'complete)
   (add-to-list 'completion-styles 'initials t)
   :bind
   (:company-active-map
@@ -24,19 +23,19 @@
    ("C-n"        . company-search-repeat-forward)
    ("C-p"        . company-search-repeat-backward))
   :custom
-  (company-dabbrev-downcase         . nil)
-  (company-dabbrev-ignore-case      . 'keep)
-  (company-dabbrev-code-ignore-case . t)
+  (company-dabbrev-downcase           . nil)
+  (company-dabbrev-ignore-case        . 'keep)
+  (company-dabbrev-code-ignore-case   . t)
+  (company-dabbrev-code-other-buffers . 'all)
+  (company-idle-delay                 . .2)
+  (company-tooltip-align-annotations  . t)
+  (company-minimum-prefix-length      . 1)
   :config
   (defun xr/company-short ()
     (company-search-abort)
     (company-filter-candidates))
   (dolist (backend '(company-eclim company-semantic))
-    (delq backend company-backends))
-  (setq company-minimum-prefix-length 1)
-  (setq-default company-dabbrev-code-other-buffers 'all
-                company-idle-delay .1
-                company-tooltip-align-annotations t))
+    (delq backend company-backends)))
 ;; (diminish 'company-mode))
 
 (provide 'init-company)
