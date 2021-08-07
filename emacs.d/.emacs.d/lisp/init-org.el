@@ -28,55 +28,54 @@
    ("M-n"       . org-next-visible-heading)
    ("C-c x C-r" . org-table-recalculate))
   :custom
-  (org-modules . '(ol-docview
-                   ol-info
-                   org-toc
-                   org-id
-                   org-habit
-                   org-inlinetask
-                   org-protocol
-                   ol-w3m))
-  ;; org appearance
-  ((org-allow-promoting-top-level-subtree
+  (org-modules
+   . '(ol-docview
+       ol-info
+       org-toc
+       org-id
+       org-habit
+       org-inlinetask
+       org-protocol
+       ol-w3m))
+  (org-directory          . "~/projects/personal/notes/")
+  (org-startup-folded     . 'content)
+  (org-archive-location   . "archive/%s_archive::* Archived Tasks")
+  (org-image-actual-width . '(500))
+  ((org-adapt-indentation
+    org-confirm-babel-evaluate) . nil)
+  ((org-startup-indented
     org-cycle-level-faces
     org-fontify-done-headline
-    org-fontify-emphasized-text
     org-fontify-todo-headline
-    org-fontify-whole-block-delimiter-line
+    org-hide-emphasis-markers
+    org-fontify-emphasized-text
     org-fontify-whole-heading-line
-    org-hide-emphasis-markers)
-   . t)
-  (org-startup-folded         . 'content)
-  (org-confirm-babel-evaluate . nil)
-  :defer-config
-  (add-to-list 'org-babel-load-languages '(shell . t))
-  (add-to-list 'org-babel-load-languages '(restclient . t))
-  (add-to-list 'org-babel-load-languages '(plantuml . t))
-  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
-  :config
-  (setq org-directory "~/projects/personal/notes/")
-  (setq org-default-notes-file (concat org-directory "notes.org"))
-  (setq org-image-actual-width '(500))
-  (setq org-adapt-indentation nil)
-  (setq org-startup-indented t)
-  (setq org-tag-alist '((:startgroup)
-                        ("Mon"       . ?m)
-                        ("Tue"       . ?t)
-                        ("Wed"       . ?w)
-                        ("Thu"       . ?T)
-                        ("Fri"       . ?f)
-                        ("Sat"       . ?s)
-                        ("Sun"       . ?S)
-                        (:startgroup)
-                        ("@home"     . ?h)
-                        ("@office"   . ?o)
-                        (:endgroup)))
+    org-allow-promoting-top-level-subtree
+    org-fontify-whole-block-delimiter-line). t)
+  (org-tag-alist
+   . '((:startgroup)
+       ("Mon"       . ?m)
+       ("Tue"       . ?t)
+       ("Wed"       . ?w)
+       ("Thu"       . ?T)
+       ("Fri"       . ?f)
+       ("Sat"       . ?s)
+       ("Sun"       . ?S)
+       (:startgroup)
+       ("@home"     . ?h)
+       ("@office"   . ?o)
+       (:endgroup)))
   ;; global Effort estimate values
   ;; global STYLE property values for completion
-  (setq org-global-properties
-        '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-          ("STYLE_ALL"  . "habit")))
-  (setq org-archive-location "archive/%s_archive::* Archived Tasks")
+  (org-global-properties
+   . '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+       ("STYLE_ALL"  . "habit")))
+  :defer-config
+  (add-to-list 'org-babel-load-languages '(shell      . t))
+  (add-to-list 'org-babel-load-languages '(plantuml   . t))
+  (add-to-list 'org-babel-load-languages '(restclient . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+  :config
   (setq org-emphasis-regexp-components ;; markup chinesee without space
         (list (concat " \t('\"{"            "[:nonascii:]")
               (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
@@ -99,29 +98,7 @@
     (setq-local paragraph-separate paragraph-ending)))
 (advice-add 'org-setup-filling :after #'reset-filling)
 
-(defun forward-one-day-in-calendar ()
-  (interactive)
-  (org-eval-in-calendar '(calendar-forward-day 1)))
-
-(defun backward-one-day-in-calendar ()
-  (interactive)
-  (org-eval-in-calendar '(calendar-backward-day 1)))
-
-(defun forward-one-week-in-calendar ()
-  (interactive)
-  (org-eval-in-calendar '(calendar-forward-week 1)))
-
-(defun backward-one-week-in-calendar ()
-  (interactive)
-  (org-eval-in-calendar '(calendar-backward-week 1)))
-
 (leaf org
-  :bind
-  (:org-read-date-minibuffer-local-map
-   ("C-h" . backward-one-day-in-calendar)
-   ("C-l" . forward-one-day-in-calendar)
-   ("C-j" . forward-one-week-in-calendar)
-   ("C-k" . backward-one-week-in-calendar))
   :config
   (setq org-return-follows-link t)
   (setq org-attach-id-dir (expand-file-name "attach/" org-directory))

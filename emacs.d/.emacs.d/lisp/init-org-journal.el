@@ -4,6 +4,7 @@
 
 (leaf org-journal
   :straight t
+  :require t
   :mode
   ("notes/journal/.+\\.org\\'" . org-journal-mode)
   :bind
