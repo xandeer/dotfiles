@@ -30,7 +30,7 @@ alias y='yarn'
 alias s='scd'
 alias rm='trash'
 alias rmrf='trash'
-alias rmd='trash ~/temp/donut/{*.apk,*.zip,*.txt}'
+alias rmd='trash ~/temp/donut/*.apk;trash ~/temp/donut/*.zip'
 alias rms='trash ~/temp/screenshot/*.png'
 
 alias cat='bat'
