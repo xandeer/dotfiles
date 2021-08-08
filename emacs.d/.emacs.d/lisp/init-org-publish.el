@@ -2,18 +2,30 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar xr/publish-base-dir "~/projects/personal/notes")
-(defvar xr/publish-pub-dir "~/projects/personal/xandeer.github.io")
-(leaf org
+(require 'org)
+(require 'org-id)
+(require 'org-attach)
+(require 'ox-publish)
+(require 'ox-html)
+
+(defvar xr/publish-pub-dir (expand-file-name "../xandeer.github.io" org-directory))
+
+(leaf ox-publish
   :custom
   (org-html-inline-images              . t)
   (org-html-head-include-default-style . nil)
   (org-html-html5-fancy                . t)
   (org-export-headline-levels          . 6)
+  (org-id-locations-file-relative      . t)
+  (org-id-locations-file               . `,(expand-file-name "id-locations.el" org-directory))
+  (org-id-extra-files                  . `,(remove (expand-file-name "index.org" org-directory)
+                                              (directory-files org-directory 'full (rx ".org" eos))))
+  (org-id-link-to-org-use-id           . 'create-if-interactive-and-no-custom-id)
+  (org-attach-id-dir                   . `,(expand-file-name "attach/" org-directory))
   (org-publish-timestamp-directory     . `,(no-littering-expand-var-file-name "org/timestamps/"))
   (org-publish-project-alist
    . `(("xandeer-org"
-        :base-directory ,xr/publish-base-dir
+        :base-directory ,org-directory
         :publishing-directory ,xr/publish-pub-dir
         :recursive t
         :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|copy_about_doc_norang\\|hledger.*"
@@ -35,7 +47,7 @@
         :with-author nil
         :with-creator nil)
        ("xandeer-static"
-        :base-directory ,xr/publish-base-dir
+        :base-directory ,org-directory
         :publishing-directory ,xr/publish-pub-dir
         :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
         :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js"
@@ -62,4 +74,3 @@ unwanted space when exporting org-mode to html."
 
 (provide 'init-org-publish)
 ;;; init-org-publish.el ends here
-(org-link-types)

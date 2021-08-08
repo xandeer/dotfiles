@@ -37,10 +37,27 @@
        org-inlinetask
        org-protocol
        ol-w3m))
-  (org-directory          . "~/projects/personal/notes/")
-  (org-startup-folded     . 'content)
-  (org-archive-location   . "archive/%s_archive::* Archived Tasks")
-  (org-image-actual-width . '(500))
+  (org-directory                    . "~/projects/personal/notes/")
+  (org-startup-folded               . 'content)
+  (org-archive-location             . "archive/%s_archive::* Archived Tasks")
+  (org-clone-delete-id              . t)
+  (org-id-locations-file-relative   . t)
+  (org-id-locations-file            . `,(expand-file-name "id-locations.el" org-directory))
+  (org-id-extra-files               . `,(remove (expand-file-name "index.org" org-directory)
+                                                (directory-files org-directory 'full (rx ".org" eos))))
+  (org-id-link-to-org-use-id        . 'create-if-interactive-and-no-custom-id)
+  (org-image-actual-width           . '(500))
+  (org-return-follows-link          . t)
+  (org-attach-id-dir                . `,(expand-file-name "attach/" org-directory))
+  (org-attach-store-link-p          . 'attached)
+  (org-list-allow-alphabetical      . t)
+  (org-edit-src-content-indentation . 0)
+  (org-catch-invisible-edits        . 'error)
+  (org-startup-with-inline-images   . t)
+  (org-cycle-separator-lines        . 0)
+  (org-blank-before-new-entry
+   . '((heading)
+       (plain-list-item . auto)))
   ((org-adapt-indentation
     org-confirm-babel-evaluate) . nil)
   ((org-startup-indented
@@ -70,6 +87,43 @@
   (org-global-properties
    . '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
        ("STYLE_ALL"  . "habit")))
+  (org-special-ctrl-a/e   . t)
+  (org-special-ctrl-k     . t)
+  (org-use-speed-commands . t)
+  (org-speed-commands-user
+   . '(("Outline Navigation")
+       ("j" org-speed-move-safe 'org-next-visible-heading)
+       ("k" org-speed-move-safe 'org-previous-visible-heading)
+       ("B" . ignore)
+       ("F" . ignore)
+
+       ("Outline Visibility")
+       ("C" . ignore)
+
+       ("Outline Structure Editing")
+       ("a" . org-insert-heading-after-current)
+       ("A" . org-archive-subtree-default-with-confirmation)
+       ("," . org-set-tags-command)
+
+       ("Clock Commands")
+       ("c" . org-clock-goto)
+       ("i" . org-clock-in)
+       ("o" . org-clock-out)
+       ("J" . org-clock-goto)
+       ("S" . org-schedule)
+
+       ("Meta Data Editing")
+       ("0" . ignore)
+       ("1" . ignore)
+       ("2" . ignore)
+       ("3" . ignore)
+       ("z" . org-add-note)
+
+       ("Agenda Views etc")
+       ("q" . org-agenda-list)
+
+       ("Misc")
+       ("o" . org-open-at-point)))
   :defer-config
   (add-to-list 'org-babel-load-languages '(shell      . t))
   (add-to-list 'org-babel-load-languages '(plantuml   . t))
@@ -90,65 +144,15 @@
   ;; set emphasis support 16 lines
   (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
   (org-set-emph-re 'org-emphasis-regexp-components
-                   org-emphasis-regexp-components))
-(defun reset-filling ()
-  (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
-                                  "\\|^\\(#\\+end_.*\\)")))
-    (setq-local paragraph-start paragraph-ending)
-    (setq-local paragraph-separate paragraph-ending)))
-(advice-add 'org-setup-filling :after #'reset-filling)
+                   org-emphasis-regexp-components)
 
-(leaf org
-  :config
-  (setq org-return-follows-link t)
-  (setq org-attach-id-dir (expand-file-name "attach/" org-directory))
-  (setq org-attach-store-link-p 'file)
-  (setq org-clone-delete-id t)
-  (setq org-list-allow-alphabetical t)
-  (setq org-edit-src-content-indentation 0)
-  (setq org-catch-invisible-edits 'error)
-  (setq org-startup-with-inline-images t)
-  (setq org-special-ctrl-a/e t)
-  (setq org-special-ctrl-k t)
-  (setq org-cycle-separator-lines 0)
-  (setq org-blank-before-new-entry
-        '((heading)
-          (plain-list-item . auto)))
-  (setq org-use-speed-commands t)
-  (setq org-speed-commands-user
-        '(("Outline Navigation")
-          ("j" org-speed-move-safe 'org-next-visible-heading)
-          ("k" org-speed-move-safe 'org-previous-visible-heading)
-          ("B" . ignore)
-          ("F" . ignore)
-
-          ("Outline Visibility")
-          ("C" . ignore)
-
-          ("Outline Structure Editing")
-          ("a" . org-insert-heading-after-current)
-          ("A" . org-archive-subtree-default-with-confirmation)
-          ("," . org-set-tags-command)
-
-          ("Clock Commands")
-          ("c" . org-clock-goto)
-          ("i" . org-clock-in)
-          ("o" . org-clock-out)
-          ("J" . org-clock-goto)
-          ("S" . org-schedule)
-
-          ("Meta Data Editing")
-          ("0" . ignore)
-          ("1" . ignore)
-          ("2" . ignore)
-          ("3" . ignore)
-          ("z" . org-add-note)
-
-          ("Agenda Views etc")
-          ("q" . org-agenda-list)
-
-          ("Misc")
-          ("o" . org-open-at-point))))
+  (defun reset-filling ()
+    (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
+                                    "\\|^\\(#\\+end_.*\\)")))
+      (setq-local paragraph-start paragraph-ending)
+      (setq-local paragraph-separate paragraph-ending)))
+  :advice
+  (:after org-setup-filling reset-filling))
 
 (provide 'init-org)
 ;;; init-org.el ends here
