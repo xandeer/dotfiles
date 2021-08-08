@@ -8,7 +8,6 @@
   :hook
   (after-init-hook . org-roam-mode)
   (org-mode-hook   . xr/enable-valign-when-valign)
-  (org-mode-hook   . xr/enable-valign-when-weekly)
   :bind
   ("C-c x r" . org-roam-random-note)
   ("C-c r"   . org-roam-capture)
@@ -49,9 +48,7 @@
   (defun xr/has-roam-tag (tag &optional file)
     "Check whether TAG is included in the FILE."
     (-contains? (org-roam--extract-tags file) tag))
-  (defun xr/enable-valign-when-weekly ()
-    (when (xr/has-roam-tag "weekly")
-      (valign-mode)))
+
   (defun xr/enable-valign-when-valign ()
     (when (xr/has-roam-tag "valign")
       (valign-mode)))
@@ -64,11 +61,13 @@
   (defun org-roam--get-title-path-completions ()
     "Return an alist for completion. The car is the displayed title for
 completion, and the cdr is the to the file."
-    (let* ((rows (org-roam-db-query [:select [files:file titles:title tags:tags files:meta] :from titles
-                                             :left :join tags
-                                             :on (= titles:file tags:file)
-                                             :left :join files
-                                             :on (= titles:file files:file)]))
+    (let* ((rows (org-roam-db-query
+                  [:select [files:file titles:title tags:tags files:meta]
+                           :from titles
+                           :left :join tags
+                           :on (= titles:file tags:file)
+                           :left :join files
+                           :on (= titles:file files:file)]))
            completions)
       (seq-sort-by (lambda (x)
                      (plist-get (nth 3 x) :mtime))

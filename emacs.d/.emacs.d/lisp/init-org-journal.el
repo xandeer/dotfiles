@@ -5,8 +5,8 @@
 (leaf org-journal
   :straight t
   :require t
-  :mode
-  ("notes/journal/.+\\.org\\'" . org-journal-mode)
+  :mode ("notes/journal/.+\\.org\\'" . org-journal-mode)
+  :hook (org-journal-mode-hook . valign-mode)
   :bind
   ("C-c x t" . org-journal-open-current-journal-file)
   :custom
