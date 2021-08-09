@@ -24,10 +24,10 @@
          ("M-i" . toggle-input-method))
   :custom
   (default-input-method . "rime")
-  (rime-librime-root    . "~/.local/share/librime/dist")
-  ;; (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share") ; rime-deploy doesn't work
-  (rime-share-data-dir  . "/Library/Input Methods/Squirrel.app/Contents/SharedSupport")
   (rime-user-data-dir   . "~/.cache/rime")
+  (rime-librime-root    . "~/.local/share/librime/dist")
+  ;; (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share") ; rime-deploy doesn't work, just use default
+  ;; (rime-share-data-dir  . "/Library/Input Methods/Squirrel.app/Contents/SharedSupport")
   :config
   (setq rime-show-candidate 'posframe)
   (setq rime-show-preedit t)
