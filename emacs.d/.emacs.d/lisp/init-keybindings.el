@@ -64,11 +64,13 @@
    "
 Org: _t_oday
 Agent: _a_gent default _s_elect
+Others: _b_ookmark
 Cancel: _q_
 "
    ("t" org-journal-open-current-journal-file)
    ("a" org-agenda-list)
    ("s" org-agenda)
+   ("b" counsel-bookmark :exit t)
    ("q" nil)))
 
 (provide 'init-keybindings)
