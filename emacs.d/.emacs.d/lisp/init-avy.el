@@ -98,8 +98,14 @@ enclose literal substrings with capture groups."
   :straight t
   :hook (after-init-hook . ace-pinyin-global-mode)
   :bind*
-  ("M-j" . xr/ace-pinyin-goto-word-1)
+  ("M-j" . xr/ace-pinyin-goto-char-2)
   :config
+  (defun xr/ace-pinyin-goto-char-2 ()
+    "Ace-pinyin replacement of `avy-goto-char-2'."
+    (interactive)
+    (setq xr/ace-mode t)
+    (call-interactively 'ace-pinyin-jump-char-2)
+    (setq xr/ace-mode nil))
   (defun xr/ace-pinyin-goto-word-1 ()
     "Ace-pinyin replacement of `avy-goto-word-1'."
     (interactive)
