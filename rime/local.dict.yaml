@@ -1,0 +1,22 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 部署位置：
+# ~/.config/ibus/rime  (Linux)
+# ~/Library/Rime  (Mac OS)
+# %APPDATA%\Rime  (Windows)
+#
+# 於重新部署後生效
+#
+
+---
+name: local
+version: "2020.10.12"
+sort: by_weight
+use_preset_vocabulary: true
+...
+
+18688720525	pl
+17722690036	pd
+620502199107053636	id
+深圳市南山区金钟大厦15K	addr
