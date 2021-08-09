@@ -55,7 +55,21 @@
           next-line
           newline-and-indent))
   (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1))
+  (keyfreq-autosave-mode 1)
+  :bind
+  ("H-j" . hydra-fv/body)
+  :hydra
+  (hydra-fv
+   (:color red :hint nil)
+   "
+Org: _t_oday
+Agent: _a_gent default _s_elect
+Cancel: _q_
+"
+   ("t" org-journal-open-current-journal-file)
+   ("a" org-agenda-list)
+   ("s" org-agenda)
+   ("q" nil)))
 
 (provide 'init-keybindings)
 ;;; init-keybindings.el ends here
