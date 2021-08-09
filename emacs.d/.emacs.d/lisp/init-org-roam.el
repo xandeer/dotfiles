@@ -14,7 +14,6 @@
   ("C-c x y" . org-roam-dailies-find-yesterday)
   ("C-c x f" . org-roam-find-file)
   ("H-f"     . org-roam-find-file)
-  ("C-c x j" . org-roam-dailies-capture-today)
   (:org-mode-map
    ("H-i"     . org-roam-insert)
    ("C-c x i" . org-roam-insert))
@@ -36,9 +35,10 @@
        :immediate-finish t
        :unnarrowed t))
   (org-roam-dailies-capture-templates
-   . `(("d" "daily" entry
-        #'org-roam-capture--get-point "* <%<%Y-%m-%d %R>> %?"
-        :olp (,(format-time-string "%B %d") ,(format-time-string "%Y"))
+   . `(("d" "daily" plain
+        (function xr/find-journal-location)
+        "*** %(format-time-string org-journal-time-format)%?"
+        :prepend t
         :clock-in t
         :clock-resume t
         :jump-to-captured t

@@ -10,33 +10,52 @@
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
 
-  (defun xr/find-phone-insertion-point ()
+  (defun xr/find-phone-location ()
     "Positions point at current month heading in file"
-    (interactive)
     (beginning-of-buffer)
 
     (if (search-forward (format-time-string "* %Y\n** %B") nil t)
         (progn
           (end-of-line)
-          (insert "\n"))
+          (newline))
       (progn
         (beginning-of-buffer)
         (re-search-forward "^$")
         (insert (format-time-string "* %Y\n** %B\n")))))
 
+  (defun xr/find-journal-location ()
+    "Open today's journal."
+    (org-journal-new-entry t)
+    (beginning-of-buffer)
+    (if (search-forward (format-time-string "** %Y") nil t)
+        (progn
+          (end-of-line)
+          (newline))
+      (progn
+        (beginning-of-buffer)
+        (if (search-forward (format-time-string "* %B %d") nil t)
+            (progn
+              (end-of-line)
+              (insert (format-time-string "\n** %Y :%a:\n")))
+          (progn
+            (beginning-of-buffer)
+            (search-forward "\n\n" nil t)
+            (insert (format-time-string "* %B %d\n** %Y :%a:\n")))))))
+
   (setq org-capture-templates nil)
   (add-to-list 'org-capture-templates
                '("p" "Phone call" plain
-                 (file+function "gtd/phone.org" xr/find-phone-insertion-point)
+                 (file+function "gtd/phone.org" xr/find-phone-location)
                  "*** PHONE %T %? :PHONE:\n"
                  :prepend t
                  :clock-in t
                  :clock-resume t))
 
   (add-to-list 'org-capture-templates
-               '("m" "Meeting" entry
-                 (file "gtd/inbox.org")
-                 "* %T MEETING with %? :MEETING:\n"
+               '("j" "Journal entry" plain
+                 (function xr/find-journal-location)
+                 "*** %(format-time-string org-journal-time-format)%?"
+                 :prepend t
                  :clock-in t
                  :clock-resume t))
 
@@ -44,19 +63,6 @@
                '("h" "Habit" entry
                  (file "gtd/inbox.org")
                  "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n\n%U\n"))
-
-  (add-to-list 'org-capture-templates
-               '("w" "org-protocol" entry
-                 (file "gtd/inbox.org")
-                 "* TODO Review %c\n%U\n"
-                 :immediate-finish t))
-
-  (add-to-list 'org-capture-templates
-               '("n" "note" entry
-                 (file "gtd/inbox.org")
-                 "* %? :NOTE:\n%U\n"
-                 :clock-in t
-                 :clock-resume t))
 
   (add-to-list 'org-capture-templates
                '("c" "todo" entry
