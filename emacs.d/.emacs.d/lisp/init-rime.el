@@ -25,7 +25,8 @@
   :custom
   (default-input-method . "rime")
   (rime-librime-root    . "~/.local/share/librime/dist")
-  (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share")
+  ;; (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share") ; rime-deploy doesn't work
+  (rime-share-data-dir  . "/Library/Input Methods/Squirrel.app/Contents/SharedSupport")
   (rime-user-data-dir   . "~/.cache/rime")
   :config
   (setq rime-show-candidate 'posframe)
