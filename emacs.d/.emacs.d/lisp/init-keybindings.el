@@ -60,17 +60,20 @@
   ("H-j" . hydra-fv/body)
   :hydra
   (hydra-fv
-   (:color red :hint nil)
+   (:hint nil :exit t)
    "
 Org: _t_oday
 Agent: _a_gent default _s_elect
-Others: _b_ookmark
+Bookmark: _be_motion _bg_et up
+Others: _bo_ookmark
 Cancel: _q_
 "
    ("t" org-journal-open-current-journal-file)
    ("a" org-agenda-list)
    ("s" org-agenda)
-   ("b" counsel-bookmark :exit t)
+   ("bo" counsel-bookmark)
+   ("be" (lambda () (interactive) (bookmark-jump "emotion")))
+   ("bg" (lambda () (interactive) (bookmark-jump "get up")))
    ("q" nil)))
 
 (provide 'init-keybindings)
