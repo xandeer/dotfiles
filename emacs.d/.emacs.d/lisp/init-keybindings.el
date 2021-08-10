@@ -65,7 +65,7 @@
      Org: _t_oday
    Agent: _a_gent default _s_elect
       Xr: _xd_elete current buffer _xl_ remove links _xc_convert quotations
-          _xf_ill subtree
+          _xf_ill subtree _xj_ insert journal in year _xm_igirage journal
 Bookmark: _be_motion _bg_et up
   Others: _bo_ookmark
   Cancel: _q_
@@ -80,6 +80,8 @@ Bookmark: _be_motion _bg_et up
    ("xd" xr/delete-current-buffer)
    ("xf" xr/fill-subtree)
    ("xl" xr/remove-links)
+   ("xj" xr/insert-journal-in-year)
+   ("xm" xr/migrate-journal)
    ("q" nil)))
 
 (provide 'init-keybindings)
