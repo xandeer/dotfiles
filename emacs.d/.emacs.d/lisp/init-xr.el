@@ -112,5 +112,26 @@ If point was already at that position, move point to beginning of line."
     (and (= oldpos (point))
          (beginning-of-line))))
 
+(defun xr/journal-title (year)
+  "Generate a journal heading like: ** YEAR :Mon:."
+  (unless year (setq year (format-time-string "%y")))
+  (let ((m (format-time-string "-%m"))
+        (d (format-time-string "-%d")))
+    (format-time-string "** %Y :%a:" (date-to-time (concat "20" year m d " +0800")))))
+
+(defun xr/migrate-journal ()
+  "Replace journal's title."
+  (interactive)
+  (xr/replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d"))
+  (xr/replace "^\\* .*"
+              (concat (format-time-string "* %B %d\n** %Y :%a:\n")
+                      (xr/journal-title "20"))))
+
+(defun xr/insert-journal-in-year (year)
+  "Insert a journal heading like: ** YEAR :Mon:."
+  (interactive "sYear like 21: ")
+  (goto-char (point-max))
+  (insert (xr/journal-title year)))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
