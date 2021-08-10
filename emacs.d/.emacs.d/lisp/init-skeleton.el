@@ -105,7 +105,8 @@
   (define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)
   (define-abbrev org-mode-abbrev-table "sh" "" 'xr/org-block-sh)
   (define-abbrev org-mode-abbrev-table "kt" "" 'xr/org-block-kt)
-  (define-abbrev emacs-lisp-mode-abbrev-table "h" "" 'xr/el-template))
+  (define-abbrev emacs-lisp-mode-abbrev-table "lambdai" "(lambda () (interactive) ())")
+  (define-abbrev emacs-lisp-mode-abbrev-table "elh" "" 'xr/el-template))
 
 (provide 'init-skeleton)
 ;;; init-skeleton.el ends here
