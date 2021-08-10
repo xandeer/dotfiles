@@ -4,14 +4,27 @@
 
 (leaf dired
   :bind
+  ("H-k" . hydra-dired/body)
   (:dired-mode-map
-   ([mouse-2] . dired-find-file)
    ("C-c C-p" . wdired-change-to-wdired-mode))
   :custom
-  (dired-dwim-target . t)
+  (dired-dwim-target         . t)
+  (dired-recursive-deletes   . 'top)
   `(insert-directory-program . ,(or (executable-find "gls")
-                                   (executable-find "ls")))
-  (dired-recursive-deletes  . 'top))
+                                    (executable-find "ls")))
+  :hydra
+  (hydra-dired
+   (:hint nil :exit t)
+   "
+    _d_ownloads    _t_elega documents    _s_creenshot
+    _w_ork temp    _e_macs.d
+"
+   ("d" (lambda () (interactive) (dired "~/Downloads")))
+   ("e" (lambda () (interactive) (dired "~/.emacs.d")))
+   ("t" (lambda () (interactive) (dired "~/Downloads/telega/documents")))
+   ("s" (lambda () (interactive) (dired "~/temp/screenshot")))
+   ("w" (lambda () (interactive) (dired "~/temp/donut")))
+   ))
 
 (leaf dired-hacks
   :straight t)
