@@ -62,11 +62,13 @@
   (hydra-fv
    (:hint nil :exit t)
    "
-Org: _t_oday
-Agent: _a_gent default _s_elect
+     Org: _t_oday
+   Agent: _a_gent default _s_elect
+      Xr: _xd_elete current buffer _xl_ remove links _xc_convert quotations
+          _xf_ill subtree
 Bookmark: _be_motion _bg_et up
-Others: _bo_ookmark
-Cancel: _q_
+  Others: _bo_ookmark
+  Cancel: _q_
 "
    ("t" org-journal-open-current-journal-file)
    ("a" org-agenda-list)
@@ -74,6 +76,10 @@ Cancel: _q_
    ("bo" counsel-bookmark)
    ("be" (lambda () (interactive) (bookmark-jump "emotion")))
    ("bg" (lambda () (interactive) (bookmark-jump "get up")))
+   ("xc" xr/convert-chinese-quotations)
+   ("xd" xr/delete-current-buffer)
+   ("xf" xr/fill-subtree)
+   ("xl" xr/remove-links)
    ("q" nil)))
 
 (provide 'init-keybindings)
