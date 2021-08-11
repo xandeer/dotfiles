@@ -112,26 +112,30 @@ If point was already at that position, move point to beginning of line."
     (and (= oldpos (point))
          (beginning-of-line))))
 
-(defun xr/journal-title (year)
-  "Generate a journal heading like: ** YEAR :Mon:."
-  (unless year (setq year (format-time-string "%y")))
+(defun xr/journal-date (year)
+  "Generate a date on today in YEAR."
   (let ((m (format-time-string "-%m"))
         (d (format-time-string "-%d")))
-    (format-time-string "** %Y :%a:" (date-to-time (concat "20" year m d " +0800")))))
+    (date-to-time (concat "20" year m d " +0800"))))
 
 (defun xr/migrate-journal ()
   "Replace journal's title."
   (interactive)
   (xr/replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d"))
-  (xr/replace "^\\* .*"
-              (concat (format-time-string "* %B %d\n** %Y :%a:\n")
-                      (xr/journal-title "20"))))
+  (let ((today (xr/journal-date "20")))
+    (xr/replace "^\\* .*" (format-time-string "* %B %d\n** %Y" today))
+    (org-set-tags (format-time-string ":%a:" today))))
 
 (defun xr/insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
   (interactive "sYear like 21: ")
+  (unless year (setq year (format-time-string "%y")))
   (goto-char (point-max))
-  (insert (xr/journal-title year)))
+  (let ((today (xr/journal-date year)))
+    (insert (format-time-string "\n** %Y" today))
+    (org-set-tags (format-time-string ":%a:" today)))
+  (goto-char (point-max))
+  (newline))
 
 (provide 'init-xr)
 ;;; init-xr.el ends here

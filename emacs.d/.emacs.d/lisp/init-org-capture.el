@@ -36,11 +36,13 @@
         (if (search-forward (format-time-string "* %B %d") nil t)
             (progn
               (end-of-line)
-              (insert (format-time-string "\n** %Y :%a:\n")))
+              (insert (format-time-string "\n** %Y :%a:")))
           (progn
             (beginning-of-buffer)
             (search-forward "\n\n" nil t)
-            (insert (format-time-string "* %B %d\n** %Y :%a:\n")))))))
+            (insert (format-time-string "* %B %d\n** %Y :%a:"))))
+        (org-set-tags (format-time-string ":%a:"))
+        (newline))))
 
   (setq org-capture-templates nil)
   (add-to-list 'org-capture-templates
