@@ -6,9 +6,9 @@
  '(telega :host github
           :repo "zevlg/telega.el"
           ;; :commit "9008565"
-          :branch "releases"))
+          :branch "master"))
 
-;; dependencies: brew install tdlib ffmpeg
+;; dependencies: brew install ffmpeg
 (leaf telega
   :straight t
   :commands (telega)
@@ -17,22 +17,18 @@
   :bind
   (:telega-chat-mode-map
    ("C-c C-f" . xr/telega-chatbuf-attach-file))
+  :custom
+  (telega-root-fill-column           . 48)
+  (telega-chat-fill-column           . 65)
+  (telega-chat-scroll-conservatively . 101)
+  (telega-sticker-set-download       . t)
+  (telega-cache-dir                  . `,(expand-file-name "~/Downloads/telega"))
+  (telega-completing-read-function   . 'ivy-completing-read)
+  (telega-proxies
+   . `,(list
+        '(:server "127.0.0.1" :port 8010 :enable t
+                  :type (:@type "proxyTypeHttp"))))
   :config
-  ;; (telega-mode-line-mode 1)
-  (setq telega-chat-fill-column 65)
-  (setq telega-emoji-use-images nil)
-  (setq-default telega-chat-scroll-scroll-conservatively 101)
-  (setq
-   telega-proxies
-   (list
-    '(:server "127.0.0.1" :port 8010 :enable t
-              :type (:@type "proxyTypeHttp")))
-   telega-sticker-set-download t
-   telega-chat-button-width 28
-   telega-cache-dir (expand-file-name "~/Downloads/telega")
-   telega-root-fill-column 48)
-  (setq telega-completing-read-function 'ivy-completing-read)
-
   (defun xr/telega-chat-with ()
     "If telega server is live start chatting, else start telega."
     (interactive)
@@ -49,8 +45,8 @@
       (telega-chatbuf-input-insert
        (list :@type "inputMessageDocument"
              :document ifile))))
-
-  (defun telega-server--check-version (required-version)
+  ;; Deprecated
+  (defun xr/telega-server--check-version (required-version)
     "Stop check at starting server."
     (let ((ts-version (telega-server-version)))
       (message (format "Installed version: %s, latest version: %s."
