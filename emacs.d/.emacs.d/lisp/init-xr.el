@@ -124,7 +124,9 @@ If point was already at that position, move point to beginning of line."
   (xr/replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d"))
   (let ((today (xr/journal-date "20")))
     (xr/replace "^\\* .*" (format-time-string "* %B %d\n** %Y" today))
-    (org-set-tags (format-time-string ":%a:" today))))
+    (search-forward "** 2020")
+    (org-set-tags (format-time-string ":%a:" today))
+    (xr/replace "^\\*" "**" (point))))
 
 (defun xr/insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
