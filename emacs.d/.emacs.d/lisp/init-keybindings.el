@@ -56,6 +56,12 @@
           newline-and-indent))
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1)
+  :config
+  (defun xr/bookmark (name)
+    (interactive)
+    (if (s-contains? name (buffer-file-name))
+        (bookmark-set name)
+      (bookmark-jump name)))
   :bind
   ("H-j" . hydra-fv/body)
   :hydra
@@ -74,8 +80,8 @@ Bookmark: _be_motion _bg_et up
    ("a" org-agenda-list)
    ("s" org-agenda)
    ("bo" counsel-bookmark)
-   ("be" (lambda () (interactive) (bookmark-jump "emotion")))
-   ("bg" (lambda () (interactive) (bookmark-jump "get up")))
+   ("be" (xr/bookmark "emotion"))
+   ("bg" (xr/bookmark "get_up"))
    ("xc" xr/convert-chinese-quotations)
    ("xd" xr/delete-current-buffer)
    ("xf" xr/fill-subtree)
