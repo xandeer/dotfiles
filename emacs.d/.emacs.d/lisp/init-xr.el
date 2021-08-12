@@ -139,5 +139,12 @@ If point was already at that position, move point to beginning of line."
   (goto-char (point-max))
   (newline))
 
+(defun xr/bookmark (name)
+  "Goto bookmark with NAME, or update it."
+  (interactive)
+  (if (s-contains? name (buffer-name))
+      (bookmark-set name)
+    (bookmark-jump name)))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here

@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-
 (leaf which-key
   :straight t
   :custom
@@ -56,12 +55,6 @@
           newline-and-indent))
   (keyfreq-mode 1)
   (keyfreq-autosave-mode 1)
-  :config
-  (defun xr/bookmark (name)
-    (interactive)
-    (if (s-contains? name (buffer-file-name))
-        (bookmark-set name)
-      (bookmark-jump name)))
   :bind
   ("H-j" . hydra-fv/body)
   :hydra
