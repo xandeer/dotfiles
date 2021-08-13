@@ -13,7 +13,6 @@
  indent-tabs-mode      nil
  make-backup-files     nil
  ;; require-final-newline nil
- bookmark-default-file (no-littering-expand-var-file-name "bookmarks.el")
  save-interprogram-paste-before-kill t
  set-mark-command-repeat-pop    t
  tab-always-indent              t
@@ -29,6 +28,11 @@
   (delete-selection-mode)
   (which-function-mode))
 (add-hook #'after-init-hook #'xr/enable-basic-modes)
+
+(leaf bookmark
+  :require t
+  :custom (bookmark-default-file . `,(no-littering-expand-var-file-name "bookmarks.el"))
+  :hook (after-init-hook . bookmark-maybe-load-default-file))
 
 (leaf all-the-icons
   :straight t
