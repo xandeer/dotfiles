@@ -13,7 +13,7 @@
   time.timeZone = "Asia/Shanghai";
 
   environment.systemPackages = with pkgs; [
-    cmake
+    # cmake
     gitAndTools.diff-so-fancy
     gnumake
     mr
