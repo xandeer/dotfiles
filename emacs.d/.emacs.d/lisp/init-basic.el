@@ -3,20 +3,20 @@
 ;;; Code:
 
 (setq-default
- visual-fill-column-width       80
- fill-column 76
- word-wrap   t
- tab-width   2
- standard-indent  2
- tooltip-delay    1.5
- case-fold-search      t
- indent-tabs-mode      nil
- make-backup-files     nil
+ tab-width                           2
+ word-wrap                           t
+ fill-column                         76
+ tooltip-delay                       1.5
+ truncate-lines                      nil
+ standard-indent                     2
+ case-fold-search                    t
+ indent-tabs-mode                    nil
+ create-lockfiles                    nil
+ make-backup-files                   nil
+ visual-fill-column-width            80
+ set-mark-command-repeat-pop         t
  ;; require-final-newline nil
- save-interprogram-paste-before-kill t
- set-mark-command-repeat-pop    t
- tab-always-indent              t
- truncate-lines                 nil)
+ save-interprogram-paste-before-kill t)
 
 (setq enable-recursive-minibuffers t)
 (fset 'yes-or-no-p 'y-or-n-p)

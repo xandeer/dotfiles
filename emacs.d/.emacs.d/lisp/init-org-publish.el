@@ -22,7 +22,7 @@
                                               (directory-files org-directory 'full (rx ".org" eos))))
   (org-id-link-to-org-use-id           . 'create-if-interactive-and-no-custom-id)
   (org-attach-id-dir                   . `,(expand-file-name "attach/" org-directory))
-  (org-publish-timestamp-directory     . `,(no-littering-expand-var-file-name "org/timestamps/"))
+  (org-publish-timestamp-directory     . `,(expand-file-name ".timestamps/" xr/publish-pub-dir))
   (org-publish-project-alist
    . `(("xandeer-org"
         :base-directory ,org-directory
