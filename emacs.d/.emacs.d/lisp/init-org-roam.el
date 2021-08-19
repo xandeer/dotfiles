@@ -6,8 +6,9 @@
   :straight t
   :after org
   :hook
-  (after-init-hook . org-roam-mode)
-  (org-mode-hook   . xr/enable-valign-when-valign)
+  (after-init-hook  . org-roam-mode)
+  (org-mode-hook    . xr/enable-valign-when-valign)
+  (before-save-hook . xr/roam-update-modified-date)
   :bind
   ("C-c x r" . org-roam-random-note)
   ("C-c r"   . org-roam-capture)
@@ -26,12 +27,12 @@
   (org-roam-capture-templates
    . '(("d" "default" plain #'org-roam-capture--get-point "%?"
         :file-name "%<%Y%m%d%H%M%S>-${slug}"
-        :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
+        :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
         :unnarrowed t)))
   (org-roam-capture-immediate-template
    . '("d" "default" plain #'org-roam-capture--get-point "%?"
        :file-name "%<%Y%m%d%H%M%S>-${slug}"
-       :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
+       :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
        :immediate-finish t
        :unnarrowed t))
   (org-roam-dailies-capture-templates
@@ -55,7 +56,13 @@
 
   (defun xr/roam-buffer-p ()
     "Whether the current is in roam directory."
-    (and (buffer-file-name) (s-contains? (expand-file-name org-roam-directory) (buffer-file-name))))
+    (and (buffer-file-name)
+         (s-ends-with? ".org" (buffer-file-name))
+         (s-contains? (expand-file-name org-roam-directory) (buffer-file-name))))
+
+  (defun xr/roam-update-modified-date ()
+    (when (xr/roam-buffer-p)
+      (org-roam--set-global-prop "DATE" (format-time-string "<%Y-%m-%d %a %R>"))))
 
   ;; Override the original, duplicate tags after title to make search easier.
   (defun org-roam--get-title-path-completions ()
