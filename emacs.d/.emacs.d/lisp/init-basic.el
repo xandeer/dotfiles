@@ -30,8 +30,9 @@
 (add-hook #'after-init-hook #'xr/enable-basic-modes)
 
 (leaf bookmark
+  :after org
   :require t
-  :custom (bookmark-default-file . `,(no-littering-expand-var-file-name "bookmarks.el"))
+  :custom (bookmark-default-file . `,(expand-file-name "etc/bookmarks.el" org-directory))
   :hook (after-init-hook . bookmark-maybe-load-default-file))
 
 (leaf all-the-icons

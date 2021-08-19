@@ -43,6 +43,11 @@
 
 (leaf keyfreq
   :straight t
+  :require t
+  :after org
+  :custom
+  (keyfreq-file      . `,(expand-file-name "etc/keyfreq.el" org-directory))
+  (keyfreq-file-lock . `,(expand-file-name "etc/keyfreq.el.lock" org-directory))
   :config
   (setq keyfreq-excluded-commands
         '(self-insert-command
