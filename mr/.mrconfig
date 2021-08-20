@@ -3,15 +3,15 @@ jobs = 8
 
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
-commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
-commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
-commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/xandeer.github.io]
 checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
@@ -20,7 +20,7 @@ commit = echo "skip github.io"
 
 [.password-store]
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
-commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/others/zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
