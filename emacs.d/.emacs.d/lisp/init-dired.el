@@ -6,41 +6,47 @@
   :bind
   ("H-k" . hydra-dired/body)
   (:dired-mode-map
-   ("C-c C-p" . wdired-change-to-wdired-mode))
+   ("* n" . dired-next-marked-file)
+   ("* p" . dired-prev-marked-file))
   :custom
-  (dired-dwim-target         . t)
-  (dired-recursive-deletes   . 'top)
-  `(insert-directory-program . ,(or (executable-find "gls")
-                                    (executable-find "ls")))
+  (insert-directory-program      . `,(executable-find "ls"))
+  (dired-listing-switches        . "-alh")
+  (dired-dwim-target             . t)
+  (delete-by-moving-to-trash     . t)
+  (dired-recursive-deletes       . 'always)
+  (dired-recursive-copies        . 'always)
+  (dired-create-destination-dirs . 'always)
   :hydra
   (hydra-dired
    (:hint nil :exit t)
    "
     _d_ownloads    _t_elega documents    _s_creenshot
-    _w_ork temp    _e_macs.d
+    _w_ork temp    _n_otes               _e_macs.d
 "
    ("d" (lambda () (interactive) (dired "~/Downloads")))
    ("e" (lambda () (interactive) (dired "~/.emacs.d")))
    ("t" (lambda () (interactive) (dired "~/Downloads/telega/documents")))
    ("s" (lambda () (interactive) (dired "~/temp/screenshot")))
    ("w" (lambda () (interactive) (dired "~/temp/donut")))
+   ("n" (lambda () (interactive) (dired org-directory)))
    ))
 
 (leaf dired-hacks
   :straight t)
 
+(leaf dired-collapse
+  :hook (dired-mode-hook . dired-collapse-mode))
+
 (leaf dired-filter
-  :tag "files"
+  :hook (dired-mode-hook . dired-filter-group-mode)
   :bind
   (:dired-mode-map
    ("/" . dired-filter-map))
   (:dired-filter-map
    ("p" . dired-filter-pop-all)
    ("/" . dired-filter-mark-map))
-  :hook (dired-mode-hook
-         (dired-mode-hook . dired-filter-group-mode))
   :custom
-  (dired-filter-revert . 'never)
+  (dired-filter-revert . 'always)
   (dired-filter-group-saved-groups
    . '(("default"
         ("Git"
@@ -64,16 +70,15 @@
          (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
 
 (leaf dired-rainbow
-  :tag "files"
-  :commands dired
-  :defer-config
+  :require t
+  :config
   (dired-rainbow-define html "#eb5286"
                         ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
   (dired-rainbow-define xml "#f2d024"
                         ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
   (dired-rainbow-define document "#9561e2"
                         ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-  (dired-rainbow-define markdown "#ffed4a"
+  (dired-rainbow-define markdown "#8aadff"
                         ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
   (dired-rainbow-define database "#6574cd"
                         ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
@@ -107,15 +112,10 @@
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 (leaf dired-narrow
-  :tag "files"
   :bind ((:dired-narrow-map
           ("<down>"  . dired-narrow-next-file)
           ("<up>"    . dired-narrow-previous-file)
           ("<right>" . dired-narrow-enter-directory))))
-
-(leaf dired-collapse
-  :tag "files"
-  :hook dired-mode-hook)
 
 (provide 'init-dired)
 ;;; init-dired.el ends here
