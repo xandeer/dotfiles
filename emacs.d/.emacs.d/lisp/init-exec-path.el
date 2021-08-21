@@ -4,10 +4,10 @@
 
 (leaf exec-path-from-shell
   :straight t
+  :init
+  (exec-path-from-shell-initialize)
   :custom
-  (exec-path-from-shell-check-startup-files . nil)
-  :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-check-startup-files . nil))
 
 (provide 'init-exec-path)
 ;;; init-exec-path.el ends here
