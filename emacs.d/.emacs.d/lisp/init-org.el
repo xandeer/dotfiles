@@ -53,6 +53,8 @@
   (org-list-allow-alphabetical      . t)
   (org-edit-src-content-indentation . 0)
   (org-catch-invisible-edits        . 'error)
+  ;; 代码区域禁用第一层缩进 https://emacs.stackexchange.com/a/18892/16450
+  (org-src-preserve-indentation     . t)
   (org-startup-with-inline-images   . t)
   (org-cycle-separator-lines        . 0)
   (org-blank-before-new-entry
@@ -126,6 +128,7 @@
        ("o" . org-open-at-point)))
   :defer-config
   (add-to-list 'org-babel-load-languages '(shell      . t))
+  (add-to-list 'org-babel-load-languages '(clojure    . t))
   (add-to-list 'org-babel-load-languages '(plantuml   . t))
   (add-to-list 'org-babel-load-languages '(restclient . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
