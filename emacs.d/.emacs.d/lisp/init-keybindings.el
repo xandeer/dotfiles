@@ -87,7 +87,7 @@ Bookmark: _be_motion _bg_et up
    ("xj" xr/insert-journal-in-year)
    ("xm" xr/migrate-journal)
    ("d" (lambda () (interactive) (shell-command (concat "open -a " "\"/Applications/Day One.app\""))))
-   ("q" nil)))
+   ;; ("q" nil)))
 
 (provide 'init-keybindings)
 ;;; init-keybindings.el ends here
