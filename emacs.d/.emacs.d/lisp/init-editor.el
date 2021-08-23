@@ -69,7 +69,7 @@
 (leaf page-break-lines
   :straight t
   :hook (after-init-hook . global-page-break-lines-mode)
-  :custom (page-break-lines-max-width . 96)
+  :custom (page-break-lines-max-width . 80)
   :defer-config
   (when (fboundp 'diminish)
     (diminish 'page-break-lines-mode)))
