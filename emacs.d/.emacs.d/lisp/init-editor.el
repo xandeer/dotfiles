@@ -13,6 +13,7 @@
   (after-init-hook . global-hungry-delete-mode))
 
 (leaf ansi-color
+  :disabled t
   :straight t
   :commands colourise-compilation-buffer
   :hook (compilation-filter-hook . colourise-compilation-buffer)
@@ -59,18 +60,12 @@
   :bind
   ("C-;" . er/expand-region))
 
-(leaf explain-pause-mode
-  :straight t)
-
-(leaf files
-  :tag "builtin" "files"
-  :custom (find-file-visit-truename . t))
-
 (leaf unfill
   :straight t
   :bind
   ("M-q" . unfill-toggle))
 
+
 (leaf visual-fill-column
   :straight t
   :commands maybe-adjust-visual-fill-column
@@ -83,16 +78,29 @@
         (add-hook 'after-setting-font-hook 'visual-fill-column--adjust-window nil t)
       (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
 
+(leaf page-break-lines
+  :straight t
+  :hook (after-init-hook . global-page-break-lines-mode)
+  :custom (page-break-lines-max-width . 96)
+  :defer-config
+  (when (fboundp 'diminish)
+    (diminish 'page-break-lines-mode)))
+
+(leaf hl-line
+  :hook (after-init-hook . global-hl-line-mode))
+
+
 (leaf color-identifiers-mode
   :straight t
   :hook prog-mode-hook)
 
-(leaf hl-line
-  :hook (after-init-hook . global-hl-line-mode))
+(leaf indent-tools
+  :straight t
+  :bind ("C-c TAB" . indent-tools-hydra/body))
 
 (leaf highlight-indent-guides
   :straight t
-  :hook (prog-mode-hook-hook text-mode-hook-hook org-mode-hook-hook)
+  :hook prog-mode-hook
   :custom
   (highlight-indent-guides-responsive . nil)
   (highlight-indent-guides-delay      . 0.5))
@@ -121,34 +129,21 @@
   (when (fboundp 'diminish)
     (diminish 'rainbow-identifiers-mode)))
 
+(leaf rainbow-delimiters
+  :straight t
+  :hook prog-mode-hook org-src-mode-hook)
+
 (leaf htmlize
   :straight t
   :custom (htmlize-pre-style . t))
 
-(leaf indent-tools
-  :straight t
-  :bind (("C-c TAB" . indent-tools-hydra/body)))
-
 (leaf mmm-auto
   :custom
-  (mmm-global-mode
-   . 'buffers-with-submode-classes)
-  (mmm-submode-decoration-level
-   . 2))
-
-(leaf page-break-lines
-  :straight t
-  :hook ((after-init-hook . global-page-break-lines-mode))
-  :defer-config
-  (when (fboundp 'diminish)
-    (diminish 'page-break-lines-mode)))
+  (mmm-global-mode . 'buffers-with-submode-classes)
+  (mmm-submode-decoration-level . 2))
 
 (leaf paren
   :hook (after-init-hook . show-paren-mode))
-
-(leaf rainbow-delimiters
-  :straight t
-  :hook prog-mode-hook org-src-mode-hook)
 
 (leaf smartparens
   :straight t

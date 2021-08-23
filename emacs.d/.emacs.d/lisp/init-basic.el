@@ -39,5 +39,11 @@
   :straight t
   :custom (inhibit-compacting-font-caches . t))
 
+(leaf files
+  :custom (find-file-visit-truename . t))
+
+(leaf explain-pause-mode
+  :straight t)
+
 (provide 'init-basic)
 ;;; init-basic.el ends here
