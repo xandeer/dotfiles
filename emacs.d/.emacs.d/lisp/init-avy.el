@@ -10,8 +10,7 @@
   :straight t
   :require t
   :after ivy-prescient
-  :commands pinyinlib-build-regexp-string
-  :init
+  :config
   (setq pinyinlib--simplified-char-table 'pinyinlib--simplified-xiaohe)
   (defun x/pinyin-regexp-helper (str)
     "Construct pinyin regexp for STR."
