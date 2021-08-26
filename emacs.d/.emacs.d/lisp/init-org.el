@@ -84,8 +84,8 @@
        ("@home"     . ?h)
        ("@office"   . ?o)
        (:startgroup)
-       ("rn" . ?N) ; Running at night
-       ("rm" . ?M) ; Running at morning
+       ("NightRunning" . ?N)
+       ("MorningRunning" . ?M)
        (:endgroup)))
   ;; global Effort estimate values
   ;; global STYLE property values for completion
