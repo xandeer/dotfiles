@@ -65,8 +65,7 @@
    ([remap unicode-chars-list-chars] . counsel-unicode-char)
    ([remap yank-pop]                 . counsel-yank-pop))
   ("C-x C-b" . counsel-switch-buffer-other-window)
-  ("C-c b"   . counsel-buffer-or-recentf)
-  ("C-c C-b" . xr/counsel-buffer-or-recentf-other-window)
+  ("C-c b"   . xr/counsel-buffer-or-recentf-other-window)
   ("C-s"     . swiper)
   ("C-c C-r" . ivy-resume)
   ("C-c x s" . xr/search-cwd)
@@ -123,10 +122,7 @@
   (with-eval-after-load 'prescient
     (setq counsel-projectile-sort-files t)))
 
-;; There's a bug after v5.0, so after clone, check to v5.0.
 (leaf ivy-prescient
-  :doc "☄️ Simple but effective sorting and filtering for Emacs."
-  :url "https://github.com/raxod502/prescient.el"
   :straight t prescient
   :hook ivy-mode-hook
   :mode-hook (prescient-persist-mode 1)
