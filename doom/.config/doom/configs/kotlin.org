@@ -1,6 +1,0 @@
-* Kotlin
-
-#+BEGIN_SRC elisp
-(after! kotlin-mode
-  (setq kotlin-tab-width 2))
-#+END_SRC

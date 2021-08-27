@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: kotlin
-# key: kt
-# --
-#+begin_src kotlin
-$0
-#+end_src

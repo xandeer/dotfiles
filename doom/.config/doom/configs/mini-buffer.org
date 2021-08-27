@@ -1,7 +1,0 @@
-* Mini Buffer
-
-#+BEGIN_SRC elisp
-(define-key! :keymaps +default-minibuffer-maps
-  "C-j"  #'scroll-up-command
-  "C-k"  #'scroll-down-command)
-#+END_SRC
