@@ -28,10 +28,14 @@ Default use `point-min` or `point-max`."
   "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
   (interactive)
 
-  (xr/replace "‘" "『")
-  (xr/replace "’" "』")
-  (xr/replace "“" "「")
-  (xr/replace "”" "」"))
+  (let ((quotas
+         '(("‘" . "『")
+           ("’" . "』")
+           ("“" . "「")
+           ("”" . "」"))))
+    (mapc (lambda (q)
+            (xr/replace (car q) (cdr q)))
+          quotas)))
 
 ;;;###autoload
 (defun xr/org-heading-beginning-p ()
@@ -65,25 +69,6 @@ Default use `point-min` or `point-max`."
   (interactive)
   (delete-file (buffer-name))
   (kill-current-buffer))
-
-(defun xr/convert-evernote ()
-  "Remove timestamp and replace quotations."
-  (interactive)
-  (org-mark-subtree)
-  (forward-line 1)
-  (xr/replace " \\{4,\\}[0-9]\\{4\\}-.*:[0-9]\\{2\\}" "" (region-beginning) (region-end))
-  (org-mark-subtree)
-  (forward-line 1)
-  (xr/replace "\n\\{1\\}" "\n\n" (region-beginning) (region-end))
-  (org-mark-subtree)
-  (forward-line 1)
-  (xr/replace "\n\\{3,\\}" "\n\n" (region-beginning) (region-end))
-  (org-mark-subtree)
-  (forward-line 1)
-  (reverse-region (region-beginning) (region-end))
-  (xr/convert-chinese-quotations)
-  (mark-whole-buffer)
-  (unfill-toggle))
 
 (defun xr/fill-subtree ()
   "Toggle fill in current subtree."
@@ -151,6 +136,7 @@ If point was already at that position, move point to beginning of line."
     (bookmark-jump name)))
 
 (defun xr/clear-file-links ()
+  "Clear the old file links."
   (interactive)
   (xr/replace "\\[\\[file:.*?\\]\\[\\(.*?\\)\\]\\]" "\\1"))
 

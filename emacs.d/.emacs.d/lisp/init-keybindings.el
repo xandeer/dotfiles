@@ -44,10 +44,6 @@
 (leaf keyfreq
   :straight t
   :require t
-  :after org
-  :custom
-  (keyfreq-file      . `,(expand-file-name "etc/keyfreq.el" org-directory))
-  (keyfreq-file-lock . `,(expand-file-name "etc/keyfreq.el.lock" org-directory))
   :config
   (setq keyfreq-excluded-commands
         '(self-insert-command
@@ -86,7 +82,7 @@ Bookmark: _be_motion _bg_et up
    ("xl" xr/remove-links)
    ("xj" xr/insert-journal-in-year)
    ("xm" xr/migrate-journal)
-   ("d" (lambda () (interactive) (shell-command (concat "open -a " "\"/Applications/Day One.app\""))))
+   ("d" (lambda () (interactive) (shell-command "open -a \"/Applications/Day One.app\"")))
    ("q" nil)))
 
 (provide 'init-keybindings)
