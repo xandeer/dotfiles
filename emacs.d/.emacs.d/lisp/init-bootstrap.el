@@ -47,12 +47,26 @@
   :bind ("H-x" . hydra-x/body)
   :hydra
   (hydra-x
-   (:hint nil)
+   (:hint nil :exit t)
    "
+--------------------------------------------------------------------
 Manage repos: _u_pdate _c_ommit
+Http servers: _d_ownloads _t_emp _s_creenshot _w_ork
+     Browser: _lh_ 192.168.3.ip:port _lo_ 10.0.2.ip:port
+         Adb: _h_ome _o_ffice
+
 Quit: _q_"
    ("u" (lambda () (interactive) (async-shell-command "mr -d ~ update")))
    ("c" (lambda () (interactive) (async-shell-command "mr -d ~ commit")))
+   ("d" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/Downloads")))
+   ("t" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/temp")))
+   ("s" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/temp/screenshot")))
+   ("w" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/temp/donut")))
+   ("h" (lambda () (interactive) (async-shell-command "~/Library/Android/sdk/platform-tools/adb connect 198.168.3.5")))
+   ("o" (lambda (ip) (interactive "sIp: 10.0.2.") (async-shell-command (concat "~/Library/Android/sdk/platform-tools/adb connect 10.0.2." ip))))
+   ("lh" (lambda () (interactive) (let ((ip (read-from-minibuffer "" "http://192.168.3.4")))
+                                      (shell-command (concat "open " ip)))))
+   ("lo" (lambda (ip) (interactive "s10.0.2.") (shell-command (concat "open http://10.0.2." ip))))
    ("q" nil)))
 
 (provide 'init-bootstrap)
