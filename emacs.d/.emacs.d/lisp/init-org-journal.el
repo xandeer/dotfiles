@@ -5,6 +5,8 @@
 (leaf org-journal
   :straight t
   :require t
+  :bind
+  ("H-t" . org-journal-open-current-journal-file)
   :hook
   (org-journal-mode-hook . valign-mode)
   ;; visual line mode will override the org-special-ctrl-a/e
