@@ -43,7 +43,17 @@
 ;; https://github.com/abo-abo/hydra/wiki/
 (leaf hydra
   :straight t
-  :require t)
+  :require t
+  :bind ("H-x" . hydra-x/body)
+  :hydra
+  (hydra-x
+   (:hint nil)
+   "
+Manage repos: _u_pdate _c_ommit
+Quit: _q_"
+   ("u" (lambda () (interactive) (async-shell-command "mr -d ~ update")))
+   ("c" (lambda () (interactive) (async-shell-command "mr -d ~ commit")))
+   ("q" nil)))
 
 (provide 'init-bootstrap)
 ;;; init-bootstrap.el ends here
