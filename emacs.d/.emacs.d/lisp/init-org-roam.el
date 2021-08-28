@@ -5,50 +5,57 @@
 (leaf org-roam
   :straight t
   :after org
+  :init
+  (setq org-roam-v2-ack t)
   :hook
   (after-init-hook  . org-roam-mode)
   (org-mode-hook    . xr/enable-valign-when-valign)
   (before-save-hook . xr/roam-update-modified-date)
   :bind
-  ("C-c x r" . org-roam-random-note)
+  ("C-c x r" . org-roam-node-random)
   ("C-c r"   . org-roam-capture)
-  ("C-c x y" . org-roam-dailies-find-yesterday)
-  ("C-c x f" . org-roam-find-file)
-  ("H-f"     . org-roam-find-file)
+  ("C-c x f" . org-roam-node-find)
+  ("H-f"     . org-roam-node-find)
+  ("H-y"     . org-roam-dailies-goto-yesterday)
   (:org-mode-map
-   ("H-i"     . org-roam-insert)
-   ("C-c x i" . org-roam-insert))
+   ("H-i"     . org-roam-node-insert)
+   ("H-r"     . org-roam-buffer-toggle)
+   ("C-c x i" . org-roam-node-insert))
   (:org-roam-mode-map
-   ("C-c x M-r" . org-roam))
+   ("H-r" . kill-buffer-and-window))
   :custom
-  (org-roam-directory    . org-directory)
-  (org-roam-buffer-width . 0.25)
-  (org-roam-db-location  . `,(no-littering-expand-var-file-name "roam.db"))
+  (org-roam-directory             . org-directory)
+  (org-roam-db-location           . `,(no-littering-expand-var-file-name "roam.db"))
+  (org-roam-dailies-directory     . "journal/")
+  (org-roam-node-display-template . "${title:36} ${tags:20}")
+  ;; (org-roam-node-display-template . "${title:36} ${tags:20} ${backlinkscount:6}")
   (org-roam-capture-templates
-   . '(("d" "default" plain #'org-roam-capture--get-point "%?"
-        :file-name "%<%Y%m%d%H%M%S>-${slug}"
-        :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
+   . '(("d" "default" plain "%?"
+        :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                           "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n")
         :unnarrowed t)))
   (org-roam-capture-immediate-template
-   . '("d" "default" plain #'org-roam-capture--get-point "%?"
-       :file-name "%<%Y%m%d%H%M%S>-${slug}"
-       :head "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n"
+   . '("d" "default" plain "%?"
+       :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                          "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n")
        :immediate-finish t
        :unnarrowed t))
   (org-roam-dailies-capture-templates
-   . `(("d" "daily" plain
-        (function xr/find-journal-location)
+   . '(("d" "daily" plain
         "*** %(format-time-string org-journal-time-format)%?"
         :prepend t
-        :clock-in t
-        :clock-resume t
         :jump-to-captured t
-        :file-name "journal/%<%Y-%m-%d>"
-        :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n")))
+        :target (file+head "%<%Y-%m-%d>.org"
+                           ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n")
+        ;; :file-name "%<%Y-%m-%d>.org"
+        ;; :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n"
+        )))
   :config
-  (defun xr/has-roam-tag (tag &optional file)
-    "Check whether TAG is included in the FILE."
-    (-contains? (org-roam--extract-tags file) tag))
+  (defun xr/has-roam-tag (tag)
+    "Check whether TAG is included in the current file."
+    (s-contains? tag (or (cadr (assoc "FILETAGS"
+                                 (org-collect-keywords '("filetags"))))
+                         "")))
 
   (defun xr/enable-valign-when-valign ()
     (when (xr/has-roam-tag "valign")
@@ -62,34 +69,31 @@
 
   (defun xr/roam-update-modified-date ()
     (when (xr/roam-buffer-p)
-      (org-roam--set-global-prop "DATE" (format-time-string "<%Y-%m-%d %a %R>"))))
+      (org-roam-set-keyword "DATE" (format-time-string "<%Y-%m-%d %a %R>"))))
 
-  ;; Override the original, duplicate tags after title to make search easier.
-  (defun org-roam--get-title-path-completions ()
-    "Return an alist for completion. The car is the displayed title for
-completion, and the cdr is the to the file."
-    (let* ((rows (org-roam-db-query
-                  [:select [files:file titles:title tags:tags files:meta]
-                           :from titles
-                           :left :join tags
-                           :on (= titles:file tags:file)
-                           :left :join files
-                           :on (= titles:file files:file)]))
-           completions)
-      (seq-sort-by (lambda (x)
-                     (plist-get (nth 3 x) :mtime))
-                   #'time-less-p
-                   rows)
-      (dolist (row rows completions)
-        (pcase-let ((`(,file-path ,title ,tags) row))
-          (let ((k (concat
-                    (when tags
-                      (format "(%s) " (s-join org-roam-tag-separator tags)))
-                    title
-                    (when tags
-                      (format " (%s)" (s-join org-roam-tag-separator tags)))))
-                (v (list :path file-path :title title)))
-            (push (cons k v) completions)))))))
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.25)
+                 (window-height . fit-window-to-buffer)))
+
+  (defun xr/refresh-roam-buffer ()
+    (when (eq (org-roam-buffer--visibility) 'visible)
+      (progn
+        (select-window (get-buffer-window org-roam-buffer))
+        (org-roam-buffer-refresh))))
+  :advice
+  (:after org-roam-buffer-toggle xr/refresh-roam-buffer))
 
 (provide 'init-org-roam)
 ;;; init-org-roam.el ends here

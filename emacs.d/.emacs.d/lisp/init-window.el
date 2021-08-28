@@ -84,8 +84,8 @@ Cancel: _q_ cancel
    ("df" delete-frame :exit t)
    ("f" make-frame :exit t)
    ("=" balance-windows)
-   ("r" org-roam-find-file)
-   ("R" org-roam-random-note)
+   ("r" org-roam-node-find)
+   ("R" org-roam-node-random)
    ("b" ivy-switch-buffer)
    ("B" counsel-switch-buffer-other-window)
 
