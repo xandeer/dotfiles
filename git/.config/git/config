@@ -14,3 +14,5 @@ show=diff-so-fancy | less --tabs=1,5 -RFX
 [user]
 email=kkxandeer@gmail.com
 name=Kevin Du
+[http]
+	sslVerify = false

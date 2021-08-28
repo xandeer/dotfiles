@@ -31,7 +31,7 @@
   (org-modules
    . '(ol-docview
        ol-info
-       org-toc
+       ;; org-toc
        org-id
        org-habit
        org-inlinetask
