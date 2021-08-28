@@ -150,5 +150,9 @@ If point was already at that position, move point to beginning of line."
       (bookmark-set name)
     (bookmark-jump name)))
 
+(defun xr/clear-file-links ()
+  (interactive)
+  (xr/replace "\\[\\[file:.*?\\]\\[\\(.*?\\)\\]\\]" "\\1"))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
