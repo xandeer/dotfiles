@@ -140,5 +140,13 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (xr/replace "\\[\\[file:.*?\\]\\[\\(.*?\\)\\]\\]" "\\1"))
 
+;;;###autoload
+(defun xr/kill-other-window-buffer ()
+  "Kill the buffer in other window."
+  (interactive)
+  (other-window 1)
+  (kill-buffer)
+  (other-window 1))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
