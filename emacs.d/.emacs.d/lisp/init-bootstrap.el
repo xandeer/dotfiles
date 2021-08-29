@@ -53,6 +53,7 @@
 Manage repos: _u_pdate _c_ommit
 Http servers: _d_ownloads _t_emp _s_creenshot _w_ork
      Browser: _lh_ 192.168.3.ip:port _lo_ 10.0.2.ip:port
+        Apps: _j_ Day One _e_vernote
          Adb: _h_ome _o_ffice
 
 Quit: _q_"
@@ -67,6 +68,8 @@ Quit: _q_"
    ("lh" (lambda () (interactive) (let ((ip (read-from-minibuffer "" "http://192.168.3.4")))
                                       (shell-command (concat "open " ip)))))
    ("lo" (lambda (ip) (interactive "s10.0.2.") (shell-command (concat "open http://10.0.2." ip))))
+   ("j" (lambda () (interactive) (shell-command "open -a /Applications/Day\\ One.app")))
+   ("e" (lambda () (interactive) (shell-command "open -a /Applications/Evernote.app")))
    ("q" nil)))
 
 (provide 'init-bootstrap)

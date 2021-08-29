@@ -63,15 +63,13 @@
   (hydra-fv
    (:hint nil :exit t)
    "
-     Org: _t_oday
    Agent: _a_gent default _s_elect
       Xr: _xd_elete current buffer _xl_ remove links _xc_convert quotations
           _xf_ill subtree _xj_ insert journal in year _xm_igirage journal
 Bookmark: _be_motion _bg_et up
-  Others: _bo_ookmark _d_ay one
+  Others: _bo_okmark
   Cancel: _q_
 "
-   ("t" org-journal-open-current-journal-file)
    ("a" org-agenda-list)
    ("s" org-agenda)
    ("bo" counsel-bookmark)
@@ -83,7 +81,6 @@ Bookmark: _be_motion _bg_et up
    ("xl" xr/remove-links)
    ("xj" xr/insert-journal-in-year)
    ("xm" xr/migrate-journal)
-   ("d" (lambda () (interactive) (shell-command "open -a \"/Applications/Day One.app\"")))
    ("q" nil)))
 
 (provide 'init-keybindings)
