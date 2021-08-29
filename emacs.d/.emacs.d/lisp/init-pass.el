@@ -2,20 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(pass
-   :host github
-   :repo "NicolasPetton/pass"
-   :tag "2.0"))
-(straight-register-package
- '(helm-pass
-   :host github
-   :repo "emacs-helm/helm-pass"))
-
-(leaf pass
-  :straight pass helm-pass
+(leaf password-store
+  :straight t
+  :require t
+  :custom
+  (epg-pinentry-mode . 'loopback)
   :config
-  (setf epg-pinentry-mode 'loopback))
+  (defun password-store--run-edit (entry)
+    (find-file (password-store--entry-to-file entry))))
 
 (provide 'init-pass)
 ;;; init-pass.el ends here
