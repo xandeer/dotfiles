@@ -2,12 +2,21 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf exec-path-from-shell
-  :straight t
-  :init
-  (exec-path-from-shell-initialize)
-  :custom
-  (exec-path-from-shell-check-startup-files . nil))
+(setenv "PATH" (concat
+                (getenv "PATH")
+                ":/usr/local/bin:/run/current-system/sw/bin:"
+                (expand-file-name "~/bin")))
+(setq exec-path
+      (mapcar
+        (lambda
+          (f)
+          (if f
+              (directory-file-name f)
+            "."))
+        (append
+         (parse-colon-path
+          (getenv "PATH"))
+         (list exec-directory))))
 
 (provide 'init-exec-path)
 ;;; init-exec-path.el ends here
