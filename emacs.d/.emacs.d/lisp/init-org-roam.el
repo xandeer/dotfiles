@@ -10,6 +10,7 @@
   :hook
   (after-init-hook  . org-roam-db-autosync-mode)
   (org-mode-hook    . xr/enable-valign-when-valign)
+  (org-mode-hook    . xr/disable-company-when-nocompany)
   (before-save-hook . xr/roam-update-modified-date)
   :bind
   ("C-c x r" . org-roam-node-random)
@@ -60,6 +61,10 @@
   (defun xr/enable-valign-when-valign ()
     (when (xr/has-roam-tag "valign")
       (valign-mode)))
+
+  (defun xr/disable-company-when-nocompany ()
+    (when (xr/has-roam-tag "nocompany")
+      (company-mode -1)))
 
   (defun xr/roam-buffer-p ()
     "Whether the current is in roam directory."
