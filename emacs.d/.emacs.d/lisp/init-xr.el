@@ -135,10 +135,28 @@ If point was already at that position, move point to beginning of line."
       (bookmark-set name)
     (bookmark-jump name)))
 
+(defun xr/clear-file-link-at-point ()
+  (save-excursion
+    (save-match-data
+      (let* ((link (org-element-context))
+             (type (org-element-property :type link))
+             (path (org-element-property :path link))
+             (desc (and (org-element-property :contents-begin link)
+                        (org-element-property :contents-end link)
+                        (buffer-substring-no-properties
+                         (org-element-property :contents-begin link)
+                         (org-element-property :contents-end link)))))
+        (goto-char (org-element-property :begin link))
+        (when (and (org-in-regexp org-link-any-re 1)
+                   (string-equal type "file"))
+          (replace-match (or desc path)))))))
+
 (defun xr/clear-file-links ()
   "Clear the old file links."
   (interactive)
-  (xr/replace "\\[\\[file:.*?\\]\\[\\(.*?\\)\\]\\]" "\\1"))
+  (org-with-point-at 1
+    (while (re-search-forward org-link-bracket-re nil t)
+      (xr/clear-file-link-at-point))))
 
 ;;;###autoload
 (defun xr/kill-other-window-buffer ()
