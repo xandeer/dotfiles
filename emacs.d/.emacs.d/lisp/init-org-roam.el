@@ -5,6 +5,7 @@
 (leaf org-roam
   :straight t
   :after org
+  :require t
   :init
   (setq org-roam-v2-ack t)
   :hook
@@ -17,6 +18,7 @@
   ("C-c r"   . org-roam-capture)
   ("C-c x f" . org-roam-node-find)
   ("H-f"     . org-roam-node-find)
+  ("H-g"     . xr/roam-node-find-other-window)
   ("H-y"     . org-roam-dailies-goto-yesterday)
   (:org-mode-map
    ("H-i"     . org-roam-node-insert)
@@ -97,6 +99,13 @@
       (progn
         (select-window (get-buffer-window org-roam-buffer))
         (org-roam-buffer-refresh))))
+
+  (defun xr/roam-node-find-other-window ()
+    (interactive)
+    (if (> (count-windows) 1)
+        (other-window 1)
+      (select-window (split-window-right)))
+    (org-roam-node-find))
   :advice
   (:after org-roam-buffer-toggle xr/refresh-roam-buffer))
 

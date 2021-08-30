@@ -30,7 +30,7 @@
     (when window
       (select-window window))
     (if (xr/roam-buffer-p)
-        (org-roam-find-file)
+        (org-roam-node-find)
       (counsel-projectile-find-file)))
 
   (defun xr/split-below-find-file ()
