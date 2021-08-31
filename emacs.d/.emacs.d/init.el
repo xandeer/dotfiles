@@ -66,7 +66,7 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(unless server-mode
+(unless (server-running-p)
   (server-start))
 
 ;; chores

@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+
 (leaf org-roam
   :straight t
   :after org
@@ -30,17 +31,17 @@
   (org-roam-directory             . org-directory)
   (org-roam-db-location           . `,(no-littering-expand-var-file-name "roam.db"))
   (org-roam-dailies-directory     . "journal/")
-  (org-roam-node-display-template . "${title:36} ${tags:20}")
+  (org-roam-node-display-template . "${title:48} ${tags:36}")
   ;; (org-roam-node-display-template . "${title:36} ${tags:20} ${backlinkscount:6}")
   (org-roam-capture-templates
    . '(("d" "default" plain "%?"
         :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                           "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n")
+                           "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
         :unnarrowed t)))
   (org-roam-capture-immediate-template
    . '("d" "default" plain "%?"
        :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                          "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+ROAM_TAGS: fleeting\n")
+                          "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
        :immediate-finish t
        :unnarrowed t))
   (org-roam-dailies-capture-templates

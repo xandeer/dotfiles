@@ -38,7 +38,7 @@
        org-protocol
        ol-w3m))
   (org-directory                    . "~/projects/personal/notes/")
-  (org-startup-folded               . 'content)
+  (org-startup-folded               . 'nofold)
   (org-archive-location             . "archive/%s_archive::* Archived Tasks")
   (org-clone-delete-id              . t)
   (org-id-locations-file-relative   . t)

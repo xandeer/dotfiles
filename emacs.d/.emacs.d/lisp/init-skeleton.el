@@ -73,6 +73,11 @@
     "\n(provide '" (string-remove-suffix ".el" (buffer-name)) ")\n"
     ";;; " (buffer-name) " ends here")
 
+  (define-skeleton xr/el-lambdai
+    "Insert an interactive lambda."
+    ""
+    "(lambda () (interactive) (" - "))")
+
   :bind*
   ("C-c M-x" . xr/hydra-skeleton/body)
   :hydra
@@ -100,12 +105,12 @@
   (define-abbrev org-mode-abbrev-table "eq" "#+end_quote")
   (define-abbrev org-mode-abbrev-table "bv" "#+begin_verse")
   (define-abbrev org-mode-abbrev-table "ev" "#+end_verse")
-  (define-abbrev org-mode-abbrev-table "ssrc" "" 'xr/org-block-src)
+  (define-abbrev org-mode-abbrev-table "src" "" 'xr/org-block-src)
   (define-abbrev org-mode-abbrev-table "dd" "" 'xr/text-day)
   (define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)
   (define-abbrev org-mode-abbrev-table "sh" "" 'xr/org-block-sh)
   (define-abbrev org-mode-abbrev-table "kt" "" 'xr/org-block-kt)
-  (define-abbrev emacs-lisp-mode-abbrev-table "lambdai" "(lambda () (interactive) ())")
+  (define-abbrev emacs-lisp-mode-abbrev-table "lambdai" "" 'xr/el-lambdai)
   (define-abbrev emacs-lisp-mode-abbrev-table "elh" "" 'xr/el-template))
 
 (provide 'init-skeleton)
