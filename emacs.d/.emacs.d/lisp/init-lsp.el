@@ -20,9 +20,7 @@
 (leaf lsp-mode
   :straight t
   :require t
-  :hook typescript-mode-hook
-  :hook
-  (typescript-mode-hook . lsp)
+  :hook (typescript-mode-hook . lsp)
   :bind
   (:lsp-mode-map
    ("C-x C-r" . lsp-rename)))
@@ -35,11 +33,11 @@
   (:lsp-ui-mode-map
    ("M-." . lsp-ui-peek-find-definitions)
    ("M-," . lsp-ui-peek-find-references))
-  :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-peek-enable t)
-  (setq lsp-ui-peek-always-show t))
+  :custom
+  ((lsp-ui-sideline-enable
+    lsp-ui-doc-enable
+    lsp-ui-peek-enable
+    lsp-ui-peek-always-show) . t))
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
