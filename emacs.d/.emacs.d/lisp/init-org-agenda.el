@@ -26,7 +26,8 @@
     (counsel-find-file (expand-file-name "gtd" org-directory)))
   :config
   (setq org-agenda-files `(,(expand-file-name "gtd/" org-directory)
-                           ,(expand-file-name "journal/" org-directory)))
+                           ;; ,(expand-file-name "journal/" org-directory)
+                           ))
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELED(c@/!)" "PHONE" "MEETING")))
   (setq org-todo-state-tags-triggers
