@@ -5,12 +5,11 @@
 
 (leaf org-roam
   :straight t
-  :after org
   :require t
   :init
   (setq org-roam-v2-ack t)
   :hook
-  (after-init-hook  . org-roam-db-autosync-mode)
+  ;; (after-init-hook  . org-roam-db-autosync-mode)
   (org-mode-hook    . xr/enable-valign-when-valign)
   (org-mode-hook    . xr/disable-company-when-nocompany)
   (before-save-hook . xr/roam-update-modified-date)
