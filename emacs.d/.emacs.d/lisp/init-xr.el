@@ -122,7 +122,7 @@ If point was already at that position, move point to beginning of line."
   (let ((today (xr/journal-date year)))
     (if (= year 21) (search-forward (format-time-string "* %B %d" today))
       (goto-char (point-max)))
-    (insert (format-time-string "\n** %Y" today))
+    (insert (format-time-string "** %Y" today))
     (org-set-tags (concat (format-time-string ":%a:" today)
                           (when (= year 21) "@home:"))))
   (end-of-line)
