@@ -57,8 +57,11 @@ Http servers: _d_ownloads _t_emp _s_creenshot _w_ork
          Adb: _h_ome _o_ffice
 
 Quit: _q_"
-   ("u" (lambda () (interactive) (async-shell-command "mr -d ~ update")))
-   ("c" (lambda () (interactive) (async-shell-command "mr -d ~ commit") (bookmark-maybe-load-default-file)))
+   ("u" (lambda ()
+          (interactive)
+          (async-shell-command "mr -d ~ update")
+          (bookmark-maybe-load-default-file)))
+   ("c" (lambda () (interactive) (async-shell-command "mr -d ~ commit")))
    ("d" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/Downloads")))
    ("t" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/temp")))
    ("s" (lambda () (interactive) (async-shell-command "~/bin/hs -d ~/temp/screenshot")))
