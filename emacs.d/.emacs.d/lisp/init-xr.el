@@ -120,7 +120,9 @@ If point was already at that position, move point to beginning of line."
                    (t 17)))
   (goto-char (point-min))
   (let ((today (xr/journal-date year)))
-    (if (= year 21) (search-forward (format-time-string "* %B %d" today))
+    (if (= year 21) (progn
+                      (search-forward (format-time-string "* %B %d" today))
+                      (newline))
       (goto-char (point-max)))
     (insert (format-time-string "** %Y" today))
     (org-set-tags (concat (format-time-string ":%a:" today)
