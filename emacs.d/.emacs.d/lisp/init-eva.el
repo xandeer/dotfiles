@@ -17,8 +17,6 @@
   (setq eva-idle-log-path         (xr/expand-note "eva/idle.tsv"))
   (setq eva-buffer-focus-log-path (xr/expand-note "eva/buffer-focus.tsv"))
   (setq eva-buffer-info-path      (xr/expand-note "eva/buffer-info.tsv"))
-  ;; (setq eva-main-ledger-path      "~/l.ledger")
-  (setq eva-main-datetree-path    (xr/expand-note "eva/diary.tsv"))
   (setq ess-ask-for-ess-directory nil)
   :config
   (require 'eva-builtin)
@@ -35,12 +33,23 @@
           :min-hours-wait 5
           :lookup-posted-time t)
 
-         (eva-item-create :fn #'eva-present-org-agenda)
-
          (eva-item-create
           :fn #'eva-query-mood
           :dataset (xr/expand-note "eva/mood.tsv")
           :min-hours-wait 1)))
+
+  (defun my-custom-session (&optional just-idled)
+    (eva-query-mood)
+    (if (eva-ynp "Shall I remind you of your life goals? Don't be shy.")
+        ;; (view-file "/home/kept/Journal/gtd.org")
+      (org-agenda-list))
+    ;; (and (>= 1 (eva-query-mood))
+         ;; (doctor))
+    ;; (eva-plot-weight)
+    (if (eva-ynp "Shall I come back in an hour?")
+        (run-with-timer 3600 nil #'my-custom-session)))
+  ;; (my-custom-session)
+  (run-with-timer 3 3600 #'eva-query-mood)
   (eva-mode))
 
 (provide 'init-eva)
