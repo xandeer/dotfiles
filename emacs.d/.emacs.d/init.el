@@ -48,6 +48,7 @@
 (require 'init-dictionary)
 (require 'init-dired)
 (require 'init-engine-mode)
+(require 'init-eva)
 (require 'init-flycheck)
 (require 'init-folding)
 (require 'init-imenu-list)

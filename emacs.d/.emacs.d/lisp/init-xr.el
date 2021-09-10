@@ -168,5 +168,9 @@ If point was already at that position, move point to beginning of line."
   (kill-buffer)
   (other-window 1))
 
+(defun xr/expand-note (path)
+  "Expand PATH in `org-directory`."
+  (expand-file-name path org-directory))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here
