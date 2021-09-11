@@ -10,7 +10,14 @@
  '(english-teacher :host github
                    :repo "loyalpartner/english-teacher.el"))
 
+(leaf osx-dictionary
+  :straight t
+  :bind
+  ("C-c x l" . osx-dictionary-search-word-at-point)
+  ("C-c x k" . osx-dictionary-search-input))
+
 (leaf sdcv
+  :disabled t
   :straight t
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
