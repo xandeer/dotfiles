@@ -49,8 +49,12 @@
     (if (eva-ynp "Shall I come back in an hour?")
         (run-with-timer 3600 nil #'my-custom-session)))
   ;; (my-custom-session)
-  (run-with-timer 3 3600 #'eva-query-mood)
-  (eva-mode))
+  (eva-mode)
+
+  (defun xr/query-mood ()
+    (eva-query-mood)
+    (run-with-timer 3600 nil #'xr/query-mood))
+  (xr/query-mood))
 
 (provide 'init-eva)
 ;;; init-eva.el ends here
