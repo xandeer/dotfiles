@@ -4,13 +4,12 @@
 
 (straight-register-package
  '(eva
-   :host github
+   :host egithub
    :repo "meedstrom/eva"
    :branch "master"
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
 (leaf eva
-  :after org-journal
   :straight t
   :init
   (setq eva-cache-dir-path        (xr/expand-note "eva"))
@@ -37,24 +36,24 @@
           :fn #'eva-query-mood
           :dataset (xr/expand-note "eva/mood.tsv")
           :min-hours-wait 1)))
-
-  (defun my-custom-session (&optional just-idled)
-    (eva-query-mood)
-    (if (eva-ynp "Shall I remind you of your life goals? Don't be shy.")
-        ;; (view-file "/home/kept/Journal/gtd.org")
-      (org-agenda-list))
-    ;; (and (>= 1 (eva-query-mood))
-         ;; (doctor))
-    ;; (eva-plot-weight)
-    (if (eva-ynp "Shall I come back in an hour?")
-        (run-with-timer 3600 nil #'my-custom-session)))
-  ;; (my-custom-session)
   (eva-mode)
 
-  (defun xr/query-mood ()
-    (eva-query-mood)
-    (run-with-timer 3600 nil #'xr/query-mood))
-  (xr/query-mood))
+  (defvar xr/query-mood-timer nil)
+
+  (defun xr/enable-query-mood ()
+    (interactive)
+    (setq xr/query-mood-timer
+          (run-with-timer 3 3600
+                          (lambda ()
+                            (when (y-or-n-p "Shall I query mood? ")
+                              (eva-query-mood))))))
+
+  (defun xr/disable-query-mood ()
+    (interactive)
+    (when (timerp xr/query-mood-timer)
+      (cancel-timer xr/query-mood-timer)))
+
+  (xr/enable-query-mood))
 
 (provide 'init-eva)
 ;;; init-eva.el ends here

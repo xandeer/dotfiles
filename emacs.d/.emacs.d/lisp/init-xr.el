@@ -172,5 +172,27 @@ If point was already at that position, move point to beginning of line."
   "Expand PATH in `org-directory`."
   (expand-file-name path org-directory))
 
+(defvar xr/push-notes-timer nil)
+
+(defun xr/enable-push-notes ()
+  "Enable push notes to github automatically."
+  (interactive)
+  (setq xr/push-notes-timer
+        (run-with-timer
+         5 3600 (lambda ()
+                  (when (y-or-n-p "Push notes to github? ")
+                    (async-shell-command
+                     (concat "cd " org-directory
+                             "; git add --all && git commit -m 'emacs timer: "
+                             (format-time-string "[%F %a %T]'")
+                             "; git push")))))))
+(xr/enable-push-notes)
+
+(defun xr/disable-push-notes ()
+  "Disable push notes to github automatically."
+  (interactive)
+  (when (timerp xr/push-notes-timer)
+    (cancel-timer xr/push-notes-timer)))
+
 (provide 'init-xr)
 ;;; init-xr.el ends here

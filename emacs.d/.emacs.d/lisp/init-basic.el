@@ -19,6 +19,7 @@
  save-interprogram-paste-before-kill t)
 
 (setq enable-recursive-minibuffers t)
+(setq use-dialog-box nil)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (defun xr/enable-basic-modes ()

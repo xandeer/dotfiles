@@ -60,13 +60,13 @@
    "
 Movement^^    ^Split^       ^Switch^               ^Delete^
 ----------------------------------------------------------------
-_h_ ←       	_H_ ←         _b_uffer               _dw_indow
+_h_ ←       	_H_ ←         _b_uffer               _w_indow
 _j_ ↓         _J_ ↓         _B_uffer other window  _db_uffer
-_k_ ↑         _K_ ↑                                _df_rame
+_k_ ↑         _K_ ↑                                _f_rame
 _l_ →         _L_ →                                _o_nly this
 ----------------------------------------------------------------
-  Roam: _r_oam find		_R_oam random
-
+  Roam: _R_oam find		_r_oam random
+Others: _=_ balance windows
 Cancel: _q_ cancel
 "
    ("h" windmove-left)
@@ -79,13 +79,12 @@ Cancel: _q_ cancel
    ("L" xr/split-right-find-file)
 
    ("o" delete-other-windows :exit t)
-   ("dw" delete-window)
+   ("w" delete-window)
    ("db" kill-buffer)
-   ("df" delete-frame :exit t)
-   ("f" make-frame :exit t)
+   ("f" delete-frame :exit t)
    ("=" balance-windows)
-   ("r" org-roam-node-find)
-   ("R" org-roam-node-random)
+   ("R" org-roam-node-find)
+   ("r" org-roam-node-random)
    ("b" ivy-switch-buffer)
    ("B" counsel-switch-buffer-other-window)
 
