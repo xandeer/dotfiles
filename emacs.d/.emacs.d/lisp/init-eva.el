@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
+(straight-use-package
  '(eva
    :host egithub
    :repo "meedstrom/eva"
@@ -10,7 +10,6 @@
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
 (leaf eva
-  :straight t
   :init
   (setq eva-cache-dir-path        (xr/expand-note "eva"))
   (setq eva-idle-log-path         (xr/expand-note "eva/idle.tsv"))
@@ -36,24 +35,7 @@
           :fn #'eva-query-mood
           :dataset (xr/expand-note "eva/mood.tsv")
           :min-hours-wait 1)))
-  (eva-mode)
-
-  (defvar xr/query-mood-timer nil)
-
-  (defun xr/enable-query-mood ()
-    (interactive)
-    (setq xr/query-mood-timer
-          (run-with-timer 3 3600
-                          (lambda ()
-                            (when (y-or-n-p "Shall I query mood? ")
-                              (eva-query-mood))))))
-
-  (defun xr/disable-query-mood ()
-    (interactive)
-    (when (timerp xr/query-mood-timer)
-      (cancel-timer xr/query-mood-timer)))
-
-  (xr/enable-query-mood))
+  (eva-mode))
 
 (provide 'init-eva)
 ;;; init-eva.el ends here

@@ -23,6 +23,11 @@ Cancel: _q_ cancel
 
    ("q" nil)))
 
+;; Show evaluation result on the right of cursor.
+(leaf eros
+  :straight t
+  :hook after-init-hook)
+
 (leaf elisp-mode
   :init
   (setq-default enable-local-variables :safe))
