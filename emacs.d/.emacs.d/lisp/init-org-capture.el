@@ -69,7 +69,7 @@
   (add-to-list 'org-capture-templates
                '("c" "todo" entry
                  (file "gtd/inbox.org")
-                 "* TODO %?\n%U\n"
+                 "* TODO %?\n%U"
                  :clock-in t
                  :clock-resume t
                  :empty-lines-before 1))

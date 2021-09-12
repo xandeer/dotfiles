@@ -8,5 +8,10 @@
   :config
   (setq company-shell-delete-duplicates t))
 
+(leaf eshell
+  :after org
+  :custom
+  `(eshell-aliases-file . ,(xr/expand-note "etc/eshell.alias")))
+
 (provide 'init-sh)
 ;;; init-sh.el ends here

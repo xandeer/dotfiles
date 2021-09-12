@@ -84,6 +84,8 @@ If point was already at that position, move point to beginning of line."
   "Replace journal's title."
   (interactive)
   (let ((today (xr/journal-date "20")))
+    (xr/replace "^#\\+STARTUP: .*\n" "")
+    (xr/clear-file-links)
     (xr/replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d" today))
     (xr/replace "^\\* .*" (format-time-string "* %B %d\n** %Y" today))
     (search-forward "** 2020")

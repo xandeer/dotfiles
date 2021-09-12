@@ -60,6 +60,7 @@
 (require 'init-pass)
 (require 'init-projectile)
 (require 'init-rime)
+(require 'init-sh)
 (require 'init-skeleton)
 (require 'init-telega)
 
