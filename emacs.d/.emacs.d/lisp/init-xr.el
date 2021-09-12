@@ -37,32 +37,9 @@ Default use `point-min` or `point-max`."
             (xr/replace (car q) (cdr q)))
           quotas)))
 
-;;;###autoload
 (defun xr/org-heading-beginning-p ()
   "Whether the point is at beginning of a heading."
   (and (org-at-heading-p) (= (line-beginning-position) (point))))
-
-(defun xr/remove-links-forward ()
-  "Remove links after current point."
-  (interactive)
-  (xr/remove-links (point) (point-max)))
-
-(defun xr/remove-links-backward ()
-  "Remove links before current point."
-  (interactive)
-  (xr/remove-links (point-min) (point)))
-
-(defun xr/remove-links-in-buffer ()
-  "Remove links in the current buffer."
-  (interactive)
-  (xr/remove-links (point-min) (point-max)))
-
-(defun xr/remove-links (beg end)
-  "Remove links between BEG and END."
-  (interactive "r")
-  (unless beg (setq beg (point-min)))
-  (unless end (setq end (point-max)))
-  (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
 
 (defun xr/delete-current-buffer ()
   "Delete the current buffer."
@@ -97,6 +74,7 @@ If point was already at that position, move point to beginning of line."
     (and (= oldpos (point))
          (beginning-of-line))))
 
+
 (defun xr/journal-date (year)
   "Generate a date on today in YEAR."
   (let ((d (split-string (string-remove-suffix ".org" (buffer-name)) "-")))
@@ -130,6 +108,8 @@ If point was already at that position, move point to beginning of line."
   (end-of-line)
   (newline))
 
+
+
 (defun xr/bookmark (name)
   "Goto bookmark with NAME, or update it."
   (interactive)
@@ -137,6 +117,7 @@ If point was already at that position, move point to beginning of line."
       (bookmark-set name)
     (bookmark-jump name)))
 
+
 (defun xr/clear-file-link-at-point ()
   (save-excursion
     (save-match-data
@@ -160,7 +141,29 @@ If point was already at that position, move point to beginning of line."
     (while (re-search-forward org-link-bracket-re nil t)
       (xr/clear-file-link-at-point))))
 
-;;;###autoload
+(defun xr/remove-links-forward ()
+  "Remove links after current point."
+  (interactive)
+  (xr/remove-links (point) (point-max)))
+
+(defun xr/remove-links-backward ()
+  "Remove links before current point."
+  (interactive)
+  (xr/remove-links (point-min) (point)))
+
+(defun xr/remove-links-in-buffer ()
+  "Remove links in the current buffer."
+  (interactive)
+  (xr/remove-links (point-min) (point-max)))
+
+(defun xr/remove-links (beg end)
+  "Remove links between BEG and END."
+  (interactive "r")
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
+  (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
+
+
 (defun xr/kill-other-window-buffer ()
   "Kill the buffer in other window."
   (interactive)
@@ -172,6 +175,7 @@ If point was already at that position, move point to beginning of line."
   "Expand PATH in `org-directory`."
   (expand-file-name path org-directory))
 
+
 (defvar xr/auto-timer nil)
 
 (defun xr/auto-session ()
@@ -192,6 +196,25 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (when (timerp xr/auto-timer)
     (cancel-timer xr/auto-timer)))
+
+
+(add-hook #'after-init-hook
+          (lambda ()
+            (async-shell-command "~/bin/hs -d ~/Downloads" "*hs-daemon*")))
+
+(defun xr/change-hs-root (path)
+  (interactive)
+  (let ((url-request-method "PUT"))
+    (with-current-buffer
+        (url-retrieve-synchronously
+         (concat "http://localhost"
+                 (expand-file-name path)))
+      (buffer-string))))
+
+(defun xr/change-hs-on-dired ()
+  (interactive)
+  (xr/change-hs-root dired-directory))
+
 
 (provide 'init-xr)
 ;;; init-xr.el ends here
