@@ -214,6 +214,10 @@ If point was already at that position, move point to beginning of line."
 (defun xr/change-hs-on-dired ()
   (interactive)
   (xr/change-hs-root dired-directory))
+
+(defun xr/ifconfig ()
+  (interactive)
+  (message (format-network-address (car (network-interface-info "en0")) t)))
 
 
 (provide 'init-xr)
