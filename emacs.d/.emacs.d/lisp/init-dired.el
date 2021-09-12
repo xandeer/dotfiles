@@ -7,7 +7,8 @@
   ("H-k" . hydra-dired/body)
   (:dired-mode-map
    ("* n" . dired-next-marked-file)
-   ("* p" . dired-prev-marked-file))
+   ("* p" . dired-prev-marked-file)
+   ("@"   . xr/change-hs-on-dired))
   :custom
   (insert-directory-program      . `,(executable-find "ls"))
   (dired-listing-switches        . "-alh")
@@ -22,14 +23,24 @@
    "
     _d_ownloads    _t_elega documents    _s_creenshot
     _w_ork temp    _n_otes               _e_macs.d
+    _h_ome
 "
-   ("d" (lambda () (interactive) (dired "~/Downloads")))
-   ("e" (lambda () (interactive) (dired "~/.emacs.d")))
-   ("t" (lambda () (interactive) (dired "~/Downloads/telega/documents")))
-   ("s" (lambda () (interactive) (dired "~/temp/screenshot")))
-   ("w" (lambda () (interactive) (dired "~/temp/donut")))
-   ("n" (lambda () (interactive) (dired org-directory)))
+   ("h" (dired "~"))
+   ("d" (dired "~/Downloads"))
+   ("e" (dired "~/.emacs.d"))
+   ("t" (dired "~/Downloads/telega/documents"))
+   ("s" (dired "~/temp/screenshot"))
+   ("w" (dired "~/temp/donut"))
+   ("n" (dired org-directory))
    ))
+
+(leaf dired-x
+  :require t
+  :custom
+  (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
+  :config
+  (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
+  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
 
 (leaf dired-hacks
   :straight t)
@@ -40,11 +51,8 @@
 (leaf dired-filter
   :hook (dired-mode-hook . dired-filter-group-mode)
   :bind
-  (:dired-mode-map
-   ("/" . dired-filter-map))
   (:dired-filter-map
-   ("p" . dired-filter-pop-all)
-   ("/" . dired-filter-mark-map))
+   ("p" . dired-filter-pop-all))
   :custom
   (dired-filter-revert . 'always)
   (dired-filter-group-saved-groups
@@ -112,10 +120,11 @@
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 (leaf dired-narrow
-  :bind ((:dired-narrow-map
-          ("<down>"  . dired-narrow-next-file)
-          ("<up>"    . dired-narrow-previous-file)
-          ("<right>" . dired-narrow-enter-directory))))
+  :bind
+  (:dired-narrow-map
+   ("<down>"  . dired-narrow-next-file)
+   ("<up>"    . dired-narrow-previous-file)
+   ("<right>" . dired-narrow-enter-directory)))
 
 (provide 'init-dired)
 ;;; init-dired.el ends here
