@@ -4,7 +4,7 @@
 
 (straight-use-package
  '(eva
-   :host egithub
+   :host github
    :repo "meedstrom/eva"
    :branch "master"
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
