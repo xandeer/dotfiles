@@ -177,6 +177,9 @@ If point was already at that position, move point to beginning of line."
   "Expand PATH in `org-directory`."
   (expand-file-name path org-directory))
 
+(global-set-key (kbd "H-e") 'xr/kill-other-window-buffer)
+(global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
+
 
 (defvar xr/auto-timer nil)
 
@@ -195,6 +198,7 @@ If point was already at that position, move point to beginning of line."
 (add-hook #'after-init-hook #'xr/auto-session)
 
 (defun xr/disable-auto-session ()
+  "Disalbe auto session."
   (interactive)
   (when (timerp xr/auto-timer)
     (cancel-timer xr/auto-timer)))

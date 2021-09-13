@@ -39,8 +39,7 @@
 
   ("H-z" . undo)
 
-  ("H-n" . make-frame)
-  ("H-e" . xr/kill-other-window-buffer))
+  ("H-n" . make-frame))
 
 (leaf keyfreq
   :straight t
