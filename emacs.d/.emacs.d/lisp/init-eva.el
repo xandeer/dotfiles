@@ -10,12 +10,12 @@
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
 (leaf eva
-  :init
-  (setq eva-cache-dir-path        (xr/expand-note "eva"))
-  (setq eva-idle-log-path         (xr/expand-note "eva/idle.tsv"))
-  (setq eva-buffer-focus-log-path (xr/expand-note "eva/buffer-focus.tsv"))
-  (setq eva-buffer-info-path      (xr/expand-note "eva/buffer-info.tsv"))
-  (setq ess-ask-for-ess-directory nil)
+  :custom
+  `(eva-cache-dir-path        . ,(no-littering-expand-var-file-name "eva"))
+  `(eva-idle-log-path         . ,(no-littering-expand-var-file-name "eva/idle.tsv"))
+  `(eva-buffer-focus-log-path . ,(no-littering-expand-var-file-name "eva/buffer-focus.tsv"))
+  `(eva-buffer-info-path      . ,(no-littering-expand-var-file-name "eva/buffer-info.tsv"))
+  (ess-ask-for-ess-directory . nil)
   :config
   (require 'eva-builtin)
 
