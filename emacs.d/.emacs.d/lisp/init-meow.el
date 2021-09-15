@@ -7,7 +7,7 @@
 ;; (delete-directory (expand-file-name "straight/build/meow" user-emacs-directory) t)
 
 (defun xr/meow-setqs ()
-  (setq meow-cursor-type-insert '(bar . 2))
+  (setq meow-cursor-type-insert '(bar . 3))
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
 
 (defun xr/meow-define-motion-keys ()
@@ -136,7 +136,7 @@
   (setq-default meow-normal-mode nil)
   (setq-default meow-insert-mode t))
 
-;; (advice-add 'meow--global-enable :after 'xr/meow-enable-local-insert)
+(advice-add 'meow--global-enable :after 'xr/meow-enable-local-insert)
 
 (defun xr/meow-setup ()
   "Meow setup."

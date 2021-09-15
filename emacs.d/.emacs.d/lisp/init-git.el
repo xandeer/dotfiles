@@ -27,10 +27,10 @@
   (magit-diff-refine-hunk . t)
   (vc-handled-backends    . nil)
   :bind
-  ("C-x g"      . magit-status)
-  ("C-x M-g"    . magit-dispatch-popup)
-  (:vc-prefix-map
-   ("f"         . vc-git-grep)))
+  ("C-x g"   . magit-status)
+  ("C-x M-g" . magit-dispatch-popup)
+  (:magit-status-mode-map
+   ("K" . magit-discard)))
 
 (leaf git-messenger
   :straight t

@@ -5,7 +5,7 @@
 (leaf org
   :bind
   ("C-c x c" . org-clock-goto)
-  ("C-c x I" . org-clock-in-last)
+  ("C-c x i" . org-clock-in-last)
   ("C-c x o" . org-clock-out)
   :config
   ;; Resume clocking task when emacs is restarted
