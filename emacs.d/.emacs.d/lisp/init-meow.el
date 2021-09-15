@@ -109,7 +109,7 @@
    '("Q" . meow-goto-line)
    '("r" . meow-reverse)
    '("R" . meow-swap-grab)
-   '("s" . meow-block)
+   '("s" . er/expand-region)
    '("t" . meow-till)
    '("T" . meow-till-expand)
    '("u" . meow-undo)
