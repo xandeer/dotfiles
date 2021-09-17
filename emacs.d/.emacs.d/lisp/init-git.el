@@ -25,7 +25,6 @@
   (magit-popup-mode-hook . no-trailing-whitespace)
   :custom
   (magit-diff-refine-hunk . t)
-  (vc-handled-backends    . nil)
   :bind
   ("C-x g"   . magit-status)
   ("C-x M-g" . magit-dispatch-popup)

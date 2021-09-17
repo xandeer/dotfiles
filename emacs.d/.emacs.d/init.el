@@ -19,6 +19,7 @@
 (require 'init-recentf)
 (require 'init-sessions)
 (require 'init-theme)
+(require 'init-modeline)
 
 ;; org-mode
 (require 'init-org)
