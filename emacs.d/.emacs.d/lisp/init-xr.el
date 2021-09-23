@@ -184,8 +184,7 @@ If point was already at that position, move point to beginning of line."
 (defvar xr/auto-timer nil)
 
 (defun xr/auto-session ()
-  (when (y-or-n-p "Shall I query mood? ")
-      (eva-query-mood))
+  (eva-query-mood)
   (when (y-or-n-p "Push notes to github? ")
     (async-shell-command
      (concat "cd " org-directory
