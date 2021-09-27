@@ -10,21 +10,25 @@
   (:ivy-minibuffer-map
    ("TAB" . ivy-alt-done))
   :custom
-  ((ivy-wrap                         . t)
-   (ivy-auto-shrink-minibuffer-alist . '((t . nil)))
-   (ivy-height                       . 15)
-   (ivy-fixed-height-minibuffer      . t)
-   (projectile-completion-system     . 'ivy)
-   ;; disable magic slash on non-match
-   (ivy-magic-slash-non-match-action . nil)
-   ;; don't show recent files in switch-buffer
-   (ivy-use-virtual-buffers          . nil)
-   ;; ...but if that ever changes, show their full path
-   (ivy-virtual-abbreviate           . 'full)
-   ;; don't quit minibuffer on delete-error
-   (ivy-on-del-error-function        . #'ignore)
-   ;; enable ability to select prompt (alternative to `ivy-immediate-done')
-   (ivy-use-selectable-prompt        . t))
+  (ivy-wrap                         . t)
+  (ivy-auto-shrink-minibuffer-alist . '((t . nil)))
+  (ivy-height                       . 15)
+  (ivy-fixed-height-minibuffer      . t)
+  (projectile-completion-system     . 'ivy)
+  ;; disable magic slash on non-match
+  (ivy-magic-slash-non-match-action . nil)
+  ;; don't show recent files in switch-buffer
+  (ivy-use-virtual-buffers          . nil)
+  ;; ...but if that ever changes, show their full path
+  (ivy-virtual-abbreviate           . 'full)
+  ;; don't quit minibuffer on delete-error
+  (ivy-on-del-error-function        . #'ignore)
+  ;; enable ability to select prompt (alternative to `ivy-immediate-done')
+  (ivy-use-selectable-prompt        . t)
+  (ivy-more-chars-alist . '((counsel-rg     . 1)
+                            (counsel-search . 2)
+                            (counsel-grep   . 3)
+                            (t              . 3)))
   :config
   ;; Highlight each ivy candidate including the following newline, so that it
   ;; extends to the right edge of the window
