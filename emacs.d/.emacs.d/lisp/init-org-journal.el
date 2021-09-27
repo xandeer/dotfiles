@@ -3,6 +3,7 @@
 ;;; Code:
 
 (leaf org-journal
+  :disabled t
   :straight t
   :require t
   :bind
