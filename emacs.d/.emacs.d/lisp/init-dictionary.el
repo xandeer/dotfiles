@@ -11,27 +11,41 @@
                    :repo "loyalpartner/english-teacher.el"))
 
 (leaf osx-dictionary
+  :disabled t
   :straight t
   :bind
   ("C-c x l" . osx-dictionary-search-word-at-point)
   ("C-c x k" . osx-dictionary-search-input))
 
-(leaf sdcv
+(leaf fanyi
   :disabled t
+  :straight t
+  :require t
+  :custom
+  (fanyi-providers . '(;; 海词
+                     fanyi-haici-provider
+                     ;; 有道同义词词典
+                     fanyi-youdao-thesaurus-provider
+                     ;; Etymonline
+                     fanyi-etymon-provider
+                     ;; Longman
+                     fanyi-longman-provider)))
+
+(leaf sdcv
   :straight t
   :commands (sdcv-search-pointer
              sdcv-search-pointer+
              sdcv-search-input
              sdcv-search-input+)
   :bind
-  ("C-c x l" . sdcv-search-pointer+)
-  ("C-c x k" . sdcv-search-input+)
+  ("C-c x l" . sdcv-search-pointer)
+  ("C-c x k" . sdcv-search-input)
   :config
   (set-face-attribute 'sdcv-tooltip-face nil
                       :foreground "#E0F0E9")
-  (setq sdcv-say-word-p nil
-        sdcv-tooltip-timeout 10
-        sdcv-dictionary-data-dir  (expand-file-name "~/.stardict")))
+  :custom
+  (sdcv-say-word-p . nil)
+  `(sdcv-dictionary-data-dir . ,(expand-file-name "~/.stardict")))
 
 (leaf english-teacher
   :straight t
