@@ -32,6 +32,7 @@
    ("H-r" . kill-buffer-and-window))
   :custom
   (org-roam-directory             . org-directory)
+  (org-roam-db-gc-threshold       . gc-cons-threshold)
   (org-roam-db-location           . `,(no-littering-expand-var-file-name "roam.db"))
   (org-roam-dailies-directory     . "journal/")
   (org-roam-node-display-template . "${title:48} ${tags:36}")

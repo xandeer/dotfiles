@@ -10,10 +10,10 @@
 
 (leaf eshell-mode
   :after org
-  :hook (eshell-mode-hook . (lambda () (define-key eshell-mode-map [(control ?s)] 'xr/eshell-search-history) (company-mode -1)))
+  :hook (eshell-mode-hook . (lambda () (define-key eshell-mode-map [(control ?s)] #'xr/eshell-search-history) (company-mode -1)))
   :custom
   `(eshell-aliases-file . ,(xr/expand-note "etc/eshell.alias"))
-  :config
+  :init
   (defun xr/eshell-search-history ()
     "Search the eshell command history with ivy."
     (interactive)

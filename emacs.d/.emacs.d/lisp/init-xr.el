@@ -194,7 +194,7 @@ If point was already at that position, move point to beginning of line."
   (setq xr/auto-timer
         (run-with-timer 3600 nil #'xr/auto-session)))
 
-(add-hook #'after-init-hook #'xr/auto-session)
+(run-with-idle-timer 1 nil #'xr/auto-session)
 
 (defun xr/disable-auto-session ()
   "Disalbe auto session."
