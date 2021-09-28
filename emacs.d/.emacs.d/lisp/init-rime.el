@@ -36,15 +36,16 @@
   (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
   (custom-set-variables
    '(rime-disable-predicates
-     '(rime-predicate-evil-mode-p
-       rime-predicate-after-alphabet-char-p
+     '(rime-predicate-after-alphabet-char-p
        rime-predicate-current-uppercase-letter-p
        meow-normal-mode-p
        xr/ace-mode-p
        xr/org-heading-beginning-p
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
-       rime-predicate-prog-in-code-p))))
+       rime-predicate-prog-in-code-p
+       rime-predicate-punctuation-after-space-cc-p
+       rime-predicate-space-after-cc-p))))
 
 (provide 'init-rime)
 ;;; init-rime.el ends here

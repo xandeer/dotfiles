@@ -82,6 +82,13 @@
   (when (file-exists-p local-file)
     (load-file local-file)))
 
+;; after loaded
+(run-with-idle-timer 1 nil
+                     (lambda ()
+                       (eva-mode)
+                       (xr/auto-session)
+                       (org-roam-node-random)))
+
 (provide 'init)
 
 ;; Local Variables:

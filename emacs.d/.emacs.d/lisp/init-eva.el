@@ -13,9 +13,10 @@
   :custom
   `(eva-cache-dir-path        . ,(no-littering-expand-var-file-name "eva"))
   `(eva-idle-log-path         . ,(no-littering-expand-var-file-name "eva/idle.tsv"))
-  `(eva-buffer-focus-log-path . ,(no-littering-expand-var-file-name "eva/buffer-focus.tsv"))
   `(eva-buffer-info-path      . ,(no-littering-expand-var-file-name "eva/buffer-info.tsv"))
-  (ess-ask-for-ess-directory . nil)
+  `(eva-buffer-focus-log-path . ,(no-littering-expand-var-file-name "eva/buffer-focus.tsv"))
+  (ess-ask-for-ess-directory       . nil)
+  (eva-check-org-vars-load-modules . nil)
   :config
   (require 'eva-builtin)
 
@@ -34,8 +35,7 @@
          (eva-item-create
           :fn #'eva-query-mood
           :dataset (xr/expand-note "eva/mood.tsv")
-          :min-hours-wait 1)))
-  (eva-mode))
+          :min-hours-wait 1))))
 
 (provide 'init-eva)
 ;;; init-eva.el ends here
