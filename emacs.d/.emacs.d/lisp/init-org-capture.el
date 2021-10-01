@@ -20,8 +20,11 @@
           (newline))
       (progn
         (beginning-of-buffer)
-        (re-search-forward "^$")
-        (insert (format-time-string "* %Y\n** %B\n")))))
+        (if (search-forward (format-time-string "* %Y") nil t)
+            (insert (format-time-string "\n** %B\n"))
+          (progn
+            (re-search-forward "^$")
+            (insert (format-time-string "\n* %Y\n** %B\n")))))))
 
   (defun xr/find-journal-location ()
     "Open today's journal."
@@ -51,6 +54,7 @@
                  "*** PHONE %T %? :PHONE:\n"
                  :prepend t
                  :clock-in t
+                 :jump-to-captured t
                  :clock-resume t))
 
   (add-to-list 'org-capture-templates
