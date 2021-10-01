@@ -5,6 +5,7 @@
 
 (leaf org-roam
   :straight t
+  :after gcmh
   :require t
   :init
   (setq org-roam-v2-ack t)

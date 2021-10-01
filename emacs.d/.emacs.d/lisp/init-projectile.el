@@ -6,6 +6,7 @@
   :straight t
   :bind
   ([remap find-tag] . projectile-find-tag)
+  ("H-p"     . counsel-projectile-find-file)
   ("C-c p f" . counsel-projectile-find-file)
   ("C-c p p" . projectile-switch-project)
   ("C-c p s" . xr/ivy/project-search)

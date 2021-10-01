@@ -62,8 +62,8 @@ Movement^^    ^Split^       ^Switch^               ^Delete^
 ----------------------------------------------------------------
 _h_ ←       	_H_ ←         _b_uffer               _w_indow
 _j_ ↓         _J_ ↓         _B_uffer other window  _db_uffer
-_k_ ↑         _K_ ↑                                _f_rame
-_l_ →         _L_ →                                _o_nly this
+_k_ ↑         _K_ _s_ ↑                            _f_rame
+_l_ →         _L_ _v_ →                            _o_nly this
 ----------------------------------------------------------------
   Roam: _R_oam find		_r_oam random
 Others: _=_ balance windows
@@ -76,7 +76,9 @@ Cancel: _q_ cancel
    ("H" xr/split-left-find-file)
    ("J" xr/split-below-find-file)
    ("K" xr/split-up-find-file)
+   ("s" xr/split-up-find-file)
    ("L" xr/split-right-find-file)
+   ("v" xr/split-right-find-file)
 
    ("o" delete-other-windows :exit t)
    ("w" delete-window)
