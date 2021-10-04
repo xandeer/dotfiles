@@ -25,6 +25,27 @@
     "Type: "
     "#+end_" str "\n")
 
+  (define-skeleton xr/org-block-verse
+    "Insert an org verse block"
+    ""
+    "#+begin_verse\n"
+    _ - \n
+    "#+end_verse\n")
+
+  (define-skeleton xr/org-block-quote
+    "Insert an org quote block"
+    ""
+    "#+begin_quote\n"
+    _ - \n
+    "#+end_quote\n")
+
+  (define-skeleton xr/org-block-comment
+    "Insert an org comment block"
+    ""
+    "#+begin_comment\n"
+    _ - \n
+    "#+end_comment\n")
+
   (define-skeleton xr/org-block-src
     "Insert an org src block, querying for type."
     "Language: "
@@ -33,7 +54,7 @@
     "#+end_src\n")
 
   (define-skeleton xr/org-block-elisp
-    "Insert a org emacs-lisp block"
+    "Insert an org emacs-lisp block"
     ""
     "#+begin_src emacs-lisp\n"
     _ - \n
@@ -105,6 +126,9 @@
   (define-abbrev org-mode-abbrev-table "eq" "#+end_quote")
   (define-abbrev org-mode-abbrev-table "bv" "#+begin_verse")
   (define-abbrev org-mode-abbrev-table "ev" "#+end_verse")
+  (define-abbrev org-mode-abbrev-table "cc" "" 'xr/org-block-comment)
+  (define-abbrev org-mode-abbrev-table "qq" "" 'xr/org-block-quote)
+  (define-abbrev org-mode-abbrev-table "vv" "" 'xr/org-block-verse)
   (define-abbrev org-mode-abbrev-table "src" "" 'xr/org-block-src)
   (define-abbrev org-mode-abbrev-table "dd" "" 'xr/text-day)
   (define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)

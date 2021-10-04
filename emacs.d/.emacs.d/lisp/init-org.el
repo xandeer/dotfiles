@@ -106,8 +106,8 @@
        ("C" . ignore)
 
        ("Outline Structure Editing")
-       ("a" . org-insert-heading-after-current)
-       ("A" . org-archive-subtree-default-with-confirmation)
+       ("A" . org-insert-heading-after-current)
+       ("a" . org-archive-subtree-default-with-confirmation)
        ("," . org-set-tags-command)
 
        ("Clock Commands")

@@ -88,8 +88,8 @@ determine the exact padding."
    (level1 blue)
    (level2 magenta)
    (level3 violet)
-   (level4 orange)
-   (level5 dark-cyan)
+   (level4 dark-cyan)
+   (level5 orange)
    (level6 dark-blue)
 
    ;; custom categories
