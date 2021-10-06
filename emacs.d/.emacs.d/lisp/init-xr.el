@@ -198,7 +198,7 @@ If point was already at that position, move point to beginning of line."
   "Disalbe auto session."
   (interactive)
   (when (timerp xr/auto-timer)
-    (cancel-timer xr/auto-timer)))
+    (setq xr/auto-timer (cancel-timer xr/auto-timer))))
 
 
 (add-hook #'after-init-hook

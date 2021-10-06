@@ -10,6 +10,8 @@
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
 (leaf eva
+  :after org
+  :require t
   :custom
   `(eva-cache-dir-path        . ,(no-littering-expand-var-file-name "eva"))
   `(eva-idle-log-path         . ,(no-littering-expand-var-file-name "eva/idle.tsv"))
@@ -23,7 +25,7 @@
   (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
   (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
 
-  (setq eva--idle-secs-fn #'org-mac-idle-seconds)
+  ;; (setq eva--idle-secs-fn #'org-mac-idle-seconds)
   (setq eva-items
         (list
          (eva-item-create

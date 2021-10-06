@@ -10,14 +10,13 @@
   :init
   (setq org-roam-v2-ack t)
   :hook
-  ;; (after-init-hook  . org-roam-db-autosync-enable)
+  (after-init-hook  . org-roam-db-autosync-enable)
   (org-mode-hook    . xr/enable-valign-when-valign)
   (org-mode-hook    . xr/disable-company-when-nocompany)
   (before-save-hook . xr/roam-update-modified-date)
   :bind
   ("C-c x r" . org-roam-node-random)
   ("C-c r"   . org-roam-capture)
-  ("C-c x f" . org-roam-node-find)
   ("H-f"     . org-roam-node-find)
   ("H-g"     . xr/roam-node-find-other-window)
   ("H-y"     . org-roam-dailies-goto-yesterday)
@@ -27,8 +26,7 @@
    ("H-i"     . org-roam-node-insert)
    ("H-r"     . org-roam-buffer-toggle)
    ("C-c C-b" . org-roam-dailies-goto-previous-note)
-   ("C-c C-f" . org-roam-dailies-goto-next-note)
-   ("C-c x i" . org-roam-node-insert))
+   ("C-c C-f" . org-roam-dailies-goto-next-note))
   (:org-roam-mode-map
    ("H-r" . kill-buffer-and-window))
   :custom
