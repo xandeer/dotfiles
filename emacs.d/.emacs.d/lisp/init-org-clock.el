@@ -2,7 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf org
+(leaf org-clock
+  :after org
   :bind
   ("C-c x c" . org-clock-goto)
   ("C-c x i" . org-clock-in-last)
@@ -40,6 +41,33 @@
   (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
   (setq bh/organization-task-id "78C5A814-5215-47D0-AC09-6522CBCBA516")
+
+  (defvar xr/clock-timer nil)
+
+  (defun xr/clock-cancel ()
+    (when (timerp xr/clock-timer)
+      (setq xr/clock-timer (cancel-timer xr/clock-timer))))
+
+  (defun xr/clock-out ()
+    (if (y-or-n-p "It's time to take a rest? ")
+        (org-clock-out)
+      (xr/clock-in "3")))
+
+  (defun xr/clock-in (&optional minutes)
+    "Max MINUTES while clock in."
+    (when (s-blank-str? minutes)
+      (setq minutes (read-from-minibuffer "Set a timer to stop(with siri?), default[52], j[45], k[25]: ")))
+    (setq minutes (cond ((s-blank-str? minutes) 52)
+                        ((s-equals? minutes "j") 45)
+                        ((s-equals? minutes "k") 25)
+                        (t (string-to-number minutes))))
+    (xr/clock-cancel)
+    (when (> minutes 0)
+      (setq xr/clock-timer
+            (run-with-timer (* minutes 60) nil #'xr/clock-out))))
+
+  (add-hook 'org-clock-out-hook 'xr/clock-cancel)
+  (add-hook 'org-clock-in-hook 'xr/clock-in)
 
   (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append))
 
