@@ -10,7 +10,6 @@
   :init
   (setq org-roam-v2-ack t)
   :hook
-  (after-init-hook  . org-roam-db-autosync-enable)
   (org-mode-hook    . xr/enable-valign-when-valign)
   (org-mode-hook    . xr/disable-company-when-nocompany)
   (before-save-hook . xr/roam-update-modified-date)
@@ -110,6 +109,8 @@
         (other-window 1)
       (select-window (split-window-right)))
     (org-roam-node-find))
+
+  (org-roam-db-autosync-enable)
   :advice
   (:after org-roam-buffer-toggle xr/refresh-roam-buffer))
 

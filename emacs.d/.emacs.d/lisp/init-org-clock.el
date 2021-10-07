@@ -8,12 +8,14 @@
   ("C-c x c" . org-clock-goto)
   ("C-c x i" . org-clock-in-last)
   ("C-c x o" . org-clock-out)
+  :custom
+  (org-clock-mode-line-total . 'current)
+  ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+  (org-clock-history-length . 23)
   :config
   ;; Resume clocking task when emacs is restarted
   (org-clock-persistence-insinuate)
   ;;
-  ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
-  (setq org-clock-history-length 23)
   ;; Resume clocking task on clock-in if the clock is open
   (setq org-clock-in-resume t)
   ;; Change tasks to NEXT when clocking in
