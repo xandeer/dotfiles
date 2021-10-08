@@ -52,7 +52,7 @@
 --------------------------------------------------------------------
 Manage repos: _u_pdate _c_ommit
 Http servers: _d_ownloads _t_emp _s_creenshot _w_ork
-     Browser: _lh_ 192.168.3.ip:port _lo_ 10.0.2.ip:port
+     Browser: _lh_ 192.168.3.ip:port _lo_ 10.0.2.ip:port _x_ github.io
         Apps: _j_ Day One _e_vernote
          Adb: _h_ome _o_ffice
 
@@ -73,6 +73,7 @@ Quit: _q_"
    ("lo" (lambda (ip) (interactive "s10.0.2.") (shell-command (concat "open http://10.0.2." ip))))
    ("j" (lambda () (interactive) (shell-command "open -a /Applications/Day\\ One.app")))
    ("e" (lambda () (interactive) (shell-command "open -a /Applications/Evernote.app")))
+   ("x" (lambda () (interactive) (shell-command "open  https://xandeer.github.io/20210629191000-000_index.html")))
    ("q" nil)))
 
 (provide 'init-bootstrap)
