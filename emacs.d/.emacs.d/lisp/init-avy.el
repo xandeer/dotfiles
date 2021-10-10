@@ -62,6 +62,7 @@
   :hook (after-init-hook . ace-pinyin-global-mode)
   :bind*
   ("M-j" . xr/ace-pinyin-goto-char-2)
+  ("M-k" . xr/ace-pinyin-goto-char-1)
   :config
   (defun xr/ace-pinyin-goto-char-2 ()
     "Ace-pinyin replacement of `avy-goto-char-2'."
@@ -74,6 +75,12 @@
     (interactive)
     (setq xr/ace-mode t)
     (call-interactively 'ace-pinyin-goto-word-1)
+    (setq xr/ace-mode nil))
+  (defun xr/ace-pinyin-goto-char-1 ()
+    "Ace-pinyin replacement of `avy-goto-char'."
+    (interactive)
+    (setq xr/ace-mode t)
+    (call-interactively 'ace-pinyin-jump-char)
     (setq xr/ace-mode nil))
   ;; Another way
   (defun -xr/ace-pinyin-goto-word-1 ()
