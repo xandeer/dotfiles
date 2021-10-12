@@ -43,6 +43,8 @@
 
 (leaf avy
   :straight t
+  :custom
+  (avy-timeout-seconds . 0.5)
   :bind
   ("M-g a"   . beginning-of-buffer)
   ("M-g e"   . end-of-buffer)
@@ -61,9 +63,23 @@
   :straight t
   :hook (after-init-hook . ace-pinyin-global-mode)
   :bind*
-  ("M-j" . xr/ace-pinyin-goto-char-2)
+  ("M-j" . xr/ace-goto-char-timer)
   ("M-k" . xr/ace-pinyin-goto-char-1)
   :config
+  (defun xr/ace-goto-char-timer ()
+    "Like the `avy-goto-char-timer`."
+    (interactive)
+    (setq xr/ace-mode t)
+    (avy-with xr/ace-goto-char-timer
+      (setq avy--old-cands
+            (avy--read-candidates
+             (lambda (str)
+               (pinyinlib-build-regexp-string
+                str
+                (not ace-pinyin-enable-punctuation-translation)
+                (not ace-pinyin-simplified-chinese-only-p)))))
+      (avy-process avy--old-cands))
+    (setq xr/ace-mode nil))
   (defun xr/ace-pinyin-goto-char-2 ()
     "Ace-pinyin replacement of `avy-goto-char-2'."
     (interactive)
