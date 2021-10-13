@@ -3,20 +3,26 @@
 ;;; Code:
 
 (leaf dired
+  :require t
   :bind
   ("H-k" . hydra-dired/body)
   (:dired-mode-map
    ("* n" . dired-next-marked-file)
    ("* p" . dired-prev-marked-file)
+   ("d"   . dired-do-delete)
    ("@"   . xr/change-hs-on-dired))
   :custom
   (insert-directory-program      . `,(executable-find "ls"))
+  ;; this doesn't work
+  (dired-no-confirm              . t)
   (dired-listing-switches        . "-alh")
   (dired-dwim-target             . t)
   (delete-by-moving-to-trash     . t)
   (dired-recursive-deletes       . 'always)
   (dired-recursive-copies        . 'always)
   (dired-create-destination-dirs . 'always)
+  :config
+  (setq dired-deletion-confirmer '(lambda (x) t))
   :hydra
   (hydra-dired
    (:hint nil :exit t)
@@ -38,6 +44,7 @@
   :require t
   :custom
   (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
+  (dired-clean-confirm-killing-deleted-buffers . nil)
   :config
   (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
   (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
