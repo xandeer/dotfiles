@@ -180,6 +180,19 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "H-e") 'xr/kill-other-window-buffer)
 (global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
+(defun xr/trash (path)
+  (shell-command (concat "trash " path)))
+
+(defun xr/trash-temp ()
+  "Move some temp files to trash."
+  (interactive)
+  (dolist (path '("~/temp/screenshot/*.png"
+                  "~/temp/donut/*.apk"
+                  "~/temp/donut/*.zip"
+                  "~/temp/donut/*.aab"
+                  ))
+    (xr/trash path)))
+
 
 (defvar xr/auto-timer nil)
 
