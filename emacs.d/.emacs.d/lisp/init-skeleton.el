@@ -99,6 +99,15 @@
     ""
     "(lambda () (interactive) (" - "))")
 
+  (define-skeleton xr/weekly-review
+    "Insert a heading for weekly review."
+    ""
+    (format-time-string "*** <%Y-%m-%d %R> W%y %W %b" (current-time)))
+
+  (define-skeleton xr/monthly-review
+    "Insert a heading for monthly review."
+    ""
+    (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
   :bind*
   ("C-c M-x" . xr/hydra-skeleton/body)
   :hydra
@@ -117,7 +126,7 @@
 (leaf abbrev
   :after skeleton
   :hook
-  ((fundamental-mode-hook org-mode-hook emacs-lisp-mode-hook) . abbrev-mode)
+  ((fundamental-mode-hook org-mode-hook emacs-lisp-mode-hook text-mode-hook) . abbrev-mode)
   :config
   (define-abbrev fundamental-mode-abbrev-table "tt" "" 'xr/text-time)
   (define-abbrev org-mode-abbrev-table "tt" "" 'xr/text-time)
@@ -134,6 +143,10 @@
   (define-abbrev org-mode-abbrev-table "el" "" 'xr/org-block-elisp)
   (define-abbrev org-mode-abbrev-table "sh" "" 'xr/org-block-sh)
   (define-abbrev org-mode-abbrev-table "kt" "" 'xr/org-block-kt)
+  (define-abbrev org-mode-abbrev-table "ww" "" 'xr/weekly-review)
+  (define-abbrev org-mode-abbrev-table "mm" "" 'xr/monthly-review)
+  (define-abbrev text-mode-abbrev-table "gv" "Build: Update app version to")
+  (define-abbrev text-mode-abbrev-table "gd" "Docs: Update changelog")
   (define-abbrev emacs-lisp-mode-abbrev-table "lambdai" "" 'xr/el-lambdai)
   (define-abbrev emacs-lisp-mode-abbrev-table "elh" "" 'xr/el-template))
 
