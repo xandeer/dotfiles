@@ -94,8 +94,9 @@ If point was already at that position, move point to beginning of line."
 
 (defun xr/insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
-  (interactive "sYear default[18], j[21], else[17]: ")
+  (interactive "sYear default[18], j[21], k[16], else[17]: ")
   (setq year (cond ((s-blank-str? year) 18)
+                   ((s-equals? year "k") 16)
                    ((s-equals? year "j") 21)
                    (t 17)))
   (goto-char (point-min))
