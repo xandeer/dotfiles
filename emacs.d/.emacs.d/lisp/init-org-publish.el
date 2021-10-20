@@ -50,7 +50,7 @@
         :base-directory ,org-directory
         :publishing-directory ,xr/publish-pub-dir
         :exclude "area/\\|journal-?.*/\\|gtd/\\|work/\\|private/\\|copy_about_doc_norang\\|hledger.*"
-        :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js"
+        :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js\\|m4a"
         :publishing-function org-publish-attachment
         :recursive t
         :with-author nil)
