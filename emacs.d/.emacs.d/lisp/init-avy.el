@@ -45,6 +45,7 @@
   :straight t
   :custom
   (avy-timeout-seconds . 0.5)
+  (avy-all-windows . 'all-frames)
   :bind
   ("M-g a"   . beginning-of-buffer)
   ("M-g e"   . end-of-buffer)
@@ -52,7 +53,17 @@
   ("M-g M-e" . end-of-buffer-other-window)
   ("M-g v"   . scroll-other-window)
   ("M-g M-v" . scroll-other-window-down)
-  ("M-g l"   . avy-goto-line))
+  ("M-g l"   . avy-goto-line)
+  :config
+  (defun avy-action-helpful (pt)
+    (save-excursion
+      (goto-char pt)
+      (helpful-at-point))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
+
+  (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful))
 
 (setq xr/ace-mode nil)
 ;;;###autoload
