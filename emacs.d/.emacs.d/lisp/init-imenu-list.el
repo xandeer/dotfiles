@@ -5,8 +5,8 @@
 (leaf imenu-list
   :straight t
   :bind
-  ("C-." . imenu)
-  ("C-," . imenu-list-smart-toggle)
+  ("C-," . imenu)
+  ("C-." . imenu-list-smart-toggle)
   :custom
   (imenu-list-auto-resize . t))
 

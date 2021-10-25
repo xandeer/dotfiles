@@ -92,6 +92,7 @@ If point was already at that position, move point to beginning of line."
     (org-set-tags (format-time-string ":%a:" today))
     (xr/replace "^\\*" "**" (point))))
 
+(setq xr/org-today-tag "@home:")
 (defun xr/insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
   (interactive "sYear default[18], j[21], k[16], else[17]: ")
@@ -107,7 +108,7 @@ If point was already at that position, move point to beginning of line."
       (goto-char (point-max)))
     (insert (format-time-string "** %Y" today))
     (org-set-tags (concat (format-time-string ":%a:" today)
-                          (when (= year 21) "@home:"))))
+                          (when (= year 21) xr/org-today-tag))))
   (end-of-line)
   (newline))
 
