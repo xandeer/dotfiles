@@ -55,6 +55,7 @@
 (require 'init-imenu-list)
 (require 'init-ivy)
 (require 'init-jieba)
+(require 'init-link-hint)
 (require 'init-lsp)
 (require 'init-git)
 (require 'init-meow)
