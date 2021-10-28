@@ -62,24 +62,24 @@
   (hydra-fv
    (:hint nil :exit t)
    "
-   Agent: _a_gent default _s_elect
-      Xr: _xd_elete current buffer _xl_ remove links _xc_convert quotations
-          _xf_ill subtree _xj_ insert journal in year _xm_igirage journal
-Bookmark: _be_motion _bg_et up
-  Others: _bo_okmark
-  Cancel: _q_
+   Agenda: _a_genda default _s_elect
+       Xr: _d_elete current buffer _l_ remove links _c_convert quotations
+           _f_ill subtree _j_ insert journal in year _m_igirage journal
+ Bookmark: _e_motion _g_et up
+   Others: _b_ookmark
+   Cancel: _q_
 "
    ("a" org-agenda-list)
    ("s" org-agenda)
-   ("bo" counsel-bookmark)
-   ("be" (xr/bookmark "emotion"))
-   ("bg" (xr/bookmark "get_up"))
-   ("xc" xr/convert-chinese-quotations)
-   ("xd" xr/delete-current-buffer)
-   ("xf" xr/fill-subtree)
-   ("xl" xr/remove-links)
-   ("xj" xr/insert-journal-in-year)
-   ("xm" xr/migrate-journal)
+   ("b" counsel-bookmark)
+   ("e" (xr/bookmark "emotion"))
+   ("g" (xr/bookmark "get_up"))
+   ("c" xr/convert-chinese-quotations)
+   ("d" xr/delete-current-buffer)
+   ("f" xr/fill-subtree)
+   ("l" xr/remove-links)
+   ("j" xr/insert-journal-in-year)
+   ("m" xr/migrate-journal)
    ("q" nil)))
 
 (provide 'init-keybindings)

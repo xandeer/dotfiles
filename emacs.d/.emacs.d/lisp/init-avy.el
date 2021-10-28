@@ -44,7 +44,7 @@
 (leaf avy
   :straight t
   :custom
-  (avy-timeout-seconds . 0.5)
+  (avy-timeout-seconds . 0.3)
   (avy-all-windows . 'all-frames)
   :bind
   ("M-g a"   . beginning-of-buffer)
