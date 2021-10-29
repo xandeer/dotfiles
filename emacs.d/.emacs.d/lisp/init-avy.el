@@ -11,7 +11,8 @@
   :require t
   :after ivy-prescient
   :config
-  (setq pinyinlib--simplified-char-table 'pinyinlib--simplified-xiaohe)
+  (require 'pinyin-xiaohe)
+  (setq pinyinlib--simplified-char-table 'xr/pinyinlib--simplified-xiaohe)
   (defun x/pinyin-regexp-helper (str)
     "Construct pinyin regexp for STR."
     (cond ((equal str "\\).*?\\(") "\\).*?\\(")
