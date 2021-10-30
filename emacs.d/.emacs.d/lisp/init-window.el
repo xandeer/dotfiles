@@ -8,6 +8,7 @@
   :bind
   ("C-x x"                    . window-swap-states)
   ("H-o"                      . switch-window)
+  ("H-0"                      . xr/delete-window-or-frame)
   ("H-1"                      . delete-other-windows)
   ("H-2"                      . xr/split-below-find-file)
   ("H-3"                      . xr/split-right-find-file)
