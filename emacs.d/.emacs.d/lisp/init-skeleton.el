@@ -102,7 +102,7 @@
   (define-skeleton xr/weekly-review
     "Insert a heading for weekly review."
     ""
-    (format-time-string "*** <%Y-%m-%d %R> W%y %W %b" (current-time)))
+    (format-time-string "*** <%Y-%m-%d %R> W%y %b %W" (current-time)))
 
   (define-skeleton xr/monthly-review
     "Insert a heading for monthly review."
