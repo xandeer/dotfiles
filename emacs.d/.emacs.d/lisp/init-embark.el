@@ -10,8 +10,8 @@
 (leaf embark
   :straight t
   :require t
-  :bind
-  ("C-;" . embark-act)
+  ;; :bind
+  ;; ("C-;" . embark-act)
   :config
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
