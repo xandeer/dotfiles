@@ -48,6 +48,7 @@
 (require 'init-company)
 (require 'init-dictionary)
 (require 'init-dired)
+(require 'init-embark)
 (require 'init-engine-mode)
 (require 'init-eva)
 (require 'init-flycheck)
