@@ -30,7 +30,10 @@ Cancel: _q_ cancel
 
 (leaf elisp-mode
   :init
-  (setq-default enable-local-variables :safe))
+  (setq-default enable-local-variables :safe)
+  ;; This will be overriden by eros.
+  :bind ([remap eval-last-sexp] . pp-eval-last-sexp)
+  )
 
 (leaf elisp-demos
   :straight t
