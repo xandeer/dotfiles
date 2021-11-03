@@ -2,8 +2,77 @@
 ;;; Commentary:
 ;;; Code:
 
+(defun xr/delete-window-or-frame ()
+  (interactive)
+  (if (eq (window-deletable-p) 't)
+      (delete-window)
+    (delete-frame)))
+
+(defun xr/roam-or-projectile-find-file (&optional window)
+  (when window
+    (select-window window))
+  (if (xr/roam-buffer-p)
+      (org-roam-node-find)
+    (counsel-projectile-find-file)))
+
+(defun xr/split-below-find-file ()
+  "Split below and find file."
+  (interactive)
+  (xr/roam-or-projectile-find-file (split-window-below)))
+
+(defun xr/split-right-find-file ()
+  "Split right and find file."
+  (interactive)
+  (xr/roam-or-projectile-find-file (split-window-right)))
+
+(leaf ace-window
+  :straight t
+  :bind
+  ("H-o"   . ace-window)
+  ("H-0"   . xr/delete-window-or-frame)
+  ("H-1"   . delete-other-windows)
+  ("H-2"   . xr/split-below-find-file)
+  ("H-3"   . xr/split-right-find-file)
+  ("C-x x" . ace-swap-window)
+  :custom
+  (aw-dispatch-always . nil)
+  :defer-config
+  ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
+  (eval-when-compile
+    (defmacro xr/embark-ace-action (fn)
+      `(defun ,(intern (concat "xr/embark-ace-" (symbol-name fn))) ()
+         (interactive)
+         (with-demoted-errors "%s"
+           (require 'ace-window)
+           (aw-switch-to-window (aw-select nil))
+           (call-interactively (symbol-function ',fn))))))
+
+  (define-key embark-file-map     (kbd "o") (xr/embark-ace-action find-file))
+  (define-key embark-buffer-map   (kbd "o") (xr/embark-ace-action switch-to-buffer))
+  (define-key embark-bookmark-map (kbd "o") (xr/embark-ace-action bookmark-jump))
+
+  (eval-when-compile
+    (defmacro xr/embark-split-action (fn split-type)
+      `(defun ,(intern (concat "xr/embark-"
+                               (symbol-name fn)
+                               "-"
+                               (car (last  (split-string
+                                            (symbol-name split-type) "-"))))) ()
+         (interactive)
+         (select-window (funcall #',split-type))
+         (call-interactively #',fn))))
+
+  (define-key embark-file-map     (kbd "2") (xr/embark-split-action find-file split-window-below))
+  (define-key embark-buffer-map   (kbd "2") (xr/embark-split-action switch-to-buffer split-window-below))
+  (define-key embark-bookmark-map (kbd "2") (xr/embark-split-action bookmark-jump split-window-below))
+
+  (define-key embark-file-map     (kbd "3") (xr/embark-split-action find-file split-window-right))
+  (define-key embark-buffer-map   (kbd "3") (xr/embark-split-action switch-to-buffer split-window-right))
+  (define-key embark-bookmark-map (kbd "3") (xr/embark-split-action bookmark-jump split-window-right)))
+
 (leaf switch-window
   :straight t
+  :disabled t
   :after hydra
   :bind
   ("C-x x"                    . window-swap-states)
