@@ -49,26 +49,7 @@
 
   (define-key embark-file-map     (kbd "o") (xr/embark-ace-action find-file))
   (define-key embark-buffer-map   (kbd "o") (xr/embark-ace-action switch-to-buffer))
-  (define-key embark-bookmark-map (kbd "o") (xr/embark-ace-action bookmark-jump))
-
-  (eval-when-compile
-    (defmacro xr/embark-split-action (fn split-type)
-      `(defun ,(intern (concat "xr/embark-"
-                               (symbol-name fn)
-                               "-"
-                               (car (last  (split-string
-                                            (symbol-name split-type) "-"))))) ()
-         (interactive)
-         (select-window (funcall #',split-type))
-         (call-interactively #',fn))))
-
-  (define-key embark-file-map     (kbd "2") (xr/embark-split-action find-file split-window-below))
-  (define-key embark-buffer-map   (kbd "2") (xr/embark-split-action switch-to-buffer split-window-below))
-  (define-key embark-bookmark-map (kbd "2") (xr/embark-split-action bookmark-jump split-window-below))
-
-  (define-key embark-file-map     (kbd "3") (xr/embark-split-action find-file split-window-right))
-  (define-key embark-buffer-map   (kbd "3") (xr/embark-split-action switch-to-buffer split-window-right))
-  (define-key embark-bookmark-map (kbd "3") (xr/embark-split-action bookmark-jump split-window-right)))
+  (define-key embark-bookmark-map (kbd "o") (xr/embark-ace-action bookmark-jump)))
 
 (leaf switch-window
   :straight t
