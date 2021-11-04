@@ -158,7 +158,12 @@
                                     "\\|^\\(#\\+end_.*\\)")))
       (setq-local paragraph-start paragraph-ending)
       (setq-local paragraph-separate paragraph-ending)))
+  :advice
+  (:after org-setup-filling reset-filling))
 
+(leaf org-attach
+  :require t
+  :config
   (defun org-attach-attach (file &optional visit-dir method)
   "Move/copy/link FILE into the attachment directory of the current outline node.
 If VISIT-DIR is non-nil, visit the directory with dired.
@@ -199,9 +204,7 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 		   org-stored-links)))
       (if visit-dir
           (dired attach-dir)
-        (message "File %S is now an attachment" basename)))))
-  :advice
-  (:after org-setup-filling reset-filling))
+        (message "File %S is now an attachment" basename))))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
