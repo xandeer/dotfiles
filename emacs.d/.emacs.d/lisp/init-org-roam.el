@@ -3,12 +3,9 @@
 ;;; Code:
 
 
+(setq org-roam-v2-ack t)
+(require-package 'org-roam)
 (leaf org-roam
-  :straight t
-  :after gcmh
-  :require t
-  :init
-  (setq org-roam-v2-ack t)
   :hook
   (org-mode-hook    . xr/enable-valign-when-valign)
   (org-mode-hook    . xr/disable-company-when-nocompany)

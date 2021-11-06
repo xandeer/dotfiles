@@ -1,15 +1,32 @@
 ;;; init.el --- Xandeer's Emacs Configuration file. -*- lexical-binding: t; -*-
 ;;; Commentary:
+;;; Refs:
+;; 1. https://github.com/purcell/emacs.d/
+
 ;;; Code:
 
+;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
+;; (setq debug-on-error t)
 (setq-default lexical-binding t)
 
-;; Bootstrap
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-bootstrap)
+
+;; Adjust garbage collection thresholds during startup, and thereafter
+(let ((init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (require-package 'gcmh)
+              (gcmh-mode)
+              (setq gcmh-verbose t)
+              (setq gcmh-low-cons-threshold #x800000)
+              (setq gcmh-high-cons-threshold #x880000))))
+
+;; Bootstrap
+(require 'init-bootstrap) ; straight, leaf, hydra, no-littering
 (require 'init-xr)
-(require 'init-exec-path)
-(require 'init-keybindings)
+(require 'init-exec-path) ; set "PATH" and `exec-path`
+(require 'init-keybindings) ; which-key, keyfreq, osx-modifiers
 
 (require 'init-basic)
 (require 'init-editor)
@@ -19,6 +36,7 @@
 (require 'init-recentf)
 (require 'init-sessions)
 (require 'init-theme)
+
 (require 'init-modeline)
 
 ;; org-mode
@@ -67,18 +85,19 @@
 (require 'init-skeleton)
 (require 'init-telega)
 
+(require 'init-hydra)
+
+;; chores
+(require 'init-mouse)
+
+(add-hook 'after-init-hook 'toggle-frame-maximized)
+
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 (unless (server-running-p)
   (server-start))
-
-;; chores
-(require 'init-mouse)
-
-(require 'init-gc)
-(toggle-frame-maximized)
 
 (let ((local-file (expand-file-name "local.el" user-emacs-directory)))
   (when (file-exists-p local-file)
@@ -88,6 +107,7 @@
 (run-with-idle-timer 1 nil
                      (lambda ()
                        (eva-mode)
+                       (eva-set-date-today)
                        (xr/auto-session)
                        (org-roam-node-random)))
 

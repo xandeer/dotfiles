@@ -18,11 +18,11 @@
   `(eva-buffer-info-path      . ,(no-littering-expand-var-file-name "eva/buffer-info.tsv"))
   `(eva-buffer-focus-log-path . ,(no-littering-expand-var-file-name "eva/buffer-focus.tsv"))
   (ess-ask-for-ess-directory       . nil)
-  (eva-check-org-vars-load-modules . nil)
+  ;; (eva-check-org-vars-load-modules . nil)
   :config
   (require 'eva-builtin)
 
-  (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
+  ;; (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
   (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
 
   ;; (setq eva--idle-secs-fn #'org-mac-idle-seconds)
