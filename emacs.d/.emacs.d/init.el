@@ -18,7 +18,7 @@
             (lambda ()
               (require-package 'gcmh)
               (gcmh-mode)
-              (setq gcmh-verbose t)
+              ;; (setq gcmh-verbose t)
               (setq gcmh-low-cons-threshold #x800000)
               (setq gcmh-high-cons-threshold #x880000))))
 
@@ -79,6 +79,7 @@
 (require 'init-git)
 (require 'init-meow)
 (require 'init-pass)
+(require 'init-pinyin)
 (require 'init-projectile)
 (require 'init-rime)
 (require 'init-sh)

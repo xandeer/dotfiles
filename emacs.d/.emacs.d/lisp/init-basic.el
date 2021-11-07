@@ -18,6 +18,7 @@
  ;; require-final-newline nil
  save-interprogram-paste-before-kill t)
 
+(setq find-file-visit-truename t)
 (setq enable-recursive-minibuffers t)
 (setq use-dialog-box nil)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -28,23 +29,17 @@
   (global-auto-revert-mode)
   (delete-selection-mode)
   (which-function-mode))
-(add-hook #'after-init-hook #'xr/enable-basic-modes)
+(add-hook 'after-init-hook 'xr/enable-basic-modes)
 
-(leaf bookmark
-  :after org
-  :require t
-  :custom (bookmark-default-file . `,(expand-file-name "etc/bookmarks.el" org-directory))
-  :hook (after-init-hook . bookmark-maybe-load-default-file))
+(require-package 'all-the-icons)
+(setq inhibit-compacting-font-caches t)
+;; TODO: for what?
+(straight-use-package 'explain-pause-mode)
 
-(leaf all-the-icons
-  :straight t
-  :custom (inhibit-compacting-font-caches . t))
-
-(leaf files
-  :custom (find-file-visit-truename . t))
-
-(leaf explain-pause-mode
-  :straight t)
+(require 'bookmark)
+(with-eval-after-load 'org
+  (setq bookmark-default-file (xr/expand-note "etc/bookmarks.el"))
+  (add-hook 'after-init-hook 'bookmark-maybe-load-default-file))
 
 (provide 'init-basic)
 ;;; init-basic.el ends here

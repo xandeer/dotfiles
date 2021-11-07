@@ -1,4 +1,4 @@
-;;; pinyin-xiaohe.el --- pinyin-xiaohe -*- lexical-binding: t -*-
+;;; init-pinyin.el --- init-pinyin -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -31,6 +31,97 @@
     "曾杂砸咂匝拶在再载灾仔宰哉栽崽甾咱赞暂攒簪糌瓒拶昝趱錾藏脏葬臧驵早造遭糟澡灶躁噪凿枣皂燥蚤藻缲唣则责泽择啧仄迮笮箦舴帻赜昃贼怎谮增赠憎缯罾甑锃子自字资咨紫滋仔姿兹孜梓渍籽姊恣滓谘龇秭呲辎锱眦笫髭淄茈觜訾缁耔鲻嵫赀孳粢趑总宗纵踪综棕粽鬃偬腙枞走奏邹揍鲰诹陬鄹组足族祖租阻卒诅俎镞菹钻攥纂躜缵最罪嘴醉咀觜蕞尊遵樽鳟撙作做坐座左昨佐凿撮怍胙笮阼祚酢")
   "ASCII char to simplifed Chinese characters.")
 
+;; pinyinlib
+
+(straight-register-package
+ '(pinyinlib :host github
+             :repo "xlshiz/pinyinlib.el"))
 
-(provide 'pinyin-xiaohe)
-;;; pinyin-xiaohe.el ends here
+(with-eval-after-load 'ivy-prescient
+  (require-package 'pinyinlib)
+  (setq pinyinlib--simplified-char-table 'xr/pinyinlib--simplified-xiaohe)
+  (defun x/pinyin-regexp-helper (str)
+    "Construct pinyin regexp for STR."
+    (cond ((equal str "\\).*?\\(") "\\).*?\\(")
+          (t (pinyinlib-build-regexp-string str t))))
+
+  (defun x/pinyinlib-build-regexp-string (str)
+    "Build a pinyin regexp sequence from STR."
+    (cond ((equal str " ") "\\).*?\\(")
+          ((equal str "") nil)
+          (t str)))
+
+  (defun pinyin-to-utf8 (str)
+    "Convert STR to UTF-8."
+    (cond ((equal 0 (length str)) nil)
+          (t (concat
+              "\\("
+              (mapconcat
+               #'x/pinyinlib-build-regexp-string
+               (remove nil (mapcar #'x/pinyin-regexp-helper (split-string str "")))
+               "")
+              "\\)"))))
+
+  (cl-defun xr/prescient-pinyin-regexp (query &key with-group
+                                              &allow-other-keys)
+    (prescient-with-group (pinyin-to-utf8 query)
+                          (eq with-group 'all)))
+
+  (add-to-list 'prescient-filter-alist '(pinyin . xr/prescient-pinyin-regexp)))
+
+;; ace
+
+(setq xr/ace-mode nil)
+(defun xr/ace-mode-p ()
+  "Whether ace goto word."
+  (bound-and-true-p xr/ace-mode))
+(require-package 'ace-pinyin)
+(defun xr/ace-goto-char-timer ()
+  "Like the `avy-goto-char-timer`."
+  (interactive)
+  (setq xr/ace-mode t)
+  (avy-with xr/ace-goto-char-timer
+    (setq avy--old-cands
+          (avy--read-candidates
+           (lambda (str)
+             (pinyinlib-build-regexp-string
+              str
+              (not ace-pinyin-enable-punctuation-translation)
+              (not ace-pinyin-simplified-chinese-only-p)))))
+    (avy-process avy--old-cands))
+  (setq xr/ace-mode nil))
+(defun xr/ace-pinyin-goto-char-2 ()
+  "Ace-pinyin replacement of `avy-goto-char-2'."
+  (interactive)
+  (setq xr/ace-mode t)
+  (call-interactively 'ace-pinyin-jump-char-2)
+  (setq xr/ace-mode nil))
+(defun xr/ace-pinyin-goto-word-1 ()
+  "Ace-pinyin replacement of `avy-goto-word-1'."
+  (interactive)
+  (setq xr/ace-mode t)
+  (call-interactively 'ace-pinyin-goto-word-1)
+  (setq xr/ace-mode nil))
+(defun xr/ace-pinyin-goto-char-1 ()
+  "Ace-pinyin replacement of `avy-goto-char'."
+  (interactive)
+  (setq xr/ace-mode t)
+  (call-interactively 'ace-pinyin-jump-char)
+  (setq xr/ace-mode nil))
+;; Another way
+(defun -xr/ace-pinyin-goto-word-1 ()
+  "Ace-pinyin replacement of `avy-goto-word-1'."
+  (interactive)
+  (let ((ace--input-method current-input-method)
+        (ace--buffer (buffer-file-name)))
+    (when ace--input-method (toggle-input-method))
+    (call-interactively 'ace-pinyin-goto-word-1)
+    (when (and ace--input-method
+               (string-equal (buffer-file-name) ace--buffer))
+      (toggle-input-method))))
+
+(global-set-key (kbd "M-j") 'xr/ace-goto-char-timer)
+(add-hook 'after-init-hook 'ace-pinyin-global-mode)
+
+(provide 'init-pinyin)
+;;; init-pinyin.el ends here
