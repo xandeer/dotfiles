@@ -2,17 +2,16 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf flycheck-clj-kondo
-  :straight t)
+(straight-use-package 'flycheck-clj-kondo)
+(straight-use-package 'parseclj)
 
-(leaf parseclj
-  :straight t)
+(require-package 'clojure-mode)
+(with-eval-after-load 'clojure-mode
+  (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljc$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+  (add-to-list 'auto-mode-alist '("\\.cljx$" . clojure-mode))
 
-(leaf clojure-mode
-  :straight t
-  :after flycheck-clj-kondo
-  :mode (("\\.clj$" "\\.cljc$" "\\.edn$" "\\.cljx$") . clojure-mode)
-  :config
   (define-clojure-indent
     (defroutes 'defun)
     (GET 2)
@@ -27,16 +26,12 @@
     (let-routes 1)
     (context 2)))
 
-(leaf clojure-mode-extra-font-locking
-  :after clojure-mode)
+;; TODO: What does this for?
+;; (leaf clojure-mode-extra-font-locking
+  ;; :after clojure-mode)
 
-(leaf cider
-  :straight t
-  :after clojure-mode
-  :hook
-  (clojure-mode-hook . cider-mode)
-  ;; (cider-mode-hook . xr/cider-hook)
-  :config
+(with-eval-after-load 'clojure-mode
+  (require-package 'cider)
   (defun xr/cider-hook ()
     (add-hook 'before-save-hook 'cider-format-buffer nil t))
 
@@ -85,7 +80,9 @@
 
   (defun xr/browse-current-ns ()
     (interactive)
-    (cider-browse-ns (cider-current-ns))))
+    (cider-browse-ns (cider-current-ns)))
+
+  (add-hook 'clojure-mode-hook 'cider-mode))
 
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
