@@ -76,10 +76,17 @@
   ("C-c x S" . xr/search-other-cwd)
   ("C-c f f" . counsel-projectile-find-file)
   ("C-c f r" . counsel-recentf)
+  ("C-c f e" . xr/search-in-lisp)
   (:counsel-find-file-map
    ("C-h" . counsel-up-directory)
    ("C-l" . counsel-down-directory))
   :config
+  (defun xr/search-in-lisp ()
+    "Start searching in `user-emacs-directory`."
+    (interactive)
+    (xr/ivy-file-search
+      :prompt "Search in ~/.emacs.d/lisp: "
+      :in (expand-file-name "lisp" user-emacs-directory)))
   (defun xr/counsel-buffer-or-recentf-other-window ()
     "Switch to recent file in another window."
     (interactive)
@@ -229,11 +236,11 @@ fallback is smarter in some cases."
     (user-error "Couldn't find ripgrep in your PATH"))
   (require 'counsel)
   (defun xr/project-root (&optional dir)
-  "Return the project root of DIR (defaults to `default-directory').
+    "Return the project root of DIR (defaults to `default-directory').
 Returns nil if not in a project."
-  (let ((projectile-project-root (unless dir projectile-project-root))
-        projectile-require-project-root)
-    (projectile-project-root dir)))
+    (let ((projectile-project-root (unless dir projectile-project-root))
+          projectile-require-project-root)
+      (projectile-project-root dir)))
   (let* ((this-command 'counsel-rg)
          (project-root (or (xr/project-root) default-directory))
          (directory (or in project-root))
