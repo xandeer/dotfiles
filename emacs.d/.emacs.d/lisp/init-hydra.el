@@ -8,7 +8,7 @@
   (:hint nil :exit t)
   "
 --------------------------------------------------------------------
-Manage repos: _u_pdate _c_ommit
+Manage repos: _u_pdate _c_ommit _r_estart after pull
 Http servers: _d_ownloads _t_emp _s_creenshot _w_ork
      Browser: _lh_ 192.168.3.ip:port _lo_ 10.0.2.ip:port _x_ github.io
         Apps: _j_ Day One _e_vernote
@@ -20,6 +20,12 @@ Quit: _q_"
      (interactive)
      (async-shell-command "mr -d ~ update")
      (bookmark-maybe-load-default-file)))
+  ("r"
+   (lambda nil
+     (interactive)
+     (shell-command "mr -d ~ update")
+     (bookmark-maybe-load-default-file)
+     (xr/restart-emacs)))
   ("c" (lambda nil (interactive) (async-shell-command "mr -d ~ commit")))
   ("d" (xr/change-hs-root "~/Downloads"))
   ("t" (xr/change-hs-root "~/temp"))

@@ -262,6 +262,16 @@ If point was already at that position, move point to beginning of line."
       (browse-url (concat "file://" file-name)))))
 
 
+(defun xr/launch-separate-emacs-under-x ()
+  (call-process "sh" nil nil nil "-c" "emacs &"))
+
+(defun xr/restart-emacs ()
+  "Restart emacs."
+  (interactive)
+  (let ((kill-emacs-hook (append kill-emacs-hook (list #'xr/launch-separate-emacs-under-x))))
+    (save-buffers-kill-emacs)))
+
+
 
 (provide 'init-xr)
 ;;; init-xr.el ends here
