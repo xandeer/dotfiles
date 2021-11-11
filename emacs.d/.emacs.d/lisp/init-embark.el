@@ -10,7 +10,7 @@
 (leaf embark
   :straight t
   :require t
-  :after ivy
+  :after ivy marginalia
   :bind
   (:ivy-minibuffer-map
    ("C-o" . embark-act))
@@ -27,6 +27,8 @@
     ("3" (xr/embark-split-action org-roam-node-find split-window-right)))
 
   (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
+  ;; (add-to-list 'embark-keymap-alist '(counsel . embark-roam-map))
+  (add-to-list 'marginalia-prompt-categories '("Recentf" . recentf))
 
   (eval-when-compile
     (defmacro xr/embark-split-action (fn split-type)
@@ -38,6 +40,13 @@
          (interactive)
          (select-window (funcall #',split-type))
          (call-interactively #',fn))))
+
+  (embark-define-keymap embark-recentf-map
+    "Keymap for recentf actions."
+    ("o" (xr/embark-ace-action counsel-recentf))
+    ("2" (xr/embark-split-action counsel-recentf split-window-below))
+    ("3" (xr/embark-split-action counsel-recentf split-window-right)))
+  (add-to-list 'embark-keymap-alist '(recentf . embark-recentf-map))
 
   (define-key embark-file-map     (kbd "2") (xr/embark-split-action find-file split-window-below))
   (define-key embark-buffer-map   (kbd "2") (xr/embark-split-action switch-to-buffer split-window-below))
