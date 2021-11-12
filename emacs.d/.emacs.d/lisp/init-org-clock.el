@@ -6,6 +6,7 @@
   :after org
   :bind
   ("C-c x c" . org-clock-goto)
+  ("C-c x d" . xr/org-done-current)
   ("C-c x i" . org-clock-in-last)
   ("C-c x o" . org-clock-out)
   :custom
@@ -67,6 +68,18 @@
     (when (> minutes 0)
       (setq xr/clock-timer
             (run-with-timer (* minutes 60) nil #'xr/clock-out))))
+
+  (defun xr/org-done-current ()
+    (interactive)
+    (if (org-clocking-p)
+        (with-current-buffer (marker-buffer org-clock-marker)
+          (let ((m org-clock-marker))
+            ;; (pop-to-buffer-same-window (marker-buffer m))
+            (if (or (< m (point-min)) (> m (point-max))) (widen))
+            (goto-char m)
+            (org-show-entry)
+            (org-todo 'done)))
+      (message "No running clock.")))
 
   (add-hook 'org-clock-out-hook 'xr/clock-cancel)
   (add-hook 'org-clock-in-hook 'xr/clock-in)
