@@ -64,6 +64,7 @@
 (require 'init-avy)
 (require 'init-calendar)
 (require 'init-company)
+(require 'init-consult)
 (require 'init-dictionary)
 (require 'init-dired)
 (require 'init-embark)
@@ -72,7 +73,7 @@
 (require 'init-flycheck)
 (require 'init-folding)
 (require 'init-imenu-list)
-(require 'init-ivy)
+;; (require 'init-ivy)
 (require 'init-jieba)
 (require 'init-link-hint)
 (require 'init-lsp)
@@ -85,6 +86,7 @@
 (require 'init-sh)
 (require 'init-skeleton)
 (require 'init-telega)
+(require 'init-vertico)
 
 (require 'init-hydra)
 
@@ -97,9 +99,6 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(unless (server-running-p)
-  (server-start))
-
 (let ((local-file (expand-file-name "local.el" user-emacs-directory)))
   (when (file-exists-p local-file)
     (load-file local-file)))
@@ -107,10 +106,14 @@
 ;; after loaded
 (run-with-idle-timer 1 nil
                      (lambda ()
+                       (require 'server)
+                       (unless (server-running-p)
+                         (server-start))
                        (eva-mode)
                        (eva-set-date-today)
                        (xr/auto-session)
-                       (org-roam-node-random)))
+                       (org-roam-node-random)
+                       ))
 
 (provide 'init)
 

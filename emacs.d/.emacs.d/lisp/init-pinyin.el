@@ -37,8 +37,8 @@
  '(pinyinlib :host github
              :repo "xlshiz/pinyinlib.el"))
 
-(with-eval-after-load 'ivy-prescient
-  (require-package 'pinyinlib)
+(require-package 'pinyinlib)
+(with-eval-after-load 'pinyinlib
   (setq pinyinlib--simplified-char-table 'xr/pinyinlib--simplified-xiaohe)
   (defun x/pinyin-regexp-helper (str)
     "Construct pinyin regexp for STR."
@@ -60,14 +60,16 @@
                #'x/pinyinlib-build-regexp-string
                (remove nil (mapcar #'x/pinyin-regexp-helper (split-string str "")))
                "")
-              "\\)"))))
+              "\\)")))))
 
+(with-eval-after-load 'ivy-prescient
   (cl-defun xr/prescient-pinyin-regexp (query &key with-group
                                               &allow-other-keys)
     (prescient-with-group (pinyin-to-utf8 query)
                           (eq with-group 'all)))
 
   (add-to-list 'prescient-filter-alist '(pinyin . xr/prescient-pinyin-regexp)))
+
 
 ;; ace
 
