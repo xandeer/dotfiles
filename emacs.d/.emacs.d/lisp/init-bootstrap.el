@@ -30,15 +30,15 @@
   (load bootstrap-file nil 'nomessage))
 
 (defun require-package (package)
-  "Call `straight-use-package` and `require` with PACKAGE."
-  (straight-use-package package)
-  (require package))
+  "Just wrap PACKAGE with `straight-use-package`."
+  (straight-use-package package))
 
-(straight-use-package 'leaf)
-(straight-use-package 'leaf-keywords)
+(require-package 'leaf)
+(require-package 'leaf-keywords)
 (leaf-keywords-init)
 
 (require-package 'no-littering)
+(require 'no-littering)
 (require-package 'hydra)
 
 (provide 'init-bootstrap)
