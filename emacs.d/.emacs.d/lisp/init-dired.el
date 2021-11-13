@@ -2,91 +2,80 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf dired
-  :require t
-  :bind
-  ("H-k" . hydra-dired/body)
-  (:dired-mode-map
-   ("* n" . dired-next-marked-file)
-   ("* p" . dired-prev-marked-file)
-   ("d"   . dired-do-delete)
-   ("@"   . xr/change-hs-on-dired))
-  :custom
-  (insert-directory-program      . `,(executable-find "ls"))
-  ;; this doesn't work
-  (dired-no-confirm              . t)
-  (dired-listing-switches        . "-alh")
-  (dired-dwim-target             . t)
-  (delete-by-moving-to-trash     . t)
-  (dired-recursive-deletes       . 'always)
-  (dired-recursive-copies        . 'always)
-  (dired-create-destination-dirs . 'always)
-  :config
+(with-eval-after-load 'dired
   (setq dired-deletion-confirmer '(lambda (x) t))
-  :hydra
-  (hydra-dired
-   (:hint nil :exit t)
-   "
+  (setq insert-directory-program (executable-find "ls"))
+  ;; this doesn't work
+  (setq dired-no-confirm t)
+  (setq dired-listing-switches "-alh")
+  (setq dired-dwim-target t)
+  (setq delete-by-moving-to-trash t)
+  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies 'always)
+  (setq dired-create-destination-dirs 'always)
+
+  (define-key dired-mode-map (kbd "* n") 'dired-next-marked-file)
+  (define-key dired-mode-map (kbd "* p") 'dired-prev-marked-file)
+  (define-key dired-mode-map (kbd "d") 'dired-do-delete)
+  (define-key dired-mode-map (kbd "@") 'xr/change-hs-on-dired)
+
+  (with-eval-after-load 'hydra
+    (defhydra hydra-dired
+      (:hint nil :exit t)
+      "
     _d_ownloads    _t_elega documents    _s_creenshot
     _w_ork temp    _n_otes               _e_macs.d
     _h_ome
 "
-   ("h" (dired "~"))
-   ("d" (dired "~/Downloads"))
-   ("e" (dired "~/.emacs.d"))
-   ("t" (dired "~/Downloads/telega/documents"))
-   ("s" (dired "~/temp/screenshot"))
-   ("w" (dired "~/temp/donut"))
-   ("n" (dired org-directory))
-   ))
+      ("h" (dired "~"))
+      ("d" (dired "~/Downloads"))
+      ("e" (dired "~/.emacs.d"))
+      ("t" (dired "~/Downloads/telega/documents"))
+      ("s" (dired "~/temp/screenshot"))
+      ("w" (dired "~/temp/donut"))
+      ("n" (dired org-directory)))
 
-(leaf dired-x
-  :require t
-  :custom
-  (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
-  (dired-clean-confirm-killing-deleted-buffers . nil)
-  :config
-  (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
-  (add-hook 'dired-mode-hook (lambda () (dired-omit-mode))))
+    (global-set-key (kbd "H-k") 'hydra-dired/body)))
 
-(leaf dired-hacks
-  :straight t)
+(require-package 'dired-hacks)
+(require 'dired-x)
 
-(leaf dired-collapse
-  :hook (dired-mode-hook . dired-collapse-mode))
+(setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
+(setq dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
+(setq dired-clean-confirm-killing-deleted-buffers nil)
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
+(add-hook 'dired-mode-hook 'dired-collapse-mode)
 
-(leaf dired-filter
-  :hook (dired-mode-hook . dired-filter-group-mode)
-  :bind
-  (:dired-filter-map
-   ("p" . dired-filter-pop-all))
-  :custom
-  (dired-filter-revert . 'always)
-  (dired-filter-group-saved-groups
-   . '(("default"
-        ("Git"
-         (directory . ".git")
-         (file . ".gitignore"))
-        ("Directory"
-         (directory))
-        ("PDF"
-         (extension . "pdf"))
-        ("LaTeX"
-         (extension "tex" "bib"))
-        ("Source"
-         (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
-        ("Doc"
-         (extension "md" "rst" "txt"))
-        ("Org"
-         (extension . "org"))
-        ("Archives"
-         (extension "zip" "rar" "gz" "bz2" "tar"))
-        ("Images"
-         (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
+(require 'dired-filter)
+(with-eval-after-load 'dired-filter
+  (add-hook 'dired-mode-hook 'dired-filter-group-mode)
+  (define-key dired-filter-map (kbd "p") 'dired-filter-pop-all)
 
-(leaf dired-rainbow
-  :require t
-  :config
+  (setq dired-filter-revert 'always)
+  (setq dired-filter-group-saved-groups
+        '(("default"
+           ("Git"
+            (directory . ".git")
+            (file . ".gitignore"))
+           ("Directory"
+            (directory))
+           ("PDF"
+            (extension . "pdf"))
+           ("LaTeX"
+            (extension "tex" "bib"))
+           ("Source"
+            (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
+           ("Doc"
+            (extension "md" "rst" "txt"))
+           ("Org"
+            (extension . "org"))
+           ("Archives"
+            (extension "zip" "rar" "gz" "bz2" "tar"))
+           ("Images"
+            (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
+
+(require 'dired-rainbow)
+(with-eval-after-load 'dired-rainbow
   (dired-rainbow-define html "#eb5286"
                         ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
   (dired-rainbow-define xml "#f2d024"
@@ -126,12 +115,11 @@
   (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
-(leaf dired-narrow
-  :bind
-  (:dired-narrow-map
-   ("<down>"  . dired-narrow-next-file)
-   ("<up>"    . dired-narrow-previous-file)
-   ("<right>" . dired-narrow-enter-directory)))
+(require 'dired-narrow)
+(with-eval-after-load 'dired-narrow
+  (define-key dired-narrow-map (kbd "<down>") 'dired-narrow-next-file)
+  (define-key dired-narrow-map (kbd "<up>") 'dired-narrow-previous-file)
+  (define-key dired-narrow-map (kbd "<right>") 'dired-narrow-enter-directory))
 
 (provide 'init-dired)
 ;;; init-dired.el ends here
