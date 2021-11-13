@@ -6,7 +6,7 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 (with-eval-after-load 'company
-  (setq company-idle-delay 2)
+  (setq company-idle-delay 0.2)
   (setq company-show-numbers t)
   (setq company-dabbrev-downcase nil)
   (setq company-dabbrev-ignore-case 'keep)
