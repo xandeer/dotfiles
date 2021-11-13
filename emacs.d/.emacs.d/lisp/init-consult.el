@@ -24,6 +24,16 @@
 (with-eval-after-load 'consult
   (setq consult-async-min-input 1)
 
+  (with-eval-after-load 'orderless
+    ;; https://github.com/minad/consult/wiki#use-orderless-as-pattern-compiler-for-consult-grepripgrepfind
+    (defun consult--orderless-regexp-compiler (input type)
+      (setq input (orderless-pattern-compiler input))
+      (cons
+       (mapcar (lambda (r) (consult--convert-regexp r type)) input)
+       (lambda (str) (orderless--highlight input str))))
+
+    (setq consult--regexp-compiler #'consult--orderless-regexp-compiler))
+
   (defun xr/search-in-lisp ()
     "Start searching in `user-emacs-directory`."
     (interactive)
