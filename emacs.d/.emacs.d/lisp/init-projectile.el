@@ -3,6 +3,7 @@
 ;;; Code:
 
 (require-package 'projectile)
+(require 'projectile)
 
 (with-eval-after-load 'projectile
   (setq projectile-indexing-method      'hybrid)

@@ -65,6 +65,7 @@
   (global-set-key (kbd "M-s G") 'consult-git-grep)
   (global-set-key (kbd "M-s s") 'consult-ripgrep)
   (global-set-key (kbd "M-s l") 'consult-line)
+  (global-set-key (kbd "C-s") 'consult-line)
   (global-set-key (kbd "M-s L") 'consult-line-multi)
   (global-set-key (kbd "M-s m") 'consult-multi-occur)
   (global-set-key (kbd "M-s k") 'consult-keep-lines)

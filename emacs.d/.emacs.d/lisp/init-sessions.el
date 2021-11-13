@@ -32,9 +32,8 @@
 
 ;; Restore histories and registers after saving
 (setq-default history-length 10)
-(leaf savehist
-  :require t
-  :hook (after-init-hook . savehist-mode))
+(require 'savehist)
+(add-hook 'after-init-hook 'savehist-mode)
 
 (leaf session
   :straight t
