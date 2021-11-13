@@ -7,7 +7,8 @@
 (add-hook 'after-init-hook 'vertico-mode)
 
 (with-eval-after-load 'orderless
-  (setq completion-styles '(substring orderless))
+  ;; (setq completion-styles '(substring orderless))
+  (setq completion-styles '(orderless))
 
   (with-eval-after-load 'pinyinlib
     (defun completion--regex-pinyin (str)
