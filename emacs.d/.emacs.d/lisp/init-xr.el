@@ -272,6 +272,29 @@ If point was already at that position, move point to beginning of line."
     (save-buffers-kill-emacs)))
 
 
+;;; utils to remove leaf
+(defun xr/leaf-expand-custom (beg end)
+  (interactive "r")
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
+  (xr/replace "\\([a-z-]*\\) *\\. " "setq \\1 " beg end))
+
+(defun xr/leaf-expand-global-bind (beg end)
+  (interactive "r")
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
+  (xr/replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) '" beg end))
+
+(defun xr/leaf-expand-map-bind (beg end)
+  (interactive "r")
+  (unless beg (setq beg (point-min)))
+  (unless end (setq end (point-max)))
+  (xr/replace "\\(\".*\"\\) *\\. "
+              (concat "define-key "
+                      (read-from-minibuffer "Map: ")
+                      " (kbd \\1) '")
+              beg end))
+
 
 (provide 'init-xr)
 ;;; init-xr.el ends here
