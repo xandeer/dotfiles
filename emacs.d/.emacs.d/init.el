@@ -104,16 +104,15 @@
     (load-file local-file)))
 
 ;; after loaded
-(run-with-idle-timer 1 nil
-                     (lambda ()
-                       (require 'server)
-                       (unless (server-running-p)
-                         (server-start))
-                       (eva-mode)
-                       (eva-set-date-today)
-                       (xr/auto-session)
-                       (org-roam-node-random)
-                       ))
+(run-with-idle-timer
+ 1 nil (lambda ()
+         ;; (require 'server)
+         ;; (unless (server-running-p)
+         ;; (server-start))
+         (eva-mode)
+         (eva-set-date-today)
+         (xr/auto-session)
+         (org-roam-node-random)))
 
 (provide 'init)
 
