@@ -13,22 +13,14 @@
         :repo "DogLooksGood/emacs-rime"
         :files ( "Makefile" "*.el" "lib.c")))
 
-(leaf rime
-  :straight t posframe
-  :bind ("M-i" . toggle-input-method)
-  :bind (:rime-mode-map
-         ("M-I" . rime-force-enable))
-  :bind (:rime-active-mode-map
-         ("M-i" . rime-inline-ascii))
-  :bind (:ivy-minibuffer-map
-         ("M-i" . toggle-input-method))
-  :custom
-  (default-input-method . "rime")
-  (rime-user-data-dir   . "~/.cache/rime")
-  (rime-librime-root    . "~/.local/share/librime/dist")
-  ;; (rime-share-data-dir  . "~/.local/share/librime/thirdparty/share") ; rime-deploy doesn't work, just use default
-  ;; (rime-share-data-dir  . "/Library/Input Methods/Squirrel.app/Contents/SharedSupport")
-  :config
+(require-package 'rime)
+(require-package 'posframe)
+
+(setq default-input-method "rime")
+
+(with-eval-after-load 'rime
+  (setq rime-user-data-dir "~/.cache/rime")
+  (setq rime-librime-root "~/.local/share/librime/dist")
   (setq rime-show-candidate 'posframe)
   (setq rime-show-preedit t)
   (setq rime-cursor "˰")
@@ -45,7 +37,11 @@
        rime-predicate-ace-window-p
        rime-predicate-prog-in-code-p
        rime-predicate-punctuation-after-space-cc-p
-       rime-predicate-space-after-cc-p))))
+       rime-predicate-space-after-cc-p)))
+
+  (define-key rime-mode-map (kbd "M-I") 'rime-force-enable)
+  (define-key rime-active-mode-map (kbd "M-i") 'rime-inline-ascii))
+(global-set-key (kbd "M-i") 'toggle-input-method)
 
 (provide 'init-rime)
 ;;; init-rime.el ends here
