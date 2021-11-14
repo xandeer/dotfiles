@@ -15,6 +15,7 @@
 
   (global-set-key (kbd "H-p") 'projectile-find-file)
   (global-set-key (kbd "C-c p f") 'projectile-find-file)
+  (global-set-key (kbd "C-c f f") 'projectile-find-file)
   (global-set-key (kbd "C-c p p") 'projectile-switch-project)
 
   (with-eval-after-load 'consult
