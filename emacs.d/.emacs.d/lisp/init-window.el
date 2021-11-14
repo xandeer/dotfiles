@@ -13,7 +13,7 @@
     (select-window window))
   (if (xr/roam-buffer-p)
       (org-roam-node-find)
-    (counsel-projectile-find-file)))
+    (projectile-find-file)))
 
 (defun xr/split-below-find-file ()
   "Split below and find file."

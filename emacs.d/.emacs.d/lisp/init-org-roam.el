@@ -15,14 +15,14 @@
   ("C-c r"   . org-roam-capture)
   ("H-f"     . org-roam-node-find)
   ("H-g"     . xr/roam-node-find-other-window)
-  ("H-y"     . org-roam-dailies-goto-yesterday)
-  ("H-."     . org-roam-dailies-goto-today)
+  ("H-'"     . org-roam-dailies-goto-yesterday)
+  ("H-;"     . org-roam-dailies-goto-today)
   ("H-t"     . org-roam-dailies-goto-date)
   (:org-mode-map
    ("H-i"     . org-roam-node-insert)
    ("H-r"     . org-roam-buffer-toggle)
-   ("C-c C-b" . org-roam-dailies-goto-previous-note)
-   ("C-c C-f" . org-roam-dailies-goto-next-note))
+   ("H-," . org-roam-dailies-goto-previous-note)
+   ("H-." . org-roam-dailies-goto-next-note))
   (:org-roam-mode-map
    ("H-r" . kill-buffer-and-window))
   :custom

@@ -27,6 +27,7 @@
    ("M-p"       . org-previous-visible-heading)
    ("M-n"       . org-next-visible-heading)
    ("C-,"       . imenu)
+   ("M-,"       . org-mark-ring-goto)
    ("C-c x C-r" . org-table-recalculate))
   :custom
   (org-modules

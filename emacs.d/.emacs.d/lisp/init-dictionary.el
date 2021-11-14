@@ -12,6 +12,8 @@
 
 (require-package 'posframe)
 (require-package 'sdcv)
+(require 'sdcv)
+
 (with-eval-after-load 'sdcv
   (set-face-attribute 'sdcv-tooltip-face nil
                       :foreground "#E0F0E9")
@@ -35,6 +37,8 @@
 ;;    . english-teacher-follow-mode))
 
 (require-package 'go-translate)
+(require 'go-translate)
+
 (with-eval-after-load 'go-translate
   (setq go-translate-token-current (cons 430675 2721866130))
   (setq go-translate-base-url "https://translate.google.cn")
