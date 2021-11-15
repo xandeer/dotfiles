@@ -40,7 +40,7 @@
 
   (defun xr/telega-chatbuf-attach-file (filename &optional preview-p)
     "Attach FILE as document to the current input."
-    (interactive (list (read-file-name "Attach file: " (expand-file-name "~/temp"))))
+    (interactive (list (read-file-name "Attach file: " (expand-file-name "~/temp/"))))
     (let ((ifile (telega-chatbuf--gen-input-file filename 'Document preview-p)))
       (telega-chatbuf-input-insert
        (list :@type "inputMessageDocument"

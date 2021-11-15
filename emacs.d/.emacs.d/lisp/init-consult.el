@@ -23,6 +23,11 @@
 
 (with-eval-after-load 'consult
   (setq consult-async-min-input 1)
+  (setq consult-ripgrep-args "rg --null --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
+   --smart-case --no-heading --line-number .")
+
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
 
   (with-eval-after-load 'orderless
     ;; https://github.com/minad/consult/wiki#use-orderless-as-pattern-compiler-for-consult-grepripgrepfind
@@ -46,6 +51,7 @@
   (global-set-key (kbd "C-c k") 'consult-kmacro)
   (global-set-key (kbd "C-c f r") 'consult-recent-file)
   (global-set-key (kbd "C-c f e") 'xr/search-in-lisp)
+  (global-set-key (kbd "C-c f s") 'consult-ripgrep)
   ;; C-x bindings (ctl-x-map)
   (global-set-key (kbd "C-x M-:") 'consult-complex-command)     ;; orig. repeat-complex-command
   (global-set-key (kbd "C-x b") 'consult-buffer)                ;; orig. switch-to-buffer

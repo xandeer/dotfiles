@@ -42,6 +42,12 @@
 
     (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
 
+    ;; (add-to-list 'marginalia-prompt-categories '("Find file: " . file))
+
+    (with-eval-after-load 'consult
+      (require-package 'embark-consult)
+      (require 'embark-consult))
+
     (with-eval-after-load 'ace-window
       (define-key embark-file-map     (kbd "o") (xr/embark-ace-action find-file))
       (define-key embark-roam-map     (kbd "o") (xr/embark-ace-action org-roam-node-find))
