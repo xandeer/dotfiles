@@ -61,5 +61,17 @@ Cancel: _q_ cancel
   :config
   (flycheck-package-setup))
 
+;; (with-eval-after-load 'skeleton
+;;   (define-abbrev-table 'emacs-lisp-mode-abbrev-table
+;;     '(("lmdi" "" 'xr/el-lambdai)
+;;       ("elh" "" 'xr/el-template))))
+
+;; (require-package 'key-chord)
+;; (require 'key-chord)
+;; (key-chord-mode 1)
+;; (setq key-chord-two-keys-delay 0.1)
+;; (key-chord-define-global "xx" 'dabbrev-expand)
+;; (key-chord-define-global "ss" 'hippie-expand)
+
 (provide 'init-elisp)
 ;;; init-elisp.el ends here

@@ -79,7 +79,7 @@
   (global-set-key (kbd "M-s F") 'consult-locate)
   (global-set-key (kbd "M-s g") 'consult-grep)
   (global-set-key (kbd "M-s G") 'consult-git-grep)
-  (global-set-key (kbd "M-s s") 'consult-ripgrep)
+  (global-set-key (kbd "M-s s") (lambda () (interactive) (consult-ripgrep default-directory)))
   (global-set-key (kbd "M-s l") 'consult-line)
   (global-set-key (kbd "C-s") 'consult-line)
   (global-set-key (kbd "M-s L") 'consult-line-multi)
