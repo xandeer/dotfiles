@@ -36,6 +36,8 @@
   (global-set-key (kbd "H-1") 'delete-other-windows)
   (global-set-key (kbd "H-2") 'xr/split-below-find-file)
   (global-set-key (kbd "H-3") 'xr/split-right-find-file)
+  (global-set-key [remap split-window-right] 'xr/split-right-find-file)
+  (global-set-key [remap split-window-below] 'xr/split-below-find-file)
   (global-set-key (kbd "C-x x") 'ace-swap-window))
 
 (provide 'init-window)
