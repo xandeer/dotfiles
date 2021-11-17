@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>hs_daemon</string>
+  <key>UserName</key>
+  <string>kevin</string>
+  <key>WorkingDirectory</key>
+  <string>/Users/kevin/bin</string>
+	<key>Program</key>
+	<string>hs</string>
+	<key>RunAtLoad</key>
+        <true/>
+	<key>StandardErrorPath</key>
+	<string>/Users/kevin/temp/hs-log/hs_daemon.stderr</string>
+	<key>StandardOutPath</key>
+	<string>/Users/kevin/temp/hs-log/hs_daemon.stdout</string>
+</dict>
+</plist>
