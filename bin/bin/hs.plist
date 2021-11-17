@@ -3,13 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>hs_daemon</string>
+	<string>hs</string>
   <key>UserName</key>
   <string>kevin</string>
-  <key>WorkingDirectory</key>
-  <string>/Users/kevin/bin</string>
 	<key>Program</key>
-	<string>hs</string>
+	<string>/Users/kevin/bin/hs-daemon.sh</string>
 	<key>RunAtLoad</key>
         <true/>
 	<key>StandardErrorPath</key>

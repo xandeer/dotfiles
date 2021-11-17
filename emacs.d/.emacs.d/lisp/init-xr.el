@@ -216,9 +216,10 @@ If point was already at that position, move point to beginning of line."
     (setq xr/auto-timer (cancel-timer xr/auto-timer))))
 
 
-(add-hook #'after-init-hook
-          (lambda ()
-            (async-shell-command "~/bin/hs -d ~/Downloads" "*hs-daemon*")))
+;; Move it to /Library/LaunchDaemons
+;; (add-hook #'after-init-hook
+          ;; (lambda ()
+            ;; (async-shell-command "~/bin/hs -d ~/Downloads" "*hs-daemon*")))
 
 (defun xr/change-hs-root (path)
   (interactive)
