@@ -5,7 +5,7 @@
 (require-package 'key-chord)
 (require 'key-chord)
 
-;; (setq key-chord-one-key-delay 0.2)
+(setq key-chord-one-key-delay 0.18)
 (add-hook 'after-init-hook (lambda () (key-chord-mode 1)))
 
 (key-chord-define-global "jj" 'xr/ace-goto-char-timer)
@@ -23,6 +23,7 @@
 (key-chord-define-global "jy" 'org-roam-dailies-goto-yesterday)
 (key-chord-define org-mode-map "kk" 'org-mark-ring-goto)
 (key-chord-define org-mode-map "nn" 'org-toggle-narrow-to-subtree)
+(key-chord-define org-agenda-mode-map "jj" 'consult-line)
 
 (defun xr/top-current-line ()
   (interactive)
