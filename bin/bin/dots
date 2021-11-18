@@ -1,37 +1,22 @@
-# ; -*-sh-*-
-#!/bin/sh
+#!/usr/bin/env bash
 
 DOTS_ROOT=$HOME/projects/personal/dotfiles
-
-function syncDoom() {
-  make -C $DOTS_ROOT/doom/.config/doom
-}
 
 function syncRime() {
   make -C $DOTS_ROOT/rime
 }
 
-function useDoom() {
-  rm $HOME/.emacs.d
-  ln -s $HOME/.local/share/doom.d $HOME/.emacs.d
-}
-
-function useVanilla() {
-  rm $HOME/.emacs.d
-  ln -s $DOTS_ROOT/emacs.d/.emacs.d $HOME/.emacs.d
+function install() {
+  make -C $DOTS_ROOT install
 }
 
 case "$1" in
-  doom|d)
-    syncDoom;;
-  dd)
-    useDoom;;
-  dx)
-    useVanilla;;
+  install|i)
+    install;;
   rime|r)
     syncRime;;
   *)
     echo "== ! dots: missing or invalid argument ! =="
-    echo "Try again with: doom(d)|rime(r)"
+    echo "Try again with: install(i)|rime(r)"
     exit 2
 esac
