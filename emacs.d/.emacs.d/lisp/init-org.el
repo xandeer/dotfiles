@@ -26,6 +26,7 @@
   (:org-mode-map
    ("M-p"       . org-previous-visible-heading)
    ("M-n"       . org-next-visible-heading)
+   ("M-o"       . org-toggle-narrow-to-subtree)
    ("C-,"       . imenu)
    ("M-,"       . org-mark-ring-goto)
    ("C-c x C-r" . org-table-recalculate))

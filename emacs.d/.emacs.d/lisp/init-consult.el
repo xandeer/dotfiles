@@ -69,7 +69,7 @@
   ;; (global-set-key (kbd "M-g f") 'consult-flymake)               ;; Alternative: consult-flycheck
   (global-set-key (kbd "M-g g") 'consult-goto-line)             ;; orig. goto-line
   (global-set-key (kbd "M-g M-g") 'consult-goto-line)           ;; orig. goto-line
-  (global-set-key (kbd "M-g o") 'consult-outline)               ;; Alternative: consult-org-heading
+  (global-set-key (kbd "M-g h") 'consult-outline)               ;; Alternative: consult-org-heading
   (global-set-key (kbd "M-g m") 'consult-mark)
   (global-set-key (kbd "M-g k") 'consult-global-mark)
   (global-set-key (kbd "M-g i") 'consult-imenu)
