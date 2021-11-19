@@ -5,11 +5,13 @@
 
 (setq org-roam-v2-ack t)
 (require-package 'org-roam)
+(require 'org-roam)
 (leaf org-roam
+  :after gcmh
   :hook
   (org-mode-hook    . xr/enable-valign-when-valign)
   (org-mode-hook    . xr/disable-company-when-nocompany)
-  (before-save-hook . xr/roam-update-modified-date)
+  ;; (before-save-hook . xr/roam-update-modified-date)
   :bind
   ("C-c x r" . org-roam-node-random)
   ("C-c r"   . org-roam-capture)
@@ -35,12 +37,12 @@
   (org-roam-capture-templates
    . '(("d" "default" plain "%?"
         :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                           "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
+                           "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
         :unnarrowed t)))
   (org-roam-capture-immediate-template
    . '("d" "default" plain "%?"
        :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                          "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+DATE: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
+                          "#+TITLE: ${title}\n#+CREATED: <%<%Y-%m-%d %a %R>>\n#+filetags: fleeting\n")
        :immediate-finish t
        :unnarrowed t))
   (org-roam-dailies-capture-templates
