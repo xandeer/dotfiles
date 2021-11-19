@@ -16,8 +16,8 @@
                    nil
                    (window-parameters (mode-line-format . none))))
 
-    (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
-
+    ;; (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
+    ;; (setq embark-keymap-alist (-remove-at 0 embark-keymap-alist))
     ;; (add-to-list 'marginalia-prompt-categories '("Find file: " . file))
 
     (with-eval-after-load 'consult
@@ -26,33 +26,38 @@
 
     (with-eval-after-load 'ace-window
       (defun xr/wrap-embark-ace ()
+        "Switch window before running default command."
         (interactive)
         (with-demoted-errors "%s"
           (aw-switch-to-window (aw-select nil))
           (call-interactively embark--command)))
 
-      (define-key embark-general-map     (kbd "o") 'xr/wrap-embark-ace))
+      (define-key embark-general-map (kbd "o") 'xr/wrap-embark-ace))
 
     (defun xr/wrap-embark-split-right ()
+      "Split window right before running default command."
       (interactive)
       (with-demoted-errors "%s"
         (select-window (split-window-right))
         (call-interactively embark--command)))
 
     (defun xr/wrap-embark-split-below ()
+      "Split window below before running default command."
       (interactive)
       (with-demoted-errors "%s"
         (select-window (split-window-below))
         (call-interactively embark--command)))
 
-    (define-key embark-general-map     (kbd "2") 'xr/wrap-embark-split-below)
-    (define-key embark-general-map     (kbd "3") 'xr/wrap-embark-split-right)
+    (define-key embark-general-map (kbd "2") 'xr/wrap-embark-split-below)
+    (define-key embark-general-map (kbd "3") 'xr/wrap-embark-split-right)
 
   ;; (global-set-key (kbd "H-i") 'embark-act)
   (with-eval-after-load 'vertico
-    (define-key vertico-map (kbd "C-o") 'embark-act)
+    (define-key vertico-map (kbd "C-o") 'embark-act))
 
-    ;;;autoload
+  (defun xr/wrap-default-p (action)
+    (s-starts-with? "xr/wrap-embark" (symbol-name action)))
+
   (defun embark-act (&optional arg)
   "Prompt the user for an action and perform it.
 The targets of the action are chosen by `embark-target-finders'.
@@ -122,9 +127,7 @@ target."
                   (condition-case err
                       (embark--act
                        action
-                       (if (or (let ((name (symbol-name action)))
-                                 (message name)
-                                 (s-starts-with? "xr/wrap-embark" name))
+                       (if (or (xr/wrap-default-p action)
                                (and (eq action default-action)
                                     (eq action embark--command)))
                            (plist-put
