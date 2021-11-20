@@ -48,6 +48,7 @@
 (defun xr/ace-mode-p ()
   "Whether ace goto word."
   (bound-and-true-p xr/ace-mode))
+
 (require-package 'ace-pinyin)
 (defun xr/ace-goto-char-timer ()
   "Like the `avy-goto-char-timer`."
@@ -63,6 +64,7 @@
               (not ace-pinyin-simplified-chinese-only-p)))))
     (avy-process avy--old-cands))
   (setq xr/ace-mode nil))
+
 (defun xr/ace-pinyin-goto-char-2 ()
   "Ace-pinyin replacement of `avy-goto-char-2'."
   (interactive)

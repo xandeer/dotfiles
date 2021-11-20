@@ -36,5 +36,11 @@
 (key-chord-define-global "kt" 'xr/top-current-line)
 (key-chord-define-global "kb" 'xr/bottom-current-line)
 
+;; https://emacs.stackexchange.com/questions/2105/how-do-i-disable-key-chord-mode-in-the-minibuffer
+(defun disable-key-chord-mode ()
+  (set (make-local-variable 'input-method-function) nil))
+
+(add-hook 'minibuffer-setup-hook #'disable-key-chord-mode)
+
 (provide 'init-key-chord)
 ;;; init-key-chord.el ends here
