@@ -177,7 +177,7 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
                     (or (progn
                           (require 'dired-aux)
                           (dired-dwim-target-directory))
-                        (expand-file-name "~/Downloads")))
+                        (expand-file-name "~/Downloads/")))
     current-prefix-arg
     nil))
   (setq method (or method org-attach-method))
