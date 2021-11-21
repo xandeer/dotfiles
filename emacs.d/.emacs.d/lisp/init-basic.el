@@ -19,7 +19,7 @@
  save-interprogram-paste-before-kill t)
 
 (setq find-file-visit-truename t)
-(setq enable-recursive-minibuffers t)
+(setq enable-recursive-minibuffers nil)
 (setq use-dialog-box nil)
 (fset 'yes-or-no-p 'y-or-n-p)
 

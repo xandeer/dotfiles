@@ -92,23 +92,23 @@ If point was already at that position, move point to beginning of line."
     (org-set-tags (format-time-string ":%a:" today))
     (xr/replace "^\\*" "**" (point))))
 
+(defun xr/--is-current-year? (year)
+  (= year (string-to-number (format-time-string "%y"))))
+
 (setq xr/org-today-tag "@home:")
 (defun xr/insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
-  (interactive "sYear default[18], j[21], k[16], else[17]: ")
-  (setq year (cond ((s-blank-str? year) 18)
-                   ((s-equals? year "k") 16)
-                   ((s-equals? year "j") 21)
-                   (t 17)))
+  (interactive "nYear[< 3: 2x, else: 1x]: ")
+  (setq year (+ year (if (< year 3) 20 10)))
   (goto-char (point-min))
   (let ((today (xr/journal-date year)))
-    (if (= year 21) (progn
+    (if (xr/--is-current-year? year) (progn
                       (search-forward (format-time-string "* %B %d" today))
                       (newline))
       (goto-char (point-max)))
     (insert (format-time-string "** %Y" today))
     (org-set-tags (concat (format-time-string ":%a:" today)
-                          (when (= year 21) xr/org-today-tag))))
+                          (when (xr/--is-current-year? year) xr/org-today-tag))))
   (end-of-line)
   (newline))
 
@@ -199,15 +199,22 @@ If point was already at that position, move point to beginning of line."
 (defvar xr/auto-timer nil)
 
 (defun xr/auto-session ()
-  (eva-query-mood)
-  (when (y-or-n-p "Push notes to github? ")
-    (async-shell-command
-     (concat "cd " org-directory
-             "; git add --all && git commit -m 'emacs timer: "
-             (format-time-string "[%F %a %T]'")
-             "; git push")))
-  (setq xr/auto-timer
-        (run-with-timer 3600 nil #'xr/auto-session)))
+  (run-with-idle-timer
+   5 nil (lambda ()
+           (run-with-idle-timer
+            1 nil (lambda ()
+                    (eva-query-mood)))
+           (run-with-idle-timer
+            3 nil (lambda ()
+                    (when (y-or-n-p "Push notes to github? ")
+                      (async-shell-command
+                       (concat "cd " org-directory
+                               "; git add --all && git commit -m 'emacs timer: "
+                               (format-time-string "[%F %a %T]'")
+                               "; git push")))))
+
+           (setq xr/auto-timer
+                 (run-with-timer 3600 nil #'xr/auto-session)))))
 
 (defun xr/disable-auto-session ()
   "Disalbe auto session."
@@ -267,7 +274,7 @@ If point was already at that position, move point to beginning of line."
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
 (defun xr/restart-emacs ()
-  "Restart emacs."
+  "Restart Emacs."
   (interactive)
   (let ((kill-emacs-hook (append kill-emacs-hook (list #'xr/launch-separate-emacs-under-x))))
     (save-buffers-kill-emacs)))
