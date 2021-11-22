@@ -23,7 +23,7 @@
   (telega-chat-scroll-conservatively . 101)
   (telega-sticker-set-download       . t)
   (telega-cache-dir                  . `,(expand-file-name "~/Downloads/telega"))
-  (telega-completing-read-function   . 'ivy-completing-read)
+  (telega-completing-read-function   . 'completing-read)
   (telega-proxies
    . `,(list
         '(:server "127.0.0.1" :port 8010 :enable t

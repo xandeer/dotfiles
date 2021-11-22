@@ -95,6 +95,8 @@
 ;; chores
 (require 'init-mouse)
 
+(require 'init-osx)
+
 (add-hook 'after-init-hook 'toggle-frame-maximized)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))

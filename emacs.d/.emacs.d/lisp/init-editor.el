@@ -196,6 +196,11 @@
    ("q" nil)
    ("g" nil)))
 
+;; https://stackoverflow.com/questions/22107501/set-emacs-to-smart-auto-line-after-a-parentheses-pair
+(with-eval-after-load 'smartparens
+  (sp-with-modes '(js-mode web-mode kotlin-mode css-mode)
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
+
 (leaf quick-peek
   :straight t
   :custom-face
