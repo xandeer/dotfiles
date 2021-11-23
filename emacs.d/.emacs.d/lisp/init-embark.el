@@ -6,59 +6,119 @@
 (add-hook 'after-init-hook 'marginalia-mode)
 
 (require-package 'embark)
-(require 'embark)
+(require 'embark nil t)
 
-(with-eval-after-load 'marginalia
-  (with-eval-after-load 'embark
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none))))
+;; Hide the mode line of the Embark live/completions buffers
+(add-to-list 'display-buffer-alist
+             '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+               nil
+               (window-parameters (mode-line-format . none))))
 
-    ;; (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
-    ;; (setq embark-keymap-alist (-remove-at 0 embark-keymap-alist))
-    ;; (add-to-list 'marginalia-prompt-categories '("Find file: " . file))
+;; (add-to-list 'embark-keymap-alist '(org-roam-node . embark-roam-map))
+;; (setq embark-keymap-alist (-remove-at 0 embark-keymap-alist))
+;; (add-to-list 'marginalia-prompt-categories '("Find file: " . file))
 
-    (with-eval-after-load 'consult
-      (require-package 'embark-consult)
-      (require 'embark-consult))
+(autoload 'consult-ripgrep "consult")
+(autoload 'consult-line "consult")
+(autoload 'consult-imenu "consult")
+(autoload 'consult-outline "consult")
+(autoload 'consult-recent-file "consult")
 
-    (with-eval-after-load 'ace-window
-      (defun xr/wrap-embark-ace ()
-        "Switch window before running default command."
-        (interactive)
-        (with-demoted-errors "%s"
-          (aw-switch-to-window (aw-select nil))
-          (call-interactively embark--command)))
+(with-eval-after-load 'consult
+  (require-package 'embark-consult)
+  (require 'embark-consult))
 
-      (define-key embark-general-map (kbd "o") 'xr/wrap-embark-ace))
+(defgroup xr-embark ()
+  "Extensions for `embark`."
+  :group 'editing)
 
-    (defun xr/wrap-embark-split-right ()
-      "Split window right before running default command."
-      (interactive)
-      (with-demoted-errors "%s"
-        (select-window (split-window-right))
-        (call-interactively embark--command)))
+(defvar xr-embark-become-general-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "f") 'consult-find)
+    (define-key map (kbd "g") 'consult-ripgrep)
+    map)
+  "General custom cross-package `embark-become` keymap.")
 
-    (defun xr/wrap-embark-split-below ()
-      "Split window below before running default command."
-      (interactive)
-      (with-demoted-errors "%s"
-        (select-window (split-window-below))
-        (call-interactively embark--command)))
+(defvar xr-embark-become-line-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "l") 'consult-line)
+    (define-key map (kbd "i") 'consult-imenu)
+    (define-key map (kbd "s") 'consult-outline) ; as my default is 'M-s M-s'
+    map)
+  "Line-specific custom cross-package `embark-become' keymap.")
 
-    (define-key embark-general-map (kbd "2") 'xr/wrap-embark-split-below)
-    (define-key embark-general-map (kbd "3") 'xr/wrap-embark-split-right)
+(defvar embark-become-file+buffer-map)
 
-  ;; (global-set-key (kbd "H-i") 'embark-act)
-  (with-eval-after-load 'vertico
-    (define-key vertico-map (kbd "C-o") 'embark-act))
+(defvar xr-embark-become-file+buffer-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map embark-become-file+buffer-map)
+    (define-key map (kbd "r") 'consult-recent-file)
+    ;; (define-key map (kbd "B") 'project-switch-to-buffer)
+    (define-key map (kbd "F") 'projectile-find-file)
+    map)
+  "File+buffer custom cross-package `embark-become' keymap.")
 
-  (defun xr/wrap-default-p (action)
-    (s-starts-with? "xr/wrap-embark" (symbol-name action)))
+(defvar embark-become-keymaps)
 
-  (defun embark-act (&optional arg)
+;;;###autoload
+(define-minor-mode xr-embark-keymaps
+  "Add or remove keymaps from Embark.
+This is based on the value of `xr-embark-add-keymaps'
+and is meant to keep things clean in case I ever wish to disable
+those so-called 'extras'."
+  :init-value nil
+  :global t
+  (let ((maps (list 'xr-embark-become-general-map
+                    'xr-embark-become-line-map
+                    'xr-embark-become-file+buffer-map)))
+    (if xr-embark-keymaps
+        (dolist (map maps)
+          (cl-pushnew map embark-become-keymaps))
+      (setq embark-become-keymaps
+            (dolist (map maps)
+              (delete map embark-become-keymaps))))))
+
+(autoload 'embark-act "embark")
+(autoload 'embark-act-noexit "embark")
+(autoload 'embark-become "embark")
+
+(global-set-key (kbd "H-l") #'embark-act)
+
+(with-eval-after-load 'ace-window
+  (defun xr/wrap-embark-ace ()
+    "Switch window before running default command."
+    (interactive)
+    (with-demoted-errors "%s"
+      (aw-switch-to-window (aw-select nil))
+      (call-interactively embark--command)))
+
+  (define-key embark-general-map (kbd "o") 'xr/wrap-embark-ace))
+
+(defun xr/wrap-embark-split-right ()
+  "Split window right before running default command."
+  (interactive)
+  (with-demoted-errors "%s"
+    (select-window (split-window-right))
+    (call-interactively embark--command)))
+
+(defun xr/wrap-embark-split-below ()
+  "Split window below before running default command."
+  (interactive)
+  (with-demoted-errors "%s"
+    (select-window (split-window-below))
+    (call-interactively embark--command)))
+
+(define-key embark-general-map (kbd "2") 'xr/wrap-embark-split-below)
+(define-key embark-general-map (kbd "3") 'xr/wrap-embark-split-right)
+
+;; (global-set-key (kbd "H-i") 'embark-act)
+(with-eval-after-load 'vertico
+  (define-key vertico-map (kbd "C-o") 'embark-act))
+
+(defun xr/wrap-default-p (action)
+  (s-starts-with? "xr/wrap-embark" (symbol-name action)))
+
+(defun embark-act (&optional arg)
   "Prompt the user for an action and perform it.
 The targets of the action are chosen by `embark-target-finders'.
 By default, if called from a minibuffer the target is the top
@@ -103,10 +163,10 @@ target."
                         (progn
                           (message "%s" target)
                           (message "copied: %s" (plist-put
-                            (plist-put
-                             (copy-sequence target)
-                             :target (plist-get target :orig-target))
-                            :type (plist-get target :orig-type)))
+                                                 (plist-put
+                                                  (copy-sequence target)
+                                                  :target (plist-get target :orig-target))
+                                                 :type (plist-get target :orig-type)))
                           (user-error "Canceled"))))
                    (default-action (or default-done
                                        (embark--default-action
@@ -158,7 +218,55 @@ target."
                                     (eq (plist-get x :type) desired-type)))
                                 new-targets)
                                0)))))))))
-      (mapc #'funcall indicators))))))
+      (mapc #'funcall indicators))))
+
+(defun embark-which-key-indicator ()
+  "An embark indicator that displays keymaps using which-key.
+The which-key help message will show the type and value of the
+current target followed by an ellipsis if there are further
+targets."
+  (lambda (&optional keymap targets prefix)
+    (if (null keymap)
+        (which-key--hide-popup-ignore-command)
+      (which-key--show-keymap
+       (if (eq (plist-get (car targets) :type) 'embark-become)
+           "Become"
+         (format "Act on %s '%s'%s"
+                 (plist-get (car targets) :type)
+                 (embark--truncate-target (plist-get (car targets) :target))
+                 (if (cdr targets) "…" "")))
+       (if prefix
+           (pcase (lookup-key keymap prefix 'accept-default)
+             ((and (pred keymapp) km) km)
+             (_ (key-binding prefix 'accept-default)))
+         keymap)
+       nil nil t (lambda (binding)
+                   (not (string-suffix-p "-argument" (cdr binding))))))))
+(setq embark-indicators
+      '(embark-which-key-indicator
+        embark-highlight-indicator
+        embark-isearch-highlight-indicator))
+
+(defun embark-hide-which-key-indicator (fn &rest args)
+  "Hide the which-key indicator immediately when using the completing-read prompter."
+  (which-key--hide-popup-ignore-command)
+  (let ((embark-indicators
+         (remq #'embark-which-key-indicator embark-indicators)))
+    (apply fn args)))
+
+(advice-add #'embark-completing-read-prompter
+            :around #'embark-hide-which-key-indicator)
+
+(defun embark-vertico-indicator ()
+  (let ((fr face-remapping-alist))
+    (lambda (&optional keymap _targets prefix)
+      (when (bound-and-true-p vertico--input)
+        (setq-local face-remapping-alist
+                    (if keymap
+                        (cons '(vertico-current . embark-target) fr)
+                      fr))))))
+
+(add-to-list 'embark-indicators #'embark-vertico-indicator)
 
 (provide 'init-embark)
 ;;; init-embark.el ends here
