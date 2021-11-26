@@ -24,6 +24,7 @@
 
 ;; Bootstrap
 (require 'init-bootstrap) ; straight, leaf, hydra, no-littering
+(require 'xr-utils)
 (require 'init-xr)
 (require 'init-exec-path) ; set "PATH" and `exec-path`
 (require 'init-keybindings) ; which-key, keyfreq, osx-modifiers
