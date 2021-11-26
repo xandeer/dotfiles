@@ -69,7 +69,6 @@
 (require 'init-dictionary)
 (require 'init-dired)
 (require 'init-embark)
-(require 'init-engine-mode)
 (require 'init-eva)
 (require 'init-flycheck)
 (require 'init-folding)
@@ -81,11 +80,12 @@
 (require 'init-link-hint)
 (require 'init-lsp)
 (require 'init-git)
-(require 'init-meow)
+(require 'xr-meow)
 (require 'init-pass)
 (require 'init-pinyin)
 (require 'init-projectile)
 (require 'init-rime)
+(require 'xr-search-engine)
 (require 'init-sh)
 (require 'init-skeleton)
 (require 'init-telega)
@@ -109,15 +109,23 @@
     (load-file local-file)))
 
 ;; after loaded
-(run-with-idle-timer
- 1 nil (lambda ()
-         ;; (require 'server)
-         ;; (unless (server-running-p)
-         ;; (server-start))
-         (eva-mode)
-         (eva-set-date-today)
-         (xr/auto-session)
-         (org-roam-node-random)))
+(defun xr-load-init-session ()
+  ;; (require 'server)
+  ;; (unless (server-running-p)
+  ;; (server-start))
+  (org-roam-node-random)
+  (eva-mode)
+  (eva-set-date-today)
+  (xr/auto-session))
+
+(setq xr-writing-config nil)
+
+(let ((init-fn
+       (if xr-writing-config
+           (lambda () (find-file (expand-file-name "init.el" user-emacs-directory)))
+         'xr-load-init-session)))
+  (run-with-idle-timer 1 nil init-fn))
+
 
 (provide 'init)
 

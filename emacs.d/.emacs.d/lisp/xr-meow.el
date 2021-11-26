@@ -1,21 +1,17 @@
-;;; init-meow.el --- Meow keybindings -*- lexical-binding: t; -*-
+;;; xr-meow.el --- xr-meow -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
-
-;; There's a bug when reload it.
-;; (delete-directory (expand-file-name "straight/build/meow" user-emacs-directory) t)
-
-(defun xr/meow-setqs ()
+(defun xr--meow-setqs ()
   (setq meow-cursor-type-insert '(bar . 3))
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
 
-(defun xr/meow-define-motion-keys ()
+(defun xr--meow-define-motion-keys ()
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)))
 
-(defun xr/meow-define-leader-keys ()
+(defun xr--meow-define-leader-keys ()
   (meow-leader-define-key
    ;; SPC j/k will run the original command in MOTION state.
    '("j" . meow-motion-origin-command)
@@ -56,7 +52,7 @@
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet)))
 
-(defun xr/meow-define-normal-keys ()
+(defun xr--meow-define-normal-keys ()
   (meow-normal-define-key
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
@@ -131,27 +127,26 @@
    '("\/" . meow-visit)
    '("<escape>" . meow-cancel)))
 
-(defun xr/meow-enable-local-insert ()
+(defun xr--meow-enable-local-insert ()
   "Set insert as default mode."
   (setq-default meow-normal-mode nil)
   (setq-default meow-insert-mode t))
 
-(advice-add 'meow--global-enable :after 'xr/meow-enable-local-insert)
+(advice-add 'meow--global-enable :after 'xr--meow-enable-local-insert)
 
-(defun xr/meow-setup ()
+(defun xr--meow-setup ()
   "Meow setup."
-  (xr/meow-setqs)
-  (xr/meow-define-motion-keys)
-  (xr/meow-define-leader-keys)
-  (xr/meow-define-normal-keys))
+  (xr--meow-setqs)
+  (xr--meow-define-motion-keys)
+  (xr--meow-define-leader-keys)
+  (xr--meow-define-normal-keys))
 
-(leaf meow
-  :straight t
-  :require t
-  :init
-  (meow-global-mode 1)
-  :config
-  (xr/meow-setup))
+(require-package 'meow)
+(xr-append-init-hook 'meow-global-mode)
+(with-eval-after-load 'meow-core
+  (require 'meow-cheatsheet)
+  (require 'meow-helpers)
+  (xr--meow-setup))
 
-(provide 'init-meow)
-;;; init-meow.el ends here
+(provide 'xr-meow)
+;;; xr-meow.el ends here
