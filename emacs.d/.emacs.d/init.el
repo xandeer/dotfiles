@@ -119,7 +119,7 @@
   (eva-set-date-today)
   (xr/auto-session))
 
-(setq xr-writing-config t)
+(setq xr-writing-config nil)
 
 (let ((init-fn
        (if xr-writing-config
