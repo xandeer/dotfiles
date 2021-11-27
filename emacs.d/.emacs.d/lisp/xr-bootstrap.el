@@ -1,4 +1,4 @@
-;;; init-bootstrap.el ---  bootstrap  -*- lexical-binding: t; -*-
+;;; xr-bootstrap.el ---  bootstrap  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -41,5 +41,5 @@
 (require 'no-littering)
 (require-package 'hydra)
 
-(provide 'init-bootstrap)
-;;; init-bootstrap.el ends here
+(provide 'xr-bootstrap)
+;;; xr-bootstrap.el ends here

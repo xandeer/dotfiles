@@ -1,4 +1,4 @@
-;;; init-keybindings.el --- basic keybindings -*- lexical-binding: t; -*-
+;;; xr-keybindings.el --- basic keybindings -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -39,5 +39,5 @@
           next-line
           newline-and-indent))
 
-(provide 'init-keybindings)
-;;; init-keybindings.el ends here
+(provide 'xr-keybindings)
+;;; xr-keybindings.el ends here

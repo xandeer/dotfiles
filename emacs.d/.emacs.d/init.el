@@ -11,7 +11,7 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; Adjust garbage collection thresholds during startup, and thereafter
+;;; Adjust garbage collection thresholds during startup, and thereafter
 (let ((init-gc-cons-threshold (* 128 1024 1024)))
   (setq gc-cons-threshold init-gc-cons-threshold)
   (add-hook 'emacs-startup-hook
@@ -22,25 +22,27 @@
               (setq gcmh-low-cons-threshold #x800000)
               (setq gcmh-high-cons-threshold #x880000))))
 
-;; Bootstrap
-(require 'init-bootstrap) ; straight, leaf, hydra, no-littering
+;;; Bootstrap
+;; straight, leaf, hydra, no-littering
+(require 'xr-bootstrap)
 (require 'xr-utils)
 (require 'init-xr)
-(require 'init-exec-path) ; set "PATH" and `exec-path`
-(require 'init-keybindings) ; which-key, keyfreq, osx-modifiers
+;; set "PATH" and `exec-path`
+(require 'xr-exec-path)
+;; which-key, keyfreq, osx-modifiers
+(require 'xr-keybindings)
 
-(require 'init-basic)
-(require 'init-editor)
+(require 'xr-basic)
+(require 'xr-editor)
 
-;; ui
-(require 'init-window)
+;;; ui
+(require 'xr-window)
 (require 'init-recentf)
 (require 'init-sessions)
 (require 'init-theme)
-
 (require 'init-modeline)
 
-;; org-mode
+;;; org-mode
 (require 'init-org)
 (require 'init-org-bh)
 (require 'init-org-agenda)
@@ -52,7 +54,7 @@
 (require 'init-org-publish)
 (require 'init-org-roam)
 
-;; languages
+;;; languages
 (require 'init-clojure)
 (require 'init-elisp)
 (require 'init-json)
@@ -60,7 +62,7 @@
 (require 'init-scheme)
 (require 'init-web)
 
-;; tools
+;;; tools
 (require 'init-anzu)
 (require 'init-avy)
 (require 'init-calendar)
@@ -90,15 +92,13 @@
 (require 'xr-skeleton)
 (require 'init-telega)
 (require 'init-vertico)
-
 (require 'init-hydra)
 
-;; chores
+;;; chores
 (require 'init-mouse)
 
-(require 'init-osx)
-
-(add-hook 'after-init-hook 'toggle-frame-maximized)
+;;; osx
+(require 'xr-osx)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)
@@ -108,7 +108,8 @@
   (when (file-exists-p local-file)
     (load-file local-file)))
 
-;; after loaded
+;;; after loaded
+;;;###autoload
 (defun xr-load-init-session ()
   ;; (require 'server)
   ;; (unless (server-running-p)
@@ -118,7 +119,7 @@
   (eva-set-date-today)
   (xr/auto-session))
 
-(setq xr-writing-config nil)
+(setq xr-writing-config t)
 
 (let ((init-fn
        (if xr-writing-config
@@ -126,6 +127,7 @@
          'xr-load-init-session)))
   (run-with-idle-timer 1 nil init-fn))
 
+(xr-append-init-hook 'toggle-frame-maximized)
 
 (provide 'init)
 

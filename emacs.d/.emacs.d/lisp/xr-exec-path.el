@@ -1,4 +1,4 @@
-;;; init-exec-path.el --- init-exec-path -*- lexical-binding: t -*-
+;;; xr-exec-path.el --- xr-exec-path -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -19,5 +19,5 @@
           (getenv "PATH"))
          (list exec-directory))))
 
-(provide 'init-exec-path)
-;;; init-exec-path.el ends here
+(provide 'xr-exec-path)
+;;; xr-exec-path.el ends here

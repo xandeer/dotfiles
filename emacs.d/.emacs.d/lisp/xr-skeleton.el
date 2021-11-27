@@ -5,6 +5,9 @@
 (with-eval-after-load 'skeleton
   (setq skeleton-end-newline nil))
 
+
+;;; org
+
 (define-skeleton xr--org-block
   "Insert an org block, querying for type."
   "Type: "
@@ -81,6 +84,38 @@
   ""
   (format-time-string "<%Y-%m-%d %a %R>" (current-time)))
 
+(define-skeleton xr--weekly-review
+  "Insert a heading for weekly review."
+  ""
+  (format-time-string "*** <%Y-%m-%d %R> W%y %b %W" (current-time)))
+
+(define-skeleton xr--monthly-review
+  "Insert a heading for monthly review."
+  ""
+  (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
+
+(defhydra xr-hydra-skeleton-org
+  (:hint nil :exit t :columns 4)
+  "
+Org Skeleton
+"
+  ("b" xr--org-block "block")
+  (";" xr--org-block-comment "comment")
+  ("q" xr--org-block-quote "quote")
+  ("v" xr--org-block-verse "verse")
+  ("w" xr-wrap-block "wrap block")
+  ("c" xr--org-block-src "code")
+  ("e" xr--org-block-elisp "elisp")
+  ("s" xr--org-block-sh "sh")
+  ("k" xr--org-block-kt "kotlin")
+  ("r" xr--weekly-review "weekly review")
+  ("m" xr--monthly-review "monthly review")
+  ("t" xr--text-time "timestamp")
+  ("d" xr--text-day "day: 14(Fri)"))
+(define-key org-mode-map (kbd "M-t") #'xr-hydra-skeleton-org/body)
+
+;;; elisp
+
 (define-skeleton xr--el-template
   "Insert the elisp file template."
   ""
@@ -96,16 +131,23 @@
   ""
   "(lambda () (interactive) (" - "))")
 
-(define-skeleton xr--weekly-review
-  "Insert a heading for weekly review."
+(define-skeleton xr--el-autoload
+  "Insert autoload comment."
   ""
-  (format-time-string "*** <%Y-%m-%d %R> W%y %b %W" (current-time)))
+  ";;;###autoload")
 
-(define-skeleton xr--monthly-review
-  "Insert a heading for monthly review."
-  ""
-  (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
+(defhydra xr-hydra-skeleton-elisp
+  (:hint nil :exit t :columns 4)
+  "
+Elisp Skeleton
+"
+  ("a" xr--el-autoload "autoload comment")
+  ("h" xr--el-template "header and footer")
+  ("i" xr--el-lambdai "interactive lambda"))
+(define-key emacs-lisp-mode-map (kbd "M-t") #'xr-hydra-skeleton-elisp/body)
 
+;;; global
+
 (define-skeleton xr--cmg-build-version
   "Build: Update app version to"
   ""
@@ -116,41 +158,14 @@
   ""
   "Docs: Update changelog")
 
-(defhydra xr-hydra-skeleton-org
-  (:hint nil :exit t :columns 4)
-  "
-Insert Skeleton
-"
-  ("b" xr--org-block "block")
-  (";" xr--org-block-comment "comment")
-  ("q" xr--org-block-quote "quote")
-  ("v" xr--org-block-verse "verse")
-  ("w" xr-wrap-block "wrap block")
-  ("c" xr--org-block-src "code")
-  ("e" xr--org-block-elisp "elisp")
-  ("s" xr--org-block-sh "sh")
-  ("k" xr--org-block-kt "kotlin")
-  ("t" xr--text-time "timestamp")
-  ("d" xr--text-day "day: 14(Fri)"))
-(define-key org-mode-map (kbd "M-t") #'xr-hydra-skeleton-org/body)
-
-(defhydra xr-hydra-skeleton-elisp
-  (:hint nil :exit t :columns 4)
-  "
-Insert Skeleton
-"
-  ("h" xr--el-template "header and footer")
-  ("i" xr--el-lambdai "interactive lambda"))
-(define-key emacs-lisp-mode-map (kbd "M-t") #'xr-hydra-skeleton-elisp/body)
-
 (defhydra xr-hydra-skeleton-global
   (:hint nil :exit t :columns 4)
   "
-Insert Skeleton
+Global Skeleton
 "
-  ("t" xr--text-time "timestamp")
+  ("d" xr--cmg-docs-changelog "git changelog")
   ("v" xr--cmg-build-version "git app version")
-  ("d" xr--cmg-docs-changelog "git changelog"))
+  ("t" xr--text-time "timestamp"))
 (global-set-key (kbd "M-t") #'xr-hydra-skeleton-global/body)
 
 (provide 'xr-skeleton)

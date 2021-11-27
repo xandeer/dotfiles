@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun xr/replace (old new &optional beg end)
+(defun xr--replace (old new &optional beg end)
   "Replace the string OLD with string NEW.
 BEG means begin point, END meas end point.
 Default use `point-min` or `point-max`."
@@ -34,7 +34,7 @@ Default use `point-min` or `point-max`."
            ("“" . "「")
            ("”" . "」"))))
     (mapc (lambda (q)
-            (xr/replace (car q) (cdr q)))
+            (xr--replace (car q) (cdr q)))
           quotas)))
 
 (defun xr/org-heading-beginning-p ()
@@ -75,7 +75,23 @@ If point was already at that position, move point to beginning of line."
          (beginning-of-line))))
 
 
-(defun xr/journal-date (year)
+;;;###autoload
+(defun xr-wrap-block (beg end type)
+  "Wrap block with TYPE between BEG and END."
+  (interactive
+   (let ((type (read-string "Block type, default[verse], q[quote]: ")))
+     (list (region-beginning) (region-end) type)))
+  
+  (setq type
+        (cond ((s-blank-str? type) "verse")
+              ((s-equals? type "q") "quote")
+              (t type)))
+  (goto-char end)
+  (insert (concat "\n#+end_" type))
+  (goto-char beg)
+  (insert (concat "#+begin_" type "\n")))
+
+(defun xr--journal-date (year)
   "Generate a date on today in YEAR."
   (let ((d (split-string (string-remove-suffix ".org" (buffer-name)) "-")))
     (date-to-time (format "20%s-%s-%s +0800" year (nth 1 d) (nth 2 d)))))
@@ -83,16 +99,16 @@ If point was already at that position, move point to beginning of line."
 (defun xr/migrate-journal ()
   "Replace journal's title."
   (interactive)
-  (let ((today (xr/journal-date "20")))
-    (xr/replace "^#\\+STARTUP: .*\n" "")
+  (let ((today (xr--journal-date "20")))
+    (xr--replace "^#\\+STARTUP: .*\n" "")
     (xr/clear-file-links)
-    (xr/replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d" today))
-    (xr/replace "^\\* .*" (format-time-string "* %B %d\n** %Y" today))
+    (xr--replace "^\\(#\\+TITLE: \\).*" (format-time-string "\\1%B %m-%d" today))
+    (xr--replace "^\\* .*" (format-time-string "* %B %d\n** %Y" today))
     (search-forward "** 2020")
     (org-set-tags (format-time-string ":%a:" today))
-    (xr/replace "^\\*" "**" (point))))
+    (xr--replace "^\\*" "**" (point))))
 
-(defun xr/--is-current-year? (year)
+(defun xr--is-current-year? (year)
   (= year (string-to-number (format-time-string "%y"))))
 
 (setq xr/org-today-tag "@home:")
@@ -101,14 +117,14 @@ If point was already at that position, move point to beginning of line."
   (interactive "nYear[< 3: 2x, else: 1x]: ")
   (setq year (+ year (if (< year 3) 20 10)))
   (goto-char (point-min))
-  (let ((today (xr/journal-date year)))
-    (if (xr/--is-current-year? year) (progn
+  (let ((today (xr--journal-date year)))
+    (if (xr--is-current-year? year) (progn
                       (search-forward (format-time-string "* %B %d" today))
                       (newline))
       (goto-char (point-max)))
     (insert (format-time-string "** %Y" today))
     (org-set-tags (concat (format-time-string ":%a:" today)
-                          (when (xr/--is-current-year? year) xr/org-today-tag))))
+                          (when (xr--is-current-year? year) xr/org-today-tag))))
   (end-of-line)
   (newline))
 
@@ -143,7 +159,7 @@ If point was already at that position, move point to beginning of line."
   (interactive)
   (org-with-point-at 1
     (while (re-search-forward org-link-bracket-re nil t)
-      (xr/clear-file-link-at-point))))
+      (xr--clear-file-link-at-point))))
 
 (defun xr/remove-links-forward ()
   "Remove links after current point."
@@ -165,7 +181,7 @@ If point was already at that position, move point to beginning of line."
   (interactive "r")
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (xr/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
+  (xr--replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
 
 
 (defun xr/kill-other-window-buffer ()
@@ -182,7 +198,7 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "H-e") 'xr/kill-other-window-buffer)
 (global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
-(defun xr/trash (path)
+(defun xr--trash (path)
   (shell-command (concat "trash " path)))
 
 (defun xr/trash-temp ()
@@ -193,10 +209,10 @@ If point was already at that position, move point to beginning of line."
                   "~/temp/donut/*.zip"
                   "~/temp/donut/*.aab"
                   ))
-    (xr/trash path)))
+    (xr--trash path)))
 
 
-(defvar xr/auto-timer nil)
+(defvar xr--auto-timer nil)
 
 (defun xr/auto-session ()
   (run-with-idle-timer
@@ -213,14 +229,14 @@ If point was already at that position, move point to beginning of line."
                                (format-time-string "[%F %a %T]'")
                                "; git push")))))
 
-           (setq xr/auto-timer
+           (setq xr--auto-timer
                  (run-with-timer 3600 nil #'xr/auto-session)))))
 
 (defun xr/disable-auto-session ()
   "Disalbe auto session."
   (interactive)
-  (when (timerp xr/auto-timer)
-    (setq xr/auto-timer (cancel-timer xr/auto-timer))))
+  (when (timerp xr--auto-timer)
+    (setq xr--auto-timer (cancel-timer xr--auto-timer))))
 
 
 ;; Move it to /Library/LaunchDaemons
@@ -270,13 +286,13 @@ If point was already at that position, move point to beginning of line."
       (browse-url (concat "file://" file-name)))))
 
 
-(defun xr/launch-separate-emacs-under-x ()
+(defun xr--launch-separate-emacs-under-x ()
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
 (defun xr/restart-emacs ()
   "Restart Emacs."
   (interactive)
-  (let ((kill-emacs-hook (append kill-emacs-hook (list #'xr/launch-separate-emacs-under-x))))
+  (let ((kill-emacs-hook (append kill-emacs-hook (list #'xr--launch-separate-emacs-under-x))))
     (save-buffers-kill-emacs)))
 
 
@@ -285,19 +301,19 @@ If point was already at that position, move point to beginning of line."
   (interactive "r")
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (xr/replace "\\([a-z-]*\\) *\\. " "setq \\1 " beg end))
+  (xr--replace "\\([a-z-]*\\) *\\. " "setq \\1 " beg end))
 
 (defun xr/leaf-expand-global-bind (beg end)
   (interactive "r")
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (xr/replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) '" beg end))
+  (xr--replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) '" beg end))
 
 (defun xr/leaf-expand-map-bind (beg end)
   (interactive "r")
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (xr/replace "\\(\".*\"\\) *\\. "
+  (xr--replace "\\(\".*\"\\) *\\. "
               (concat "define-key "
                       (read-from-minibuffer "Map: ")
                       " (kbd \\1) '")

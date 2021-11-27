@@ -1,4 +1,4 @@
-;;; init-basic.el --- Basic -*- lexical-binding: t -*-
+;;; xr-basic.el --- Basic -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -41,5 +41,5 @@
   (setq bookmark-default-file (xr/expand-note "etc/bookmarks.el"))
   (add-hook 'after-init-hook 'bookmark-maybe-load-default-file))
 
-(provide 'init-basic)
-;;; init-basic.el ends here
+(provide 'xr-basic)
+;;; xr-basic.el ends here
