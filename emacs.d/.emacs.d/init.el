@@ -87,7 +87,7 @@
 (require 'init-rime)
 (require 'xr-search-engine)
 (require 'init-sh)
-(require 'init-skeleton)
+(require 'xr-skeleton)
 (require 'init-telega)
 (require 'init-vertico)
 
