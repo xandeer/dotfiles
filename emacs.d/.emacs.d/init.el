@@ -1,5 +1,9 @@
 ;;; init.el --- Xandeer's Emacs Configuration file. -*- lexical-binding: t; -*-
 ;;; Commentary:
+;; 1. package name starts with "x"
+;; 2. global symbol starts with "x/"
+;; 3. local symbol starts with "x--"
+
 ;;; Refs:
 ;; 1. https://github.com/purcell/emacs.d/
 
@@ -24,81 +28,79 @@
 
 ;;; Bootstrap
 ;; straight, leaf, hydra, no-littering
-(require 'xr-bootstrap)
-(require 'xr-utils)
-(require 'init-xr)
+(require 'x-bootstrap)
+(require 'x-init-utils)
+(require 'x-utils)
+;; osx
+(require 'x-osx)
+(require 'x-hydra)
 ;; set "PATH" and `exec-path`
-(require 'xr-exec-path)
+(require 'x-exec-path)
 ;; which-key, keyfreq, osx-modifiers
-(require 'xr-keybindings)
+(require 'x-keybindings)
 
-(require 'xr-basic)
-(require 'xr-editor)
+(require 'x-basic)
+(require 'x-editor)
 
 ;;; ui
-(require 'xr-window)
-(require 'init-recentf)
-(require 'init-sessions)
-(require 'init-theme)
-(require 'init-modeline)
+(require 'x-window)
+(require 'x-recentf)
+(require 'x-sessions)
+(require 'x-theme)
+(require 'x-modeline)
 
 ;;; org-mode
-(require 'init-org)
-(require 'init-org-bh)
-(require 'init-org-agenda)
-(require 'init-org-capture)
-(require 'init-org-clock)
-(require 'init-org-habit)
-(require 'init-org-refile)
-(require 'init-org-journal)
-(require 'init-org-publish)
-(require 'init-org-roam)
+(require 'x-org)
+(require 'x-org-bh)
+(require 'x-org-agenda)
+(require 'x-org-capture)
+(require 'x-org-clock)
+(require 'x-org-habit)
+(require 'x-org-refile)
+(require 'x-org-publish)
+(require 'x-org-roam)
 
 ;;; languages
-(require 'init-clojure)
-(require 'init-elisp)
-(require 'init-json)
-(require 'init-kt)
-(require 'init-scheme)
-(require 'init-web)
+(require 'x-clojure)
+(require 'x-elisp)
+(require 'x-json)
+(require 'x-kt)
+(require 'x-scheme)
+(require 'x-web)
 
 ;;; tools
-(require 'init-anzu)
-(require 'init-avy)
-(require 'init-calendar)
-(require 'init-company)
-(require 'init-consult)
-(require 'init-dictionary)
-(require 'init-dired)
-(require 'init-embark)
-(require 'init-eva)
-(require 'init-flycheck)
-(require 'init-folding)
-(require 'init-hippie-expand)
-(require 'init-imenu-list)
-;; (require 'init-ivy)
-(require 'init-jieba)
-(require 'init-key-chord)
-(require 'init-link-hint)
-(require 'init-lsp)
-(require 'init-git)
-(require 'xr-meow)
-(require 'init-pass)
-(require 'init-pinyin)
-(require 'init-projectile)
-(require 'init-rime)
-(require 'xr-search-engine)
-(require 'init-sh)
-(require 'xr-skeleton)
-(require 'init-telega)
-(require 'init-vertico)
-(require 'init-hydra)
+(require 'x-anzu)
+(require 'x-avy)
+(require 'x-calendar)
+(require 'x-company)
+(require 'x-consult)
+(require 'x-dictionary)
+(require 'x-dired)
+(require 'x-embark)
+(require 'x-eva)
+(require 'x-flycheck)
+(require 'x-folding)
+(require 'x-hippie-expand)
+(require 'x-imenu-list)
+;; (require 'x-ivy)
+(require 'x-jieba)
+;; (require 'x-key-chord)
+(require 'x-link-hint)
+(require 'x-lsp)
+(require 'x-git)
+(require 'x-meow)
+(require 'x-pass)
+(require 'x-pinyin)
+(require 'x-projectile)
+(require 'x-rime)
+(require 'x-search-engine)
+(require 'x-sh)
+(require 'x-skeleton)
+(require 'x-telega)
+(require 'x-vertico)
 
 ;;; chores
-(require 'init-mouse)
-
-;;; osx
-(require 'xr-osx)
+(require 'x-mouse)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)
@@ -109,25 +111,23 @@
     (load-file local-file)))
 
 ;;; after loaded
-;;;###autoload
-(defun xr-load-init-session ()
+(defun x/load-init-session ()
+  (interactive)
   ;; (require 'server)
   ;; (unless (server-running-p)
   ;; (server-start))
   (org-roam-node-random)
   (eva-mode)
   (eva-set-date-today)
-  (xr/auto-session))
-
-(setq xr-writing-config nil)
+  (x/auto-session))
 
 (let ((init-fn
-       (if xr-writing-config
+       (if x/writing-config
            (lambda () (find-file (expand-file-name "init.el" user-emacs-directory)))
-         'xr-load-init-session)))
+         #'x/load-init-session)))
   (run-with-idle-timer 1 nil init-fn))
 
-(xr-append-init-hook 'toggle-frame-maximized)
+(x/append-init-hook 'toggle-frame-maximized)
 
 (provide 'init)
 
