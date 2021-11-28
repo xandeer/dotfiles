@@ -203,12 +203,13 @@
 (defhydra x-hydra-agenda
   (:hit nil :exit t :columns 4)
   "
-Agenda View
-"
-  ("a" (org-agenda nil "x") "all")
-  ("d" org-agenda-list "daily")
+Agenda View\n"
+  ("x" (org-agenda nil "x") "all")
+  ("a" org-agenda-list "daily")
   ("e" (org-agenda nil "e") "emacs")
-  ("v" org-agenda "view")
+  ("t" (org-agenda nil "t") "todo")
+  ("p" (org-agenda nil "p") "phone")
+  ("l" org-agenda "list")
   ("w" (org-agenda nil "w") "work"))
 
 (global-set-key (kbd "H-a") #'x-hydra-agenda/body)

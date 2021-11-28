@@ -23,9 +23,9 @@
   (require 'eva-builtin)
 
   ;; (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
-  (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
+  ;; (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
 
-  ;; (setq eva--idle-secs-fn #'org-mac-idle-seconds)
+  (setq eva--idle-secs-fn #'org-mac-idle-seconds)
   (setq eva-items
         (list
          (eva-item-create
