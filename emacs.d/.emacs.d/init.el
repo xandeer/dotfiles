@@ -106,6 +106,7 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(defvar x/writing-config? nil)
 (let ((local-file (expand-file-name "local.el" user-emacs-directory)))
   (when (file-exists-p local-file)
     (load-file local-file)))
@@ -122,7 +123,7 @@
   (x/auto-session))
 
 (let ((init-fn
-       (if x/writing-config
+       (if x/writing-config?
            (lambda () (find-file (expand-file-name "init.el" user-emacs-directory)))
          #'x/load-init-session)))
   (run-with-idle-timer 1 nil init-fn))
