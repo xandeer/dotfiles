@@ -7,51 +7,6 @@
 (with-eval-after-load 'gcmh
   (require 'org-roam))
 
-(with-eval-after-load 'org-roam
-  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-    (let* ((count (caar (org-roam-db-query
-                         [:select (funcall count source)
-                                  :from links
-                                  :where (= dest $s1)
-                                  :and (= type "id")]
-                         (org-roam-node-id node)))))
-      (format "[%d]" count)))
-
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . right)
-                 (window-width . 0.25)
-                 (window-height . fit-window-to-buffer)))
-
-  (defun x--refresh-roam-buffer ()
-    (when (eq (org-roam-buffer--visibility) 'visible)
-      (progn
-        (select-window (get-buffer-window org-roam-buffer))
-        (org-roam-buffer-refresh))))
-  (advice-add 'org-roam-buffer-toggle :after #'x--refresh-roam-buffer)
-
-
-
-  (defun x--has-roam-tag (tag)
-    "Check whether TAG is included in the current file."
-    (s-contains? tag (or (cadr (assoc "FILETAGS"
-                                      (org-collect-keywords '("filetags"))))
-                         "")))
-
-  (defun x--enable-valign-when-valign ()
-    (when (x--has-roam-tag "valign")
-      (valign-mode)))
-
-  (defun x--disable-company-when-nocompany ()
-    (when (x--has-roam-tag "nocompany")
-      (company-mode -1)))
-
-  (add-hook 'org-mode-hook #'x--enable-valign-when-valign)
-  (add-hook 'org-mode-hook #'x--disable-company-when-nocompany)
-
-  (define-key org-roam-mode-map (kbd "H-r") 'kill-buffer-and-window))
-
 (setq org-roam-directory org-directory)
 (setq org-roam-db-gc-threshold gc-cons-threshold)
 (setq org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
@@ -79,6 +34,51 @@
          ;; :file-name "%<%Y-%m-%d>.org"
          ;; :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n"
          )))
+
+(with-eval-after-load 'org-roam
+  (org-roam-db-autosync-enable)
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.25)
+                 (window-height . fit-window-to-buffer)))
+
+  (defun x--refresh-roam-buffer ()
+    (when (eq (org-roam-buffer--visibility) 'visible)
+      (progn
+        (select-window (get-buffer-window org-roam-buffer))
+        (org-roam-buffer-refresh))))
+  (advice-add 'org-roam-buffer-toggle :after #'x--refresh-roam-buffer)
+
+  (defun x--has-roam-tag (tag)
+    "Check whether TAG is included in the current file."
+    (s-contains? tag (or (cadr (assoc "FILETAGS"
+                                      (org-collect-keywords '("filetags"))))
+                         "")))
+
+  (defun x--enable-valign-when-valign ()
+    (when (x--has-roam-tag "valign")
+      (valign-mode)))
+
+  (defun x--disable-company-when-nocompany ()
+    (when (x--has-roam-tag "nocompany")
+      (company-mode -1)))
+
+  (add-hook 'org-mode-hook #'x--enable-valign-when-valign)
+  (add-hook 'org-mode-hook #'x--disable-company-when-nocompany)
+
+  (define-key org-roam-mode-map (kbd "H-r") 'kill-buffer-and-window))
 
 (defun x/roam-buffer-p ()
   "Whether the current is in roam directory."
@@ -175,8 +175,6 @@
   (interactive)
   (x--remove-links (point-min) (point-max)))
 
-(org-roam-db-autosync-enable)
-
 (defhydra x-hydra-roam-global (:exit t :columns 4)
   "
 Roam\n"
@@ -191,6 +189,8 @@ Roam\n"
   ("d" org-roam-dailies-goto-date "date"))
 (global-set-key (kbd "H-r") #'x-hydra-roam-global/body)
 
+(autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
+(autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
 (defhydra x-hydra-roam-org (:exit t :columns 4)
   "
 Roam\n"
