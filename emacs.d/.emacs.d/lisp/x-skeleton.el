@@ -141,11 +141,29 @@ Org Skeleton
   ""
   "(global-set-key (kbd \"" - "\") #')")
 
+(define-skeleton x--el-define-skeleton
+  "Define skeleton."
+  "Name: "
+  "(define-skeleton x--" str
+  "\n\t\".\"\n\t"
+  "\"\"\n\t"
+  _ - ")")
+
+(define-skeleton x--el-defhydra
+	"Defhydra."
+	"Name: "
+	"(defhydra x-hydra-" str
+  " (:exit t :columns 4)"
+  "\n\t\"\"\n\t"
+  _ - ")")
+
 (defhydra x/hydra-skeleton-elisp
   (:hint nil :exit t :columns 4)
   "
 Elisp Skeleton
 "
+  ("ds" x--el-define-skeleton "define skeleton")
+  ("dh" x--el-defhydra "defhydra")
   ("a" x--el-autoload "autoload comment")
   ("g" x--el-global-set-key "global set key")
   ("h" x--el-template "header and footer")

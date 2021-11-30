@@ -200,20 +200,6 @@
   (define-key org-agenda-mode-map (kbd "i") 'org-agenda-clock-in)
   (define-key org-agenda-mode-map (kbd "o") 'org-agenda-clock-goto))
 
-(defhydra x-hydra-agenda
-  (:hit nil :exit t :columns 4)
-  "
-Agenda View\n"
-  ("x" (org-agenda nil "x") "all")
-  ("a" org-agenda-list "daily")
-  ("e" (org-agenda nil "e") "emacs")
-  ("t" (org-agenda nil "t") "todo")
-  ("p" (org-agenda nil "p") "phone")
-  ("l" org-agenda "list")
-  ("w" (org-agenda nil "w") "work"))
-
-(global-set-key (kbd "H-a") #'x-hydra-agenda/body)
-
 ;;; valign
 (straight-use-package
  '(valign

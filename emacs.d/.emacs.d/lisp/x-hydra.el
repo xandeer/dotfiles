@@ -40,29 +40,72 @@
 
 (global-set-key (kbd "H-x") 'x-hydra-x/body)
 
-;;; jump
+;;; open invisible buffer
 
-(defhydra x-hydra-jump
-  (:exit t :columns 4)
-  ""
-  ("b" consult-buffer "buffer")
-  ("H-b" consult-buffer-other-window "buffer other window")
-  ("m" consult-bookmark "consult bookmark")
-  ("H-r" consult-register-store "register store")
-  ("r" consult-register "register")
-  ("n" consult-focus-lines "focus lines")
+(defhydra x-hydra-open-buffer (:exit t :columns 4)
+  "
+Buffer\n"
+  ("j" consult-buffer "buffer")
+  ("H-j" consult-buffer-other-window "buffer other window")
+  ("k" org-roam-node-find "roam")
+  ("H-k" x/roam-node-find-other-window "roam other window")
+  ("r" org-roam-node-random "roam random" :exit nil)
+  ("h" org-roam-dailies-goto-today "today")
+  ("H-h" org-roam-dailies-goto-yesterday "yesterday")
+  ("d" org-roam-dailies-goto-date "date")
   ("f" find-file "find file")
   ("H-f" projectile-find-file "project find file")
-  ("o" consult-outline "consult outline")
-  ("p" projectile-switch-project "switch project")
-  ("l" link-hint-open-link "open link")
-  ("t" x/telega-chat-with "telega chat with")
-  ("e" (x/bookmark "emotion") "emotion")
-  ("g" (x/bookmark "get_up") "get up")
-  ("c" x/convert-chinese-quotations "convert quotations")
-  ("d" x/delete-current-buffer "delete current buffer"))
-(global-set-key (kbd "H-j") 'x-hydra-jump/body)
+  ("l" consult-recent-file "recent files")
+  ("s" x/telega-chat-with "telega chat with")
+  ("H-s" x/telega-chat-with "telega root"))
+(global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
 
+;;; store/goto the special position
+
+(defhydra x-hydra-deal-special-position
+  (:exit t :columns 4)
+  ""
+  ("j" consult-register "register")
+  ("H-j" consult-register-store "register store")
+  ("l" link-hint-open-link "open link")
+  ("k" consult-bookmark "consult bookmark")
+  ("H-k" bookmark-set "set bookmark")
+
+  ("d" org-agenda-list "agenda daily")
+  ("a" (org-agenda nil "x") "agenda all")
+  ("e" (org-agenda nil "e") "agenda emacs")
+  ("t" (org-agenda nil "t") "agenda todo")
+  ("p" (org-agenda nil "p") "agenda phone")
+  ("v" org-agenda "agenda list")
+  ("w" (org-agenda nil "w") "agenda work")
+
+  ("H-h" (dired "~") "home")
+  ("H-d" (dired "~/Downloads") "downloads")
+  ("H-e" (dired "~/.emacs.d") ".emacs.d")
+  ("H-t" (dired "~/Downloads/telega/documents") "telega")
+  ("H-s" (dired "~/temp/screenshot") "screenshot")
+  ("H-w" (dired "~/temp/donut") "work temp")
+  ("H-n" (dired org-directory) "notes"))
+
+(global-set-key (kbd "H-j") #'x-hydra-deal-special-position/body)
+
+;;; global actions
+
+(defhydra x-hydra-global-actions (:exit t :columns 4)
+  ""
+  ("n" consult-focus-lines "focus lines")
+  ("o" consult-outline "consult outline")
+
+  ("p" projectile-switch-project "switch project")
+  ("c" x/convert-chinese-quotations "convert quotations")
+  ("d" x/delete-current-buffer "delete current buffer")
+
+  ("k" x/org-done-current "done current")
+  ("j" org-clock-goto "goto current")
+  ("i" org-clock-in-last "in last")
+  ("l" org-clock-out "out"))
+
+(global-set-key (kbd "H-d") #'x-hydra-global-actions/body)
 (global-set-key (kbd "M-k") #'x/switch-to-last-buffer)
 
 ;;; search
@@ -72,19 +115,14 @@
   ("s" (consult-ripgrep default-directory) "rg current directory")
   ("H-s" consult-ripgrep "rg project")
   ("p" projectile-switch-project "switch project")
-  ("f" find-file "find file")
-  ("H-f" projectile-find-file "project find file")
-  ("b" consult-buffer "buffer")
-  ("H-b" consult-buffer-other-window "buffer other window")
-  ("r" consult-recent-file "recent files")
   ("u" engine/search-github "github")
   ("g" engine/search-google "google")
   ("c" engine/search-grep-app "grep.app")
   ("w" engine/search-wiki-en "wiki")
   ("z" engine/search-wiki-cn "wiki cn")
   ("l" sdcv-search-pointer "lookup point")
-  ("k" sdcv-search-input "lookup input")
-  ("t" go-translate "translate"))
+  ("H-l" sdcv-search-input "lookup input")
+  ("k" go-translate "translate"))
 
 (global-set-key (kbd "H-s") #'x-hydra-search/body)
 

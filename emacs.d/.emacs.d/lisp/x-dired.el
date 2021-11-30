@@ -17,25 +17,7 @@
   (define-key dired-mode-map (kbd "* n") 'dired-next-marked-file)
   (define-key dired-mode-map (kbd "* p") 'dired-prev-marked-file)
   (define-key dired-mode-map (kbd "d") 'dired-do-delete)
-  (define-key dired-mode-map (kbd "@") 'x/change-hs-on-dired)
-
-  (with-eval-after-load 'hydra
-    (defhydra hydra-dired
-      (:hint nil :exit t)
-      "
-    _d_ownloads    _t_elega documents    _s_creenshot
-    _w_ork temp    _n_otes               _e_macs.d
-    _h_ome
-"
-      ("h" (dired "~"))
-      ("d" (dired "~/Downloads"))
-      ("e" (dired "~/.emacs.d"))
-      ("t" (dired "~/Downloads/telega/documents"))
-      ("s" (dired "~/temp/screenshot"))
-      ("w" (dired "~/temp/donut"))
-      ("n" (dired org-directory)))
-
-    (global-set-key (kbd "H-k") 'hydra-dired/body)))
+  (define-key dired-mode-map (kbd "@") 'x/change-hs-on-dired))
 
 (require-package 'dired-hacks)
 (require 'dired-x)

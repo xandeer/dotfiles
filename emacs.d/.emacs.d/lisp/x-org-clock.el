@@ -75,14 +75,5 @@
           (org-todo 'done)))
     (message "No running clock.")))
 
-(defhydra x-hydra-clock (:exit t)
-  "
-Org Clock\n\n"
-  ("d" x/org-done-current "done current")
-  ("g" org-clock-goto "goto current")
-  ("i" org-clock-in-last "in last")
-  ("o" org-clock-out "out"))
-(global-set-key (kbd "H-c") #'x-hydra-clock/body)
-
 (provide 'x-org-clock)
 ;;; x-org-clock.el ends here
