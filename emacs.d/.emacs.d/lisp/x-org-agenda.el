@@ -78,6 +78,9 @@
                      ((org-agenda-overriding-header "Embark")))
           (tags-todo "EMACS+CATEGORY=\"Leaf\""
                      ((org-agenda-overriding-header "Without Leaf")))))
+        ("i" "Inbox"
+         ((tags-todo "REFILE+CATEGORY=\"Inbox\""
+                     ((org-agenda-overriding-header "Inbox")))))
         ("w" "Work"
          ((tags-todo "WORK+CATEGORY=\"Bug\""
                      ((org-agenda-overriding-header "Bug")))

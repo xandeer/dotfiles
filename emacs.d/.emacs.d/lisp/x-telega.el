@@ -27,8 +27,6 @@
     (message (format "Installed version: %s, latest version: %s."
                      required-version ts-version))))
 
-(autoload #'x/telega-chat-with "telega" nil t)
-
 (defun x/telega-chatbuf-attach-file (filename &optional preview-p)
     "Attach FILE as document to the current input."
     (interactive (list (read-file-name "Attach file: " (expand-file-name "~/temp/"))))
@@ -37,6 +35,8 @@
        (list :@type "inputMessageDocument"
              :document ifile))))
 
+(autoload #'x/telega-chat-with "telega" nil t)
+(autoload #'x/open-telega-root "telega" nil t)
 (with-eval-after-load 'telega
   (defun x/telega-chat-with ()
     "If telega server is live start chatting, else start telega."
@@ -46,6 +46,13 @@
       (progn
         (telega)
         (message "Telega starting..."))))
+
+  (defun x/open-telega-root ()
+    "If telega server is live open telega root buffer, else start telega."
+    (interactive)
+    (if (telega-server-live-p)
+        (switch-to-buffer telega-root-buffer-name)
+      (telega)))
 
   (define-key telega-chat-mode-map (kbd "C-c C-f") 'x/telega-chatbuf-attach-file)
 

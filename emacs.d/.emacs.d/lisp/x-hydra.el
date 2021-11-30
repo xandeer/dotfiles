@@ -45,6 +45,7 @@
 (defhydra x-hydra-open-buffer (:exit t :columns 4)
   "
 Buffer\n"
+  ("p" projectile-switch-project "switch project")
   ("j" consult-buffer "buffer")
   ("H-j" consult-buffer-other-window "buffer other window")
   ("k" org-roam-node-find "roam")
@@ -57,7 +58,7 @@ Buffer\n"
   ("H-f" projectile-find-file "project find file")
   ("l" consult-recent-file "recent files")
   ("s" x/telega-chat-with "telega chat with")
-  ("H-s" x/telega-chat-with "telega root"))
+  ("H-s" x/open-telega-root "telega root"))
 (global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
 
 ;;; store/goto the special position
@@ -74,6 +75,7 @@ Buffer\n"
   ("d" org-agenda-list "agenda daily")
   ("a" (org-agenda nil "x") "agenda all")
   ("e" (org-agenda nil "e") "agenda emacs")
+  ("i" (org-agenda nil "i") "agenda inbox")
   ("t" (org-agenda nil "t") "agenda todo")
   ("p" (org-agenda nil "p") "agenda phone")
   ("v" org-agenda "agenda list")
@@ -96,7 +98,6 @@ Buffer\n"
   ("n" consult-focus-lines "focus lines")
   ("o" consult-outline "consult outline")
 
-  ("p" projectile-switch-project "switch project")
   ("c" x/convert-chinese-quotations "convert quotations")
   ("d" x/delete-current-buffer "delete current buffer")
   ("H-d" x/duplicate-line "duplicate line")
