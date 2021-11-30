@@ -157,8 +157,7 @@ Org Skeleton
   "\n\t\"\"\n\t"
   _ - ")")
 
-(defhydra x/hydra-skeleton-elisp
-  (:hint nil :exit t :columns 4)
+(defhydra x/hydra-skeleton-elisp (:exit t :columns 4)
   "
 Elisp Skeleton
 "
@@ -182,8 +181,7 @@ Elisp Skeleton
   ""
   "Docs: Update changelog")
 
-(defhydra x/hydra-skeleton-global
-  (:hint nil :exit t :columns 4)
+(defhydra x/hydra-skeleton-global (:exit t :columns 4)
   "
 Global Skeleton
 "

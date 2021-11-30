@@ -6,8 +6,7 @@
 
 ;;; x
 
-(defhydra x-hydra-x
-  (:exit t :columns 4)
+(defhydra x-hydra-x (:exit t :columns 4)
   ""
   ("u"
    (lambda nil
@@ -63,8 +62,7 @@ Buffer\n"
 
 ;;; store/goto the special position
 
-(defhydra x-hydra-deal-special-position
-  (:exit t :columns 4)
+(defhydra x-hydra-deal-special-position (:exit t :columns 4)
   ""
   ("j" consult-register "register")
   ("H-j" consult-register-store "register store")
