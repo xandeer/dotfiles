@@ -50,7 +50,7 @@ Default use `point-min` or `point-max`."
     (move-beginning-of-line 1)
     (insert (thing-at-point 'line))
     (move-end-of-line 1)))
-(global-set-key (kbd "H-d") 'x/duplicate-line)
+
 
 
 (defun x/bookmark (name)

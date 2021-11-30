@@ -99,6 +99,7 @@ Buffer\n"
   ("p" projectile-switch-project "switch project")
   ("c" x/convert-chinese-quotations "convert quotations")
   ("d" x/delete-current-buffer "delete current buffer")
+  ("H-d" x/duplicate-line "duplicate line")
 
   ("k" x/org-done-current "done current")
   ("j" org-clock-goto "goto current")
