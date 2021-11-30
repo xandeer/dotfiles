@@ -95,7 +95,7 @@
   (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
 
 (defhydra x/hydra-skeleton-org
-  (:hint nil :exit t :columns 4)
+  (:exit t :columns 4 :idle 0.3)
   "
 Org Skeleton
 "
@@ -153,11 +153,11 @@ Org Skeleton
 	"Defhydra."
 	"Name: "
 	"(defhydra x-hydra-" str
-  " (:exit t :columns 4)"
+  " (:exit t :columns 4 :idle 0.3)"
   "\n\t\"\"\n\t"
   _ - ")")
 
-(defhydra x/hydra-skeleton-elisp (:exit t :columns 4)
+(defhydra x/hydra-skeleton-elisp (:exit t :columns 4 :idle 0.3)
   "
 Elisp Skeleton
 "
@@ -181,7 +181,7 @@ Elisp Skeleton
   ""
   "Docs: Update changelog")
 
-(defhydra x/hydra-skeleton-global (:exit t :columns 4)
+(defhydra x/hydra-skeleton-global (:exit t :columns 4 :idle 0.3)
   "
 Global Skeleton
 "

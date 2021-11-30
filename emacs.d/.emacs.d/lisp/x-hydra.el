@@ -6,7 +6,7 @@
 
 ;;; x
 
-(defhydra x-hydra-x (:exit t :columns 4)
+(defhydra x-hydra-x (:exit t :columns 4 :idle 0.3)
   ""
   ("u"
    (lambda nil
@@ -41,7 +41,7 @@
 
 ;;; open invisible buffer
 
-(defhydra x-hydra-open-buffer (:exit t :columns 4)
+(defhydra x-hydra-open-buffer (:exit t :columns 4 :idle 0.3)
   "
 Buffer\n"
   ("p" projectile-switch-project "switch project")
@@ -62,7 +62,7 @@ Buffer\n"
 
 ;;; store/goto the special position
 
-(defhydra x-hydra-deal-special-position (:exit t :columns 4)
+(defhydra x-hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
   ""
   ("j" consult-register "register")
   ("H-j" consult-register-store "register store")
@@ -91,7 +91,7 @@ Buffer\n"
 
 ;;; global actions
 
-(defhydra x-hydra-global-actions (:exit t :columns 4)
+(defhydra x-hydra-global-actions (:exit t :columns 4 :idle 0.3)
   ""
   ("n" consult-focus-lines "focus lines")
   ("o" consult-outline "consult outline")
@@ -107,10 +107,11 @@ Buffer\n"
 
 (global-set-key (kbd "H-d") #'x-hydra-global-actions/body)
 (global-set-key (kbd "M-k") #'x/switch-to-last-buffer)
+(global-set-key (kbd "H-c") #'org-capture)
 
 ;;; search
 
-(defhydra x-hydra-search (:exit t :columns 4)
+(defhydra x-hydra-search (:exit t :columns 4 :idle 0.3)
   ""
   ("s" (consult-ripgrep default-directory) "rg current directory")
   ("H-s" consult-ripgrep "rg project")

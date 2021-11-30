@@ -177,7 +177,7 @@
 
 (autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
-(defhydra x-hydra-roam-org (:exit t :columns 4)
+(defhydra x-hydra-roam-org (:exit t :columns 4 :idle 0.3)
   "
 Roam\n"
   ("b" org-roam-buffer-toggle "roam buffer")
