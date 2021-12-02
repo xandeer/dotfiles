@@ -70,7 +70,7 @@ Default use `point-min` or `point-max`."
 
 (defun x/expand-note (path)
   "Expand PATH in `org-directory`."
-  (expand-file-name path org-directory))
+  (expand-file-name path "~/projects/personal/notes"))
 
 (global-set-key (kbd "H-e") 'x/kill-other-window-buffer)
 (global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))

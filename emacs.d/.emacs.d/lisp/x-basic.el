@@ -37,9 +37,8 @@
 (straight-use-package 'explain-pause-mode)
 
 (require 'bookmark)
-(with-eval-after-load 'org
-  (setq bookmark-default-file (x/expand-note "etc/bookmarks.el"))
-  (add-hook 'after-init-hook 'bookmark-maybe-load-default-file))
+(setq bookmark-default-file (x/expand-note "etc/bookmarks.el"))
+(add-hook 'after-init-hook 'bookmark-maybe-load-default-file)
 
 (provide 'x-basic)
 ;;; x-basic.el ends here
