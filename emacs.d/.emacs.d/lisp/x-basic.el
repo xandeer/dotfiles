@@ -38,7 +38,8 @@
 
 (require 'bookmark)
 (setq bookmark-default-file (x/expand-note "etc/bookmarks.el"))
-(add-hook 'after-init-hook 'bookmark-maybe-load-default-file)
+(setq bookmark-save-flag 1)
+(x/append-init-hook #'bookmark-maybe-load-default-file)
 
 (provide 'x-basic)
 ;;; x-basic.el ends here

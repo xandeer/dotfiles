@@ -86,6 +86,7 @@
 (require 'x-jieba)
 ;; (require 'x-key-chord)
 (require 'x-link-hint)
+(require 'x-lispy)
 (require 'x-lsp)
 (require 'x-git)
 (require 'x-meow)

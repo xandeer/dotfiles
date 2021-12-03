@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require-package 'marginalia)
-(add-hook 'after-init-hook 'marginalia-mode)
+(x/append-init-hook 'marginalia-mode)
 
 (require-package 'embark)
 (require 'embark nil t)

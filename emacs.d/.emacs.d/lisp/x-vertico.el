@@ -8,7 +8,14 @@
 
 (with-eval-after-load 'orderless
   ;; (setq completion-styles '(substring orderless))
+  ;; (setq completion-styles '(basic partial-completion))
   (setq completion-styles '(orderless))
+  ;; (add-to-list 'marginalia-prompt-categories '("Node" . roam))
+  ;; (setq completion-category-defaults
+  ;;       '((file (styles . (basic orderless)))
+  ;;         (roam (styles . (basic orderless)))
+  ;;         (buffer (styles . (basic orderless)))
+  ;;         (project-files (styles . (basic orderless)))))
 
   (with-eval-after-load 'pinyinlib
     (defun completion--regex-pinyin (str)
