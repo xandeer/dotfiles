@@ -15,7 +15,7 @@
 (setq telega-chat-fill-column 65)
 (setq telega-chat-scroll-conservatively 101)
 (setq telega-sticker-set-download t)
-(setq telega-cache-dir (expand-file-name "~/Downloads/telega"))
+(setq telega-cache-dir (expand-file-name "~/temp/telega"))
 (setq telega-completing-read-function 'completing-read)
 (setq telega-proxies
       (list '(:server "127.0.0.1" :port 8010 :enable t

@@ -45,10 +45,10 @@
   "
 Buffer\n"
   ("p" projectile-switch-project "switch project")
-  ("j" consult-buffer "buffer")
-  ("H-j" consult-buffer-other-window "buffer other window")
-  ("k" org-roam-node-find "roam")
-  ("H-k" x/roam-node-find-other-window "roam other window")
+  ("k" consult-buffer "buffer")
+  ("H-k" consult-buffer-other-window "buffer other window")
+  ("j" org-roam-node-find "roam")
+  ("H-j" x/roam-node-find-other-window "roam other window")
   ("r" org-roam-node-random "roam random" :exit nil)
   ("h" org-roam-dailies-goto-today "today")
   ("H-h" org-roam-dailies-goto-yesterday "yesterday")
@@ -82,7 +82,7 @@ Buffer\n"
   ("H-h" (dired "~") "home")
   ("H-d" (dired "~/Downloads") "downloads")
   ("H-e" (dired "~/.emacs.d") ".emacs.d")
-  ("H-t" (dired "~/Downloads/telega/documents") "telega")
+  ("H-t" (dired "~/temp/telega/documents") "telega")
   ("H-s" (dired "~/temp/screenshot") "screenshot")
   ("H-w" (dired "~/temp/donut") "work temp")
   ("H-n" (dired org-directory) "notes"))
