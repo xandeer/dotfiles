@@ -19,7 +19,7 @@
      (shell-command "mr -d ~ update")
      (bookmark-maybe-load-default-file)
      (x/restart-emacs)) "restart after mr update")
-  ("c" (x/async-command "mr -d ~ commit") "mr commit")
+  ("c" (lambda () (interactive) (recentf-save-list) (x/async-command "mr -d ~ commit")) "mr commit")
   ("H-r" x/restart-emacs "restart")
   ("hd" (x/change-hs-root "~/Downloads") "hs downloads")
   ("ht" (x/change-hs-root "~/temp") "hs temp")

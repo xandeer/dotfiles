@@ -73,7 +73,7 @@
   (add-to-list 'org-capture-templates
                '("c" "todo" entry
                  (file "gtd/inbox.org")
-                 "* TODO %?\n%U"
+                 "* TODO %?"
                  :empty-lines-before 1))
 
   (add-to-list 'org-capture-templates

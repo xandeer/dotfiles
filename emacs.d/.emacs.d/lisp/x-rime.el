@@ -40,7 +40,7 @@
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
        rime-predicate-prog-in-code-p
-       rime-predicate-punctuation-after-space-cc-p
+       ;; rime-predicate-punctuation-after-space-cc-p
        rime-predicate-space-after-cc-p)))
 
   (define-key rime-mode-map (kbd "M-I") 'rime-force-enable)
