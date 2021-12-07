@@ -59,9 +59,9 @@
     (setq x--clock-timer
           (run-with-timer (* minutes 60) nil #'x--clock-out))))
 
-(add-hook 'org-clock-out-hook 'x--clock-cancel)
-(add-hook 'org-clock-in-hook 'x--clock-in)
-(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+(add-hook 'org-clock-out-hook #'x--clock-cancel)
+(add-hook 'org-clock-in-hook #'x--clock-in)
+(add-hook 'org-clock-out-hook #'bh/clock-out-maybe 'append)
 
 (defun x/org-done-current ()
   (interactive)
