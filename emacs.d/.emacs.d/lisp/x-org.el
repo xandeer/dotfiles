@@ -131,6 +131,26 @@
   (goto-char beg)
   (insert (concat "#+begin_" type "\n")))
 
+(defun x/org-heading-beginning-p ()
+  "Whether the point is at beginning of a heading."
+  (and (org-at-heading-p) (= (line-beginning-position) (point))))
+
+(defun x/org-goto-heading-beginning ()
+  "Goto beginning of the heading."
+  (interactive)
+  (org-back-to-heading)
+  (if (x/org-heading-beginning-p) (org-beginning-of-line)))
+
+(defun x/org-schedule ()
+  "Insert an active timestamp at the beginning of the headline."
+  (interactive)
+  (save-excursion
+    (x/org-goto-heading-beginning)
+    (setq ts (call-interactively #'org-time-stamp))
+    (x/org-goto-heading-beginning)
+    (replace-regexp ">\\([^ ]\\)" "> \\1"))
+  ts)
+
 (add-hook 'org-mode-hook #'auto-fill-mode)
 
 (with-eval-after-load 'org
@@ -163,13 +183,15 @@
   (add-to-list 'org-babel-load-languages '(restclient . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
-  (define-key org-mode-map (kbd "M-p") 'org-previous-visible-heading)
-  (define-key org-mode-map (kbd "M-n") 'org-next-visible-heading)
-  ;; (define-key org-mode-map (kbd "M-o") 'org-toggle-narrow-to-subtree)
-  (define-key org-mode-map (kbd "C-,") 'imenu)
-  ;; (define-key org-mode-map (kbd "M-,") 'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "M-k") 'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "C-c x C-r") 'org-table-recalculate)
+  (define-key org-mode-map (kbd "M-p") #'org-previous-visible-heading)
+  (define-key org-mode-map (kbd "M-n") #'org-next-visible-heading)
+  ;; (define-key org-mode-map (kbd "M-o") #'org-toggle-narrow-to-subtree)
+  (define-key org-mode-map (kbd "C-,") #'imenu)
+  ;; (define-key org-mode-map (kbd "M-,") #'org-mark-ring-goto)
+  (define-key org-mode-map (kbd "M-k") #'org-mark-ring-goto)
+  (define-key org-mode-map (kbd "C-c x C-r") #'org-table-recalculate)
+
+  (define-key org-mode-map [remap org-schedule] #'x/org-schedule)
 
   (global-set-key (kbd "C-c l") #'org-store-link))
 

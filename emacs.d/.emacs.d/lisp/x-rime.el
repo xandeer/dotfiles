@@ -26,9 +26,6 @@
   (setq rime-cursor "˰")
   (setq rime-inline-ascii-trigger 'shift-l)
   (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
-  (defun x--org-heading-beginning-p ()
-    "Whether the point is at beginning of a heading."
-    (and (org-at-heading-p) (= (line-beginning-position) (point))))
 
   (custom-set-variables
    '(rime-disable-predicates
@@ -36,7 +33,7 @@
        rime-predicate-current-uppercase-letter-p
        meow-normal-mode-p
        x/ace-mode-p
-       x--org-heading-beginning-p
+       x/org-heading-beginning-p
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
        rime-predicate-prog-in-code-p

@@ -194,14 +194,38 @@
       (capitalize-word 1)
       (buffer-substring start end))))
 
+(defun x/org-agenda-schedule (arg &optional time)
+  "Schedule the item at point.
+ARG is passed through to `x/org-schedule'."
+  (interactive "P")
+  (org-agenda-check-type t 'agenda 'todo 'tags 'search)
+  (org-agenda-check-no-diary)
+  (org-agenda-maybe-loop
+   #'org-agenda-schedule arg t nil
+   (let* ((marker (or (org-get-at-bol 'org-marker)
+		                  (org-agenda-error)))
+	        (type (marker-insertion-type marker))
+	        (buffer (marker-buffer marker))
+	        (pos (marker-position marker))
+	        ts)
+     (set-marker-insertion-type marker t)
+     (org-with-remote-undo buffer
+       (with-current-buffer buffer
+	       (widen)
+	       (goto-char pos)
+	       (setq ts (x/org-schedule)))
+       (org-agenda-show-new-time marker ts " S"))
+     (message "%s" ts))))
+
 (with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "M-l") 'x/agenda-toggle-clock-log)
-  (define-key org-agenda-mode-map (kbd "q") 'meow-last-buffer)
-  (define-key org-agenda-mode-map (kbd "p") 'org-agenda-previous-item)
-  (define-key org-agenda-mode-map (kbd "n") 'org-agenda-next-item)
-  (define-key org-agenda-mode-map (kbd "T") 'org-agenda-goto-today)
-  (define-key org-agenda-mode-map (kbd "i") 'org-agenda-clock-in)
-  (define-key org-agenda-mode-map (kbd "o") 'org-agenda-clock-goto))
+  (define-key org-agenda-mode-map (kbd "M-l") #'x/agenda-toggle-clock-log)
+  (define-key org-agenda-mode-map (kbd "q") #'meow-last-buffer)
+  (define-key org-agenda-mode-map (kbd "s") #'x/org-agenda-schedule)
+  (define-key org-agenda-mode-map (kbd "p") #'org-agenda-previous-item)
+  (define-key org-agenda-mode-map (kbd "n") #'org-agenda-next-item)
+  (define-key org-agenda-mode-map (kbd "T") #'org-agenda-goto-today)
+  (define-key org-agenda-mode-map (kbd "i") #'org-agenda-clock-in)
+  (define-key org-agenda-mode-map (kbd "o") #'org-agenda-clock-goto))
 
 ;;; valign
 (straight-use-package
