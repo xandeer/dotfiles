@@ -18,7 +18,7 @@ Cancel: _q_ cancel
   ("l" find-library)
   ("q" nil))
 
-(global-set-key (kbd "C-j") 'hydra-elisp-helpful/body)
+(define-key emacs-lisp-mode-map (kbd "H-k") #'hydra-elisp-helpful/body)
 
 ;; Show evaluation result on the right of cursor.
 ;; (require-package 'eros)

@@ -7,5 +7,8 @@
 
 (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
 
+(with-eval-after-load 'lispy
+  (define-key lispy-mode-map (kbd "M-j") #'x/ace-goto-char-timer))
+
 (provide 'x-lispy)
 ;;; x-lispy.el ends here
