@@ -18,11 +18,11 @@
 ;; (setq embark-keymap-alist (-remove-at 0 embark-keymap-alist))
 ;; (add-to-list 'marginalia-prompt-categories '("Find file: " . file))
 
-(autoload 'consult-ripgrep "consult")
-(autoload 'consult-line "consult")
-(autoload 'consult-imenu "consult")
-(autoload 'consult-outline "consult")
-(autoload 'consult-recent-file "consult")
+(autoload #'consult-ripgrep "consult")
+(autoload #'consult-line "consult")
+(autoload #'consult-imenu "consult")
+(autoload #'consult-outline "consult")
+(autoload #'consult-recent-file "consult")
 
 (with-eval-after-load 'consult
   (require-package 'embark-consult)
@@ -34,16 +34,16 @@
 
 (defvar x/embark-become-general-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "f") 'consult-find)
-    (define-key map (kbd "g") 'consult-ripgrep)
+    (define-key map (kbd "f") #'consult-find)
+    (define-key map (kbd "g") #'consult-ripgrep)
     map)
   "General custom cross-package `embark-become` keymap.")
 
 (defvar x/embark-become-line-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "l") 'consult-line)
-    (define-key map (kbd "i") 'consult-imenu)
-    (define-key map (kbd "s") 'consult-outline) ; as my default is 'M-s M-s'
+    (define-key map (kbd "l") #'consult-line)
+    (define-key map (kbd "i") #'consult-imenu)
+    (define-key map (kbd "s") #'consult-outline) ; as my default is 'M-s M-s'
     map)
   "Line-specific custom cross-package `embark-become' keymap.")
 
@@ -108,12 +108,13 @@ those so-called 'extras'."
     (select-window (split-window-below))
     (call-interactively embark--command)))
 
-(define-key embark-general-map (kbd "2") 'x/wrap-embark-split-below)
-(define-key embark-general-map (kbd "3") 'x/wrap-embark-split-right)
+(define-key embark-general-map (kbd "2") #'x/wrap-embark-split-below)
+(define-key embark-general-map (kbd "3") #'x/wrap-embark-split-right)
+(define-key embark-general-map (kbd ".") #'sdcv-search-pointer)
 
 ;; (global-set-key (kbd "H-i") 'embark-act)
 (with-eval-after-load 'vertico
-  (define-key vertico-map (kbd "C-o") 'embark-act))
+  (define-key vertico-map (kbd "C-o") #'embark-act))
 
 (defun x/wrap-default-p (action)
   (s-starts-with? "x/wrap-embark" (symbol-name action)))
