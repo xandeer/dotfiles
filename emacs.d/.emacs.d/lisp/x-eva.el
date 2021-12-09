@@ -1,5 +1,11 @@
 ;;; x-eva.el --- x-eva -*- lexical-binding: t -*-
 ;;; Commentary:
+
+;;; How to modify mood alist?
+;; 1. stop eva mode
+;; 2. (find-file (expand-file-name "memory.tsv" eva-cache-dir-path))
+;; 3. find the item and remove it
+
 ;;; Code:
 
 (straight-use-package
@@ -9,22 +15,14 @@
    :branch "master"
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
-(leaf eva
-  :after org
-  :require t
-  :custom
-  `(eva-cache-dir-path        . ,(no-littering-expand-var-file-name "eva"))
-  `(eva-idle-log-path         . ,(no-littering-expand-var-file-name "eva/idle.tsv"))
-  `(eva-buffer-info-path      . ,(no-littering-expand-var-file-name "eva/buffer-info.tsv"))
-  `(eva-buffer-focus-log-path . ,(no-littering-expand-var-file-name "eva/buffer-focus.tsv"))
-  (ess-ask-for-ess-directory       . nil)
-  ;; (eva-check-org-vars-load-modules . nil)
-  :config
+(setq eva-cache-dir-path (no-littering-expand-var-file-name "eva"))
+(setq eva-idle-log-path (expand-file-name "idle.tsv" eva-cache-dir-path))
+(setq eva-buffer-info-path (expand-file-name "buffer-info.tsv" eva-cache-dir-path))
+(setq eva-buffer-focus-log-path (expand-file-name "buffer-focus.tsv" eva-cache-dir-path))
+(setq ess-ask-for-ess-directory nil)
+
+(with-eval-after-load 'eva
   (require 'eva-builtin)
-
-  ;; (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
-  ;; (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
-
   (setq eva--idle-secs-fn #'org-mac-idle-seconds)
   (setq eva-items
         (list
