@@ -111,6 +111,7 @@ those so-called 'extras'."
 (define-key embark-general-map (kbd "2") #'x/wrap-embark-split-below)
 (define-key embark-general-map (kbd "3") #'x/wrap-embark-split-right)
 (define-key embark-general-map (kbd ".") #'sdcv-search-pointer)
+(define-key embark-symbol-map (kbd "h") #'helpful-at-point)
 
 ;; (global-set-key (kbd "H-i") 'embark-act)
 (with-eval-after-load 'vertico

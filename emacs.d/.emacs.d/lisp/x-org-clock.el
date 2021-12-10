@@ -35,6 +35,12 @@
 
 (setq bh/organization-task-id "78C5A814-5215-47D0-AC09-6522CBCBA516")
 
+(setq x/work-chore-task-id "8170CF57-231D-493B-A8E1-1CBA9370A244")
+(defun x/clock-in-work-chore-task ()
+  (interactive)
+  (org-with-point-at (org-id-find x/work-chore-task-id 'marker)
+    (org-clock-in '(16))))
+
 (defvar x--clock-timer nil)
 
 (defun x--clock-cancel ()

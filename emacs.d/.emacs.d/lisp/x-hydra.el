@@ -31,11 +31,12 @@
      (x/async-command
       (concat "~/Library/Android/sdk/platform-tools/adb connect " ip))) "adb connect")
   ("l" (lambda (ip)
-          (interactive (list (read-string "Ip: " (x/ifconfig))))
-          (x/open (concat "http://" ip))) "open localhost")
+         (interactive (list (read-string "Ip: " (x/ifconfig))))
+         (x/open (concat "http://" ip))) "open localhost")
   ;; ("j" (x/open-with "/Applications/Day\\ One.app"))
   ("e" (x/open-with "/Applications/Evernote.app") "open evernote")
-  ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io"))
+  ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io")
+  ("s" #'eva-query-sleep "eva query sleep"))
 
 (global-set-key (kbd "H-x") 'x-hydra-x/body)
 
@@ -103,6 +104,7 @@ Buffer\n"
   ("k" x/org-done-current "done current")
   ("j" org-clock-goto "goto current")
   ("i" org-clock-in-last "in last")
+  ("H-i" x/clock-in-work-chore-task "in work chore")
   ("l" org-clock-out "out"))
 
 (global-set-key (kbd "H-d") #'x-hydra-global-actions/body)

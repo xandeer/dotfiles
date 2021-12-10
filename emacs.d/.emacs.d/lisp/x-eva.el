@@ -38,7 +38,8 @@
          (eva-item-create
           :fn #'eva-query-mood
           :dataset (x/expand-note "eva/mood.tsv")
-          :min-hours-wait 1))))
+          :min-hours-wait 1)))
+  (advice-add 'eva-query-sleep :before #'eva-set-date-today))
 
 (provide 'x-eva)
 ;;; x-eva.el ends here

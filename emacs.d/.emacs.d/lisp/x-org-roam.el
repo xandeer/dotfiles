@@ -186,6 +186,7 @@ Roam\n"
   ("l" x--remove-links "remove links")
   ("m" x--migrate-journal "migrate journal")
   ("f" x/fill-subtree "fill subtree")
+  ("i" org-id-get-create "create id")
   ("n" org-toggle-narrow-to-subtree "narrow")
   ("0" (x--insert-journal-in-year 0) "insert journal in 2020")
   ("1" (x--insert-journal-in-year 1) "insert journal in 2021")

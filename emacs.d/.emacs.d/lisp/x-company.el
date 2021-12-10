@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require-package 'company)
-(add-hook 'after-init-hook 'global-company-mode)
+;; (x/append-init-hook #'global-company-mode)
 
 (with-eval-after-load 'company
   (setq company-idle-delay 0.2)
@@ -15,8 +15,8 @@
   (setq company-tooltip-align-annotations t)
   (setq company-dabbrev-code-other-buffers 'all)
 
-  (define-key company-active-map (kbd "M-s") 'company-filter-candidates)
-  (define-key company-active-map (kbd "C-s") 'counsel-company))
+  (define-key company-active-map (kbd "M-s") #'company-filter-candidates)
+  (define-key company-active-map (kbd "C-s") #'counsel-company))
 
 (provide 'x-company)
 ;;; x-company.el ends here
