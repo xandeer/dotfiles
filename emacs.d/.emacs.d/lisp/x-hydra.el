@@ -63,13 +63,19 @@ Buffer\n"
 
 ;;; store/goto the special position
 
+(defun x--bookmark-set ()
+  (interactive)
+  (if (equal major-mode 'org-mode)
+      (bookmark-set (org-roam--get-keyword "title"))
+    (bookmark-set)))
+
 (defhydra x-hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
   ""
   ("j" consult-register "register")
   ("H-j" consult-register-store "register store")
   ("l" link-hint-open-link "open link")
   ("k" consult-bookmark "consult bookmark")
-  ("H-k" bookmark-set "set bookmark")
+  ("H-k" x--bookmark-set "set bookmark")
 
   ("d" org-agenda-list "agenda daily")
   ("a" (org-agenda nil "x") "agenda all")
