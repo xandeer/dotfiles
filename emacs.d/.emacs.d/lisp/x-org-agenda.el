@@ -74,10 +74,12 @@
         ("e" "Emacs"
          ((tags-todo "EMACS+CATEGORY=\"One-off\""
                      ((org-agenda-overriding-header "One Off")))
+          (tags-todo "EMACS+CATEGORY=\"Leaf\""
+                     ((org-agenda-overriding-header "Without Leaf")))
           (tags-todo "EMACS+CATEGORY=\"Embark\""
                      ((org-agenda-overriding-header "Embark")))
-          (tags-todo "EMACS+CATEGORY=\"Leaf\""
-                     ((org-agenda-overriding-header "Without Leaf")))))
+          (tags-todo "EMACS+Sword"
+                     ((org-agenda-overriding-header "Lispy and Meow")))))
         ("i" "Inbox"
          ((tags-todo "REFILE+CATEGORY=\"Inbox\""
                      ((org-agenda-overriding-header "Inbox")))))
@@ -88,10 +90,10 @@
                      ((org-agenda-overriding-header "Feature")))
           (tags-todo "WORK+CATEGORY=\"Refactor\""
                      ((org-agenda-overriding-header "Refactor")))
-          (tags-todo "WORK+CATEGORY=\"Chore\""
-                     ((org-agenda-overriding-header "Chore")))
           (tags-todo "WORK+CATEGORY=\"Other\""
-                     ((org-agenda-overriding-header "Other")))))
+                     ((org-agenda-overriding-header "Other")))
+          (tags-todo "WORK+CATEGORY=\"Chore\""
+                     ((org-agenda-overriding-header "Chore")))))
         ("x" "Agenda"
          ((tags-todo "-WORK-CANCELLED/!NEXT"
                      ((org-agenda-overriding-header (concat "Project Next Tasks"

@@ -111,6 +111,7 @@ Buffer\n"
   ("j" org-clock-goto "goto current")
   ("i" org-clock-in-last "in last")
   ("H-i" x/clock-in-work-chore-task "in work chore")
+  ("H-l" bh/clock-in-organization-task-as-default "in organization")
   ("l" org-clock-out "out"))
 
 (global-set-key (kbd "H-d") #'x-hydra-global-actions/body)
