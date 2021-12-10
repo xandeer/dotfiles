@@ -2,42 +2,46 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'git-blamed)
-(straight-use-package 'git-modes)
-(straight-use-package 'git-timemachine)
+;;; package
+(require-package 'git-blamed)
+(require-package 'git-modes)
+(require-package 'git-timemachine)
+(require-package 'diff-hl)
+(require-package 'abridge-diff)
+(require-package 'magit)
+(require-package 'git-messenger)
 
-(leaf abridge-diff
-  :straight t
-  :after magit
-  :init (abridge-diff-mode 1))
+;;; diff-hl
+(autoload #'diff-hl-dired-mode "diff-hl" nil t)
+(add-hook 'dired-mode-hook #'diff-hl-dired-mode)
 
-(leaf diff-hl
-  :straight t
-  :hook
-  (dired-mode-hook         . diff-hl-dired-mode)
-  (magit-pre-refresh-hook  . diff-hl-magit-pre-refresh)
-  (magit-post-refresh-hook . diff-hl-magit-post-refresh))
+;;; magit
+(with-eval-after-load 'magit
+  (setq magit-diff-refine-hunk t)
+  (autoload #'diff-hl-magit-post-refresh "diff-hl" nil t)
+  (autoload #'diff-hl-magit-pre-refresh "diff-hl" nil t)
+  ;; (autoload #'no-trailing-whitespace "magit" nil t)
+  (add-hook 'magit-pre-refresh-hook  #'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+  ;; (add-hook 'magit-post-refresh-hook #'no-trailing-whitespace)
+  (abridge-diff-mode)
 
-(leaf magit
-  :straight t
-  :commands magit-status
-  :hook
-  (magit-popup-mode-hook . no-trailing-whitespace)
-  :custom
-  (magit-diff-refine-hunk . t)
-  :bind
-  ("C-x g"   . magit-status)
-  ("C-x M-g" . magit-dispatch-popup)
-  (:magit-status-mode-map
-   ("K" . magit-discard)))
+  (global-set-key (kbd "C-x g") #'magit-status)
+  (global-set-key (kbd "C-x M-g") #'magit-dispatch-popup)
+  (define-key magit-status-mode-map (kbd "K") #'magit-discard))
 
-(leaf git-messenger
-  :straight t
-  :custom
-  (git-messenger:show-detail . t)
-  :bind
-  (:vc-prefix-map
-   ("p" . git-messenger:popup-message)))
+(defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
+	"
+Magit\n"
+	("n" (magit-status org-directory) "notes")
+  ("w" (magit-status x/work-directory) "work")
+  ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles"))
+(global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
+
+;;; git-messenger
+(with-eval-after-load 'git-messenger
+  (setq git-messenger:show-detail t)
+  (define-key vc-prefix-map (kbd "p") #'git-messenger:popup-message))
 
 (provide 'x-git)
 ;;; x-git.el ends here

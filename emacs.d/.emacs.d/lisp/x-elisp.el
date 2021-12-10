@@ -2,37 +2,41 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; helpful
 (require-package 'helpful)
-(defhydra hydra-elisp-helpful (:hint nil :exit t)
-  "
-Find the definition near point:
-_f_: Function    _v_: Variable     _l_: Library
+(defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
+	"
+Elisp\n"
+  ("d" helpful-at-point "helpful at point")
+  ("f" find-function "find function")
+  ("v" find-variable "find variable")
+  ("l" find-library "find library"))
 
-_d_: Helpful at point
+(define-key emacs-lisp-mode-map (kbd "H-k") #'x-hydra-elisp-helpful/body)
 
-Cancel: _q_ cancel
-"
-  ("d" helpful-at-point)
-  ("f" find-function)
-  ("v" find-variable)
-  ("l" find-library)
-  ("q" nil))
+;;; lispy
+(define-key emacs-lisp-mode-map (kbd "M-n") #'special-lispy-outline-next)
+(define-key emacs-lisp-mode-map (kbd "M-p") #'special-lispy-outline-prev)
 
-(define-key emacs-lisp-mode-map (kbd "H-k") #'hydra-elisp-helpful/body)
+;;; disable flycheck on elisp mode
+(with-eval-after-load 'flycheck
+  (defun x--disable-flycheck ()
+    (flycheck-mode -1))
+  (add-hook 'emacs-lisp-mode-hook #'x--disable-flycheck))
 
-;; Show evaluation result on the right of cursor.
-;; (require-package 'eros)
-;; (x/append-init-hook #'eros-mode)
-
+;;; pretty print
 (setq-default enable-local-variables :safe)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
+;;; help demos
 (require-package 'elisp-demos)
 (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
 
+;;; elisp def
 (require-package 'elisp-def)
-(define-key emacs-lisp-mode-map (kbd "M-.") 'elisp-def)
+(define-key emacs-lisp-mode-map (kbd "M-.") #'elisp-def)
 
+;;; suggest
 (require-package 'suggest)
 
 (provide 'x-elisp)
