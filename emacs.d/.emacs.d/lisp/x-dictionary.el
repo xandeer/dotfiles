@@ -12,7 +12,6 @@
 
 (require-package 'posframe)
 (require-package 'sdcv)
-;; (require 'sdcv)
 
 (autoload #'sdcv-search-pointer "sdcv" nil t)
 (autoload #'sdcv-search-input "sdcv" nil t)
@@ -24,34 +23,19 @@
   (global-set-key (kbd "C-c x l") 'sdcv-search-pointer)
   (global-set-key (kbd "C-c x k") 'sdcv-search-input))
 
-;; (leaf english-teacher
-;;   :disabled t
-;;   :straight t
-;;   :commands english-teacher-follow-mode
-;;   :custom
-;;   (english-teacher-backend . 'google)
-;;   (english-teacher-show-result-function . 'english-teacher-eldoc-show-result-function)
-;;   :hook
-;;   ((Info-mode-hook
-;;     Man-mode-hook
-;;     ;; help-mode
-;;     Woman-mode-hook)
-;;    . english-teacher-follow-mode))
-
 (require-package 'go-translate)
-(require 'go-translate)
+;; (require 'go-translate)
 
+(autoload #'go-translate "go-translate" nil t)
 (with-eval-after-load 'go-translate
   (setq go-translate-token-current (cons 430675 2721866130))
   (setq go-translate-base-url "https://translate.google.cn")
   (setq go-translate-local-language "zh-CN")
   (setq go-translate-target-language "en")
-  (setq go-translate-buffer-follow-p t)       ; 翻译完成后，总是将光标切换到翻译结果窗口
-  (setq go-translate-buffer-source-fold-p t)  ; 在结果页面，折叠源文本。可以通过回车或鼠标点击展开
-  (setq go-translate-buffer-line-wrap-p nil)  ; 在结果页面，不允许过长的行折行显示
-  (setq go-translate-extra-directions '(("zh-CN" . "zh-TW")))
-
-  (global-set-key (kbd "C-c x g")  'go-translate))
+  (setq go-translate-buffer-follow-p t) ; 翻译完成后，总是将光标切换到翻译结果窗口
+  (setq go-translate-buffer-source-fold-p t) ; 在结果页面，折叠源文本。可以通过回车或鼠标点击展开
+  (setq go-translate-buffer-line-wrap-p nil) ; 在结果页面，不允许过长的行折行显示
+  (setq go-translate-extra-directions '(("zh-CN" . "zh-TW"))))
 
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here

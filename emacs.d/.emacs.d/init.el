@@ -65,7 +65,6 @@
 (require 'x-elisp)
 (require 'x-json)
 (require 'x-kt)
-(require 'x-scheme)
 (require 'x-web)
 
 ;;; tools
