@@ -1,6 +1,23 @@
 [init]
 	defaultBranch = main
 
+[alias]
+	co = checkout
+	br = branch
+	st = status
+	aa = add -A .
+	cm = commit -m
+	undo = reset HEAD~1
+	rv = revert
+	rb = rebase
+	rbc = rebase --continue
+	rba = rebase --abort
+	rbs = rebase --skip
+	save = stash push
+	pop = stash pop
+	apply = stash apply
+	rl = reflog
+
 [github]
 user=xandeer
 
