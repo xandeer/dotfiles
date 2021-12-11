@@ -59,8 +59,6 @@ Default use `point-min` or `point-max`."
     (insert (thing-at-point 'line))
     (move-end-of-line 1)))
 
-
-
 (defun x/bookmark (name)
   "Goto bookmark with NAME, or update it."
   (interactive)
@@ -68,7 +66,6 @@ Default use `point-min` or `point-max`."
       (bookmark-set name)
     (bookmark-jump name)))
 
-
 (defun x/kill-other-window-buffer ()
   "Kill the buffer in other window."
   (interactive)
@@ -96,7 +93,6 @@ Default use `point-min` or `point-max`."
                   ))
     (x--trash path)))
 
-
 ;; Move it to /Library/LaunchDaemons
 ;; (add-hook #'after-init-hook
           ;; (lambda ()
@@ -119,7 +115,6 @@ Default use `point-min` or `point-max`."
   (interactive)
   (message (format-network-address (car (network-interface-info "en0")) t)))
 
-
 ;; https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
 (defun x/rename (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
@@ -143,7 +138,6 @@ Default use `point-min` or `point-max`."
         (error "Cannot open tramp file")
       (browse-url (concat "file://" file-name)))))
 
-
 (defun x--launch-separate-emacs-under-x ()
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
@@ -153,7 +147,6 @@ Default use `point-min` or `point-max`."
   (let ((kill-emacs-hook (append kill-emacs-hook (list #'x--launch-separate-emacs-under-x))))
     (save-buffers-kill-emacs)))
 
-
 ;;; utils to remove leaf
 (defun x/leaf-expand-custom (beg end)
   (interactive "r")
@@ -165,7 +158,7 @@ Default use `point-min` or `point-max`."
   (interactive "r")
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (x/replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) '" beg end))
+  (x/replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) #'" beg end))
 
 (defun x/leaf-expand-map-bind (beg end)
   (interactive "r")
@@ -174,9 +167,8 @@ Default use `point-min` or `point-max`."
   (x/replace "\\(\".*\"\\) *\\. "
               (concat "define-key "
                       (read-from-minibuffer "Map: ")
-                      " (kbd \\1) '")
+                      " (kbd \\1) #'")
               beg end))
-
 
 (provide 'x-utils)
 ;;; x-utils.el ends here

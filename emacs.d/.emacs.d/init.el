@@ -80,7 +80,6 @@
 (require 'x-flycheck)
 (require 'x-folding)
 (require 'x-hippie-expand)
-(require 'x-imenu-list)
 ;; (require 'x-ivy)
 (require 'x-jieba)
 ;; (require 'x-key-chord)

@@ -12,7 +12,7 @@
 (require-package 'git-messenger)
 
 ;;; diff-hl
-(autoload #'diff-hl-dired-mode "diff-hl" nil t)
+(autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
 (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
 
 ;;; magit
