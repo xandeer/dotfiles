@@ -2,14 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
-;;;###autoload
 (defun x/delete-window-or-frame ()
   (interactive)
   (if (eq (window-deletable-p) 't)
       (delete-window)
     (delete-frame)))
 
-;;;###autoload
 (defun x/roam-or-projectile-find-file (&optional window)
   (when window
     (select-window window))
@@ -17,13 +15,11 @@
       (org-roam-node-find)
     (projectile-find-file)))
 
-;;;###autoload
 (defun x/split-below-find-file ()
   "Split below and find file."
   (interactive)
   (x/roam-or-projectile-find-file (split-window-below)))
 
-;;;###autoload
 (defun x/split-right-find-file ()
   "Split right and find file."
   (interactive)
