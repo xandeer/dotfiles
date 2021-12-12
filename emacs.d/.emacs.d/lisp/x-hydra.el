@@ -32,7 +32,7 @@
          (interactive (list (read-string "Ip: " (x/ifconfig))))
          (x/open (concat "http://" ip))) "open localhost")
   ;; ("j" (x/open-with "/Applications/Day\\ One.app"))
-  ("e" (x/open-with "/Applications/Evernote.app") "open evernote")
+  ("e" (x/open "/Applications/Evernote.app") "open evernote")
   ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io")
   ("s" #'eva-query-sleep "eva query sleep"))
 
