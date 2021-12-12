@@ -4,8 +4,6 @@
 
 (require-package 'hydra)
 
-;;; x
-
 (defhydra x-hydra-x (:exit t :columns 4 :idle 0.3)
   ""
   ("u"
@@ -40,19 +38,15 @@
 
 (global-set-key (kbd "H-x") 'x-hydra-x/body)
 
-;;; open invisible buffer
-
 (defhydra x-hydra-open-buffer (:exit t :columns 4 :idle 0.3)
   "
 Buffer\n"
   ("p" projectile-switch-project "switch project")
   ("k" consult-buffer "buffer")
   ("H-k" consult-buffer-other-window "buffer other window")
-  ("j" org-roam-node-find "roam")
-  ("H-j" x/roam-node-find-other-window "roam other window")
   ("r" org-roam-node-random "roam random" :exit nil)
-  ("h" org-roam-dailies-goto-today "today")
-  ("H-h" org-roam-dailies-goto-yesterday "yesterday")
+  ("j" org-roam-dailies-goto-today "today")
+  ("H-j" org-roam-dailies-goto-yesterday "yesterday")
   ("d" org-roam-dailies-goto-date "date")
   ("f" find-file "find file")
   ("H-f" projectile-find-file "project find file")
@@ -61,8 +55,6 @@ Buffer\n"
   ("H-s" x/open-telega-root "telega root"))
 (global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
 
-;;; store/goto the special position
-
 (defun x--bookmark-set ()
   (interactive)
   (if (equal major-mode 'org-mode)
@@ -96,8 +88,6 @@ Buffer\n"
 
 (global-set-key (kbd "H-j") #'x-hydra-deal-special-position/body)
 
-;;; global actions
-
 (defhydra x-hydra-global-actions (:exit t :columns 4 :idle 0.3)
   ""
   ("n" consult-focus-lines "focus lines")
@@ -118,12 +108,11 @@ Buffer\n"
 (global-set-key (kbd "M-k") #'x/switch-to-last-buffer)
 (global-set-key (kbd "H-c") #'org-capture)
 
-;;; search
-
 (defhydra x-hydra-search (:exit t :columns 4 :idle 0.3)
   ""
   ("s" (consult-ripgrep default-directory) "rg current directory")
   ("H-s" consult-ripgrep "rg project")
+  ("e" find-library "find library")
   ("p" projectile-switch-project "switch project")
   ("u" engine/search-github "github")
   ("g" engine/search-google "google")

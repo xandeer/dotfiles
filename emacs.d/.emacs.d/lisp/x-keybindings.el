@@ -17,7 +17,7 @@ If point was already at that position, move point to beginning of line."
 (global-set-key [remap newline] 'newline-and-indent)
 
 (global-set-key (kbd "H-z") 'undo)
-(global-set-key (kbd "H-n") 'make-frame)
+;; (global-set-key (kbd "H-n") 'make-frame)
 
 (defun x/switch-to-last-buffer ()
   (interactive)

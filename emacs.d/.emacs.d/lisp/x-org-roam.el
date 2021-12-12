@@ -180,7 +180,10 @@
 (defhydra x-hydra-roam-org (:exit t :columns 4 :idle 0.3)
   "
 Roam\n"
-  ("b" org-roam-buffer-toggle "roam buffer")
+  ("r" org-roam-buffer-toggle "roam buffer")
+  ("a" org-roam-alias-add "roam add alias")
+  (";" org-roam-tag-add "roam add tag")
+  ("H-;" org-roam-tag-remove "roam remove tag")
   ("k" org-roam-dailies-goto-previous-note "dailies previous" :exit nil)
   ("j" org-roam-dailies-goto-next-note "dailies next" :exit nil)
   ("l" x--remove-links "remove links")
@@ -198,10 +201,10 @@ Roam\n"
   ("9" (x--insert-journal-in-year 9) "insert journal in 2019"))
 (define-key org-mode-map (kbd "H-k") #'x-hydra-roam-org/body)
 
-;; (global-set-key (kbd "H-f") 'org-roam-node-find)
-(global-set-key (kbd "H-g") 'x/roam-node-find-other-window)
+(global-set-key (kbd "H-n") #'org-roam-node-find)
+(global-set-key (kbd "H-g") #'x/roam-node-find-other-window)
 
-(define-key org-mode-map (kbd "H-i") 'org-roam-node-insert)
+(define-key org-mode-map (kbd "H-i") #'org-roam-node-insert)
 
 (provide 'x-org-roam)
 ;;; x-org-roam.el ends here

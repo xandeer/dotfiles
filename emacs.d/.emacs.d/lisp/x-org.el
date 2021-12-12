@@ -104,7 +104,7 @@
         ("c" . org-clock-goto)
         ("i" . org-clock-in)
         ("l" . org-clock-out)
-        ("S" . org-schedule)
+        ("S" . x/org-schedule)
 
         ("Meta Data Editing")
         ("t" . org-todo)
