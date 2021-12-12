@@ -26,6 +26,7 @@
 (require-package 'go-translate)
 ;; (require 'go-translate)
 
+(autoload #'facemenu-add-face "facemenu" nil t)
 (autoload #'go-translate "go-translate" nil t)
 (with-eval-after-load 'go-translate
   (setq go-translate-token-current (cons 430675 2721866130))

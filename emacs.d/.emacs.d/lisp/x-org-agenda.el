@@ -72,14 +72,14 @@
           (org-agenda-sorting-strategy
            '(todo-state-down effort-up category-keep))))
         ("e" "Emacs"
-         ((tags-todo "EMACS+CATEGORY=\"One-off\""
+         ((tags-todo "EMACS+Sword"
+                     ((org-agenda-overriding-header "Lispy and Meow")))
+          (tags-todo "EMACS+CATEGORY=\"One-off\""
                      ((org-agenda-overriding-header "One Off")))
           (tags-todo "EMACS+CATEGORY=\"Leaf\""
                      ((org-agenda-overriding-header "Without Leaf")))
           (tags-todo "EMACS+CATEGORY=\"Embark\""
-                     ((org-agenda-overriding-header "Embark")))
-          (tags-todo "EMACS+Sword"
-                     ((org-agenda-overriding-header "Lispy and Meow")))))
+                     ((org-agenda-overriding-header "Embark")))))
         ("i" "Inbox"
          ((tags-todo "REFILE+CATEGORY=\"Inbox\""
                      ((org-agenda-overriding-header "Inbox")))))
