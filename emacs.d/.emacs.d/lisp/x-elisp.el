@@ -13,13 +13,11 @@ Elisp\n"
 
 (define-key emacs-lisp-mode-map (kbd "H-k") #'x-hydra-elisp-helpful/body)
 
-(define-key emacs-lisp-mode-map (kbd "M-p") #'beginning-of-defun)
 (defun x--end-of-defun ()
   (interactive)
   (forward-char)
   (end-of-defun)
   (backward-char))
-(define-key emacs-lisp-mode-map (kbd "M-n") #'x--end-of-defun)
 
 ;;; disable flycheck on elisp mode
 (with-eval-after-load 'flycheck

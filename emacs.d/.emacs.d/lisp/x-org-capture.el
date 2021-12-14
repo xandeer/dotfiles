@@ -2,11 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-(leaf org-capture
-  :require t
-  :bind
-  ("C-c c" . org-capture)
-  :config
+(require 'org-capture)
+(global-set-key (kbd "C-c c") #'org-capture)
+
+(with-eval-after-load 'org-capture
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
 
