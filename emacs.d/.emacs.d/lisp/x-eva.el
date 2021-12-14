@@ -2,13 +2,13 @@
 ;;; Commentary:
 
 ;;; How to modify mood alist?
-;; 1. stop eva mode
-;; 2. (find-file (expand-file-name "memory.tsv" eva-cache-dir-path))
-;; 3. find the item and remove it
+;; 1. (setq eva-mood-alist '(("phone" . "5") ("watching" . "5") ("review" . "5") ("learning" . "5")   ("reading" . "5") ("emacs" . "5") ("donut" . "5") ("normal" . "5")))
+;; 2. stop (eva-mode)
+;; 3. start (eva-mode)
+;; 4. could look at (find-file (expand-file-name "memory.tsv" eva-cache-dir-path))
 
 ;;; Code:
 
-;;; package
 (require-package
  '(eva
    :host github
@@ -16,14 +16,12 @@
    :branch "master"
    :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
 
-;;; init
 (setq eva-cache-dir-path (no-littering-expand-var-file-name "eva"))
 (setq eva-idle-log-path (expand-file-name "idle.tsv" eva-cache-dir-path))
 (setq eva-buffer-info-path (expand-file-name "buffer-info.tsv" eva-cache-dir-path))
 (setq eva-buffer-focus-log-path (expand-file-name "buffer-focus.tsv" eva-cache-dir-path))
 (setq ess-ask-for-ess-directory nil)
 
-;;; config
 (with-eval-after-load 'eva
   (require 'eva-builtin)
   (setq eva--idle-secs-fn #'org-mac-idle-seconds)
