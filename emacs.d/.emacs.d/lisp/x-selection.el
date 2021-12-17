@@ -7,21 +7,6 @@
   :group 'bindings
   :prefix "x/selection-")
 
-;;;###autoload
-(define-minor-mode x/selection-mode
-  "Minor mode for navigating and editing with region.
-
-When `x/selection-mode` is on, most unprefixed keys,
-i.e. [a-zA-Z+-./<>], call commands instead of self-inserting
-when the region is active.
-
-\\{x/selection-mode-map}"
-  :keymap x/selection-mode-map
-  :group 'x/selection
-  :lighter " X/S")
-
-;; (add-hook 'activate-mark-hook (lambda () (x/selection-mode)))
-
 (defvar x/selection-mode-map-base
   (let ((map (make-sparse-keymap)))
     ;; navigation
@@ -43,11 +28,61 @@ when the region is active.
     (define-key map (kbd "M-,") 'pop-tag-mark)
     map))
 
+(defun x--get-region-str ()
+  (buffer-substring-no-properties (region-beginning)
+                                  (region-end)))
+
 (defvar x/selection-mode-map
-  (let ((map (copy-keymap x/selection-mode-map-base)))
+  (let ((map (make-sparse-keymap)))
+    ;; (let ((map (copy-keymap x/selection-mode-map-base)))
     ;; navigation
     (define-key map "d" #'exchange-point-and-mark)
+    (define-key map "f" #'jieba-forward-word)
+    (define-key map "b" #'jieba-backward-word)
+    (define-key map "j" #'next-line)
+    (define-key map "k" #'previous-line)
+    ;; expand
+    (define-key map "o" #'er/expand-region)
+    (define-key map "i" #'er/contract-region)
+    ;; clipboard
+    (define-key map "w" #'easy-kill)
+    ;; misc
+    (define-key map "n" #'x/toggle-narrow)
+    ;; search
+    (define-key map "s" (lambda () (interactive) (consult-line (x--get-region-str))))
+    (define-key map "l" #'sdcv-search-pointer)
+    (define-key map "L" #'go-translate)
+    (define-key map "G" (lambda () (interactive) (engine/search-google (x--get-region-str))))
+    (define-key map "S" (lambda () (interactive) (consult-ripgrep default-directory (x--get-region-str))))
     map))
+
+;;;###autoload
+(defun x/selection-forward ()
+  (interactive)
+  (unless (equal (point) (region-end))
+    (exchange-point-and-mark))
+  (call-interactively #'jieba-forward-word))
+
+;;;###autoload
+(define-minor-mode x/selection-mode
+  "Minor mode for navigating and editing with region.
+
+When `x/selection-mode` is on, most unprefixed keys,
+i.e. [a-zA-Z+-./<>], call commands instead of self-inserting
+when the region is active.
+
+\\{x/selection-mode-map}"
+  :keymap x/selection-mode-map
+  :group 'x/selection
+  :lighter " X/S"
+  (if x/selection-mode
+      (progn
+        (lispy-raise-minor-mode 'x/selection-mode))))
+
+(add-hook 'activate-mark-hook (lambda ()
+                                (unless (equal major-mode 'emacs-lisp-mode)
+                                  (x/selection-mode))))
+(add-hook 'deactivate-mark-hook (lambda () (x/selection-mode -1)))
 
 (provide 'x-selection)
 ;;; x-selection.el ends here

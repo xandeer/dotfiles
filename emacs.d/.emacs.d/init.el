@@ -31,6 +31,7 @@
 (require 'x-bootstrap)
 (require 'x-init-utils)
 (require 'x-utils)
+(require 'x-selection)
 ;; osx
 (require 'x-osx)
 (require 'x-hydra)
