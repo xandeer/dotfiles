@@ -73,9 +73,13 @@ Default use `point-min` or `point-max`."
   (kill-buffer)
   (other-window 1))
 
+(defun x/expand-repo (path)
+  "Expand PATH in ~/prejects/personal ."
+  (expand-file-name path "~/projects/personal"))
+
 (defun x/expand-note (path)
   "Expand PATH in `org-directory`."
-  (expand-file-name path "~/projects/personal/notes"))
+  (expand-file-name path (x/expand-repo "notes")))
 
 (global-set-key (kbd "H-e") 'x/kill-other-window-buffer)
 (global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))

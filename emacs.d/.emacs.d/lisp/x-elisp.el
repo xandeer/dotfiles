@@ -3,6 +3,12 @@
 ;;; Code:
 
 (require-package 'helpful)
+(global-set-key (kbd "C-h f") #'helpful-callable)
+(global-set-key (kbd "C-h v") #'helpful-variable)
+(global-set-key (kbd "C-h k") #'helpful-key)
+(global-set-key (kbd "C-h F") #'helpful-function)
+(global-set-key (kbd "C-h C") #'helpful-command)
+
 (defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
 	"
 Elisp\n"

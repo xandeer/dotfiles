@@ -36,8 +36,6 @@
   ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io")
   ("s" #'eva-query-sleep "eva query sleep"))
 
-(global-set-key (kbd "H-x") 'x-hydra-x/body)
-
 (defhydra x-hydra-open-buffer (:exit t :columns 4 :idle 0.3)
   "
 Buffer\n"
@@ -48,11 +46,15 @@ Buffer\n"
   ("j" org-roam-dailies-goto-today "today")
   ("H-j" org-roam-dailies-goto-yesterday "yesterday")
   ("d" org-roam-dailies-goto-date "date")
+  ("H-d" (projectile-find-file-in-directory (x/expand-repo "dotfiles")) "projectile dots")
+  ("w" (projectile-find-file-in-directory x/work-directory) "projectile work")
   ("f" find-file "find file")
   ("H-f" projectile-find-file "project find file")
   ("l" consult-recent-file "recent files")
   ("s" x/telega-chat-with "telega chat with")
   ("H-s" x/open-telega-root "telega root"))
+
+(global-set-key (kbd "H-x") 'x-hydra-x/body)
 (global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
 
 (defun x--bookmark-set ()
