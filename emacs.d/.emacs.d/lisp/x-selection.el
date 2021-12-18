@@ -79,10 +79,25 @@ when the region is active.
       (progn
         (lispy-raise-minor-mode 'x/selection-mode))))
 
-(add-hook 'activate-mark-hook (lambda ()
-                                (unless (equal major-mode 'emacs-lisp-mode)
-                                  (x/selection-mode))))
-(add-hook 'deactivate-mark-hook (lambda () (x/selection-mode -1)))
+(defun x/selection-mode-p ()
+  (equal x/selection-mode t))
+
+(defun x/selection-mode-enable ()
+  (unless (equal major-mode 'emacs-lisp-mode)
+    (x/selection-mode)))
+
+(defun x/selection-mode-disable ()
+  (x/selection-mode -1))
+
+(defun x/selection-mode-global-enable ()
+  (interactive)
+  (add-hook 'activate-mark-hook #'x/selection-mode-enable)
+  (add-hook 'deactivate-mark-hook #'x/selection-mode-disable))
+
+(defun x/selection-mode-global-disable ()
+  (interactive)
+  (remove-hook 'activate-mark-hook #'x/selection-mode-enable)
+  (remove-hook 'deactivate-mark-hook #'x/selection-mode-disable))
 
 (provide 'x-selection)
 ;;; x-selection.el ends here

@@ -128,7 +128,10 @@
          #'x/load-init-session)))
   (run-with-idle-timer 1 nil init-fn))
 
-(x/append-init-hook 'toggle-frame-maximized)
+(x/append-init-hook
+ '(toggle-frame-maximized
+   x/selection-mode-global-enable
+   ))
 
 (provide 'init)
 

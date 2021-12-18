@@ -34,6 +34,7 @@
        meow-normal-mode-p
        x/ace-mode-p
        x/org-heading-beginning-p
+       x/selection-mode-p
        rime-predicate-hydra-p
        rime-predicate-ace-window-p
        rime-predicate-prog-in-code-p

@@ -2,9 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(defun x/append-init-hook (fn)
-  "Add FN as a hook on `after-init-hook`."
-  (add-hook 'after-init-hook fn))
+(defun x/append-init-hook (arg)
+  "Add ARG as hook on `after-init-hook`."
+  (cond ((functionp arg) (add-hook 'after-init-hook arg))
+        (t (dolist (fn arg)
+             (add-hook 'after-init-hook fn)))))
 
 (defvar x--auto-timer nil)
 (defvar x--auto-push-answered? t)
