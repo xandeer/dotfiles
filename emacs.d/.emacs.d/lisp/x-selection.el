@@ -7,6 +7,12 @@
   :group 'bindings
   :prefix "x/selection-")
 
+;; (defun x/selection-forward ()
+;;   (interactive)
+;;   (unless (equal (point) (region-end))
+;;     (exchange-point-and-mark))
+;;   (call-interactively #'jieba-forward-word))
+
 (defvar x/selection-mode-map-base
   (let ((map (make-sparse-keymap)))
     ;; navigation
@@ -32,10 +38,34 @@
   (buffer-substring-no-properties (region-beginning)
                                   (region-end)))
 
+(defun x--selection-consult-line ()
+  (interactive)
+  (consult-line (x--get-region-str)))
+
+(defun x--selection-consult-rg-default ()
+  (interactive)
+  (consult-ripgrep default-directory (x--get-region-str)))
+
+(defun x--selection-google ()
+  (interactive)
+  (engine/search-google (x--get-region-str)))
+
+(defun x--selection-beginning-of-line ()
+  (interactive)
+  (cond ((equal major-mode 'org-mode) (org-beginning-of-line))
+        (t (x/smart-beginning-of-line))))
+
+(defun x--selection-end-of-line ()
+  (interactive)
+  (cond ((equal major-mode 'org-mode) (org-end-of-line))
+        (t (end-of-line))))
+
 (defvar x/selection-mode-map
   (let ((map (make-sparse-keymap)))
     ;; (let ((map (copy-keymap x/selection-mode-map-base)))
     ;; navigation
+    (define-key map "a" #'x--selection-beginning-of-line)
+    (define-key map "e" #'x--selection-end-of-line)
     (define-key map "d" #'exchange-point-and-mark)
     (define-key map "f" #'jieba-forward-word)
     (define-key map "b" #'jieba-backward-word)
@@ -48,20 +78,16 @@
     (define-key map "w" #'easy-kill)
     ;; misc
     (define-key map "n" #'x/toggle-narrow)
+    (define-key map "v" #'special-lispy-view)
     ;; search
-    (define-key map "s" (lambda () (interactive) (consult-line (x--get-region-str))))
+    (define-key map "s" #'x--selection-consult-line)
     (define-key map "l" #'sdcv-search-pointer)
     (define-key map "L" #'go-translate)
-    (define-key map "G" (lambda () (interactive) (engine/search-google (x--get-region-str))))
-    (define-key map "S" (lambda () (interactive) (consult-ripgrep default-directory (x--get-region-str))))
+    (define-key map "G" #'x--selection-google)
+    (define-key map "S" #'x--selection-consult-rg-default)
+    ;; deactivate region
+    (define-key map "q" #'keyboard-quit)
     map))
-
-;;;###autoload
-(defun x/selection-forward ()
-  (interactive)
-  (unless (equal (point) (region-end))
-    (exchange-point-and-mark))
-  (call-interactively #'jieba-forward-word))
 
 ;;;###autoload
 (define-minor-mode x/selection-mode

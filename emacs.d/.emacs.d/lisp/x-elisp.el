@@ -15,7 +15,8 @@ Elisp\n"
   ("d" helpful-at-point "helpful at point")
   ("f" find-function "find function")
   ("v" find-variable "find variable")
-  ("l" find-library "find library"))
+  ("l" find-library "find library")
+  ("r" x/load-current "reload current file"))
 
 (define-key emacs-lisp-mode-map (kbd "H-k") #'x-hydra-elisp-helpful/body)
 

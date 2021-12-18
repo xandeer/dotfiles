@@ -151,6 +151,11 @@ Default use `point-min` or `point-max`."
   (let ((kill-emacs-hook (append kill-emacs-hook (list #'x--launch-separate-emacs-under-x))))
     (save-buffers-kill-emacs)))
 
+(defun x/load-current ()
+  "Load the current elisp file."
+  (interactive)
+  (load-file (buffer-file-name)))
+
 ;;; utils to remove leaf
 (defun x/leaf-expand-custom (beg end)
   (interactive "r")

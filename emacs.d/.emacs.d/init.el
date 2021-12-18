@@ -130,8 +130,7 @@
 
 (x/append-init-hook
  '(toggle-frame-maximized
-   x/selection-mode-global-enable
-   ))
+   x/selection-mode-global-enable))
 
 (provide 'init)
 
