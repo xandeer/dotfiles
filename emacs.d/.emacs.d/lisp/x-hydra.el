@@ -77,7 +77,7 @@ Buffer\n"
   ("e" (org-agenda nil "e") "agenda emacs")
   ("i" (org-agenda nil "i") "agenda inbox")
   ("t" (org-agenda nil "t") "agenda todo")
-  ("p" (org-agenda nil "p") "agenda phone")
+  ("p" (org-agenda nil "p") "agenda personal")
   ("v" org-agenda "agenda list")
   ("w" (org-agenda nil "w") "agenda work")
 

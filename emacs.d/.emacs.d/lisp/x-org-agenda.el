@@ -64,13 +64,17 @@
       '(("n" "Notes" tags "NOTE"
          ((org-agenda-overriding-header "Notes")
           (org-tags-match-list-sublevels t)))
-        ("p" "Phone Calls" tags "PHONE"
-         ((org-agenda-overriding-header "Phone Calls")
-          (org-tags-match-list-sublevels nil)))
-        ("h" "Habits" tags-todo "STYLE=\"habit\""
-         ((org-agenda-overriding-header "Habits")
-          (org-agenda-sorting-strategy
-           '(todo-state-down effort-up category-keep))))
+        ("p" "Personal"
+         ((tags-todo "PERSONAL+CATEGORY=\"Learning\""
+                     ((org-agenda-overriding-header "Learning")))
+          (tags-todo "PERSONAL+CATEGORY=\"Tasks\""
+                     ((org-agenda-overriding-header "Tasks")))
+          (tags-todo "PERSONAL+CATEGORY=\"Review\""
+                     ((org-agenda-overriding-header "Review")))
+          (tags-todo "PERSONAL+CATEGORY=\"Ideas\""
+                     ((org-agenda-overriding-header "Ideas")))
+          (tags-todo "PERSONAL+CATEGORY=\"Habits\""
+                     ((org-agenda-overriding-header "Habits")))))
         ("e" "Emacs"
          ((tags-todo "EMACS+Sword"
                      ((org-agenda-overriding-header "Lispy and Meow")))
@@ -230,7 +234,7 @@ ARG is passed through to `x/org-schedule'."
   (define-key org-agenda-mode-map (kbd "o") #'org-agenda-clock-goto))
 
 ;;; valign
-(straight-use-package
+(require-package
  '(valign
    :host github
    :repo "casouri/valign"))
