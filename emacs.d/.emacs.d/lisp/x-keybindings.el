@@ -44,5 +44,7 @@ If point was already at that position, move point to beginning of line."
           next-line
           newline-and-indent))
 
+(require-package 'command-log-mode)
+
 (provide 'x-keybindings)
 ;;; x-keybindings.el ends here

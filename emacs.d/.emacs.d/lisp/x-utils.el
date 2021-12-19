@@ -94,6 +94,8 @@ Default use `point-min` or `point-max`."
                   "~/temp/donut/*.apk"
                   "~/temp/donut/*.zip"
                   "~/temp/donut/*.aab"
+                  "~/syncthing/donut/apks/*"
+                  "~/syncthing/personal/temp/*"
                   ))
     (x--trash path)))
 
