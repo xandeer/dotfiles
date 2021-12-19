@@ -70,7 +70,9 @@
     (define-key map "f" #'jieba-forward-word)
     (define-key map "b" #'jieba-backward-word)
     (define-key map "j" #'next-line)
+    (define-key map "J" #'avy-goto-line-below)
     (define-key map "k" #'previous-line)
+    (define-key map "K" #'avy-goto-line-above)
     ;; expand
     (define-key map "o" #'er/expand-region)
     (define-key map "i" #'er/contract-region)

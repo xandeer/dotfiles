@@ -85,10 +85,11 @@
         ("Outline Visibility")
         (" " . org-display-outline-path)
         ("n" . org-toggle-narrow-to-subtree)
-        ("d" . org-cut-subtree)
+        ("v" . special-lispy-view)
         ("=" . org-columns)
 
         ("Outline Structure Editing")
+        ("d" . org-cut-subtree)
         ("w" . org-metaup)
         ("s" . org-metadown)
         ("." . org-metaright)

@@ -2,11 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
+(require-package
  '(sdcv :host github
         :repo "manateelazycat/sdcv"))
 
-(straight-register-package
+(require-package
  '(english-teacher :host github
                    :repo "loyalpartner/english-teacher.el"))
 
