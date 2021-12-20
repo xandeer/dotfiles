@@ -82,13 +82,17 @@
     (define-key map "n" #'x/toggle-narrow)
     (define-key map "v" #'special-lispy-view)
     ;; search
+    (define-key map "r" #'anzu-query-replace-regexp)
     (define-key map "s" #'x--selection-consult-line)
     (define-key map "l" #'sdcv-search-pointer)
     (define-key map "L" #'go-translate)
     (define-key map "G" #'x--selection-google)
     (define-key map "S" #'x--selection-consult-rg-default)
     ;; deactivate region
-    (define-key map "q" #'keyboard-quit)
+    (define-key map "g" #'keyboard-quit)
+    ;; digit argument
+    (mapc (lambda (x) (define-key map (format "%d" x) 'digit-argument))
+          (number-sequence 0 9))
     map))
 
 ;;;###autoload

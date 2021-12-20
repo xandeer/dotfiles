@@ -9,6 +9,7 @@
 
 (setq lispy-completion-method 'default)
 (setq lispy-visit-method 'projectile)
+(setq lispy-avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
 (with-eval-after-load 'lispy
   (define-key lispy-mode-map (kbd "M-j") #'x/ace-goto-char-timer)
@@ -30,7 +31,7 @@
 
   (define-key lispy-mode-map (kbd "M-e") #'special-lispy-eval-and-comment)
   (lispy-define-key lispy-mode-map "E" #'lispy-eval-and-replace)
-
+  
   (defun x/toggle-narrow ()
     (interactive)
     (if (buffer-narrowed-p)
