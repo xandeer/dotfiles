@@ -36,6 +36,7 @@
 ;; (add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
 
 (require-package 'expand-region)
+(setq expand-region-subword-enabled t)
 (global-set-key (kbd "C-;") #'er/expand-region)
 
 (require-package 'unfill)
