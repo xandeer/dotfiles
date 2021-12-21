@@ -3,7 +3,7 @@
 
 ;;; How to modify mood alist?
 ;; 1. (setq eva-mood-alist '(("phone" . "5") ("watching" . "5") ("review" . "5") ("learning" . "5")   ("reading" . "5") ("emacs" . "5") ("donut" . "5") ("normal" . "5")))
-;; 2. stop (eva-mode)
+;; 2. stop (eva-mode -1)
 ;; 3. start (eva-mode)
 ;; 4. could look at (find-file (expand-file-name "memory.tsv" eva-cache-dir-path))
 
