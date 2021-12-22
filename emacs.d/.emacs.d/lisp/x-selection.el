@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(require 'x-point-mode)
+
 (defgroup x/selection nil
   "Selection navigation and editing with region."
   :group 'bindings
@@ -60,39 +62,43 @@
   (cond ((equal major-mode 'org-mode) (org-end-of-line))
         (t (end-of-line))))
 
+(defun x-point-org-different ()
+  "Switch to the different side of currrent context."
+  (interactive)
+  (cond ((x-point-org-block-end-p)
+         (re-search-backward x-point-org-block-begin-re))
+        ((x-point-org-block-begin-p)
+         (progn
+           (re-search-forward  x-point-org-block-end-re)
+           (beginning-of-line)))
+        (t (lispy-different))))
+
 (defvar x/selection-mode-map
-  (let ((map (make-sparse-keymap)))
-    ;; (let ((map (copy-keymap x/selection-mode-map-base)))
+  ;; (let ((map (make-sparse-keymap)))
+  (let ((map (copy-keymap x-point-mode-special-map-base)))
     ;; navigation
-    (define-key map "a" #'x--selection-beginning-of-line)
-    (define-key map "e" #'x--selection-end-of-line)
-    (define-key map "d" #'exchange-point-and-mark)
-    (define-key map "f" #'jieba-forward-word)
-    (define-key map "b" #'jieba-backward-word)
-    (define-key map "j" #'next-line)
-    (define-key map "J" #'avy-goto-line-below)
-    (define-key map "k" #'previous-line)
-    (define-key map "K" #'avy-goto-line-above)
+    (x-point-define-key map "a" #'x--selection-beginning-of-line)
+    (x-point-define-key map "e" #'x--selection-end-of-line)
+    (x-point-define-key map "d" #'x-point-org-different)
+;    (x-point-define-key map "f" #'jieba-forward-word)
+;    (x-point-define-key map "b" #'jieba-backward-word)
     ;; expand
-    (define-key map "o" #'er/expand-region)
-    (define-key map "i" #'er/contract-region)
+;    (x-point-define-key map "o" #'er/expand-region)
+;    (x-point-define-key map "i" #'er/contract-region)
     ;; clipboard
-    (define-key map "w" #'easy-kill)
+;    (x-point-define-key map "w" #'easy-kill)
     ;; misc
-    (define-key map "n" #'x/toggle-narrow)
-    (define-key map "v" #'special-lispy-view)
+    ;; (x-point-define-key map "n" #'x/toggle-narrow)
+    ;; (x-point-define-key map "v" #'special-lispy-view)
     ;; search
-    (define-key map "r" #'anzu-query-replace-regexp)
-    (define-key map "s" #'x--selection-consult-line)
-    (define-key map "l" #'sdcv-search-pointer)
-    (define-key map "L" #'go-translate)
-    (define-key map "G" #'x--selection-google)
-    (define-key map "S" #'x--selection-consult-rg-default)
+;    (x-point-define-key map "r" #'anzu-query-replace-regexp)
+    (x-point-define-key map "s" #'x--selection-consult-line)
+;    (x-point-define-key map "l" #'sdcv-search-pointer)
+;    (x-point-define-key map "L" #'go-translate)
+    (x-point-define-key map "G" #'x--selection-google)
+    (x-point-define-key map "S" #'x--selection-consult-rg-default)
     ;; deactivate region
-    (define-key map "g" #'keyboard-quit)
-    ;; digit argument
-    (mapc (lambda (x) (define-key map (format "%d" x) 'digit-argument))
-          (number-sequence 0 9))
+    (x-point-define-key map "g" #'keyboard-quit)
     map))
 
 ;;;###autoload

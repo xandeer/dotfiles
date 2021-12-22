@@ -134,26 +134,19 @@ FUNC is obtained from (`x-point--insert-or-call' DEF PLIST)."
     (eldoc-add-command func)
     (define-key keymap (kbd key) func)))
 
-(defun x-point-block ()
-  (org-next-block arg t block-regexp))
-
-(defun x-point-different ()
-  "Switch to the different side of currrent context."
-  (interactive)
-  (cond ((x-point-org-block-end-p)
-         (re-search-backward x-point-org-block-begin-re))
-        ((x-point-org-block-begin-p)
-         (progn
-           (re-search-forward  x-point-org-block-end-re)
-           (beginning-of-line)))
-        (t (lispy-different))))
-
-(defvar x-point-mode-special-map
+(defvar x-point-mode-special-map-base
   (let ((map (make-sparse-keymap)))
     ;; navigation
-    (x-point-define-key map "d" #'x-point-different)
+    (x-point-define-key map "e" #'end-of-line)
+    (x-point-define-key map "j" #'next-line)
+    (x-point-define-key map "k" #'previous-line)
+;    (x-point-define-key map "J" #'avy-goto-line-below)
+;    (x-point-define-key map "K" #'avy-goto-line-above)
+    ;; misc
+;    (x-point-define-key map "n" #'x/toggle-narrow)
+;    (x-point-define-key map "v" #'special-lispy-view)
     ;; digit argument
-    (mapc (lambda (x) (define-key map (format "%d" x) 'digit-argument))
+    (mapc (lambda (x) (x-point-define-key map (format "%d" x) 'digit-argument))
           (number-sequence 0 9))
     map))
 
@@ -165,8 +158,8 @@ When `x-point-mode` is on, most unprefixed keys,
 i.e. [a-zA-Z+-./<>], call commands instead of self-inserting
 at some special points.
 
-\\{x-point-mode-special-map}"
-  :keymap x-point-mode-special-map
+\\{x-point-mode-special-map-base}"
+  :keymap x-point-mode-special-map-base
   :group 'x-point
   :lighter " x/p"
   (if x-point-mode
