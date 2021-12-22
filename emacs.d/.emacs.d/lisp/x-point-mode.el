@@ -57,6 +57,16 @@
                (setq expose (overlay-get ov 'isearch-open-invisible)))
           (funcall expose ov)))))
 
+(defun x-point-bol-p ()
+  "Return t if point is at beginning of a line not empty, after optional spaces."
+  (save-excursion
+    (skip-chars-backward " \t")
+    (and (bolp)
+         (not (eolp)))))
+
+(defvar-local x-point-special-p-alist '(x-point-bol-p)
+  "Special point  predicates.")
+
 (defun x-point--insert-or-call (def plist)
   "Return a lambda to call DEF if position is special.
 Otherwise call `self-insert-command'.
@@ -93,15 +103,17 @@ PLIST currently accepts:
               (setq this-command 'self-insert-command)
               (call-interactively 'self-insert-command))
 
-             ((or (x-point-left-p)
-                  (x-point-right-p)
-                  ;; (org-at-block-p)
-                  (x-point-org-block-begin-p)
-                  (x-point-org-block-end-p)
-                  (and (x-point-bolp)
-                       (looking-at x-point-outline)))
-              (call-interactively ',def))
+             ;; ((or (x-point-left-p)
+             ;;      (x-point-right-p)
+             ;;      ;; (org-at-block-p)
+             ;;      (x-point-org-block-begin-p)
+             ;;      (x-point-org-block-end-p)
+             ;;      (and (x-point-bolp)
+             ;;           (looking-at x-point-outline)))
+             ;;  (call-interactively ',def))
 
+             ((seq-find 'funcall x-point-special-p-alist)
+              (call-interactively ',def))
              (t
               (setq this-command 'self-insert-command)
               (call-interactively
