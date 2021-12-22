@@ -181,5 +181,12 @@ Default use `point-min` or `point-max`."
                       " (kbd \\1) #'")
               beg end))
 
+(autoload #'lispy-narrow "lispy" nil t)
+(defun x/toggle-narrow ()
+  (interactive)
+  (if (buffer-narrowed-p)
+      (widen)
+    (call-interactively #'lispy-narrow)))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here

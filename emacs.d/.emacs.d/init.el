@@ -31,7 +31,6 @@
 (require 'x-bootstrap)
 (require 'x-init-utils)
 (require 'x-utils)
-(require 'x-selection)
 ;; osx
 (require 'x-osx)
 (require 'x-hydra)
@@ -98,6 +97,7 @@
 (require 'x-skeleton)
 (require 'x-telega)
 (require 'x-vertico)
+(require 'x-selection)
 
 ;;; chores
 (require 'x-mouse)

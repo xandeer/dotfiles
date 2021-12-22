@@ -31,12 +31,7 @@
 
   (define-key lispy-mode-map (kbd "M-e") #'special-lispy-eval-and-comment)
   (lispy-define-key lispy-mode-map "E" #'lispy-eval-and-replace)
-  
-  (defun x/toggle-narrow ()
-    (interactive)
-    (if (buffer-narrowed-p)
-        (widen)
-      (call-interactively #'lispy-narrow)))
+
   (lispy-define-key lispy-mode-map "n" #'x/toggle-narrow)
 
   (lispy-define-key lispy-mode-map "%" #'lispy-delete)

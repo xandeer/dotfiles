@@ -73,6 +73,7 @@
            (beginning-of-line)))
         (t (lispy-different))))
 
+(autoload #'er/contract-region "expand-region-core" nil t)
 (defvar x/selection-mode-map
   ;; (let ((map (make-sparse-keymap)))
   (let ((map (copy-keymap x-point-mode-special-map-base)))
@@ -80,21 +81,21 @@
     (x-point-define-key map "a" #'x--selection-beginning-of-line)
     (x-point-define-key map "e" #'x--selection-end-of-line)
     (x-point-define-key map "d" #'x-point-org-different)
-;    (x-point-define-key map "f" #'jieba-forward-word)
-;    (x-point-define-key map "b" #'jieba-backward-word)
+    (x-point-define-key map "f" #'jieba-forward-word)
+    (x-point-define-key map "b" #'jieba-backward-word)
     ;; expand
-;    (x-point-define-key map "o" #'er/expand-region)
-;    (x-point-define-key map "i" #'er/contract-region)
+    (x-point-define-key map "o" #'er/expand-region)
+    (x-point-define-key map "i" #'er/contract-region)
     ;; clipboard
-;    (x-point-define-key map "w" #'easy-kill)
+    (x-point-define-key map "w" #'easy-kill)
     ;; misc
     ;; (x-point-define-key map "n" #'x/toggle-narrow)
-    ;; (x-point-define-key map "v" #'special-lispy-view)
+    ;; (x-point-define-key map "v" #'lispy-view)
     ;; search
-;    (x-point-define-key map "r" #'anzu-query-replace-regexp)
+    (x-point-define-key map "r" #'anzu-query-replace-regexp)
     (x-point-define-key map "s" #'x--selection-consult-line)
-;    (x-point-define-key map "l" #'sdcv-search-pointer)
-;    (x-point-define-key map "L" #'go-translate)
+    (x-point-define-key map "l" #'sdcv-search-pointer)
+    (x-point-define-key map "L" #'go-translate)
     (x-point-define-key map "G" #'x--selection-google)
     (x-point-define-key map "S" #'x--selection-consult-rg-default)
     ;; deactivate region

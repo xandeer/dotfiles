@@ -134,17 +134,18 @@ FUNC is obtained from (`x-point--insert-or-call' DEF PLIST)."
     (eldoc-add-command func)
     (define-key keymap (kbd key) func)))
 
+(autoload #'lispy-view "lispy" nil t)
 (defvar x-point-mode-special-map-base
   (let ((map (make-sparse-keymap)))
     ;; navigation
     (x-point-define-key map "e" #'end-of-line)
     (x-point-define-key map "j" #'next-line)
     (x-point-define-key map "k" #'previous-line)
-;    (x-point-define-key map "J" #'avy-goto-line-below)
-;    (x-point-define-key map "K" #'avy-goto-line-above)
+    (x-point-define-key map "J" #'avy-goto-line-below)
+    (x-point-define-key map "K" #'avy-goto-line-above)
     ;; misc
-;    (x-point-define-key map "n" #'x/toggle-narrow)
-;    (x-point-define-key map "v" #'special-lispy-view)
+    (x-point-define-key map "n" #'x/toggle-narrow)
+    (x-point-define-key map "v" #'lispy-view)
     ;; digit argument
     (mapc (lambda (x) (x-point-define-key map (format "%d" x) 'digit-argument))
           (number-sequence 0 9))
