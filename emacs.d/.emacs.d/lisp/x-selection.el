@@ -38,7 +38,6 @@
 (autoload #'er/contract-region "expand-region-core" nil t)
 (defvar x/selection-mode-map-base
   (let ((map (make-sparse-keymap)))
-    ;; (let ((map (copy-keymap x-point-mode-special-map-base)))
     (set-keymap-parent map x-point-mode-special-map-base)
     ;; navigation
     (x-point-define-key map "a" #'beginning-of-line)
@@ -51,9 +50,6 @@
     (x-point-define-key map "i" #'er/contract-region)
     ;; clipboard
     (x-point-define-key map "w" #'easy-kill)
-    ;; misc
-    ;; (x-point-define-key map "n" #'x/toggle-narrow)
-    ;; (x-point-define-key map "v" #'lispy-view)
     ;; search
     (x-point-define-key map "r" #'anzu-query-replace-regexp)
     (x-point-define-key map "s" #'x--selection-consult-line)
@@ -66,16 +62,7 @@
     map))
 
 (defvar x/selection-mode-map-org
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map x/selection-mode-map-base)
-    (x-point-define-key map "a" #'org-beginning-of-line)
-    (x-point-define-key map "e" #'org-end-of-line)
-    (x-point-define-key map "d" #'x-point-org-different)
-    (x-point-define-key map "j" #'next-line)
-    (x-point-define-key map "k" #'previous-line)
-    ;; misc
-    (x-point-define-key map "v" #'lispy-view)
-    map))
+  (x-point-define-org-map x/selection-mode-map-base))
 
 (defun x/selection-mode-update-key-theme ()
   (let ((map

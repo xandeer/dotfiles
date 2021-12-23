@@ -96,15 +96,6 @@ PLIST currently accepts:
               (setq this-command 'self-insert-command)
               (call-interactively 'self-insert-command))
 
-             ;; ((or (x-point-left-p)
-             ;;      (x-point-right-p)
-             ;;      ;; (org-at-block-p)
-             ;;      (x-point-org-block-begin-p)
-             ;;      (x-point-org-block-end-p)
-             ;;      (and (x-point-bolp)
-             ;;           (looking-at x-point-outline)))
-             ;;  (call-interactively ',def))
-
              ((seq-find 'funcall x-point-special-p-alist)
               (call-interactively ',def))
              (t
@@ -185,17 +176,26 @@ at some special points.
            (end-of-line)))
         (t (lispy-different))))
 
-(defvar x-point-mode-org-map
+(defun x-point-define-org-map (parent)
   (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map x-point-mode-special-map-base)
+    (set-keymap-parent map parent)
     ;; navigation
     (x-point-define-key map "a" #'org-beginning-of-line)
     (x-point-define-key map "e" #'org-end-of-line)
     (x-point-define-key map "d" #'x-point-org-different)
     (x-point-define-key map "j" #'next-line)
     (x-point-define-key map "k" #'previous-line)
+    ;; (x-point-define-key map "o" #'org-up-element)
     ;; misc
     (x-point-define-key map "v" #'lispy-view)
+    map))
+
+(defvar x-point-mode-org-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent
+     map
+     (x-point-define-org-map x-point-mode-special-map-base))
+    (x-point-define-key map "o" #'org-up-element)
     map))
 
 ;;;###autoload
