@@ -4,17 +4,12 @@
 
 ;;; Code:
 
+;;; base
 (defvar x-point-left "[([{]"
   "Opening delimiter.")
 
 (defvar x-point-right "[])}]"
   "Closing delimiter.")
-
-(defvar x-point-org-block-begin-re "^#\\+\\(begin\\|BEGIN\\)_"
-  "Org block begin delimiter.")
-
-(defvar x-point-org-block-end-re "^#\\+\\(end\\|END\\)_"
-  "Org block begin delimiter.")
 
 (defvar x-point-outline "^;;\\(?:;[^#]\\|\\*+\\)"
   "Outline delimiter.")
@@ -28,17 +23,15 @@
   "Return t if before variable `x-point-left'."
   (looking-at x-point-left))
 
-(defsubst x-point-org-block-begin-p ()
-  (looking-at x-point-org-block-begin-re))
-
-(defsubst x-point-org-block-end-p ()
-  (looking-at x-point-org-block-end-re))
-
 (defun x-point-bolp ()
   "Return t if point is at beginning of line, after optional spaces."
   (save-excursion
     (skip-chars-backward " \t")
     (bolp)))
+
+(defun x-point-looking-back (regexp)
+  "Forward to (`looking-back' REGEXP)."
+  (looking-back regexp (line-beginning-position)))
 
 (defun x-point--in-string-or-comment-p ()
   "Test if point is inside a string or a comment."
@@ -65,7 +58,7 @@
          (not (eolp)))))
 
 (defvar-local x-point-special-p-alist '(x-point-bol-p)
-  "Special point  predicates.")
+  "Special point predicates.")
 
 (defun x-point--insert-or-call (def plist)
   "Return a lambda to call DEF if position is special.
@@ -166,6 +159,66 @@ at some special points.
   (if x-point-mode
       (progn
         (lispy-raise-minor-mode 'x-point-mode))))
+
+;;; org-mode
+(defvar x-point-org-block-begin-re "^#\\+\\(begin\\|BEGIN\\)_"
+  "Org block begin delimiter.")
+
+(defvar x-point-org-block-end-re "^#\\+\\(end\\|END\\)_.*"
+  "Org block begin delimiter.")
+
+(defun x-point-org-block-begin-p ()
+  (looking-at x-point-org-block-begin-re))
+
+(defun x-point-org-block-end-p ()
+  (or (looking-at x-point-org-block-end-re)
+      (x-point-looking-back x-point-org-block-end-re)))
+
+(defun x-point-org-different ()
+  "Switch to the different side of currrent context."
+  (interactive)
+  (cond ((x-point-org-block-end-p)
+         (re-search-backward x-point-org-block-begin-re))
+        ((x-point-org-block-begin-p)
+         (progn
+           (re-search-forward  x-point-org-block-end-re)
+           (end-of-line)))
+        (t (lispy-different))))
+
+(defvar x-point-mode-org-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map x-point-mode-special-map-base)
+    ;; navigation
+    (x-point-define-key map "a" #'org-beginning-of-line)
+    (x-point-define-key map "e" #'org-end-of-line)
+    (x-point-define-key map "d" #'x-point-org-different)
+    (x-point-define-key map "j" #'next-line)
+    (x-point-define-key map "k" #'previous-line)
+    ;; misc
+    (x-point-define-key map "v" #'lispy-view)
+    map))
+
+;;;###autoload
+(define-minor-mode x-point-org-mode
+  "Minor mode for navigating and editing with org mode.
+
+When `x-point-org-mode` is on, most unprefixed keys,
+i.e. [a-zA-Z+-./<>], call commands instead of self-inserting
+at some special points.
+
+\\{x-point-mode-org-map}"
+  :keymap x-point-mode-org-map
+  :group 'x-point
+  :lighter " x/p"
+  (if x-point-org-mode
+      (progn
+        (push #'x-point-org-block-end-p x-point-special-p-alist)
+        (lispy-raise-minor-mode 'x-point-org-mode))))
+
+(defun x-point-mode-p ()
+  (equal x-point-mode t))
+
+(add-hook 'org-mode-hook #'x-point-org-mode)
 
 (provide 'x-point-mode)
 ;;; x-point-mode.el ends here
