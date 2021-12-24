@@ -38,7 +38,7 @@
 (setq org-cycle-separator-lines 0)
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
-(setq org-use-speed-commands t)
+(setq org-use-speed-commands nil)
 (setq org-blank-before-new-entry
       '((heading)
         (plain-list-item . auto)))
@@ -85,7 +85,7 @@
         ("Outline Visibility")
         (" " . org-display-outline-path)
         ("n" . org-toggle-narrow-to-subtree)
-        ("v" . special-lispy-view)
+        ("v" . lispy-view)
         ("=" . org-columns)
 
         ("Outline Structure Editing")

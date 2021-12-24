@@ -97,7 +97,7 @@
 (require 'x-skeleton)
 (require 'x-telega)
 (require 'x-vertico)
-(require 'x-selection)
+(require 'x-point-mode)
 
 ;;; chores
 (require 'x-mouse)
@@ -130,7 +130,8 @@
 
 (x/append-init-hook
  '(toggle-frame-maximized
-   x/selection-mode-global-enable))
+   ;; x/selection-mode-global-enable
+   ))
 
 (provide 'init)
 
