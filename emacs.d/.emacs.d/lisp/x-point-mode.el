@@ -249,7 +249,18 @@ hook.  The default setting is `x-point-speed-command-activate'."
     ("K" . avy-goto-line-above)
     ("Misc")
     ("n" . x/toggle-narrow)
-    ("v" . lispy-view))
+    ("v" . lispy-view)
+    ("Digit arguments")
+    ("0" . digit-argument)
+    ("1" . digit-argument)
+    ("2" . digit-argument)
+    ("3" . digit-argument)
+    ("4" . digit-argument)
+    ("5" . digit-argument)
+    ("6" . digit-argument)
+    ("7" . digit-argument)
+    ("8" . digit-argument)
+    ("9" . digit-argument))
   "Alist of speed commands.
 
 The car of each entry is a string with a single letter, which
