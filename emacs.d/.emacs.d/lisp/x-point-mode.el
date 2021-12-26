@@ -49,7 +49,10 @@
 (defvar x-point-speed-command nil)
 
 (defcustom x-point-speed-command-hook
-  '(x-point-speed-selection-command-activate org-speed-command-activate x-point-speed-command-activate)
+  '(x-point-org-special-command-activate
+    x-point-speed-selection-command-activate
+    x-point-org-speed-command-activate
+    x-point-speed-command-activate)
   "Hook for activating speed commands at strategic locations.
 Hook functions are called in sequence until a valid handler is
 found.
@@ -264,19 +267,71 @@ See `x-point-speed-commands' for configuring them."
         (t (end-of-line))))
 
 ;;; org-mode
+(setq x-point-org-speed-commands
+      '(("Outline Navigation")
+        ("j" . (org-speed-move-safe 'org-next-visible-heading))
+        ("k" . (org-speed-move-safe 'org-previous-visible-heading))
+        ("f" . (org-speed-move-safe 'org-forward-heading-same-level))
+        ("b" . (org-speed-move-safe 'org-backward-heading-same-level))
+        ("u" . (org-speed-move-safe 'outline-up-heading))
+        ("d" . x-point-org-different)
+
+        ("Outline Visibility")
+        (" " . org-display-outline-path)
+        ("n" . org-toggle-narrow-to-subtree)
+        ("v" . x-point-view)
+        ("=" . org-columns)
+
+        ("Outline Structure Editing")
+        ("c" . org-cut-subtree)
+        ("w" . org-metaup)
+        ("s" . org-metadown)
+        ("." . org-metaright)
+        ("," . org-metaleft)
+        (">" . org-shiftmetaright)
+        ("<" . org-shiftmetaleft)
+        ("^" . org-sort)
+        ("R" . org-refile)
+        ("m" . org-mark-subtree)
+        ("a" . org-insert-heading-after-current)
+
+        ("Clock Commands")
+        ("i" . org-clock-in)
+        ("l" . org-clock-out)
+        ("S" . x/org-schedule)
+
+        ("Meta Data Editing")
+        ("t" . org-todo)
+        ("z" . org-add-note)
+        (";" . org-set-tags-command)
+        ("e" . org-set-effort)
+        ("E" . org-inc-effort)
+
+        ("Misc")
+        ("q" . x/fill-subtree)
+        ("o" . org-open-at-point)
+        ("?" . org-speed-command-help)))
+
+(defun x-point-org-speed-command-activate (keys)
+  "Hook for activating single-letter speed commands.
+See `x-point-org-speed-commands' for configuring them."
+  (when (and (bolp) (looking-at org-outline-regexp))
+    (cdr (assoc keys
+                x-point-org-speed-commands))))
+
+(setq x-point-org-special-commands
+      '(("d" . x-point-org-different)))
+
+(defun x-point-org-special-command-activate (keys)
+  "Hook for activating single-letter speed commands.
+See `x-point-org-speed-commands' for configuring them."
+  (when (or (x-point-org-block-begin-p)
+            (x-point-org-block-end-p))
+    (cdr (assoc keys
+                x-point-org-special-commands))))
+
 (defun x-point-remap-org ()
   (define-key org-mode-map [remap self-insert-command] 'x-point-self-insert-command))
-
-(defun x-point-org-different ()
-  "Switch to the different side of currrent context."
-  (interactive)
-  (cond ((x-point-org-block-end-p)
-         (re-search-backward x-point-org-block-begin-re))
-        ((x-point-org-block-begin-p)
-         (progn
-           (re-search-forward  x-point-org-block-end-re)
-           (end-of-line)))
-        (t (lispy-different))))
 
 (defvar x-point-org-block-begin-re "^#\\+\\(begin\\|BEGIN\\)_"
   "Org block begin delimiter.")
@@ -290,6 +345,17 @@ See `x-point-speed-commands' for configuring them."
 (defun x-point-org-block-end-p ()
   (or (looking-at x-point-org-block-end-re)
       (x-point-looking-back x-point-org-block-end-re)))
+
+(defun x-point-org-different ()
+  "Switch to the different side of currrent context."
+  (interactive)
+  (cond ((x-point-org-block-end-p)
+         (re-search-backward x-point-org-block-begin-re))
+        ((x-point-org-block-begin-p)
+         (progn
+           (re-search-forward  x-point-org-block-end-re)
+           (end-of-line)))
+        (t (lispy-different))))
 
 (with-eval-after-load 'org-keys
   (x-point-remap-org))
