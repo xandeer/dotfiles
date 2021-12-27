@@ -21,8 +21,8 @@
 (setq disable-mouse-wheel-events nil)
 (global-disable-mouse-mode)
 
-(mouse-wheel-scroll-amount . '(1))
-(mac-mouse-wheel-smooth-scroll . t)
+(setq mouse-wheel-scroll-amount '(1))
+(setq mac-mouse-wheel-smooth-scroll t)
 
 (provide 'x-mouse)
 ;;; x-mouse.el ends here
