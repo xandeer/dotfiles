@@ -16,19 +16,13 @@
       scroll-preserve-screen-position 'always
       scroll-error-top-bottom         t)
 
-(leaf disable-mouse
-  :straight t
-  :require t
-  :init
-  (setq disable-mouse-wheel-events nil)
-  :bind
-  :config
-  (global-disable-mouse-mode))
+(require-package 'disable-mouse)
+(require 'disable-mouse)
+(setq disable-mouse-wheel-events nil)
+(global-disable-mouse-mode)
 
-(leaf mwheel
-  :custom
-  (mouse-wheel-scroll-amount . '(1))
-  (mac-mouse-wheel-smooth-scroll . t))
+(mouse-wheel-scroll-amount . '(1))
+(mac-mouse-wheel-smooth-scroll . t)
 
 (provide 'x-mouse)
 ;;; x-mouse.el ends here

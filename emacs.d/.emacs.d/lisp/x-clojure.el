@@ -2,35 +2,35 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-use-package 'flycheck-clj-kondo)
-(straight-use-package 'parseclj)
+(require-package 'flycheck-clj-kondo)
+(require-package 'parseclj)
 
 (require-package 'clojure-mode)
+
+(add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljc$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljx$" . clojure-mode))
+
 (with-eval-after-load 'clojure-mode
-  (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
-  (add-to-list 'auto-mode-alist '("\\.cljc$" . clojure-mode))
-  (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
-  (add-to-list 'auto-mode-alist '("\\.cljx$" . clojure-mode))
-
   (define-clojure-indent
-    (defroutes 'defun)
-    (GET 2)
-    (POST 2)
-    (PUT 2)
-    (DELETE 2)
-    (HEAD 2)
-    (ANY 2)
-    (OPTIONS 2)
-    (PATCH 2)
-    (rfn 2)
-    (let-routes 1)
-    (context 2)))
+   (defroutes 'defun)
+   (GET 2)
+   (POST 2)
+   (PUT 2)
+   (DELETE 2)
+   (HEAD 2)
+   (ANY 2)
+   (OPTIONS 2)
+   (PATCH 2)
+   (rfn 2)
+   (let-routes 1)
+   (context 2))
 
-;; TODO: What does this for?
-;; (leaf clojure-mode-extra-font-locking
+  ;; TODO: What does this for?
+  ;; (leaf clojure-mode-extra-font-locking
   ;; :after clojure-mode)
 
-(with-eval-after-load 'clojure-mode
   (require-package 'cider)
   (defun x/cider-hook ()
     (add-hook 'before-save-hook 'cider-format-buffer nil t))
