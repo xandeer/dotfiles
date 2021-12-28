@@ -112,8 +112,7 @@ hook.  The default setting is `x-point-speed-command-activate'."
                  (setcdr buffer-undo-list (cddr buffer-undo-list)))
             (setq org-self-insert-command-undo-counter
                   (1+ org-self-insert-command-undo-counter))))))
-     (t
-      (self-insert-command N))))))
+     (t (self-insert-command N))))))
 
 ;;; base commands
 (defcustom x-point-speed-commands
@@ -299,7 +298,7 @@ See `x-point-speed-commands' for configuring them."
         ("i" . org-clock-in)
         ("l" . org-clock-out)
         ("S" . x/org-schedule)
-
+        
         ("Meta Data Editing")
         ("t" . org-todo)
         ("z" . org-add-note)
@@ -315,20 +314,29 @@ See `x-point-speed-commands' for configuring them."
 (defun x-point-org-speed-command-activate (keys)
   "Hook for activating single-letter speed commands.
 See `x-point-org-speed-commands' for configuring them."
-  (when (and (bolp) (looking-at org-outline-regexp))
+  (when (and (equal major-mode 'org-mode)
+             (bolp)
+             (looking-at org-outline-regexp))
     (cdr (assoc keys
                 x-point-org-speed-commands))))
 
+;; override selection mode
 (setq x-point-org-special-commands
       '(("d" . x-point-org-different)))
 
 (defun x-point-org-special-command-activate (keys)
   "Hook for activating single-letter speed commands.
 See `x-point-org-speed-commands' for configuring them."
-  (when (or (x-point-org-block-begin-p)
-            (x-point-org-block-end-p))
+  (when (and (equal major-mode 'org-mode)
+             (or (x-point-org-block-begin-p)
+                 (x-point-org-block-end-p)))
     (cdr (assoc keys
                 x-point-org-special-commands))))
+
+(defun x-point-remap-global ()
+  (global-set-key [remap self-insert-command] 'x-point-self-insert-command))
+
+(x-point-remap-global)
 
 (defun x-point-remap-org ()
   (define-key org-mode-map [remap self-insert-command] 'x-point-self-insert-command))
@@ -353,7 +361,7 @@ See `x-point-org-speed-commands' for configuring them."
          (re-search-backward x-point-org-block-begin-re))
         ((x-point-org-block-begin-p)
          (progn
-           (re-search-forward  x-point-org-block-end-re)
+           (re-search-forward x-point-org-block-end-re)
            (end-of-line)))
         (t (lispy-different))))
 
