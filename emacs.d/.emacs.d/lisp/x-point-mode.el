@@ -49,10 +49,7 @@
 (defvar x-point-speed-command nil)
 
 (defcustom x-point-speed-command-hook
-  '(x-point-org-special-command-activate
-    x-point-speed-selection-command-activate
-    x-point-org-speed-command-activate
-    x-point-speed-command-activate)
+  '( x-point-speed-command-activate)
   "Hook for activating speed commands at strategic locations.
 Hook functions are called in sequence until a valid handler is
 found.
@@ -118,8 +115,9 @@ hook.  The default setting is `x-point-speed-command-activate'."
 (defcustom x-point-speed-commands
   '(("Navigation")
     ("e" . end-of-line)
-    ("j" . next-line)
-    ("k" . previous-line)
+    ("j" . (progn (next-line) (beginning-of-line)))
+    ("k" . (progn (previous-line) (beginning-of-line)))
+    ;; ("k" . previous-line)
     ("J" . avy-goto-line-below)
     ("K" . avy-goto-line-above)
     ("Misc")
@@ -191,6 +189,8 @@ else recenter by the current point."
 (defcustom x-point-speed-selection-commands
   '(("Navigation")
     ("a" . beginning-of-line)
+    ("j" . next-line)
+    ("k" . previous-line)
     ("d" . exchange-point-and-mark)
     ("f" . jieba-forward-word)
     ("b" . jieba-backward-word)
@@ -238,6 +238,8 @@ See `x-point-speed-commands' for configuring them."
     (cdr (assoc keys
                 (append x-point-speed-selection-commands
                         x-point-speed-commands)))))
+
+(add-hook 'x-point-speed-command-hook #'x-point-speed-selection-command-activate -50)
 
 (defun x-point--get-region-str ()
   (buffer-substring-no-properties (region-beginning)
@@ -298,7 +300,7 @@ See `x-point-speed-commands' for configuring them."
         ("i" . org-clock-in)
         ("l" . org-clock-out)
         ("S" . x/org-schedule)
-        
+
         ("Meta Data Editing")
         ("t" . org-todo)
         ("z" . org-add-note)
@@ -320,6 +322,8 @@ See `x-point-org-speed-commands' for configuring them."
     (cdr (assoc keys
                 x-point-org-speed-commands))))
 
+(add-hook 'x-point-speed-command-hook #'x-point-org-speed-command-activate -30)
+
 ;; override selection mode
 (setq x-point-org-special-commands
       '(("d" . x-point-org-different)))
@@ -332,6 +336,8 @@ See `x-point-org-speed-commands' for configuring them."
                  (x-point-org-block-end-p)))
     (cdr (assoc keys
                 x-point-org-special-commands))))
+
+(add-hook 'x-point-speed-command-hook #'x-point-org-special-command-activate -90)
 
 (defun x-point-remap-global ()
   (global-set-key [remap self-insert-command] 'x-point-self-insert-command))

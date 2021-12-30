@@ -110,10 +110,12 @@
   (defun x-point-lisp-speed-command-activate (keys)
     "Hook for activating single-letter speed commands.
 See `x-point-lisp-speed-commands' for configuring them."
-    (when (and (equal major-mode 'emacs-lisp-mode)
+    (when (and (or (equal major-mode 'lisp-interaction-mode)
+                   (equal major-mode 'emacs-lisp-mode))
                (x-point-bol-p))
       (back-to-indentation))
-    (when (and (equal major-mode 'emacs-lisp-mode)
+    (when (and (or (equal major-mode 'lisp-interaction-mode)
+                   (equal major-mode 'emacs-lisp-mode))
                (or (region-active-p)
                    (lispy-left-p)
                    (lispy-right-p)
