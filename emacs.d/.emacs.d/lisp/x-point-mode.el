@@ -115,9 +115,8 @@ hook.  The default setting is `x-point-speed-command-activate'."
 (defcustom x-point-speed-commands
   '(("Navigation")
     ("e" . end-of-line)
-    ("j" . (progn (next-line) (beginning-of-line)))
-    ("k" . (progn (previous-line) (beginning-of-line)))
-    ;; ("k" . previous-line)
+    ("j" . (lambda (N) (interactive "p") (next-line N) (beginning-of-line)))
+    ("k" . (lambda (N) (interactive "p") (previous-line N) (beginning-of-line)))
     ("J" . avy-goto-line-below)
     ("K" . avy-goto-line-above)
     ("Misc")

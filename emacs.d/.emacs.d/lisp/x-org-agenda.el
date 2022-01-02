@@ -77,7 +77,7 @@
                      ((org-agenda-overriding-header "Habits")))))
         ("e" "Emacs"
          ((tags-todo "EMACS+Sword"
-                     ((org-agenda-overriding-header "Lispy and Meow")))
+                     ((org-agenda-overriding-header "Sword")))
           (tags-todo "EMACS+CATEGORY=\"One-off\""
                      ((org-agenda-overriding-header "One Off")))
           (tags-todo "EMACS+CATEGORY=\"Leaf\""
