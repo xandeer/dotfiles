@@ -20,7 +20,7 @@
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
   (add-to-list 'org-babel-tangle-lang-exts
                '("kotlin" . "kt")))
-
+;;; x-point
 (defvar x--kotlin-left "[([{]"
   "Opening delimiter.")
 
