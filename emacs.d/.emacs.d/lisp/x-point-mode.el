@@ -122,6 +122,7 @@ hook.  The default setting is `x-point-speed-command-activate'."
     ("Misc")
     ("n" . x/toggle-narrow)
     ("v" . x-point-view)
+    ("h" . x-hydra-hideshow/body)
     ("Digit arguments")
     ("0" . digit-argument)
     ("1" . digit-argument)

@@ -55,7 +55,7 @@
           ;; ("u" . lispy-undo)
           ("d" . x--kotlin-different)
           ;; ("l" . lispy-right)
-          ;; ("h" . lispy-left)
+          ;; ("h" . x-hydra-hideshow/body)
           ))
 
   (defun x-point-kotlin-speed-command-activate (keys)

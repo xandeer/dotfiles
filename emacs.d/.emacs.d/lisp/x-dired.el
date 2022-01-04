@@ -14,10 +14,14 @@
   (setq dired-recursive-copies 'always)
   (setq dired-create-destination-dirs 'always)
 
-  (define-key dired-mode-map (kbd "* n") 'dired-next-marked-file)
-  (define-key dired-mode-map (kbd "* p") 'dired-prev-marked-file)
-  (define-key dired-mode-map (kbd "d") 'dired-do-delete)
-  (define-key dired-mode-map (kbd "@") 'x/change-hs-on-dired))
+  (let ((map dired-mode-map))
+    (define-key map (kbd "* n") 'dired-next-marked-file)
+    (define-key map (kbd "* p") 'dired-prev-marked-file)
+    (define-key map (kbd "d") 'dired-do-delete)
+    (define-key map (kbd "u") 'dired-up-directory)
+    (define-key map (kbd "n") 'dired-unmark)
+    (define-key map (kbd "N") 'dired-unmark-all-marks)
+    (define-key map (kbd "@") 'x/change-hs-on-dired)))
 
 (require-package 'dired-hacks)
 (require 'dired-x)

@@ -19,5 +19,8 @@ Hideshow\n"
           typescript-mode-hook
           kotlin-mode-hook
           cider-mode-hook))
+
+(with-eval-after-load 'hideshow
+  (add-to-list 'hs-special-modes-alist '(kotlin-mode "{" "}" "/[*/]" nil nil)))
 (provide 'x-folding)
 ;;; x-folding.el ends here
