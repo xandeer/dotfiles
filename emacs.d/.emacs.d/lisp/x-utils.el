@@ -181,12 +181,18 @@ Default use `point-min` or `point-max`."
                       " (kbd \\1) #'")
               beg end))
 
-(autoload #'lispy-narrow "lispy" nil t)
-(defun x/toggle-narrow ()
-  (interactive)
+(defun x/toggle-narrow (arg)
+  (interactive "p")
   (if (buffer-narrowed-p)
       (widen)
-    (call-interactively #'lispy-narrow)))
+    (cond ((region-active-p)
+           (narrow-to-region (region-beginning) (region-end)))
+          (lispy-mode
+           (lispy-narrow arg))
+          ((equal major-mode 'org-mode)
+           (org-toggle-narrow-to-subtree))
+          (smartparens-mode
+           (sp-narrow-to-sexp arg)))))
 
 (provide 'x-utils)
 ;;; x-utils.el ends here

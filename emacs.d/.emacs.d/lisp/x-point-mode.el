@@ -279,7 +279,7 @@ See `x-point-speed-commands' for configuring them."
 
         ("Outline Visibility")
         (" " . org-display-outline-path)
-        ("n" . org-toggle-narrow-to-subtree)
+        ;; ("n" . org-toggle-narrow-to-subtree)
         ("v" . x-point-view)
         ("=" . org-columns)
 

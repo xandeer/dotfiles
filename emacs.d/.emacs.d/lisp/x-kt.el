@@ -46,7 +46,7 @@
 
 ;;; x-point
 (with-eval-after-load 'x-point-mode
-  (setq x-point-kotlin-speed-commands
+  (setq x-point-kotlin-speed-special-commands
         '(("Navigation")
           ;; ("j" . lispy-down)
           ;; ("k" . lispy-up)
@@ -56,6 +56,21 @@
           ("d" . x--kotlin-different)
           ;; ("l" . lispy-right)
           ;; ("h" . x-hydra-hideshow/body)
+          ("Misc")
+          ;; ("n" . sp-narrow-to-sexp)
+          ))
+  (setq x-point-kotlin-speed-commands
+        '(("Navigation")
+          ;; ("j" . lispy-down)
+          ;; ("k" . lispy-up)
+          ;; ("f" . lispy-flow)
+          ;; ("b" . lispy-back)
+          ;; ("u" . lispy-undo)
+          ;; ("d" . x--kotlin-different)
+          ;; ("l" . lispy-right)
+          ;; ("h" . x-hydra-hideshow/body)
+          ("Misc")
+          ;; ("n" . sp-narrow-to-sexp)
           ))
 
   (defun x-point-kotlin-speed-command-activate (keys)
@@ -64,12 +79,16 @@ See `x-point-kotlin-speed-commands' for configuring them."
     (when (and (equal major-mode 'kotlin-mode)
                (x-point-bol-p))
       (back-to-indentation))
-    (when (and (equal major-mode 'kotlin-mode)
-               (or (region-active-p)
-                   (x--kotlin-left-p)
-                   (x--kotlin-right-p)))
-      (cdr (assoc keys (append x-point-kotlin-speed-commands
-                               x-point-speed-commands)))))
+    (when (equal major-mode 'kotlin-mode)
+      (cond
+       ((or (region-active-p)
+            (x--kotlin-left-p)
+            (x--kotlin-right-p))
+        (cdr (assoc keys (append x-point-kotlin-speed-special-commands
+                                 x-point-speed-commands))))
+       ((or (x-point-bol-p))
+        (cdr (assoc keys (append x-point-kotlin-speed-commands
+                                 x-point-speed-commands)))))))
 
   (add-hook 'x-point-speed-command-hook #'x-point-kotlin-speed-command-activate -90))
 
