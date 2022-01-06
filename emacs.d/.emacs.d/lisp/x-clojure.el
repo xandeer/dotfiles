@@ -32,6 +32,7 @@
   ;; :after clojure-mode)
 
   (require-package 'cider)
+  
   (defun x/cider-hook ()
     (add-hook 'before-save-hook 'cider-format-buffer nil t))
 
@@ -82,7 +83,8 @@
     (interactive)
     (cider-browse-ns (cider-current-ns)))
 
-  (add-hook 'clojure-mode-hook 'cider-mode))
+  (add-hook 'clojure-mode-hook 'cider-mode)
+  (add-hook 'clojurescript-mode-hook 'cider-mode))
 
 (provide 'x-clojure)
 ;;; x-clojure.el ends here

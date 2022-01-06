@@ -6,6 +6,8 @@
 (require-package 'multiple-cursors)
 
 (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+(add-hook 'clojurescript-mode-hook (lambda () (lispy-mode 1)))
+(add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
 
 (setq lispy-completion-method 'default)
 (setq lispy-visit-method 'projectile)
@@ -107,15 +109,24 @@
           ("." . lispy-repeat)
           ("~" . lispy-tilde)))
 
+  (defvar x--lispy-modes
+    '(lisp-interaction-mode
+      emacs-lisp-mode
+      clojure-mode
+      clojurescript-mode))
+
+  (defun x--lispy-modes-p ()
+    ;; (when (derived-mode-p
+    ;;        'lisp-interaction-mode 'emacs-lisp-mode ))
+    (member major-mode x--lispy-modes))
+
   (defun x-point-lisp-speed-command-activate (keys)
     "Hook for activating single-letter speed commands.
 See `x-point-lisp-speed-commands' for configuring them."
-    (when (and (or (equal major-mode 'lisp-interaction-mode)
-                   (equal major-mode 'emacs-lisp-mode))
+    (when (and (x--lispy-modes-p)
                (x-point-bol-p))
       (back-to-indentation))
-    (when (and (or (equal major-mode 'lisp-interaction-mode)
-                   (equal major-mode 'emacs-lisp-mode))
+    (when (and (x--lispy-modes-p)
                (or (region-active-p)
                    (lispy-left-p)
                    (lispy-right-p)
