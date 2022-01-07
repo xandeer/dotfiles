@@ -21,30 +21,6 @@
   (add-to-list 'org-babel-tangle-lang-exts
                '("kotlin" . "kt")))
 ;;; x-point
-(defvar x--kotlin-left "[([{]"
-  "Opening delimiter.")
-
-(defvar x--kotlin-right "[])}]"
-  "Closing delimiter.")
-
-(defsubst x--kotlin-right-p ()
-  (looking-back x--kotlin-right
-                (line-beginning-position)))
-
-(defsubst x--kotlin-left-p ()
-  (looking-at x--kotlin-left))
-
-(defun x--kotlin-different ()
-  (interactive)
-  (cond ((x--kotlin-right-p)
-         (sp-backward-sexp))
-        ((x--kotlin-left-p)
-         (sp-forward-sexp))
-        ((and (region-active-p)
-              (not (= (region-beginning) (region-end))))
-         (exchange-point-and-mark))))
-
-;;; x-point
 (with-eval-after-load 'x-point-mode
   (setq x-point-kotlin-speed-special-commands
         '(("Navigation")
@@ -52,23 +28,10 @@
           ;; ("k" . lispy-up)
           ;; ("f" . lispy-flow)
           ;; ("b" . lispy-back)
-          ;; ("u" . lispy-undo)
-          ("d" . x--kotlin-different)
-          ;; ("l" . lispy-right)
-          ;; ("h" . x-hydra-hideshow/body)
-          ("Misc")
-          ;; ("n" . sp-narrow-to-sexp)
           ))
   (setq x-point-kotlin-speed-commands
         '(("Navigation")
-          ;; ("j" . lispy-down)
-          ;; ("k" . lispy-up)
-          ;; ("f" . lispy-flow)
-          ;; ("b" . lispy-back)
-          ;; ("u" . lispy-undo)
-          ;; ("d" . x--kotlin-different)
           ;; ("l" . lispy-right)
-          ;; ("h" . x-hydra-hideshow/body)
           ("Misc")
           ;; ("n" . sp-narrow-to-sexp)
           ))
@@ -82,13 +45,18 @@ See `x-point-kotlin-speed-commands' for configuring them."
     (when (equal major-mode 'kotlin-mode)
       (cond
        ((or (region-active-p)
-            (x--kotlin-left-p)
-            (x--kotlin-right-p))
+            (x-point-sexp-left-p)
+            (x-point-sexp-right-p))
         (cdr (assoc keys (append x-point-kotlin-speed-special-commands
                                  x-point-speed-commands))))
        ((or (x-point-bol-p))
         (cdr (assoc keys (append x-point-kotlin-speed-commands
                                  x-point-speed-commands)))))))
+  (defun x-point-kotlin-setup ()
+    (setq-local x-point-left "[([{<]")
+    (setq-local x-point-right "[])}>]"))
+
+  (add-hook 'kotlin-mode-hook #'x-point-kotlin-setup)
 
   (add-hook 'x-point-speed-command-hook #'x-point-kotlin-speed-command-activate -90))
 

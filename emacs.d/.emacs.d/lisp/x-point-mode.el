@@ -5,23 +5,14 @@
 ;;; Code:
 
 ;;; base helper
-(defvar x-point-left "[([{]"
+(defvar-local x-point-left "[([{]"
   "Opening delimiter.")
 
-(defvar x-point-right "[])}]"
+(defvar-local x-point-right "[])}]"
   "Closing delimiter.")
 
 (defvar x-point-outline "^;;\\(?:;[^#]\\|\\*+\\)"
   "Outline delimiter.")
-
-(defsubst x-point-right-p ()
-  "Return t if after variable `x-point-right'."
-  (looking-back x-point-right
-                (line-beginning-position)))
-
-(defsubst x-point-left-p ()
-  "Return t if before variable `x-point-left'."
-  (looking-at x-point-left))
 
 (defun x-point-looking-back (regexp)
   "Forward to (`looking-back' REGEXP)."
@@ -67,10 +58,33 @@ hook.  The default setting is `x-point-speed-command-activate'."
   ;; :version "24.1"
   :type 'hook)
 
+(defvar x-point--last-newline nil)
+
+(defun x-point--last-newline-p ()
+  "Return t if `newline` called."
+  x-point--last-newline)
+
+(defun x-point--call-newline (&optional arg interactive)
+  (setq x-point--last-newline t))
+
+(advice-add 'newline :after #'x-point--call-newline)
+
+(defun x-point-bol-p ()
+  "Return t if point is at beginning of a line and not a new line,
+after optional spaces."
+  (save-excursion
+    (skip-chars-backward " \t")
+    (and (bolp)
+         (not
+          (and (x-point--last-newline-p)
+               (eolp))))))
+
 (defun x-point-speed-activate-p ()
   (and x-point-use-speed-commands
-       (or (x-point-bol-p)
-           (region-active-p))))
+       (or
+        ;; (not (x-point--last-newline-p))
+        (x-point-bol-p)
+        (region-active-p))))
 
 (defun x-point-self-insert-command (N)
   "Like `self-insert-command`. Inspired by `org-speed-commands`."
@@ -109,11 +123,56 @@ hook.  The default setting is `x-point-speed-command-activate'."
                  (setcdr buffer-undo-list (cddr buffer-undo-list)))
             (setq org-self-insert-command-undo-counter
                   (1+ org-self-insert-command-undo-counter))))))
-     (t (self-insert-command N))))))
+     (t (self-insert-command N)))))
+  (setq x-point--last-newline nil))
 
 ;;; base commands
+(defun x-point-left-sexp-p ()
+  (looking-at x-point-left))
+
+(defun x-point-right-sexp-p ()
+  (looking-back x-point-right
+                (line-beginning-position)))
+
+(defun x-point-different ()
+  (interactive)
+  (cond ((x-point-left-sexp-p)
+         (sp-forward-sexp))
+        ((x-point-right-sexp-p)
+         (sp-backward-sexp))
+        ((and (region-active-p)
+              (not (= (region-beginning) (region-end))))
+         (exchange-point-and-mark))))
+
+(defun x-point-copy-sexp (N)
+  (interactive "p")
+  (save-excursion
+    (when (x-point-right-sexp-p)
+      (x-point-different))
+    (sp-copy-sexp N)))
+
+(defun x-point-kill-sexp (N)
+  (interactive "p")
+  (save-excursion
+    (when (x-point-right-sexp-p)
+      (x-point-different))
+    (sp-kill-sexp N)))
+
+(defun x-point-change-inner ()
+  (interactive)
+  (when (x-point-right-sexp-p)
+    (x-point-different))
+  (sp-change-inner))
+
+(defun x-point-change-enclosing ()
+  (interactive)
+  (when (x-point-right-sexp-p)
+    (x-point-different))
+  (sp-change-enclosing))
+
 (defcustom x-point-speed-commands
   '(("Navigation")
+    ("d" . x-point-different)
     ("e" . end-of-line)
     ("j" . (lambda (N) (interactive "p") (next-line N) (beginning-of-line)))
     ("k" . (lambda (N) (interactive "p") (previous-line N) (beginning-of-line)))
@@ -123,6 +182,11 @@ hook.  The default setting is `x-point-speed-command-activate'."
     ("n" . x/toggle-narrow)
     ("v" . x-point-view)
     ("h" . x-hydra-hideshow/body)
+    ("z" . lispy-undo)
+    ("c" . x-point-kill-sexp)
+    ("C" . x-point-change-inner)
+    ("X" . x-point-change-enclosing)
+    ("W" . x-point-copy-sexp)
     ("Digit arguments")
     ("0" . digit-argument)
     ("1" . digit-argument)
@@ -149,25 +213,20 @@ command."
   :group 'x-point
   ;; :package-version '(Org . "9.5")
   :type '(repeat :value ("k" . ignore)
-		             (choice :value ("k" . ignore)
-			                   (list :tag "Descriptive Headline" (string :tag "Headline"))
-			                   (cons :tag "Letter and Command"
-			                         (string :tag "Command letter")
-			                         (choice
-				                        (function)
-				                        (sexp))))))
-
-(defun x-point-bol-p ()
-  "Return t if point is at beginning of a line not empty, after optional spaces."
-  (save-excursion
-    (skip-chars-backward " \t")
-    (and (bolp)
-         (not (eolp)))))
+                 (choice :value ("k" . ignore)
+                         (list :tag "Descriptive Headline" (string :tag "Headline"))
+                         (cons :tag "Letter and Command"
+                               (string :tag "Command letter")
+                               (choice
+                                (function)
+                                (sexp))))))
 
 (defun x-point-speed-command-activate (keys)
   "Hook for activating single-letter speed commands.
 See `x-point-speed-commands' for configuring them."
-  (when (x-point-bol-p)
+  (when (or (x-point-speed-activate-p)
+            (x-point-left-sexp-p)
+            (x-point-right-sexp-p))
     (cdr (assoc keys
                 x-point-speed-commands))))
 
@@ -191,7 +250,6 @@ else recenter by the current point."
     ("a" . beginning-of-line)
     ("j" . next-line)
     ("k" . previous-line)
-    ("d" . exchange-point-and-mark)
     ("f" . jieba-forward-word)
     ("b" . jieba-backward-word)
     ("Expand")
@@ -200,7 +258,7 @@ else recenter by the current point."
     ("Search")
     ("r" . anzu-query-replace-regexp)
     ("s" . x-point--selection-consult-line)
-    ("S" . x-point--selection-consult-line)
+    ("S" . x-point--selection-consult-rg-default)
     ("l" . sdcv-search-pointer)
     ("L" . go-translate)
     ("G" . x-point--selection-google)
@@ -279,7 +337,6 @@ See `x-point-speed-commands' for configuring them."
 
         ("Outline Visibility")
         (" " . org-display-outline-path)
-        ;; ("n" . org-toggle-narrow-to-subtree)
         ("v" . x-point-view)
         ("=" . org-columns)
 
@@ -303,7 +360,6 @@ See `x-point-speed-commands' for configuring them."
 
         ("Meta Data Editing")
         ("t" . org-todo)
-        ("z" . org-add-note)
         (";" . org-set-tags-command)
         ("e" . org-set-effort)
         ("E" . org-inc-effort)
@@ -369,7 +425,7 @@ See `x-point-org-speed-commands' for configuring them."
          (progn
            (re-search-forward x-point-org-block-end-re)
            (end-of-line)))
-        (t (lispy-different))))
+        (t (x-point-different))))
 
 (with-eval-after-load 'org-keys
   (x-point-remap-org))
