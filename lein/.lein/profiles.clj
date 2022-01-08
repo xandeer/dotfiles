@@ -8,6 +8,7 @@
          [lein-pprint "1.3.2"]               ;pretty print lein dependencies
          [io.aviso/pretty "0.1.37"]          ;make stack traces pretty
          [lein-ancient "0.6.15"]             ;check dependencies
+         [chestnut/lein-template "0.18.0"]
          ]
 
         :middleware
