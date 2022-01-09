@@ -86,13 +86,6 @@
        (s-ends-with? ".org" (buffer-file-name))
        (s-contains? (expand-file-name org-roam-directory) (buffer-file-name))))
 
-(defun x/roam-node-find-other-window ()
-  (interactive)
-  (if (> (count-windows) 1)
-      (other-window 1)
-    (select-window (split-window-right)))
-  (org-roam-node-find))
-
 (defun x--journal-date (year)
   "Generate a date on today in YEAR."
   (let ((d (split-string (string-remove-suffix ".org" (buffer-name)) "-")))
@@ -203,7 +196,7 @@ Roam\n"
 (define-key org-mode-map (kbd "H-k") #'x-hydra-roam-org/body)
 
 (global-set-key (kbd "H-n") #'org-roam-node-find)
-(global-set-key (kbd "H-g") #'x/roam-node-find-other-window)
+(global-set-key (kbd "H-g") (lambda () (interactive) (org-roam-node-find t)))
 
 (define-key org-mode-map (kbd "H-i") #'org-roam-node-insert)
 
