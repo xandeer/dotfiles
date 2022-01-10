@@ -45,8 +45,8 @@ See `x-point-kotlin-speed-commands' for configuring them."
     (when (equal major-mode 'kotlin-mode)
       (cond
        ((or (region-active-p)
-            (x-point-sexp-left-p)
-            (x-point-sexp-right-p))
+            (x-point-left-sexp-p)
+            (x-point-right-sexp-p))
         (cdr (assoc keys (append x-point-kotlin-speed-special-commands
                                  x-point-speed-commands))))
        ((or (x-point-bol-p))

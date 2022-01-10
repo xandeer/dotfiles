@@ -158,6 +158,10 @@ Default use `point-min` or `point-max`."
   (interactive)
   (load-file (buffer-file-name)))
 
+(defun x/fix-straight-build ()
+  (interactive)
+  (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
+
 ;;; utils to remove leaf
 (defun x/leaf-expand-custom (beg end)
   (interactive "r")

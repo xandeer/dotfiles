@@ -30,10 +30,8 @@
                  (abbreviate-file-name filename))))))
 (advice-add 'desktop-create-buffer :around 'x/desktop-time-buffer-create)
 
-;; Restore histories and registers after saving
-(setq-default history-length 10)
 (require 'savehist)
-(add-hook 'after-init-hook 'savehist-mode)
+(x/append-init-hook #'savehist-mode)
 
 (leaf session
   :straight t

@@ -5,6 +5,7 @@
 (require-package 'consult)
 (require-package 'wgrep)
 (require 'consult)
+(require 'consult-imenu)
 ;; Optionally configure the register formatting. This improves the register
 ;; preview for `consult-register', `consult-register-load',
 ;; `consult-register-store' and the Emacs built-ins.
