@@ -2,10 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
+(require 'no-littering)
+(require 'x-init-utils)
+
 ;; save a list of open files in ~/.emacs.d/var/.emacs.desktop
 (setq desktop-path (list no-littering-var-directory)
       desktop-auto-save-timeout 600)
-;(desktop-save-mode 1)
+;; (desktop-save-mode 1)
 
 (defun x/time-subtract-millis (b a)
   (* 1000.0 (float-time (time-subtract b a))))
@@ -33,13 +36,11 @@
 (require 'savehist)
 (x/append-init-hook #'savehist-mode)
 
-(leaf session
-  :straight t
-  :hook (after-init-hook . session-initialize)
-  :config
-  (setq session-save-file (no-littering-expand-var-file-name "session"))
-  (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
-  (setq session-save-file-coding-system 'utf-8))
+(require-package 'session)
+(x/append-init-hook #'session-initialize)
+(setq session-save-file (no-littering-expand-var-file-name "session"))
+(setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
+(setq session-save-file-coding-system 'utf-8)
 
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also

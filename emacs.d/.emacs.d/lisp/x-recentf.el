@@ -3,6 +3,10 @@
 ;;; Code:
 
 (require 'recentf)
+(require 'no-littering)
+(require 'x-utils)
+(require 'x-init-utils)
+
 (setq recentf-save-file (x/expand-note "etc/recentf.el"))
 (setq recentf-auto-cleanup 300)
 (setq recentf-max-saved-items 300)

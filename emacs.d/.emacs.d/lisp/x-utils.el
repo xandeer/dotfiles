@@ -40,6 +40,7 @@ Default use `point-min` or `point-max`."
            ("：" . ": ")
            ("（" . "(")
            ("）" . ")")
+           ("・" . "·")
            ("！" . "! "))))
     (mapc (lambda (q)
             (x/replace (car q) (cdr q)))
