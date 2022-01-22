@@ -33,9 +33,9 @@
   "Just wrap PACKAGE with `straight-use-package`."
   (straight-use-package package))
 
-(require-package 'leaf)
-(require-package 'leaf-keywords)
-(leaf-keywords-init)
+;; (require-package 'leaf)
+;; (require-package 'leaf-keywords)
+;; (leaf-keywords-init)
 
 (require-package 'no-littering)
 (require 'no-littering)
