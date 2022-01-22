@@ -11,6 +11,7 @@
 (require-package 'engine-mode)
 (x/append-init-hook (lambda () (engine-mode t)))
 
+(setq browse-url-firefox-program "/Applications/Firefox.app/Contents/MacOS/firefox")
 (setq browse-url-generic-program (executable-find "open"))
 (setq engine/browser-function 'browse-url-generic)
 
