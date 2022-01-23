@@ -29,16 +29,14 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(defun require-package (package)
-  "Just wrap PACKAGE with `straight-use-package`."
-  (straight-use-package package))
+(defun require-package (package &optional require)
+  "Just wrap PACKAGE with `straight-use-package`.
+When REQUIRE is `t`, require the PACKAGE."
+  (straight-use-package package)
+  (when require
+    (require package)))
 
-;; (require-package 'leaf)
-;; (require-package 'leaf-keywords)
-;; (leaf-keywords-init)
-
-(require-package 'no-littering)
-(require 'no-littering)
+(require-package 'no-littering t)
 (require-package 'hydra)
 
 (provide 'x-bootstrap)

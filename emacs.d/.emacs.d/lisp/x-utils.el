@@ -163,29 +163,6 @@ Default use `point-min` or `point-max`."
   (interactive)
   (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
 
-;;; utils to remove leaf
-(defun x/leaf-expand-custom (beg end)
-  (interactive "r")
-  (unless beg (setq beg (point-min)))
-  (unless end (setq end (point-max)))
-  (x/replace "\\([a-z-]*\\) *\\. " "setq \\1 " beg end))
-
-(defun x/leaf-expand-global-bind (beg end)
-  (interactive "r")
-  (unless beg (setq beg (point-min)))
-  (unless end (setq end (point-max)))
-  (x/replace "\\(\".*\"\\) *\\. " "global-set-key (kbd \\1) #'" beg end))
-
-(defun x/leaf-expand-map-bind (beg end)
-  (interactive "r")
-  (unless beg (setq beg (point-min)))
-  (unless end (setq end (point-max)))
-  (x/replace "\\(\".*\"\\) *\\. "
-              (concat "define-key "
-                      (read-from-minibuffer "Map: ")
-                      " (kbd \\1) #'")
-              beg end))
-
 (defun x/toggle-narrow (arg)
   (interactive "p")
   (if (buffer-narrowed-p)
