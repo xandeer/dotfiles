@@ -24,7 +24,7 @@
      :font (font-spec
             :name   "Consola Mono"
             :weight 'normal
-            :size   16))
+            :size   14))
 
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
@@ -32,7 +32,7 @@
                         (font-spec
                          :name   "PingFang SC"
                          :weight 'normal
-                         :size   16)
+                         :size   14)
                         frame
                         'prepend))
 
