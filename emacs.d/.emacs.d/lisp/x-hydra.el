@@ -66,6 +66,8 @@ Buffer\n"
 
 (defhydra x-hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
   ""
+  ("f" consult-mark "mark")
+  ("H-f" consult-global-mark "global mark")
   ("j" consult-register "register")
   ("H-j" consult-register-store "register store")
   ("l" link-hint-open-link "open link")

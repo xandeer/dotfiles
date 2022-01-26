@@ -2,10 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'consult)
+(require-package 'consult t)
 (require-package 'wgrep)
-(require 'consult)
 (require 'consult-imenu)
+
 ;; Optionally configure the register formatting. This improves the register
 ;; preview for `consult-register', `consult-register-load',
 ;; `consult-register-store' and the Emacs built-ins.
@@ -49,11 +49,8 @@
 
   (global-set-key (kbd "C-c h") 'consult-history)
   (global-set-key (kbd "C-c m") 'consult-mode-command)
-  (global-set-key (kbd "C-c b") 'consult-bookmark)
   (global-set-key (kbd "C-c k") 'consult-kmacro)
-  (global-set-key (kbd "C-c f r") 'consult-recent-file)
   (global-set-key (kbd "C-c f e") 'xr/search-in-lisp)
-  (global-set-key (kbd "C-c f s") 'consult-ripgrep)
   ;; C-x bindings (ctl-x-map)
   (global-set-key (kbd "C-x M-:") 'consult-complex-command)     ;; orig. repeat-complex-command
   (global-set-key (kbd "C-x b") 'consult-buffer)                ;; orig. switch-to-buffer

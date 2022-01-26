@@ -5,8 +5,7 @@
 (require-package 'marginalia)
 (x/append-init-hook 'marginalia-mode)
 
-(require-package 'embark)
-(require 'embark nil t)
+(require-package 'embark t)
 
 ;; Hide the mode line of the Embark live/completions buffers
 (add-to-list 'display-buffer-alist
@@ -25,8 +24,7 @@
 (autoload #'consult-recent-file "consult")
 
 (with-eval-after-load 'consult
-  (require-package 'embark-consult)
-  (require 'embark-consult))
+  (require-package 'embark-consult t))
 
 (defgroup x/embark ()
   "Extensions for `embark`."
@@ -92,6 +90,9 @@ those so-called 'extras'."
       (aw-switch-to-window (aw-select nil))
       (call-interactively embark--command)))
 
+  (define-key embark-buffer-map (kbd "o") #'x/wrap-embark-ace)
+  (define-key embark-bookmark-map (kbd "o") #'x/wrap-embark-ace)
+  (define-key embark-file-map (kbd "o") #'x/wrap-embark-ace)
   (define-key embark-general-map (kbd "o") 'x/wrap-embark-ace))
 
 (defun x/wrap-embark-split-right ()
