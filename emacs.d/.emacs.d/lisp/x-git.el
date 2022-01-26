@@ -28,7 +28,30 @@
 
   (global-set-key (kbd "C-x g") #'magit-status)
   (global-set-key (kbd "C-x M-g") #'magit-dispatch-popup)
-  (define-key magit-status-mode-map (kbd "K") #'magit-discard))
+  (define-key magit-status-mode-map (kbd "K") #'magit-discard)
+
+  (defun x/git-create-tag-and-update-chglog ()
+    (interactive)
+    (call-interactively #'magit-tag-create)
+    (magit-push-tags)
+    (yarn-run "chglog"))
+
+  ;; override default magit-tag
+  (transient-define-prefix magit-tag ()
+    "Create or delete a tag."
+    :man-page "git-tag"
+    ["Arguments"
+     ("-f" "Force"    ("-f" "--force"))
+     ("-a" "Annotate" ("-a" "--annotate"))
+     ("-s" "Sign"     ("-s" "--sign"))
+     (magit-tag:--local-user)]
+    [["Create"
+      ("t"  "tag"            magit-tag-create)
+      ("r"  "release"        magit-tag-release)
+      ("c"  "tag and chglog" x/git-create-tag-and-update-chglog)]
+     ["Do"
+      ("k"  "delete"  magit-tag-delete)
+      ("p"  "prune"   magit-tag-prune)]]))
 
 (defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
 	"
