@@ -399,7 +399,6 @@ See `x-point-org-speed-commands' for configuring them."
   (define-key text-mode-map [remap self-insert-command] #'x-point-self-insert-command)
   (define-key prog-mode-map [remap self-insert-command] #'x-point-self-insert-command)
   (define-key minibuffer-mode-map [remap self-insert-command] #'x-point-self-insert-command)
-  (define-key telega-chat-mode-map [remap self-insert-command] #'x-point-self-insert-command)
   ;; (global-set-key [remap self-insert-command] 'x-point-self-insert-command)
   )
 
