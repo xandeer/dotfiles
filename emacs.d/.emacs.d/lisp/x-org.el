@@ -254,5 +254,20 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
             (dired attach-dir)
           (message "File %S is now an attachment" basename))))))
 
+;;; org-bars
+;; (straight-register-package
+;;  '(org-bars
+;;    :host github
+;;    :repo "tonyaldon/org-bars"))
+;; (require-package 'org-bars t)
+;; (add-hook 'org-mode-hook #'org-bars-mode)
+
+(require-package 'org-bullets t)
+(add-hook 'org-mode-hook #'org-bullets-mode)
+(setq org-bullets-bullet-list '(
+                                "♥"
+                                "◉"
+                                "○"))
+
 (provide 'x-org)
 ;;; x-org.el ends here

@@ -25,7 +25,15 @@
   (interactive)
   (x/roam-or-projectile-find-file (split-window-right)))
 
-(require-package 'ace-window)
+(require-package 'ace-window t)
+
+(setq aw-dispatch-always nil)
+(setq aw-keys '(?j ?k ?l ?i ?h ?f ?d ?a))
+(setq aw-ignore-current nil)
+(setq aw-ignored-buffers
+      '("*Calc Trail*"
+        " *LV*"
+        "*Org Agenda(a)*"))
 
 (global-set-key (kbd "H-o") 'ace-window)
 (global-set-key (kbd "H-0") 'x/delete-window-or-frame)
@@ -35,9 +43,6 @@
 (global-set-key [remap split-window-right] 'x/split-right-find-file)
 (global-set-key [remap split-window-below] 'x/split-below-find-file)
 (global-set-key (kbd "C-x x") 'ace-swap-window)
-
-(with-eval-after-load 'ace-window
-  (setq aw-dispatch-always nil))
 
 (provide 'x-window)
 ;;; x-window.el ends here

@@ -77,6 +77,7 @@
 (require 'x-dired)
 (require 'x-embark)
 (require 'x-eva)
+(require 'x-eww)
 (require 'x-flycheck)
 (require 'x-folding)
 (require 'x-hippie-expand)
