@@ -2,9 +2,17 @@
 ;;; Commentary:
 ;;; Code:
 
+(straight-register-package
+ '(vertico-posframe :host github
+        :repo "tumashu/vertico-posframe"
+        :branch "main"))
+
 (require-package 'vertico)
+(require-package 'vertico-posframe t)
 (require-package 'orderless)
-(add-hook 'after-init-hook 'vertico-mode)
+
+(x/append-init-hook #'vertico-mode)
+(x/append-init-hook #'vertico-posframe-mode)
 
 (with-eval-after-load 'orderless
   ;; (setq completion-styles '(substring orderless))
@@ -43,8 +51,8 @@
                    #'completion--in-region)
                  args)))
 
-  (define-key vertico-map (kbd "C-(") #'vertico-previous-group)
-  (define-key vertico-map (kbd "C-)") #'vertico-next-group))
+  (define-key vertico-map (kbd "(") #'vertico-previous-group)
+  (define-key vertico-map (kbd ")") #'vertico-next-group))
 
 (provide 'x-vertico)
 ;;; x-vertico.el ends here

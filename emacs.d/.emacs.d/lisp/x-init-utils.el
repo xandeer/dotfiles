@@ -8,8 +8,25 @@
         (t (dolist (fn arg)
              (add-hook 'after-init-hook fn)))))
 
+(defun x--push-notes ()
+  (when (y-or-n-p "Push notes to github? ")
+    (async-shell-command
+     (concat "cd " org-directory
+             "; git add --all && git commit -m 'emacs timer: "
+             (format-time-string "[%F %a %T]'")
+             "; git push"))))
+
 (defvar x--auto-timer nil)
 (defvar x--auto-push-answered? t)
+
+(defun x/start-timer-session ()
+  (run-with-idle-timer
+   5 nil (lambda ()
+           (eva-query-mood)
+           (x--push-notes)
+           (setq x--auto-timer
+                 (run-with-timer 3600 nil #'x/start-timer-session)))))
+
 (defun x/auto-session ()
   (run-with-idle-timer
    5 nil (lambda ()

@@ -71,7 +71,8 @@
 (require 'x-anzu)
 (require 'x-avy)
 (require 'x-calendar)
-(require 'x-company)
+;; (require 'x-company)
+(require 'x-completion)
 (require 'x-consult)
 (require 'x-dictionary)
 (require 'x-dired)
@@ -121,7 +122,7 @@
   (org-roam-node-random)
   (eva-mode)
   (eva-set-date-today)
-  (x/auto-session))
+  (x/start-timer-session))
 
 (let ((init-fn
        (if x/writing-config?
