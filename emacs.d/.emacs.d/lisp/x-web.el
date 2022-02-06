@@ -14,12 +14,10 @@
 ;; (require-package 'counsel-css)
 ;; (add-hook 'css-mode-hook #'counsel-css-imenu-setup)
 
-(setq css-indent-offset 2)
-
 (add-to-list 'auto-mode-alist
              '("\\.js\\'" . js-mode))
 (add-hook 'js-mode-hook #'lsp)
-(setq js-indent-level 2)
+
 (with-eval-after-load 'js-mode
   ;; fix `js-find-symbol' [M-.] overriding other packages' keybinding.
   (substitute-key-definition 'js-find-symbol 'xref-find-definitions js-mode-map))
@@ -43,7 +41,6 @@
 
 (require-package 'typescript-mode)
 (add-hook 'typescript-mode-hook #'lsp)
-(setq typescript-indent-level 2)
 
 (require-package 'tide)
 (with-eval-after-load 'typescript-mode

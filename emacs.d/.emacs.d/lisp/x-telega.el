@@ -55,16 +55,7 @@
       (telega)))
 
   (define-key telega-chat-mode-map (kbd "C-c C-f") 'x/telega-chatbuf-attach-file)
-  (define-key telega-chat-mode-map [remap self-insert-command] #'x-point-self-insert-command)
-
-  (add-hook 'telega-chat-mode-hook
-            (lambda ()
-              (set (make-local-variable 'company-backends)
-                   (append '(telega-company-emoji
-                             telega-company-username
-                             telega-company-hashtag)
-                           (when (telega-chat-bot-p telega-chatbuf--chat)
-                             '(telega-company-botcmd)))))))
+  (define-key telega-chat-mode-map [remap self-insert-command] #'x-point-self-insert-command))
 
 (provide 'x-telega)
 ;;; x-telega.el ends here

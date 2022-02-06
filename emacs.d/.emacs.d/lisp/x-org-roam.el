@@ -73,7 +73,8 @@
 
   (defun x--disable-company-when-nocompany ()
     (when (x--has-roam-tag "nocompany")
-      (company-mode -1)))
+      ;; (company-mode -1)
+      (corfu-mode -1)))
 
   (add-hook 'org-mode-hook #'x--enable-valign-when-valign)
   (add-hook 'org-mode-hook #'x--disable-company-when-nocompany)

@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(setq kotlin-tab-width 2)
 (add-to-list 'exec-path
              (expand-file-name
               "~/projects/others/kotlin-language-server/server/build/install/server/bin"))

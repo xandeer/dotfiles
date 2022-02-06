@@ -9,6 +9,8 @@
         :branch "main"))
 (require-package 'cape)
 
+(setq corfu-auto t)
+(setq corfu-auto-prefix 3)
 (corfu-global-mode)
 
 (setq tab-always-indent 'complete)

@@ -103,7 +103,7 @@
   (defvar x--lispy-modes
     '(lisp-interaction-mode
       emacs-lisp-mode
-      pclojure-mode
+      clojure-mode
       clojurescript-mode))
 
   (defun x--lispy-modes-p ()
