@@ -269,5 +269,13 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
                                 "◉"
                                 "○"))
 
+;;; utils
+(defun x/wiki-with-title ()
+  "Goto wiki with the buffer's title."
+  (interactive)
+  (let ((title (car (cdr (car (org-collect-keywords '("title")))))))
+    (browse-url (concat "https://zh.wikipedia.org/wiki/"
+                        (url-encode-url title)))))
+
 (provide 'x-org)
 ;;; x-org.el ends here
