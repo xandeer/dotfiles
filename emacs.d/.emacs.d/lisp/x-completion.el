@@ -24,6 +24,7 @@
 
 (with-eval-after-load 'org
   (defun x--cape-org-setup ()
+    (setq-local corfu-auto nil)
     (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
   (add-hook 'org-mode-hook #'x--cape-org-setup))
