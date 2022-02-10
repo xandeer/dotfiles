@@ -2,18 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'company-shell)
-(with-eval-after-load 'company
-  (with-eval-after-load 'sh-script
-    (add-to-list 'company-backends 'company-shell)))
-
 (with-eval-after-load 'org
   (setq eshell-aliases-file (x/expand-note "etc/eshell.alias")))
 
-(with-eval-after-load 'eshell
-  (with-eval-after-load 'company
-    (add-hook 'eshell-mode-hook (lambda () (company-mode -1))))
+(setq sh-shell-file "/bin/sh")
 
+(with-eval-after-load 'eshell
   (with-eval-after-load 'consult
     (defvar consult--eshell-history nil)
     (defun x/consult-eshell-history ()

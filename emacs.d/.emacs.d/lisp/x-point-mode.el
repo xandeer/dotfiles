@@ -173,6 +173,7 @@ after optional spaces."
 (defcustom x-point-speed-commands
   '(("Navigation")
     ("d" . x-point-different)
+    ("D" . x/duplicate-line)
     ("e" . end-of-line)
     ("j" . (lambda (N) (interactive "p") (next-line N) (beginning-of-line)))
     ("k" . (lambda (N) (interactive "p") (previous-line N) (beginning-of-line)))
@@ -183,7 +184,6 @@ after optional spaces."
     ("v" . x-point-view)
     ("h" . x-hydra-hideshow/body)
     ("z" . lispy-undo)
-    ("c" . x-point-kill-sexp)
     ("C" . x-point-change-inner)
     ("X" . x-point-change-enclosing)
     ("W" . x-point-copy-sexp)

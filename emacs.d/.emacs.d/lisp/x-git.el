@@ -33,7 +33,7 @@
   (defun x/git-create-tag-and-update-chglog ()
     (interactive)
     (call-interactively #'magit-tag-create)
-    (magit-push-tags)
+    (magit-push-tags "origin")
     (yarn-run "chglog"))
 
   ;; override default magit-tag

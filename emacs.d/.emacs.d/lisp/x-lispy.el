@@ -85,6 +85,7 @@
 
           ("miscellanea")
           (" " . lispy-space)
+          ("c" . lispy-kill)
           ("i" . lispy-tab)
           ("I" . lispy-shifttab)
           ("D" . lispy-clone)
