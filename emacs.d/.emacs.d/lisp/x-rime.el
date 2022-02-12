@@ -46,9 +46,15 @@
 
 (setq default-input-method "rime")
 
+(defvar x--ignored-adim-buffers
+  '("COMMIT_EDITMSG"
+    "CAPTURE-inbox.org"
+    "inbox.org"))
+
 (defun x/activate-default-input-method ()
   (interactive)
-  (activate-input-method default-input-method))
+  (unless (member (buffer-name) x--ignored-adim-buffers)
+    (activate-input-method default-input-method)))
 
 (add-hook 'text-mode-hook #'x/activate-default-input-method)
 (add-hook 'telega-chat-mode-hook #'x/activate-default-input-method)

@@ -174,7 +174,6 @@ after optional spaces."
   '(("Navigation")
     ("d" . x-point-different)
     ("D" . x/duplicate-line)
-    ("e" . end-of-line)
     ("j" . (lambda (N) (interactive "p") (next-line N) (beginning-of-line)))
     ("k" . (lambda (N) (interactive "p") (previous-line N) (beginning-of-line)))
     ("J" . avy-goto-line-below)
@@ -248,6 +247,7 @@ else recenter by the current point."
 (defcustom x-point-speed-selection-commands
   '(("Navigation")
     ("a" . beginning-of-line)
+    ("e" . end-of-line)
     ("j" . next-line)
     ("k" . previous-line)
     ("f" . jieba-forward-word)
