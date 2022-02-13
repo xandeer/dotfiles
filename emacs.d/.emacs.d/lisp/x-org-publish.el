@@ -11,7 +11,8 @@
 ;;; Path
 
 (require 'x-utils)
-(defvar x/publish-pub-dir (x/expand-repo "xandeer.github.io/"))
+;; (defvar x/publish-pub-dir (x/expand-repo "xandeer.github.io/"))
+(defvar x/publish-pub-dir (expand-file-name "xandeer.github.io/" "~/syncthing/personal/"))
 
 (defun x/expand-pub (path)
   "Expand file PATH under `x/publish-pub-dir`."
@@ -24,10 +25,29 @@
 (setq org-export-headline-levels          6)
 (setq org-html-head-include-default-style nil)
 
+(setq org-html-inline-image-rules
+      `(("file" . ,(regexp-opt '(".jpeg" ".jpg" ".png" ".gif" ".svg" ".webp" ".heic")))
+        ("http" . ,(regexp-opt '(".jpeg" ".jpg" ".png" ".gif" ".svg" ".webp" ".heic")))
+        ("https" . ,(regexp-opt '(".jpeg" ".jpg" ".png" ".gif" ".svg" ".webp" ".heic")))))
+(defconst org-export-default-inline-image-rule
+  `(("file" .
+     ,(format "\\.%s\\'" (regexp-opt
+                          '("heic" "png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm"
+                            "xpm" "pbm" "pgm" "ppm") t)))))
+
+(defadvice org-html--format-image (before org-html--format-image-advice
+                                          (source attributes info) activate)
+  "Prepend `/` for attach images."
+  (let* ((origin-source (ad-get-arg 0))
+         (fixed-source (if (string-prefix-p "attach/" origin-source)
+                           (concat "/" origin-source)
+                         origin-source)))
+    (ad-set-arg 0 fixed-source)))
+
 ;; https://github.com/syl20bnr/spacemacs/blob/develop/layers/+intl/chinese/packages.el
 (defadvice org-html-paragraph (before org-html-paragraph-advice
                                       (paragraph contents info) activate)
-"Join consecutive Chinese lines into a single long line without
+  "Join consecutive Chinese lines into a single long line without
 unwanted space when exporting `org-mode` to html."
   (let* ((origin-contents (ad-get-arg 1))
          (fix-regexp "[[:multibyte:]]")
@@ -44,23 +64,25 @@ unwanted space when exporting `org-mode` to html."
          :base-directory ,org-directory
          :publishing-directory ,x/publish-pub-dir
          :recursive t
-         :exclude "area/\\|journal-?.*/\\|gtd/"
+         ;; :exclude "area/\\|journal-?.*/\\|gtd/"
+         :exclude "gtd/\\|area/"
          :base-extension "org"
          :publishing-function org-html-publish-to-html
          :style-include-default nil
          :html-head ,(concat
-                      "<link rel=\"stylesheet\" href=\"static/x.css\" type=\"text/css\"/>"
+                      "<link rel=\"stylesheet\" href=\"/static/x.css\" type=\"text/css\"/>"
                       "<meta charset=\"utf-8\">"
                       "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">")
          :html-postamble ,(concat
                            "<div class=\"links\">"
                            "<a href=\"#content\">T</a>"
-                           "<a href=\"index.html\">H</a>"
+                           "<a href=\"/index.html\">H</a>"
                            "<a id=\"share-img\">I</a>"
-                           "<a href=\"20210629191000-000_index.html\">0</a>"
+                           "<a href=\"/20210629191000-000_index.html\">0</a>"
+                           "<a href=\"/journal\">J</a>"
                            "</div>"
-                           "<script src=\"static/dom2img.min.js\" type=\"text/javascript\"></script>"
-                           "<script src=\"static/x.js\" type=\"text/javascript\"></script>")
+                           "<script src=\"/static/dom2img.min.js\" type=\"text/javascript\"></script>"
+                           "<script src=\"/static/x.js\" type=\"text/javascript\"></script>")
          :auto-sitemap t
          :sitemap-filename "index.org"
          :with-author nil
@@ -68,8 +90,8 @@ unwanted space when exporting `org-mode` to html."
         ("xandeer-static"
          :base-directory ,org-directory
          :publishing-directory ,x/publish-pub-dir
-         :exclude "area/\\|journal-?.*/\\|gtd/"
-         :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js\\|clj\\|txt\\|m4a\\|mp3"
+         ;; :exclude "area/\\|journal-?.*/\\|gtd/"
+         :base-extension "css\\|pdf\\|png\\|jpg\\|gif\\|webp\\|js\\|clj\\|txt\\|m4a\\|mp3\\|heic"
          :publishing-function org-publish-attachment
          :recursive t
          :with-author nil)
@@ -78,14 +100,14 @@ unwanted space when exporting `org-mode` to html."
 
 ;;; A customized filter
 
-(defun x/pub-exclude (files)
-  "Exclude FILES which contens match \"^#\\+.* nopub\"."
-  (cl-remove-if
-   (lambda (f)
-     (and (file-exists-p f)
-          (string-match "^#\\+.*nopub" (org-file-contents f))))
-   files))
-(advice-add 'org-publish-get-base-files :filter-return 'x/pub-exclude)
+;; (defun x/pub-exclude (files)
+;;   "Exclude FILES which contens match \"^#\\+.* nopub\"."
+;;   (cl-remove-if
+;;    (lambda (f)
+;;      (and (file-exists-p f)
+;;           (string-match "^#\\+.*nopub" (org-file-contents f))))
+;;    files))
+;; (advice-add 'org-publish-get-base-files :filter-return 'x/pub-exclude)
 
 (provide 'x-org-publish)
 ;;; x-org-publish.el ends here

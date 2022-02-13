@@ -10,6 +10,7 @@
 (require-package 'cape)
 
 (setq corfu-auto t)
+(setq corfu-quit-no-match t)
 (setq corfu-auto-prefix 3)
 (corfu-global-mode)
 
@@ -28,6 +29,10 @@
     (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
   (add-hook 'org-mode-hook #'x--cape-org-setup))
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (setq-local corfu-auto nil)))
 
 (provide 'x-completion)
 ;;; x-completion.el ends here

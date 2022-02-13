@@ -25,7 +25,7 @@
 (setq org-id-extra-files `,(remove (expand-file-name "index.org" org-directory)
                                    (directory-files org-directory 'full (rx ".org" eos))))
 (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-(setq org-image-actual-width '(500))
+(setq org-image-actual-width '(200))
 (setq org-return-follows-link t)
 (setq org-attach-id-dir (x/expand-note "attach/"))
 (setq org-attach-store-link-p 'attached)

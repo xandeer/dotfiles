@@ -8,58 +8,6 @@
 
 ;;; org
 
-(define-skeleton x--org-block
-  "Insert an org block, querying for type."
-  "Type: "
-  "#+begin_" str "\n"
-  _ - \n
-  "#+end_" str "\n")
-
-(define-skeleton x--org-block-begin
-  "Insert an org block begin, querying for type."
-  "Type: "
-  "#+begin_" str "\n")
-
-(define-skeleton x--org-block-end
-  "Insert an org block end, querying for type."
-  "Type: "
-  "#+end_" str "\n")
-
-(define-skeleton x--org-block-verse
-  "Insert an org verse block"
-  ""
-  "#+begin_verse\n"
-  _ - \n
-  "#+end_verse\n")
-
-(define-skeleton x--org-block-quote
-  "Insert an org quote block"
-  ""
-  "#+begin_quote\n"
-  _ - \n
-  "#+end_quote\n")
-
-(define-skeleton x--org-block-comment
-  "Insert an org comment block"
-  ""
-  "#+begin_comment\n"
-  _ - \n
-  "#+end_comment\n")
-
-(define-skeleton x--org-block-src
-  "Insert an org src block, querying for type."
-  "Language: "
-  "#+begin_src " str "\n"
-  _ - \n
-  "#+end_src\n")
-
-(define-skeleton x--org-block-elisp
-  "Insert an org emacs-lisp block"
-  ""
-  "#+begin_src emacs-lisp\n"
-  _ - \n
-  "#+end_src\n")
-
 (define-skeleton x--org-block-sh
   "Insert a org sh block"
   ""
@@ -95,26 +43,6 @@
   "Insert a heading for monthly review."
   ""
   (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
-
-(defhydra x/hydra-skeleton-org
-  (:exit t :columns 4 :idle 0.3)
-  "
-Org Skeleton
-"
-  ("b" x--org-block "block")
-  (";" x--org-block-comment "comment")
-  ("q" x--org-block-quote "quote")
-  ("v" x--org-block-verse "verse")
-  ("w" x/wrap-block "wrap block")
-  ("c" x--org-block-src "code")
-  ("e" x--org-block-elisp "elisp")
-  ("s" x--org-block-sh "sh")
-  ("k" x--org-block-kt "kotlin")
-  ("r" x--weekly-review "weekly review")
-  ("m" x--monthly-review "monthly review")
-  ("t" x--text-time "timestamp")
-  ("d" x--text-day "day: 14(Fri)"))
-(define-key org-mode-map (kbd "M-t") #'x/hydra-skeleton-org/body)
 
 ;;; elisp
 
@@ -167,7 +95,7 @@ Elisp Skeleton
   ("dh" x--el-defhydra "defhydra")
   ("a" x--el-autoload "autoload comment")
   ("g" x--el-global-set-key "global set key")
-  ("h" x--el-template "header and footer")
+  ("h" (tempel-insert 'file-head) "header and footer")
   ("i" x--el-lambdai "interactive lambda"))
 (define-key emacs-lisp-mode-map (kbd "M-t") #'x/hydra-skeleton-elisp/body)
 

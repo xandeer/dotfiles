@@ -97,6 +97,7 @@
 (require 'x-search-engine)
 (require 'x-sh)
 (require 'x-skeleton)
+(require 'x-template)
 (require 'x-telega)
 (require 'x-vertico)
 (require 'x-point-mode)
