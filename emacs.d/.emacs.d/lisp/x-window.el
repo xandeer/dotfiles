@@ -52,7 +52,7 @@
                (display-buffer-reuse-window display-buffer-in-side-window)
                (reusable-frames . visible)
                (side . left)
-               (window-width . 0.3)))
+               (window-width . 0.33)))
 
 (provide 'x-window)
 ;;; x-window.el ends here
