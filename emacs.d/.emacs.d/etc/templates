@@ -1,0 +1,86 @@
+;; -*- mode: emacs-lisp -*-
+
+;;; fundamental
+fundamental-mode ;; Available everywhere
+
+(time (format-time-string "<%Y-%m-%d %a %R>" (current-time)))
+(today (format-time-string "%Y-%m-%d"))
+
+;;; prog
+prog-mode
+
+(fixme (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "FIXME ")
+(todo (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "TODO ")
+(bug (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
+(hack (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
+
+;;; lisp
+lisp-mode emacs-lisp-mode ;; Specify multiple modes
+
+(lambda "(lambda (" p ")" n> r> ")")
+(var "(defvar " p "\n  \"" p "\")")
+(const "(defconst " p "\n  \"" p "\")")
+(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" p ")")
+(face "(defface " p " '((t :inherit " p "))\n  \"" p "\")")
+(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" p "-\")")
+(macro "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
+(fun "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
+(let "(let (" p ")" n> r> ")")
+(star "(let* (" p ")" n> r> ")")
+(rec "(letrec (" p ")" n> r> ")")
+(command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive)" n> r> ")")
+(hydra "(defhydra x-hydra-" p
+         " (:exit t :columns 4 :idle 0.3)" n> "\"" p "\"" n> r> ")")
+(docs ";;; " (buffer-name) " --- " (string-remove-suffix ".el" (buffer-name)) " -*- lexical-binding: t -*-\n"
+      ";;; Commentary:" n
+      ";;; Code:" n n r n n
+      "(provide '" (string-remove-suffix ".el" (buffer-name)) ")" n
+      ";;; " (buffer-name) " ends here"
+      :post (tempel-done))
+
+;;; eshell
+eshell-mode
+
+(for "for " (p "i") " in " p " { " p " }")
+(while "while { " p " } { " p " }")
+(until "until { " p " } { " p " }")
+(if "if { " p " } { " p " }")
+(if-else "if { " p " } { " p " } { " p " }")
+(unless "unless { " p " } { " p " }")
+(unless-else "unless { " p " } { " p " } { " p " }")
+
+;;; text
+text-mode
+
+(cut "--8<---------------cut here---------------start------------->8---" n r n
+     "--8<---------------cut here---------------end--------------->8---" n)
+(asciibox "+-" (make-string (length str) ?-) "-+" n
+          "| " (s str)                       " |" n
+          "+-" (make-string (length str) ?-) "-+" n)
+(rot13 (p "plain text" text) n "----" n (rot13 text))
+(calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)))
+(version "Build: Update app version to ")
+(chglog "Docs: Update changelog")
+
+;;; org
+org-mode
+
+(title "#+title: " p n "#+author: Daniel Mendler" n "#+language: en" n n)
+(quote "#+begin_quote" n> r> n> "#+end_quote")
+(example "#+begin_example" n> r> n> "#+end_example")
+(center "#+begin_center" n> r> n> "#+end_center")
+(comment "#+begin_comment" n> r> n> "#+end_comment")
+(verse "#+begin_verse" n> r> n> "#+end_verse")
+(src "#+begin_src " p n> r> n> "#+end_src")
+(elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
+       :post (progn (tempel-done) (org-edit-src-code)))
+(sh "#+begin_src sh" n> r> n "#+end_src"
+       :post (progn (tempel-done) (org-edit-src-code)))
+(kotlin "#+begin_src kotlin" n> r> n "#+end_src"
+       :post (progn (tempel-done) (org-edit-src-code)))
+(clojure "#+begin_src clojure" n> r> n "#+end_src"
+       :post (progn (tempel-done) (org-edit-src-code)))
+(day (format-time-string "%d(%a)" (current-time)))
+(weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) p
+        n "**** Review" n "1. ")
+(monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))

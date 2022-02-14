@@ -16,30 +16,57 @@
 (define-key tempel-map (kbd "C-<tab>") #'tempel-previous)
 (define-key tempel-map (kbd "C-g") #'tempel-done)
 (define-key tempel-map (kbd "C-c") #'tempel-abort)
-(define-key tempel-map (kbd "C-a") #'tempel-beginning)
-(define-key tempel-map (kbd "C-e") #'tempel-end)
+(define-key tempel-map (kbd "M-a") #'tempel-beginning)
+(define-key tempel-map (kbd "M-e") #'tempel-end)
 
 ;;; org
 (defhydra x/hydra-template-org
   (:exit t :columns 4 :idle 0.3)
   "
-Org Skeleton
+Org Templates
 "
-  ("b" (tempel-insert 'block) "block")
   (";" (tempel-insert 'comment) "comment")
   ("q" (tempel-insert 'quote) "quote")
   ("v" (tempel-insert 'verse) "verse")
   ("w" x/wrap-block "wrap block")
-  ("c" (tempel-insert 'src) "code")
   ("e" (tempel-insert 'elisp) "elisp")
-  ("s" x--org-block-sh "sh")
-  ("k" x--org-block-kt "kotlin")
-  ("r" x--weekly-review "weekly review")
-  ("m" x--monthly-review "monthly review")
-  ("t" x--text-time "timestamp")
-  ("d" x--text-day "day: 14(Fri)"))
+  ("s" (tempel-insert 'sh) "sh")
+  ("M-s" (tempel-insert 'src) "src")
+  ("k" (tempel-insert 'kotlin) "kotlin")
+  ("c" (tempel-insert 'clojure) "clojure")
+  ("r" (tempel-insert 'weekly) "weekly review")
+  ("m" (tempel-insert 'monthly) "monthly review")
+  ("t" (tempel-insert 'time) "timestamp")
+  ("d" (tempel-insert 'day) "day: 14(Fri)"))
 
 (define-key org-mode-map (kbd "M-t") #'x/hydra-template-org/body)
+
+;;; elisp
+(defhydra x/hydra-template-elisp (:exit t :columns 4 :idle 0.3)
+  "
+Elisp Templates
+"
+  ("d" (tempel-insert 'docs) "elisp header and footer")
+  ("h" (tempel-insert 'hydra) "defhydra")
+  ("l" (tempel-insert 'lambda) "lambda")
+  ("f" (tempel-insert 'fun) "defun")
+  ("c" (tempel-insert 'command) "command")
+  ("M-l" (tempel-insert 'let) "let")
+  ("v" (tempel-insert 'var) "defvar")
+  ("M-c" (tempel-insert 'const) "defconst")
+  ("S-c" (tempel-insert 'custom) "defcustom"))
+
+(define-key emacs-lisp-mode-map (kbd "M-t") #'x/hydra-template-elisp/body)
+
+;;; global
+(defhydra x/hydra-template-global (:exit t :columns 4 :idle 0.3)
+  "
+Global Templates
+"
+  ("d" (tempel-insert 'chglog) "git changelog")
+  ("v" (tempel-insert 'version) "git app version")
+  ("t" (tempel-insert 'time) "timestamp"))
+(global-set-key (kbd "M-t") #'x/hydra-template-global/body)
 
 (provide 'x-template)
 ;;; x-template.el ends here
