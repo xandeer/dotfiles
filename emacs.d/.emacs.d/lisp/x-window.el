@@ -44,5 +44,15 @@
 (global-set-key [remap split-window-below] 'x/split-below-find-file)
 (global-set-key (kbd "C-x x") 'ace-swap-window)
 
+;; Display agenda buffers always at the left.
+(add-to-list 'display-buffer-alist
+             `(,(rx bos (or "*Org Agenda(a)*"
+                            "*Org Agenda(e)"
+                            "*Org Agenda(w)"))
+               (display-buffer-reuse-window display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side . left)
+               (window-width . 0.3)))
+
 (provide 'x-window)
 ;;; x-window.el ends here
