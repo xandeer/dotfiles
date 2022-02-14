@@ -11,6 +11,17 @@
 ;;; config
 (setq tempel-file (expand-file-name "etc/templates" user-emacs-directory))
 
+(defun x-template--setup-capf ()
+  "Add the Tempel Capf to `completion-at-point-functions".
+  (add-hook 'completion-at-point-functions #'tempel-expand -1 'local))
+
+;; (add-hook 'prog-mode-hook #'x-template--setup-capf)
+;; (add-hook 'text-mode-hook #'x-template--setup-capf)
+
+;; `expand-abbrev` is bound to "C-x '".
+;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+(tempel-global-abbrev-mode)
+
 ;;; key bindings
 (define-key tempel-map (kbd "TAB") #'tempel-next)
 (define-key tempel-map (kbd "C-<tab>") #'tempel-previous)
