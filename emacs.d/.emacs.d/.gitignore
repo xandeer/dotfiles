@@ -2,3 +2,5 @@ straight
 var
 
 local.el
+
+.cache
