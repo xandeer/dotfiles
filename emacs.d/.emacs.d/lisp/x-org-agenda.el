@@ -225,7 +225,7 @@ ARG is passed through to `x/org-schedule'."
 
 (with-eval-after-load 'org-agenda
   (define-key org-agenda-mode-map (kbd "M-l") #'x/agenda-toggle-clock-log)
-  (define-key org-agenda-mode-map (kbd "q") #'meow-last-buffer)
+  (define-key org-agenda-mode-map (kbd "q") #'delete-frame)
   (define-key org-agenda-mode-map (kbd "s") #'x/org-agenda-schedule)
   (define-key org-agenda-mode-map (kbd "p") #'org-agenda-previous-item)
   (define-key org-agenda-mode-map (kbd "n") #'org-agenda-next-item)

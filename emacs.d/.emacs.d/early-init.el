@@ -20,8 +20,10 @@
 
 (setq default-frame-alist
       '((internal-border-width . 12)
-        (width . 100)
-        (height . 100)
+        ;; (width . 100)
+        ;; (height . 100)
+        (width . 0.33)
+        (height . 0.5)
         (alpha . (85 . 78))
         (vertical-scroll-bars . nil)))
 (provide 'early-init)

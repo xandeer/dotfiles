@@ -29,11 +29,16 @@
 
 (setq aw-dispatch-always nil)
 (setq aw-keys '(?j ?k ?l ?i ?h ?f ?d ?a))
-(setq aw-ignore-current nil)
+(setq aw-ignore-current t)
 (setq aw-ignored-buffers
       '("*Calc Trail*"
         " *LV*"
-        "*Org Agenda(a)*"))
+        "*Org Agenda(a)*"
+        "*Org Agenda(w)*"
+        "*Org Agenda(e)*"
+        "*Org Agenda(t)*"
+        ;; "*Org Agenda(a)*"
+        ))
 
 (global-set-key (kbd "H-o") 'ace-window)
 (global-set-key (kbd "H-0") 'x/delete-window-or-frame)
@@ -45,14 +50,18 @@
 (global-set-key (kbd "C-x x") 'ace-swap-window)
 
 ;; Display agenda buffers always at the left.
+;; (add-to-list 'display-buffer-alist
+;;              `(,(rx bos (or "*Org Agenda(a)*"
+;;                             "*Org Agenda(e)"
+;;                             "*Org Agenda(w)"))
+;;                (display-buffer-reuse-window display-buffer-in-side-window)
+;;                (reusable-frames . visible)
+;;                (side . left)
+;;                (window-width . 0.33)))
 (add-to-list 'display-buffer-alist
-             `(,(rx bos (or "*Org Agenda(a)*"
-                            "*Org Agenda(e)"
-                            "*Org Agenda(w)"))
-               (display-buffer-reuse-window display-buffer-in-side-window)
-               (reusable-frames . visible)
-               (side . left)
-               (window-width . 0.33)))
+             `("\\`\\*Org Agenda(.)\\*"
+               (display-buffer-reuse-window display-buffer-pop-up-frame)
+               (reusable-frames . t)))
 
 (provide 'x-window)
 ;;; x-window.el ends here
