@@ -20,11 +20,12 @@
 
 (setq default-frame-alist
       '((internal-border-width . 12)
-        ;; (width . 100)
-        ;; (height . 100)
+        (top . 50)
+        (left . 0.5)
         (width . 0.33)
-        (height . 0.5)
+        (height . 0.66)
         (alpha . (85 . 78))
         (vertical-scroll-bars . nil)))
+
 (provide 'early-init)
 ;;; early-init.el ends here
