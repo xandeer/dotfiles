@@ -176,5 +176,12 @@ Default use `point-min` or `point-max`."
           (smartparens-mode
            (sp-narrow-to-sexp arg)))))
 
+;;; exercism
+(defun x/exercism-submit ()
+  "Submit the current buffer to Exercism."
+  (interactive)
+  (shell-command (format "exercism submit %s"
+                         (buffer-file-name))))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here

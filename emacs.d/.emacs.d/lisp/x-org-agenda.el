@@ -80,8 +80,8 @@
                      ((org-agenda-overriding-header "Sword")))
           (tags-todo "EMACS+CATEGORY=\"One-off\""
                      ((org-agenda-overriding-header "One Off")))
-          ;; (tags-todo "EMACS+CATEGORY=\"Leaf\""
-          ;;            ((org-agenda-overriding-header "Without Leaf")))
+          (tags-todo "EMACS+CATEGORY=\"Xwidget\""
+                     ((org-agenda-overriding-header "Xwidget")))
           (tags-todo "EMACS+CATEGORY=\"Embark\""
                      ((org-agenda-overriding-header "Embark")))))
         ("i" "Inbox"
