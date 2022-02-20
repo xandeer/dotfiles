@@ -17,6 +17,8 @@
 (require 'xwwp-ace)
 (require 'xwwp-history)
 
+(setq xwidget-webkit-bookmark-jump-new-session t)
+
 (setq xwwp-history-filename (no-littering-expand-var-file-name "xwwp-history"))
 
 (with-eval-after-load 'xwidget
@@ -25,10 +27,15 @@
   (define-key xwidget-webkit-mode-map (kbd "f") #'xwwp-ace-toggle)
   (define-key xwidget-webkit-mode-map (kbd "v") #'xwwp-follow-link))
 
-(defun x-webkit-search-clojure-core (key)
+(defun x/xwidget-browse (url)
+  "Ask xwidget-webkit to browse URL in a new session."
+  (interactive "sUrl: ")
+  (xwidget-webkit-browse-url url t))
+
+(defun x/xwidget-search-clojure-core (key)
   "Use xwidget-webkit search KEY from clojure.core docs."
   (interactive "sKey: ")
-  (xwidget-webkit-browse-url (concat "https://clojuredocs.org/clojure.core/" key)))
+  (xwidget-webkit-browse-url (concat "https://clojuredocs.org/clojure.core/" key) t))
 
 (provide 'x-webkit)
 ;;; x-webkit.el ends here

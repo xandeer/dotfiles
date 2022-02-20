@@ -32,11 +32,11 @@
                   :members (sort-by :name)
                   (pp/print-table [:name :flags :parameter-types :return-type]))))]
 
-        :repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
-        :plugin-repositories ^:replace [["tsing-clojars-pl" "https://mirrors.tuna.tsinghua.edu.cn/clojars"
-                                         "hw-central-pl" "https://mirrors.huaweicloud.com/repository/maven/"]]
-        :mirrors {"central" {:name "hw-central"
-                             :url "https://mirrors.huaweicloud.com/repository/maven/"}
-                  #"clojars" {:name "tsinghua-clojars"
-                              :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"}}
+        ;; :repositories [["tencent" "https://mirrors.cloud.tencent.com/nexus/repository/maven-public"]]
+        ;; :plugin-repositories ^:replace [["tsing-clojars-pl" "https://mirrors.tuna.tsinghua.edu.cn/clojars"
+        ;;                                  "hw-central-pl" "https://mirrors.huaweicloud.com/repository/maven/"]]
+        ;; :mirrors {"central" {:name "hw-central"
+        ;;                      :url "https://mirrors.huaweicloud.com/repository/maven/"}
+        ;;           #"clojars" {:name "tsinghua-clojars"
+        ;;                       :url "https://mirrors.tuna.tsinghua.edu.cn/clojars"}}
         }}
