@@ -22,8 +22,26 @@
 (setq xwwp-history-filename (no-littering-expand-var-file-name "xwwp-history"))
 
 (with-eval-after-load 'xwidget
-  (define-key xwidget-webkit-mode-map (kbd "d") #'xwidget-webkit-scroll-up)
-  (define-key xwidget-webkit-mode-map (kbd "e") #'xwidget-webkit-scroll-down)
+  (defun x-xwidget--get-half-window-height ()
+    (/ (xwidget-window-inside-pixel-height (selected-window))
+       2))
+
+  (defun x-xwidget--scroll-up-half ()
+    (interactive)
+    (xwidget-webkit-scroll-up (x-xwidget--get-half-window-height)))
+
+  (defun x-xwidget--scroll-down-half ()
+    (interactive)
+    (xwidget-webkit-scroll-down (x-xwidget--get-half-window-height)))
+
+  (define-key xwidget-webkit-mode-map [remap meow-next] #'xwidget-webkit-scroll-up)
+  (define-key xwidget-webkit-mode-map [remap scroll-up] #'xwidget-webkit-scroll-up)
+  
+  (define-key xwidget-webkit-mode-map [remap meow-prev] #'xwidget-webkit-scroll-down)
+  (define-key xwidget-webkit-mode-map [remap scroll-down] #'xwidget-webkit-scroll-down)
+
+  (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up-half)
+  (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down-half)
   (define-key xwidget-webkit-mode-map (kbd "f") #'xwwp-ace-toggle)
   (define-key xwidget-webkit-mode-map (kbd "v") #'xwwp-follow-link))
 

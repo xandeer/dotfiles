@@ -30,7 +30,7 @@
          :prepend t
          :jump-to-captured t
          :target (file+head "%<%Y-%m-%d>.org"
-                            ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n")
+                            ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n\n* %<%B %d>\n\n")
          ;; :file-name "%<%Y-%m-%d>.org"
          ;; :head ":PROPERTIES:\n:CATEGORY: Journal\n:END:\n#+TITLE: %<%B %m-%d>\n#+STARTUP: content\n\n"
          )))
