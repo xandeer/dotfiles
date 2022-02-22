@@ -3,4 +3,12 @@
 rem=MTg2ODg3MjA1MjU6MTY0NTY5MjM2MjEwNDplOWJjMmMzZTQ0ZTBlMGJiMTExZTg3NTA4YmJhMmRmZg
 token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZTQwNjU5ZDUtYmJkYi00NzA1LTllMWQtNDAzNTMwYzRiMTQwIiwiZXhwIjoxNjQ1NjkzODYxfQ.ToV5Hu4UTo5kGIEWHn2HvkxVqDIJ-u2xs4vstyk5qEw
 
-cowtransfer-uploader -c "remember-mev2=$rem;" -a "$token" $@
+path=$(dirname "$0")
+
+output=$($path/cowtransfer-uploader -c "remember-mev2=$rem;" -a "$token" $@)
+
+output=${output#* }
+output=${output%Local*}
+output=$(echo $output | tr -d '[:space:]')
+echo $output
+echo $output | pbcopy

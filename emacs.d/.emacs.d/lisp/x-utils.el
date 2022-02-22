@@ -183,5 +183,14 @@ Default use `point-min` or `point-max`."
   (shell-command (format "exercism submit %s"
                          (buffer-file-name))))
 
+;;; cow
+(defun x/cow ()
+  "Upload the current file to cow."
+  (interactive)
+  (x/async-command (format "%s %s"
+                           (expand-file-name "~/bin/cow")
+                           (or (dired-get-filename)
+                               (buffer-file-name)))))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here
