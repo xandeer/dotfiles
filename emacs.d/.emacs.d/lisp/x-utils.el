@@ -184,13 +184,24 @@ Default use `point-min` or `point-max`."
                          (buffer-file-name))))
 
 ;;; cow
-(defun x/cow ()
-  "Upload the current file to cow."
-  (interactive)
+(defun x--cow (file)
+  "Upload the FILE to cow."
   (x/async-command (format "%s %s"
                            (expand-file-name "~/bin/cow")
-                           (or (dired-get-filename)
-                               (buffer-file-name)))))
+                           file)))
+
+(defun x/cow-current ()
+  "Upload the current file to cow."
+  (interactive)
+  (x--cow
+   (or (dired-get-filename)
+       (buffer-file-name))))
+
+(defun x/cow ()
+  "Read a file and then upload to cow."
+  (interactive)
+  (x--cow
+   (read-file-name "Cow Upload: " (expand-file-name "~/syncthing/"))))
 
 (provide 'x-utils)
 ;;; x-utils.el ends here
