@@ -156,7 +156,8 @@
 (with-eval-after-load 'smartparens
   (require 'smartparens-config)
   (sp-with-modes '(js-mode web-mode kotlin-mode css-mode typescript-mode)
-    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
+    (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))))
 
 (require-package 'quick-peek)
 (custom-set-faces
