@@ -2,17 +2,17 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'helpful)
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
-(global-set-key (kbd "C-h F") #'helpful-function)
-(global-set-key (kbd "C-h C") #'helpful-command)
+;; (require-package 'helpful)
+;; (global-set-key (kbd "C-h f") #'helpful-callable)
+;; (global-set-key (kbd "C-h v") #'helpful-variable)
+;; (global-set-key (kbd "C-h k") #'helpful-key)
+;; (global-set-key (kbd "C-h F") #'helpful-function)
+;; (global-set-key (kbd "C-h C") #'helpful-command)
 
 (defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
 	"
 Elisp\n"
-  ("d" helpful-at-point "helpful at point")
+  ;; ("d" helpful-at-point "helpful at point")
   ("f" find-function "find function")
   ("v" find-variable "find variable")
   ("l" find-library "find library")
@@ -35,8 +35,8 @@ Elisp\n"
 (setq-default enable-local-variables :safe)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 
-(require-package 'elisp-demos)
-(advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+;; (require-package 'elisp-demos)
+;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
 
 (require-package 'elisp-def)
 (define-key emacs-lisp-mode-map (kbd "M-.") #'elisp-def)

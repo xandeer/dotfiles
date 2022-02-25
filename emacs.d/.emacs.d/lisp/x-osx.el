@@ -12,6 +12,7 @@
 (setq mac-redisplay-dont-reset-vscroll t
       mac-mouse-wheel-smooth-scroll nil)
 
+(require-package 'osx-lib)
 (require-package 'osx-trash)
 
 (setq delete-by-moving-to-trash t)

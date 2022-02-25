@@ -100,6 +100,7 @@
 (require 'x-telega)
 (require 'x-vertico)
 (require 'x-point-mode)
+(require 'x-xwidget)
 
 ;;; chores
 (require 'x-mouse)

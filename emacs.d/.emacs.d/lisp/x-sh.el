@@ -3,7 +3,8 @@
 ;;; Code:
 
 (with-eval-after-load 'org
-  (setq eshell-aliases-file (x/expand-note "etc/eshell.alias")))
+  (setq eshell-aliases-file (x/expand-note "etc/eshell.alias"))
+  (setq eshell-rc-script (x/expand-note "etc/eshell.profile")))
 
 (setq sh-shell-file "/bin/sh")
 

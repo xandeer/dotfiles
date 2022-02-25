@@ -201,7 +201,7 @@
   ;; (define-key org-mode-map (kbd "M-o") #'org-toggle-narrow-to-subtree)
   (define-key org-mode-map (kbd "C-,") #'imenu)
   ;; (define-key org-mode-map (kbd "M-,") #'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "M-k") #'org-mark-ring-goto)
+  ;; (define-key org-mode-map (kbd "M-k") #'org-mark-ring-goto)
   (define-key org-mode-map (kbd "C-c x C-r") #'org-table-recalculate)
 
   (define-key org-mode-map [remap org-schedule] #'x/org-schedule)
