@@ -20,16 +20,16 @@
     stow
 
     unzip
-    tmux
-    tmuxPlugins.continuum
-    tmuxPlugins.resurrect
-    tmuxPlugins.yank
+    # tmux
+    # tmuxPlugins.continuum
+    # tmuxPlugins.resurrect
+    # tmuxPlugins.yank
     vim
     wget
 
     ag
     bat
-    broot
+    # broot
     exa
     duf
     fd
@@ -41,8 +41,8 @@
     ncdu
     neofetch
     ripgrep
-    skim
-    starship
+    # skim
+    # starship
     tldr
     tree
 
@@ -66,6 +66,6 @@
   #     pip
   #     setuptools
   #   ]))
-    shadowfox
+    # shadowfox
   ];
 }

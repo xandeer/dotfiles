@@ -4,7 +4,7 @@
 
 (setenv "PATH" (concat
                 (getenv "PATH")
-                ":/usr/local/bin:/run/current-system/sw/bin:"
+                ":/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:"
                 (expand-file-name "~/Library/Android/sdk/platform-tools/:")
                 (expand-file-name "~/bin")))
 (setq exec-path
