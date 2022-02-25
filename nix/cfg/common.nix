@@ -35,7 +35,7 @@
     fd
     fzf
     htop
-    httpie
+    # httpie
     jq
     lsof
     ncdu
@@ -61,7 +61,7 @@
     yarn
 
     # openjdk8
-    python3
+    # python3
   #   (python3.withPackages(ps: with ps; [
   #     pip
   #     setuptools

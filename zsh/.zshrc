@@ -209,3 +209,5 @@ echo "Zsh plugins loaded."
 # [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
 if [ -e /Users/kevin/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kevin/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 export NIX_PATH="darwin-config=$HOME/.nixpkgs/darwin-configuration.nix:/nix/var/nix/profiles/per-user/root/channels:$HOME/.nix-defexpr/channels"
+
+export PATH=/opt/homebrew/bin:$HOME/.nix-profile/bin:$PATH
