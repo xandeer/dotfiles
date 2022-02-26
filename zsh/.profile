@@ -9,3 +9,5 @@ done
 unset file
 
 if [ -e /Users/kevin/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kevin/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+eval "$(/opt/homebrew/bin/brew shellenv)"

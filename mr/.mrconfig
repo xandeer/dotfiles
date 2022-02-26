@@ -5,6 +5,10 @@ jobs = 8
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
 commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
+[Exercism/clojure]
+checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
+commit = echo "skip exercism/clojure"
+
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
 commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
