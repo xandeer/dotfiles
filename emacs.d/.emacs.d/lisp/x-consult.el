@@ -33,7 +33,7 @@
 
   (with-eval-after-load 'orderless
     ;; https://github.com/minad/consult/wiki#use-orderless-as-pattern-compiler-for-consult-grepripgrepfind
-    (defun consult--orderless-regexp-compiler (input type)
+    (defun consult--orderless-regexp-compiler (input type ignore-case)
       (setq input (orderless-pattern-compiler input))
       (cons
        (mapcar (lambda (r) (consult--convert-regexp r type)) input)
