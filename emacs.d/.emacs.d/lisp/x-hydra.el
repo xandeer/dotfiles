@@ -126,7 +126,7 @@ Buffer\n"
   ("z" engine/search-wiki-cn "wiki cn")
   ("l" sdcv-search-pointer "lookup point")
   ("H-l" sdcv-search-input "lookup input")
-  ("k" go-translate "translate"))
+  ("k" gts-do-translate "translate"))
 
 (global-set-key (kbd "H-s") #'x-hydra-search/body)
 

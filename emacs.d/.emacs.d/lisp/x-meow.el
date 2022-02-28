@@ -149,5 +149,9 @@
   (require 'meow-helpers)
   (x--meow-setup))
 
+;;; special modes
+;; (add-hook 'eshell-mode-hook #'meow-insert)
+;; (remove-hook 'eshell-mode-hook #'meow-insert-mode)
+
 (provide 'x-meow)
 ;;; x-meow.el ends here

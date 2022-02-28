@@ -201,5 +201,31 @@ Roam\n"
 
 (define-key org-mode-map (kbd "H-i") #'org-roam-node-insert)
 
+;;; tbl mode
+(defvar x/tbl-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "H-r") #'org-table-recalculate)
+    map))
+
+;;;###autoload
+(define-minor-mode x/tbl-mode
+  "Minor mode for table."
+  :keymap x/tbl-mode-map
+  :group 'x/tbl
+  :lighter "X/TBL"
+  ;; (if x/tbl-mode
+  ;;     (progn))
+  )
+
+(defun x--tbl-setup ()
+  "Enable `x/tbl-mode when it has tag \"tbl\"."
+  (when (x--has-roam-tag "tbl")
+    (x/tbl-mode 1)))
+
+(defun x/tbl-mode-p ()
+  x/tbl-mode)
+
+(add-hook 'text-mode-hook #'x--tbl-setup 90)
+
 (provide 'x-org-roam)
 ;;; x-org-roam.el ends here

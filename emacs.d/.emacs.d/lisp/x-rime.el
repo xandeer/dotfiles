@@ -46,14 +46,23 @@
 
 (setq default-input-method "rime")
 
-(defvar x--ignored-adim-buffers
+(defcustom x/rime-ignored-adim-buffers
   '("COMMIT_EDITMSG"
     "CAPTURE-inbox.org"
-    "inbox.org"))
+    "inbox.org")
+  "When `buffer-name is contained in it, don't active default input method.")
+
+(defun x/rime-ignored-adim-buffer-p ()
+  "Predicate for checking `x/rime-ignored-adim-buffers."
+  (member (buffer-name) x/rime-ignored-adim-buffers))
+
+(defvar x/rime-ignored-adim-preds
+  '(x/rime-ignored-adim-buffer-p
+    x/tbl-mode-p)
+  "Predicates for ignoring to active default input method.")
 
 (defun x/activate-default-input-method ()
-  (interactive)
-  (unless (member (buffer-name) x--ignored-adim-buffers)
+  (unless (-any? (lambda (p) (funcall p)) x/rime-ignored-adim-preds)
     (activate-input-method default-input-method)))
 
 (add-hook 'text-mode-hook #'x/activate-default-input-method)
