@@ -15,6 +15,7 @@
   environment.systemPackages = with pkgs; [
     # cmake
     gitAndTools.diff-so-fancy
+    git-chglog
     gnumake
     mr
     stow

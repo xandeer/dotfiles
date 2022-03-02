@@ -35,6 +35,7 @@
 
 (require 'savehist)
 (x/append-init-hook #'savehist-mode)
+(setq history-length 1000)
 
 (require-package 'session)
 (x/append-init-hook #'session-initialize)

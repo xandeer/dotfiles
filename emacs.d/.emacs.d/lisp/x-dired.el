@@ -22,7 +22,7 @@
     (define-key map (kbd "n") 'dired-unmark)
     (define-key map (kbd "N") 'dired-unmark-all-marks)
     (define-key map (kbd "@") #'x/change-hs-on-dired)
-    (define-key map (kbd "^") #'x/cow)))
+    (define-key map (kbd "^") #'x/cow-current)))
 
 (require-package 'dired-hacks)
 (require 'dired-x)

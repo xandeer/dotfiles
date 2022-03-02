@@ -1,11 +1,12 @@
 #!/usr/bin/env sh
 
 rem=MTg2ODg3MjA1MjU6MTY0NTY5MjM2MjEwNDplOWJjMmMzZTQ0ZTBlMGJiMTExZTg3NTA4YmJhMmRmZg
-token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZTQwNjU5ZDUtYmJkYi00NzA1LTllMWQtNDAzNTMwYzRiMTQwIiwiZXhwIjoxNjQ1NjkzODYxfQ.ToV5Hu4UTo5kGIEWHn2HvkxVqDIJ-u2xs4vstyk5qEw
+token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZTQwNjU5ZDUtYmJkYi00NzA1LTllMWQtNDAzNTMwYzRiMTQwIiwiZXhwIjoxNjQ2ODEwNzMwfQ.8WAkmA_3RkyObLUeAH5p9qvEMg19dvH5LdtjXSwmzJU
 
 path=$(dirname "$0")
 
-output=$($path/cowtransfer-uploader -c "remember-mev2=$rem;" -a "$token" $@)
+# output=$($path/cowtransfer-uploader -c "remember-mev2=$rem;" -a "$token" $@)
+output=$($path/cowtransfer-uploader -a "$token" $@)
 
 output=${output#* }
 output=${output%Local*}

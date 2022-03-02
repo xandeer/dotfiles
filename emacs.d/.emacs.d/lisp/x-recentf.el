@@ -9,7 +9,7 @@
 
 (setq recentf-save-file (x/expand-note "etc/recentf.el"))
 (setq recentf-auto-cleanup 300)
-(setq recentf-max-saved-items 300)
+(setq recentf-max-saved-items 1000)
 ;; Replace $HOME with ~.
 (setq recentf-filename-handlers '(abbreviate-file-name))
 (setq recentf-exclude

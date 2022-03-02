@@ -4,6 +4,20 @@
 
 (require-package 'hydra)
 
+(defvar x/adb-history nil
+  "The history list for adb connect functions.")
+
+(defun x/adb-connect ()
+  (interactive)
+  (let ((ip (completing-read "Adb Connect: "
+                             x/adb-history
+                             nil nil
+                             (concat (s-join "." (butlast (s-split "\\." (x/ifconfig)))) ".")
+                             'x/adb-history)))
+    (x/async-command
+      (concat "~/Library/Android/sdk/platform-tools/adb connect " ip))))
+
+
 (defhydra x-hydra-x (:exit t :columns 4 :idle 0.3)
   ""
   ("u"
@@ -24,11 +38,7 @@
   ("hs" (x/change-hs-root "~/syncthing") "hs syncthing")
   ("hp" (x/change-hs-root "~/syncthing/personal") "hs personal")
   ("hw" (x/change-hs-root "~/syncthing/donut") "hs work")
-  ("a"
-   (lambda (ip)
-     (interactive (list (read-string "Ip: " (concat (s-join "." (butlast (s-split "\\." (x/ifconfig)))) "."))))
-     (x/async-command
-      (concat "~/Library/Android/sdk/platform-tools/adb connect " ip))) "adb connect")
+  ("a" x/adb-connect "adb connect")
   ("l" (lambda (ip)
          (interactive (list (read-string "Ip: " (x/ifconfig))))
          (x/open (concat "http://" ip))) "open localhost")
