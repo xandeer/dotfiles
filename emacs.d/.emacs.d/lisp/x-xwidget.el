@@ -4,14 +4,13 @@
 
 (require-package
  '(xwwp
-   :host github :repo "BlueFlo0d/xwwp"
+   :host github :repo "xandeer/xwwp"
    :branch "master"
    :files (:defaults "*.js" "*.css")
    ;; :pre-build ("make")
    ))
 (require-package 'ctable)
 
-(require 'cl)
 (require 'xwwp)
 (require 'xwwp-follow-link)
 (require 'xwwp-ace)
@@ -89,11 +88,10 @@
       (xwidget-log
        "error: loaded callback called for xwidget with dead buffer")
     (if (eq xwidget-event-type 'load-changed)
-        (let ((title (xwidget-webkit-title xwidget))
-              (uri (xwidget-webkit-uri xwidget)))
-          (x/xwidget-stylus-start xwidget)))))
+        (x/xwidget-stylus-start xwidget))))
 
-(advice-add 'xwidget-webkit-callback :after #'x/xwidget-load-changed-callback)
+(advice-add 'xwidget-webkit-callback :before #'x/xwidget-load-changed-callback)
+;; (advice-remove 'xwidget-webkit-callback  #'x/xwidget-load-changed-callback)
 
 (provide 'x-xwidget)
 ;;; x-xwidget.el ends here
