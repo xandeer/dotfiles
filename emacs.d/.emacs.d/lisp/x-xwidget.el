@@ -13,13 +13,15 @@
 
 (require 'xwwp)
 (require 'xwwp-follow-link)
-(require 'xwwp-ace)
 (require 'xwwp-history)
-
 (setq xwidget-webkit-bookmark-jump-new-session t)
-(setq xwidget-webkit-enable-plugins t)
 
+(setq xwidget-webkit-enable-plugins t)
 (setq xwwp-history-filename (no-littering-expand-var-file-name "xwwp-history"))
+
+(setq xwwp-ace-candidate-selector
+      "button, input, [href], select, textarea, [tabindex]:not([tabindex=\"-1\"]), [class*=btn], [class=tab-item-content], [class=list-item]")
+(require 'xwwp-ace)
 
 (with-eval-after-load 'xwidget
   (defun x-xwidget--get-half-window-height ()
