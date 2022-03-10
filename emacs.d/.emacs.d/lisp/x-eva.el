@@ -30,7 +30,7 @@
          (eva-item-create
           :fn #'eva-query-sleep
           :dataset (x/expand-note "eva/sleep.tsv")
-          :min-hours-wait 5
+          :min-hours-wait 16
           :lookup-posted-time t)
 
          (eva-item-create

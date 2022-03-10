@@ -28,6 +28,10 @@
     (/ (xwidget-window-inside-pixel-height (selected-window))
        2))
 
+  (defun x-xwidget--get-window-height-with-margin (margin)
+    (- (xwidget-window-inside-pixel-height (selected-window))
+       (* margin (window-font-height))))
+
   (defun x-xwidget--scroll-up-half ()
     (interactive)
     (xwidget-webkit-scroll-up (x-xwidget--get-half-window-height)))
@@ -36,11 +40,19 @@
     (interactive)
     (xwidget-webkit-scroll-down (x-xwidget--get-half-window-height)))
 
-  (define-key xwidget-webkit-mode-map [remap meow-next] #'xwidget-webkit-scroll-up)
-  (define-key xwidget-webkit-mode-map [remap scroll-up] #'xwidget-webkit-scroll-up)
+  (defun x-xwidget--scroll-up ()
+    (interactive)
+    (xwidget-webkit-scroll-up (x-xwidget--get-window-height-with-margin 3)))
 
-  (define-key xwidget-webkit-mode-map [remap meow-prev] #'xwidget-webkit-scroll-down)
-  (define-key xwidget-webkit-mode-map [remap scroll-down] #'xwidget-webkit-scroll-down)
+  (defun x-xwidget--scroll-down ()
+    (interactive)
+    (xwidget-webkit-scroll-down (x-xwidget--get-window-height-with-margin 3)))
+
+  (define-key xwidget-webkit-mode-map [remap meow-next] #'x-xwidget--scroll-up)
+  (define-key xwidget-webkit-mode-map [remap scroll-up] #'x-xwidget--scroll-up)
+
+  (define-key xwidget-webkit-mode-map [remap meow-prev] #'x-xwidget--scroll-down)
+  (define-key xwidget-webkit-mode-map [remap scroll-down] #'x-xwidget--scroll-down)
 
   (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up-half)
   (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down-half)
