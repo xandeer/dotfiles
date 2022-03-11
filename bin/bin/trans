@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 #function transfer() {
   if [ $# -eq 0 ];then
      echo "No arguments specified.\nUsage:\n  transfer <file|directory>\n  ... | transfer <file_name>">&2;

@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 
 rem=MTg2ODg3MjA1MjU6MTY0NTY5MjM2MjEwNDplOWJjMmMzZTQ0ZTBlMGJiMTExZTg3NTA4YmJhMmRmZg
-token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZTQwNjU5ZDUtYmJkYi00NzA1LTllMWQtNDAzNTMwYzRiMTQwIiwiZXhwIjoxNjQ2ODEwNzMwfQ.8WAkmA_3RkyObLUeAH5p9qvEMg19dvH5LdtjXSwmzJU
+token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZTQwNjU5ZDUtYmJkYi00NzA1LTllMWQtNDAzNTMwYzRiMTQwIiwiZXhwIjoxNjQ3NTk0NTE5fQ.mr3LVker4zcrm22ZtYcJcTppyhhogN_0mFzm4ETFt_M
 
 path=$(dirname "$0")
 
 # output=$($path/cowtransfer-uploader -c "remember-mev2=$rem;" -a "$token" $@)
 output=$($path/cowtransfer-uploader -a "$token" $@)
-
+echo $output
 output=${output#* }
 output=${output%Local*}
 output=$(echo $output | tr -d '[:space:]')

@@ -205,6 +205,10 @@ Roam\n"
 (defvar x/tbl-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "H-r") #'org-table-recalculate)
+    (define-key map (kbd "H-t") (lambda () (interactive)
+                                  (org-open-line 1)
+                                  (tempel-insert 'day)
+                                  (org-cycle)))
     map))
 
 ;;;###autoload

@@ -21,12 +21,27 @@
 (setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict"))
 
 (with-eval-after-load 'sdcv
+  ;; face
   (set-face-attribute 'sdcv-tooltip-face nil
                       :foreground "#E0F0E9")
 
   (defun x--sdcv-translate-br (s)
     (s-replace "<br>" "\n" s))
-  (advice-add 'sdcv-filter :filter-return #'x--sdcv-translate-br))
+  (advice-add 'sdcv-filter :filter-return #'x--sdcv-translate-br)
+
+  ;; say
+  (defvar x-sdcv-say-word-p t)
+
+  (defun x-sdcv--say-word (&optional word)
+    (when (and word x-sdcv-say-word-p)
+      (osx-lib-say word)))
+
+  (advice-add 'sdcv-search-detail :after #'x-sdcv--say-word)
+
+  (define-key sdcv-mode-map (kbd "s")
+              (lambda ()
+                (interactive)
+                (osx-lib-say sdcv-current-translate-object))))
 
 (require-package 'go-translate)
 ;; (require 'go-translate)

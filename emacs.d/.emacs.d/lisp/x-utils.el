@@ -187,15 +187,15 @@ Default use `point-min` or `point-max`."
 (defun x--cow (file)
   "Upload the FILE to cow."
   (x/async-command (format "%s %s"
-                           (expand-file-name "~/bin/cow")
+                           (expand-file-name "~/bin/trans")
                            file)))
 
 (defun x/cow-current ()
   "Upload the current file to cow."
   (interactive)
   (x--cow
-   (or (dired-get-filename)
-       (buffer-file-name))))
+   (if (equal major-mode 'dired-mode) (dired-get-filename)
+     (buffer-file-name))))
 
 (defun x/cow ()
   "Read a file and then upload to cow."
