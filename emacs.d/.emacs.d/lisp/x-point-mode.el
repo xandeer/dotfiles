@@ -40,7 +40,7 @@
 (defvar x-point-speed-command nil)
 
 (defcustom x-point-speed-command-hook
-  '( x-point-speed-command-activate)
+  '(x-point-speed-command-activate)
   "Hook for activating speed commands at strategic locations.
 Hook functions are called in sequence until a valid handler is
 found.
@@ -185,8 +185,41 @@ after optional spaces."
     ("z" . lispy-undo)
     ("C" . x-point-change-inner)
     ("X" . x-point-change-enclosing)
-    ("W" . x-point-copy-sexp)
-    ("Digit arguments")
+    ("W" . x-point-copy-sexp))
+  "Alist of speed commands.
+
+The car of each entry is a string with a single letter, which
+must be assigned to `self-insert-command' in the global map.
+
+The cdr is either a command to be called interactively, a
+function to be called, or a form to be evaluated.
+
+An entry that is just a list with a single string will be
+interpreted as a descriptive headline that will be added when
+listing the speed commands in the Help buffer using the `?' speed
+command."
+  :group 'x-point
+  ;; :package-version '(Org . "9.5")
+  :type '(repeat :value ("k" . ignore)
+                 (choice :value ("k" . ignore)
+                         (list :tag "Descriptive Headline" (string :tag "Headline"))
+                         (cons :tag "Letter and Command"
+                               (string :tag "Command letter")
+                               (choice
+                                (function)
+                                (sexp))))))
+
+(defun x-point-speed-command-activate (keys)
+  "Hook for activating single-letter speed commands.
+See `x-point-speed-commands' for configuring them."
+  (when (or (x-point-speed-activate-p)
+            (x-point-left-sexp-p)
+            (x-point-right-sexp-p))
+    (cdr (assoc keys
+                x-point-speed-commands))))
+
+(defcustom x-point-speed-digit-commands
+  '(("Digit arguments")
     ("0" . digit-argument)
     ("1" . digit-argument)
     ("2" . digit-argument)
@@ -220,14 +253,14 @@ command."
                                 (function)
                                 (sexp))))))
 
-(defun x-point-speed-command-activate (keys)
+(defun x-point-speed-digit-command-activate (keys)
   "Hook for activating single-letter speed commands.
 See `x-point-speed-commands' for configuring them."
   (when (or (x-point-speed-activate-p)
             (x-point-left-sexp-p)
             (x-point-right-sexp-p))
     (cdr (assoc keys
-                x-point-speed-commands))))
+                x-point-speed-digit-commands))))
 
 (defun x-point-view ()
   "If region actived, recenter by `region-beginning`,
@@ -376,7 +409,7 @@ See `x-point-org-speed-commands' for configuring them."
              (bolp)
              (looking-at org-outline-regexp))
     (cdr (assoc keys
-                x-point-org-speed-commands))))
+                (append x-point-org-speed-commands x-point-speed-digit-commands)))))
 
 (add-hook 'x-point-speed-command-hook #'x-point-org-speed-command-activate -30)
 

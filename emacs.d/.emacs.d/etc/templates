@@ -84,3 +84,6 @@ org-mode
 (weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) p
         n "**** Review" n "1. ")
 (monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
+(author "- author :: " p n)
+(from "- from :: " p n)
+(link "- link :: " p n)

@@ -43,6 +43,7 @@ Org Templates
   ("e" (tempel-insert 'elisp) "elisp")
   ("s" (tempel-insert 'sh) "sh")
   ("M-s" (tempel-insert 'src) "src")
+  ("M-t" tempel-insert "tempel insert")
   ("k" (tempel-insert 'kotlin) "kotlin")
   ("c" (tempel-insert 'clojure) "clojure")
   ("r" (tempel-insert 'weekly) "weekly review")
