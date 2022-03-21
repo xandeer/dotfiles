@@ -29,6 +29,7 @@
 (define-key tempel-map (kbd "C-c") #'tempel-abort)
 (define-key tempel-map (kbd "M-a") #'tempel-beginning)
 (define-key tempel-map (kbd "M-e") #'tempel-end)
+(global-set-key (kbd "M-C") #'tempel-complete)
 
 ;;; org
 (defhydra x/hydra-template-org
