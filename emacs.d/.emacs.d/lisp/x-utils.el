@@ -187,7 +187,7 @@ Default use `point-min` or `point-max`."
 (defun x--cow (file)
   "Upload the FILE to cow."
   (x/async-command (format "%s %s"
-                           (expand-file-name "~/bin/trans")
+                           (expand-file-name "~/bin/cow")
                            file)))
 
 (defun x/cow-current ()
