@@ -5,7 +5,7 @@
 (straight-register-package
  '(telega :host github
           :repo "zevlg/telega.el"
-          ;; :commit "9008565"
+          ;; :commit 06c715ae7a87f27f59a675625d581ee851ca3dd3 ; 1.7.10
           :branch "master"))
 
 ;; dependencies: brew install ffmpeg

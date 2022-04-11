@@ -13,6 +13,8 @@
 (setq org-roam-dailies-directory "journal/")
 (setq org-roam-node-display-template "${title:48} ${tags:36}")
 ;; (org-roam-node-display-template . "${title:36} ${tags:20} ${backlinkscount:6}")
+;; (require 'org-roam-capture)
+;; (require 'org-roam-dailies)
 (setq org-roam-capture-templates
       '(("d" "default" plain "%?"
          :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
@@ -61,25 +63,25 @@
         (org-roam-buffer-refresh))))
   (advice-add 'org-roam-buffer-toggle :after #'x--refresh-roam-buffer)
 
-  (defun x--has-roam-tag (tag)
-    "Check whether TAG is included in the current file."
-    (s-contains? tag (or (cadr (assoc "FILETAGS"
-                                      (org-collect-keywords '("filetags"))))
-                         "")))
-
-  (defun x--enable-valign-when-valign ()
-    (when (x--has-roam-tag "valign")
-      (valign-mode)))
-
-  (defun x--disable-company-when-nocompany ()
-    (when (x--has-roam-tag "nocompany")
-      ;; (company-mode -1)
-      (corfu-mode -1)))
-
-  (add-hook 'org-mode-hook #'x--enable-valign-when-valign)
-  (add-hook 'org-mode-hook #'x--disable-company-when-nocompany)
-
   (define-key org-roam-mode-map (kbd "H-r") 'kill-buffer-and-window))
+
+(defun x--has-roam-tag (tag)
+  "Check whether TAG is included in the current file."
+  (s-contains? tag (or (cadr (assoc "FILETAGS"
+                                    (org-collect-keywords '("filetags"))))
+                       "")))
+
+(defun x--enable-valign-when-valign ()
+  (when (x--has-roam-tag "valign")
+    (valign-mode)))
+
+(defun x--disable-company-when-nocompany ()
+  (when (x--has-roam-tag "nocompany")
+    ;; (company-mode -1)
+    (corfu-mode -1)))
+
+(add-hook 'org-mode-hook #'x--enable-valign-when-valign)
+(add-hook 'org-mode-hook #'x--disable-company-when-nocompany)
 
 (defun x/roam-buffer-p ()
   "Whether the current is in roam directory."
