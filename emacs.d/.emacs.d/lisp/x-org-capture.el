@@ -5,6 +5,12 @@
 (require 'org-capture)
 (global-set-key (kbd "C-c c") #'org-capture)
 
+(defvar x/expenses-history nil)
+
+(defun x/org-capture-expense-item ()
+  (interactive)
+  (completing-read "Expense: " x/expenses-history nil nil nil 'x/expenses-history "groceries"))
+
 (with-eval-after-load 'org-capture
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
