@@ -59,7 +59,8 @@ Magit\n"
 	("n" (magit-status org-directory) "notes")
   ("w" (magit-status x/work-directory) "work")
   ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
-  ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure"))
+  ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure")
+  ("k" (magit-status (expand-file-name "~/Exercism/kotlin/")) "exercism/kotlin"))
 (global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
 
 ;;; git-messenger
