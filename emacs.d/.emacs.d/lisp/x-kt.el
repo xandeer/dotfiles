@@ -59,5 +59,25 @@ See `x-point-kotlin-speed-commands' for configuring them."
 
   (add-hook 'x-point-speed-command-hook #'x-point-kotlin-speed-command-activate -90))
 
+(defun x-kt/gradle-test ()
+  (interactive)
+  (let ((root (car (s-split "/src/" buffer-file-name))))
+    (async-shell-command (concat "cd " root
+                                 ";gradle test")
+                         "*gradle test*")))
+
+(with-eval-after-load 'kotlin-mode
+  (define-key kotlin-mode-map (kbd "C-c C-t n") #'x-kt/gradle-test))
+
+(defun x-kt/new-lib-project ()
+  (interactive)
+  (let* ((root-name (read-from-minibuffer "Project root name: "))
+         (root (expand-file-name root-name "~/temp")))
+    (mkdir root)
+    (shell-command (concat
+                    "cd " root
+                    ";gradle init --type kotlin-library --dsl kotlin"))
+    (dired root)))
+
 (provide 'x-kt)
 ;;; x-kt.el ends here
