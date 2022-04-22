@@ -46,7 +46,8 @@
 (with-eval-after-load 'typescript-mode
   (add-hook 'typescript-mode-hook #'tide-setup)
   (add-hook 'typescript-mode-hook #'tide-hl-identifier-mode)
-  (add-hook 'before-save-hook #'tide-format-before-save))
+  ;; (add-hook 'before-save-hook #'tide-format-before-save)
+  )
 (with-eval-after-load 'tide
   (define-key tide-mode-map (kbd "C-x f") #'tide-format)
   (define-key tide-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
