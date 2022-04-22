@@ -45,7 +45,7 @@ zplug "plugins/git-extras",               from:oh-my-zsh, if:"(( $+commands[git]
 zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/gitignore",                from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/golang",                   from:oh-my-zsh, if:"(( $+commands[go] ))"
-zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[gradle] ))"
+# zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[gradle] ))"
 zplug "plugins/nvm",                      from:oh-my-zsh, if:"(( $+commands[nvm] ))"
 zplug "plugins/pass",                     from:oh-my-zsh, if:"(( $+commands[pass] ))"
 zplug "plugins/rust",                     from:oh-my-zsh, if:"(( $+commands[rust] ))"
