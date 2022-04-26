@@ -59,6 +59,12 @@ See `x-point-kotlin-speed-commands' for configuring them."
 
   (add-hook 'x-point-speed-command-hook #'x-point-kotlin-speed-command-activate -90))
 
+(defun x-kt/remove-ingore-annotation ()
+  (interactive)
+  (x/replace "@Ignore\n" "")
+  (mark-whole-buffer)
+  (indent-for-tab-command))
+
 (defun x-kt/gradle-test ()
   (interactive)
   (let ((root (car (s-split "/src/" buffer-file-name))))
@@ -67,6 +73,7 @@ See `x-point-kotlin-speed-commands' for configuring them."
                          "*gradle test*")))
 
 (with-eval-after-load 'kotlin-mode
+  (define-key kotlin-mode-map (kbd "C-c C-t i") #'x-kt/remove-ingore-annotation)
   (define-key kotlin-mode-map (kbd "C-c C-t n") #'x-kt/gradle-test))
 
 (defun x-kt/new-lib-project ()
