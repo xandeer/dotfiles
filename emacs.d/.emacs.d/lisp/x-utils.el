@@ -206,5 +206,13 @@ Default use `point-min` or `point-max`."
   (x--cow
    (read-file-name "Cow Upload: " (expand-file-name "~/syncthing/"))))
 
+(defun x/null-st ()
+  "Upload the current file to 0x0.st"
+  (interactive)
+  (x/async-command
+   (concat "cd " (string-join (butlast (file-name-split (buffer-file-name))) "/")
+           (format ";curl -F'file=@%s' https://0x0.st"
+                   (buffer-name)))))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here

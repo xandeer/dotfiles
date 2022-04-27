@@ -4,8 +4,8 @@
 
 (straight-register-package
  '(tempel :host github
-        :repo "minad/tempel"
-        :branch "main"))
+          :repo "minad/tempel"
+          :branch "main"))
 (require-package 'tempel t)
 
 ;;; config
@@ -20,7 +20,7 @@
 
 ;; `expand-abbrev` is bound to "C-x '".
 ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-(tempel-global-abbrev-mode)
+(global-tempel-abbrev-mode)
 
 ;;; key bindings
 (define-key tempel-map (kbd "TAB") #'tempel-next)
