@@ -210,9 +210,8 @@ Default use `point-min` or `point-max`."
   "Upload the current file to 0x0.st"
   (interactive)
   (x/async-command
-   (concat "cd " (string-join (butlast (file-name-split (buffer-file-name))) "/")
-           (format ";curl -F'file=@%s' https://0x0.st"
-                   (buffer-name)))))
+   (format "null.exs %s"
+           (buffer-file-name))))
 
 (provide 'x-utils)
 ;;; x-utils.el ends here

@@ -63,6 +63,7 @@
 ;;; languages
 (require 'x-clojure)
 (require 'x-elisp)
+(require 'x-elixir)
 (require 'x-json)
 (require 'x-kt)
 (require 'x-web)

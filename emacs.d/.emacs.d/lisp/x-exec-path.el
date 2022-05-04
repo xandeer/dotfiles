@@ -21,8 +21,11 @@
          (getenv "PATH"))
         (list exec-directory))))
 
-(defun x--prepend-homebrew-path (cmd)
-  (concat "PATH=/opt/homebrew/bin:$PATH; " cmd))
+(with-eval-after-load 'dash
+  (setq exec-path (-distinct exec-path)))
+
+(defun x/prepend-homebrew-path (cmd)
+  (concat "PATH=$HOME/bin:/opt/homebrew/bin:$PATH; " cmd))
 
 (defun x/async-command (cmd)
   (interactive)
@@ -30,7 +33,7 @@
 
 (defun x/append-exec-path (args)
   "Append `/opt/homebrew/bin` to PATH with `shell-command`."
-  (list (x--prepend-homebrew-path (car args)) (cadr args)))
+  (list (x/prepend-homebrew-path (car args)) (cadr args)))
 
 (advice-add 'shell-command :filter-args #'x/append-exec-path)
 ;; (advice-add 'async-shell-command :filter-args #'x/append-exec-path)

@@ -87,9 +87,9 @@
     (diminish 'rainbow-mode)))
 
 (require-package 'rainbow-identifiers)
-(add-hook 'after-init-hook #'rainbow-identifiers-mode)
-(add-hook 'text-mode-hook #'rainbow-identifiers-mode)
-(add-hook 'org-mode-hook #'rainbow-identifiers-mode)
+;; (add-hook 'after-init-hook #'rainbow-identifiers-mode)
+;; (add-hook 'text-mode-hook #'rainbow-identifiers-mode)
+;; (add-hook 'org-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'css-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'html-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'prog-mode-hook #'rainbow-identifiers-mode)

@@ -53,6 +53,7 @@
 (setq org-fontify-whole-heading-line t)
 (setq org-allow-promoting-top-level-subtree t)
 (setq org-fontify-whole-block-delimiter-line t)
+(setq org-use-fast-tag-selection nil)
 (setq org-tag-alist
       '((:startgroup)
         ("Mon"       . ?m)
@@ -68,6 +69,14 @@
         (:startgroup)
         ("NightRunning" . ?n)
         ("MorningRunning" . ?r)
+        (:startgroup)
+        ("Sunny")
+        ("MostlySunny")
+        ("Cloudy")
+        ("PartlyCloudy")
+        ("MostlyCloudy")
+        ("Showers")
+        ("Haze")
         (:endgroup)))
 ;; global Effort estimate values
 ;; global STYLE property values for completion
@@ -276,6 +285,11 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (let ((title (car (cdr (car (org-collect-keywords '("title")))))))
     (browse-url (concat "https://zh.wikipedia.org/wiki/"
                         (url-encode-url title)))))
+
+;;; tags
+(defun x/org-set-tags-without-fast-ui ()
+  (interactive)
+  (org-set-tags-command '(16)))
 
 (provide 'x-org)
 ;;; x-org.el ends here

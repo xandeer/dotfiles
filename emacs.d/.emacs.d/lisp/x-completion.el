@@ -42,6 +42,11 @@
 (define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
 (define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
 (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
+(define-key corfu-map " " #'corfu-insert-separator)
+(define-key corfu-map [tab] #'corfu-next)
+(define-key corfu-map [(shift tab)] #'corfu-previous)
+(define-key corfu-map [return] #'corfu-insert)
+(define-key corfu-map [escape] #'corfu-quit)
 
 (add-to-list 'completion-at-point-functions #'cape-file)
 ;; (add-to-list 'completion-at-point-functions #'cape-tex)
