@@ -150,6 +150,8 @@
   (x--meow-setup))
 
 ;;; special modes
+(add-hook 'eshell-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
+(add-hook 'comint-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
 ;; (add-hook 'eshell-mode-hook #'meow-insert)
 ;; (remove-hook 'eshell-mode-hook #'meow-insert-mode)
 

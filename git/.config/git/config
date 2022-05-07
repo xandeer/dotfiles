@@ -34,6 +34,5 @@
 [github]
 	user=xandeer
 
-[gitlab "gitlab.xmind.cn/api/v4"]
-	user=kevin
-	email=kevin@xmind.net
+[includeIf "gitdir:~/projects/work/"]
+	path = ~/projects/work/.gitconfig
