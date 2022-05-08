@@ -17,8 +17,10 @@
 (require-package 'lsp-mode)
 (require 'lsp-mode)
 
+(setq lsp-auto-guess-root t)
 (add-hook 'typescript-mode-hook #'lsp)
 (define-key lsp-mode-map (kbd "C-x C-r") #'lsp-rename)
+(define-key lsp-mode-map (kbd "C-x f") #'lsp-format-buffer)
 
 (require-package 'lsp-ui)
 (require 'lsp-ui)

@@ -186,6 +186,12 @@ Default use `point-min` or `point-max`."
   (shell-command (format "exercism submit %s"
                          (buffer-file-name))))
 
+(defun x/exercism-open-readme-other-window ()
+  "Open the README related with current file."
+  (interactive)
+  (let ((root (locate-dominating-file (buffer-file-name) "README.md")))
+    (find-file-other-window (expand-file-name "README.md" root))))
+
 ;;; cow
 (defun x--cow (file)
   "Upload the FILE to cow."

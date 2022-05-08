@@ -59,8 +59,10 @@ See `x-point-kotlin-speed-commands' for configuring them."
 
   (add-hook 'x-point-speed-command-hook #'x-point-kotlin-speed-command-activate -90))
 
-(defun x/kt-remove-ingore-annotation ()
+(defun x/kotlin-exercism-clear ()
+  "Delete useless comments and reindent."
   (interactive)
+  (x/replace ".*TODO.*" "")
   (x/replace "@Ignore\n" "")
   (mark-whole-buffer)
   (indent-for-tab-command))
@@ -69,8 +71,7 @@ See `x-point-kotlin-speed-commands' for configuring them."
   "Gradlew file location for this project."
   (locate-dominating-file buffer-file-name "gradlew"))
 
-(add-to-list 'exec-path (no-littering-expand-var-file-name "lsp/server/kotlin/server/bin"))
-
+(setq lsp-clients-kotlin-server-executable (expand-file-name "kotlin/server/bin/kotlin-language-server" "~/.lsp"))
 
 (defun x/kt-gradle-test ()
   (interactive)
@@ -80,8 +81,10 @@ See `x-point-kotlin-speed-commands' for configuring them."
                          "*gradle test*")))
 
 (with-eval-after-load 'kotlin-mode
-  (define-key kotlin-mode-map (kbd "C-c C-t i") #'x/kt-remove-ingore-annotation)
-  (define-key kotlin-mode-map (kbd "C-c C-t n") #'x/kt-gradle-test))
+  (define-key kotlin-mode-map (kbd "C-c t i") #'x/kotlin-exercism-clear)
+  (define-key kotlin-mode-map (kbd "C-c t n") #'x/kt-gradle-test)
+  (define-key kotlin-mode-map (kbd "C-c e r") #'x/exercism-open-readme-other-window)
+  (define-key kotlin-mode-map (kbd "C-c e u") #'x/exercism-submit))
 
 (defun x/kt-new-lib-project ()
   (interactive)
