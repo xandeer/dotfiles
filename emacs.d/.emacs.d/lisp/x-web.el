@@ -54,6 +54,7 @@
   (define-key tide-mode-map (kbd "M-,") #'lsp-ui-peek-find-references))
 
 (require-package 'skewer-mode)
+(setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
 
 (provide 'x-web)
 ;;; x-web.el ends here
