@@ -53,5 +53,7 @@
   (define-key tide-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
   (define-key tide-mode-map (kbd "M-,") #'lsp-ui-peek-find-references))
 
+(require-package 'skewer-mode)
+
 (provide 'x-web)
 ;;; x-web.el ends here
