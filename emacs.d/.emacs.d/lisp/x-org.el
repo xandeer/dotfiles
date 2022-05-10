@@ -77,6 +77,7 @@
         ("MostlyCloudy")
         ("Showers")
         ("Haze")
+        ("Thunderstorms")
         (:endgroup)))
 ;; global Effort estimate values
 ;; global STYLE property values for completion
