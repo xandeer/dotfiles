@@ -18,6 +18,7 @@
 (require 'lsp-mode)
 
 (setq lsp-auto-guess-root t)
+(setq lsp-enable-snippet nil)
 (add-hook 'typescript-mode-hook #'lsp)
 (define-key lsp-mode-map (kbd "C-x C-r") #'lsp-rename)
 (define-key lsp-mode-map (kbd "C-x f") #'lsp-format-buffer)

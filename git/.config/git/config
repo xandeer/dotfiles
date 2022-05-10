@@ -36,3 +36,6 @@
 
 [includeIf "gitdir:~/projects/work/"]
 	path = ~/projects/work/.gitconfig
+
+[includeIf "gitdir:~/projects/xmind/"]
+	path = ~/projects/xmind/.gitconfig
