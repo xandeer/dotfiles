@@ -192,6 +192,11 @@ Default use `point-min` or `point-max`."
   (let ((root (locate-dominating-file (buffer-file-name) "README.md")))
     (find-file-other-window (expand-file-name "README.md" root))))
 
+(defun x/async-run-clipboard ()
+  "Call `async-shell-command` with the clipboard content."
+  (interactive)
+  (x/async-command (osx-lib-get-from-clipboard)))
+
 ;;; cow
 (defun x--cow (file)
   "Upload the FILE to cow."
