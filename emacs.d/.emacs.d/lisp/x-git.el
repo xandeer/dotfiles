@@ -59,6 +59,7 @@ Magit\n"
 	("n" (magit-status org-directory) "notes")
   ("w" (magit-status x/work-directory) "work")
   ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
+  ("l" (magit-status (expand-file-name "~/projects/personal/android-lab/")) "android-lab")
   ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure")
   ("k" (magit-status (expand-file-name "~/Exercism/kotlin/")) "exercism/kotlin")
   ("e" (magit-status (expand-file-name "~/Exercism/elixir/")) "exercism/elixir"))
