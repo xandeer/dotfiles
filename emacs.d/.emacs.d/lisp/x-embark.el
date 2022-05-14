@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'marginalia)
+(require-package 'marginalia t)
 (x/append-init-hook 'marginalia-mode)
 
 (require-package 'embark t)

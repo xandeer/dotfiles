@@ -1,0 +1,15 @@
+#! /nix/store/cgazsg19rlcn6yf9gr760bmlrzjv00z7-bash-5.1-p16/bin/bash -e
+PATH=${PATH:+':'$PATH':'}
+PATH=${PATH/':''/nix/store/bycp32kd6wd02rpys2d7hsf2zapm1mk3-buku-4.6/bin'':'/':'}
+PATH='/nix/store/bycp32kd6wd02rpys2d7hsf2zapm1mk3-buku-4.6/bin'$PATH
+PATH=${PATH#':'}
+PATH=${PATH%':'}
+export PATH
+PATH=${PATH:+':'$PATH':'}
+PATH=${PATH/':''/nix/store/jz3szw44xjrglaifbhkmmk5yxzsj1fs4-python3-3.9.12/bin'':'/':'}
+PATH='/nix/store/jz3szw44xjrglaifbhkmmk5yxzsj1fs4-python3-3.9.12/bin'$PATH
+PATH=${PATH#':'}
+PATH=${PATH%':'}
+export PATH
+export PYTHONNOUSERSITE='true'
+exec -a "$0" "~/bin/buku-wrapped"  "$@"

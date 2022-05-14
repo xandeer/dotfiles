@@ -3,6 +3,11 @@
 ;;; Code:
 
 (straight-register-package
+ '(copilot :host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
+
+(straight-register-package
  '(cape :host github
         :repo "minad/cape"
         :branch "main"))
@@ -20,6 +25,7 @@
         :repo "galeo/corfu-doc"
         :branch "main"))
 
+(require-package 'copilot)
 (require-package 'corfu)
 (require-package 'cape)
 (require-package 'kind-icon t)
@@ -39,11 +45,18 @@
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
 ;; (remove-hook 'corfu-mode-hook #'corfu-doc-mode)
 
+(defun x/tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (corfu-next)))
+
+(add-hook 'prog-mode-hook 'copilot-mode)
+
 (define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
 (define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
 (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
 (define-key corfu-map " " #'corfu-insert-separator)
-(define-key corfu-map [tab] #'corfu-next)
+(define-key corfu-map [tab] #'x/tab)
 (define-key corfu-map [(shift tab)] #'corfu-previous)
 (define-key corfu-map [return] #'corfu-insert)
 (define-key corfu-map [escape] #'corfu-quit)

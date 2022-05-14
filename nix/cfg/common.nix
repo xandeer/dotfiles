@@ -63,6 +63,7 @@
 
     buku
     bukubrow
+    hub
 
     # openjdk8
     # python3

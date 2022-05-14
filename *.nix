@@ -1,0 +1,1 @@
+/Users/kevin/projects/personal/dotfiles/nix/machines//*.nix

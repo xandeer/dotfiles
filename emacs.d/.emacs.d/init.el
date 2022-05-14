@@ -136,7 +136,7 @@
 (x/append-init-hook
  '(toggle-frame-maximized
    ;; x/selection-mode-global-enable
-   ))
+   ebuku))
 
 (provide 'init)
 

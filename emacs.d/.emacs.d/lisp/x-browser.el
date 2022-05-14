@@ -2,8 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'consult)
-(require 'marginalia)
+;; (require 'consult)
+;; (require 'marginalia)
 
 (require-package 'ebuku)
 
@@ -12,6 +12,9 @@
 (defvar x/buku-bookmarks nil)
 
 (defvar x/bookmark-history nil)
+
+(defvar x/buku-org (x/expand-note "etc/buku.org"))
+(defvar x/buku-html (x/expand-note "etc/buku.html"))
 
 (defun x/update-bookmarks ()
   "Update bookmarks from buku cache."
@@ -27,16 +30,19 @@
                 ebuku-bookmarks))
   (setq x/bookmarks (append x/buku-bookmarks bookmark-alist)))
 
-(defun marginalia-annotate-bookmark (cand)
-  "Annotate bookmark CAND with its file name and front context string."
-  (when-let ((bm (assoc cand x/bookmarks)))
-    (let ((front (bookmark-get-front-context-string bm)))
-      (marginalia--fields
-       ((marginalia--bookmark-type bm) :truncate 0.1 :face 'marginalia-type)
-       ((or (bookmark-get-filename bm)
-            (alist-get 'page bm)
-            (alist-get 'url bm))
-        :face 'marginalia-file-name)))))
+(add-hook 'ebuku-mode-hook 'x/update-bookmarks)
+
+(with-eval-after-load 'marginalia
+  (defun marginalia-annotate-bookmark (cand)
+    "Annotate bookmark CAND with its file name and front context string."
+    (when-let ((bm (assoc cand x/bookmarks)))
+      (let ((front (bookmark-get-front-context-string bm)))
+        (marginalia--fields
+         ((marginalia--bookmark-type bm) :truncate 0.1 :face 'marginalia-type)
+         ((or (bookmark-get-filename bm)
+              (alist-get 'page bm)
+              (alist-get 'url bm))
+          :face 'marginalia-file-name))))))
 
 (defun x/bookmark-candidates ()
   "Generate buku bookmarks candidates."
@@ -52,13 +58,13 @@
 
 (defun x/consult-bookmark (title)
   "Select pattern with buku."
-  (x/update-bookmarks)
   (interactive
    (list (consult--read
           (x/bookmark-candidates)
           :prompt "Bookmark: "
           :category 'bookmark
           :history 'x/bookmark-history)))
+  (x/update-bookmarks)
   (x/open-bookmark title))
 
 (defun x/buku--candidates ()
@@ -150,13 +156,19 @@
   (interactive)
   (x/buku--read #'x/buku--delete))
 
-(defun x/buku-export-to-download ()
-  "Export bookmarks to ~/Downloads/buku.html"
+(defun x/buku-export ()
+  "Export bookmarks to notes/etc/buku.[org|html]"
   (interactive)
-  (let ((file "~/Downloads/buku.html"))
-    (x/async-command
-     (concat "rm -rf " file
-             "; buku -e " file))))
+  (shell-command
+   (concat "rm -rf " x/buku-org " " x/buku-html
+           "; buku -e " x/buku-org "; buku -e" x/buku-html))
+  (find-file x/buku-org))
+
+(defun x/buku-import ()
+  "Import bookmarks from notes/etc/buku.org"
+  (interactive)
+  (shell-command
+   (concat "xbuku --nostdin -i " x/buku-org)))
 
 (provide 'x-browser)
 ;;; x-browser.el ends here

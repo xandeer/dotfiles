@@ -34,6 +34,9 @@
 [github]
 	user=xandeer
 
+[includeIf "gitdir:~/projects/personal/"]
+	path = ~/projects/personal/.gitconfig
+
 [includeIf "gitdir:~/projects/work/"]
 	path = ~/projects/work/.gitconfig
 
