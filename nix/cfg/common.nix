@@ -28,7 +28,7 @@
     vim
     wget
 
-    ag
+    # ag
     bat
     # broot
     exa
@@ -60,6 +60,9 @@
     # xandeer.v2ray
 
     yarn
+
+    buku
+    bukubrow
 
     # openjdk8
     # python3
