@@ -81,7 +81,7 @@ Buffer\n"
   ("j" consult-register "register")
   ("H-j" consult-register-store "register store")
   ("l" link-hint-open-link "open link")
-  ("k" consult-bookmark "consult bookmark")
+  ("k" x/consult-bookmark "consult bookmark")
   ("H-k" x--bookmark-set "set bookmark")
 
   ("d" org-agenda-list "agenda daily")
