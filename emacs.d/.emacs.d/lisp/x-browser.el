@@ -161,14 +161,15 @@
   (interactive)
   (shell-command
    (concat "rm -rf " x/buku-org " " x/buku-html
-           "; buku -e " x/buku-org "; buku -e" x/buku-html))
+           "; buku --nostdin -e " x/buku-org "; buku --nostdin -e" x/buku-html))
   (find-file x/buku-org))
 
 (defun x/buku-import ()
   "Import bookmarks from notes/etc/buku.org"
   (interactive)
   (shell-command
-   (concat "xbuku --nostdin -i " x/buku-org)))
+   (concat "xbuku --nostdin -i " x/buku-org))
+  (x/update-bookmarks))
 
 (provide 'x-browser)
 ;;; x-browser.el ends here
