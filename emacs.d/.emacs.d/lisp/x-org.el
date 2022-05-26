@@ -32,7 +32,7 @@
 (setq org-list-allow-alphabetical t)
 (setq org-edit-src-content-indentation 0)
 (setq org-catch-invisible-edits 'error)
-;; 代码区域禁用第一层缩进 https://emacs.stackexchange.com/a/18892/16450
+;; Disable first level indentation in code block. https://emacs.stackexchange.com/a/18892/16450
 (setq org-src-preserve-indentation t)
 (setq org-startup-with-inline-images t)
 (setq org-cycle-separator-lines 0)
@@ -49,37 +49,13 @@
 (setq org-fontify-done-headline t)
 (setq org-fontify-todo-headline t)
 (setq org-hide-emphasis-markers t)
+(setq org-ellipsis "…")
+(setq org-pretty-entities t)
 (setq org-fontify-emphasized-text t)
 (setq org-fontify-whole-heading-line t)
 (setq org-allow-promoting-top-level-subtree t)
 (setq org-fontify-whole-block-delimiter-line t)
-(setq org-use-fast-tag-selection nil)
-(setq org-tag-alist
-      '((:startgroup)
-        ("Mon"       . ?m)
-        ("Tue"       . ?t)
-        ("Wed"       . ?w)
-        ("Thu"       . ?T)
-        ("Fri"       . ?f)
-        ("Sat"       . ?s)
-        ("Sun"       . ?S)
-        (:startgroup)
-        ("@home"     . ?h)
-        ("@office"   . ?o)
-        (:startgroup)
-        ("NightRunning" . ?n)
-        ("MorningRunning" . ?r)
-        (:startgroup)
-        ("Sunny")
-        ("MostlySunny")
-        ("Cloudy")
-        ("PartlyCloudy")
-        ("MostlyCloudy")
-        ("Showers")
-        ("Haze")
-        ("Thunderstorms")
-        ("HeavyRain")
-        (:endgroup)))
+
 ;; global Effort estimate values
 ;; global STYLE property values for completion
 (setq org-global-properties
@@ -273,12 +249,13 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 ;; (require-package 'org-bars t)
 ;; (add-hook 'org-mode-hook #'org-bars-mode)
 
-(require-package 'org-bullets t)
-(add-hook 'org-mode-hook #'org-bullets-mode)
-(setq org-bullets-bullet-list '(
-                                "♥"
-                                "◉"
-                                "○"))
+;;; org bullets
+;; (require-package 'org-bullets t)
+;; (add-hook 'org-mode-hook #'org-bullets-mode)
+;; (setq org-bullets-bullet-list '(
+;;                                 "♥"
+;;                                 "◉"
+;;                                 "○"))
 
 ;;; utils
 (defun x/wiki-with-title ()
@@ -289,9 +266,44 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
                         (url-encode-url title)))))
 
 ;;; tags
+(setq org-use-fast-tag-selection nil)
+(setq org-tag-alist
+      '((:startgroup)
+        ("Mon"       . ?m)
+        ("Tue"       . ?t)
+        ("Wed"       . ?w)
+        ("Thu"       . ?T)
+        ("Fri"       . ?f)
+        ("Sat"       . ?s)
+        ("Sun"       . ?S)
+        (:startgroup)
+        ("@home"     . ?h)
+        ("@office"   . ?o)
+        (:startgroup)
+        ("NightRunning" . ?n)
+        ("MorningRunning" . ?r)
+        (:startgroup)
+        ("Sunny")
+        ("MostlySunny")
+        ("Cloudy")
+        ("PartlyCloudy")
+        ("MostlyCloudy")
+        ("Showers")
+        ("Haze")
+        ("Thunderstorms")
+        ("HeavyRain")
+        (:endgroup)))
 (defun x/org-set-tags-without-fast-ui ()
   (interactive)
   (org-set-tags-command '(16)))
+
+;;; org modern
+(straight-register-package
+ '(org-modern
+   :host github
+   :repo "minad/org-modern"))
+(require-package 'org-modern)
+(global-org-modern-mode)
 
 (provide 'x-org)
 ;;; x-org.el ends here

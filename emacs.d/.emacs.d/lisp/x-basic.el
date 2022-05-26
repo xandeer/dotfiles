@@ -7,6 +7,7 @@
  word-wrap                           t
  fill-column                         76
  tooltip-delay                       1.5
+ line-spacing                        0.2
  truncate-lines                      nil
  case-fold-search                    t
  indent-tabs-mode                    nil

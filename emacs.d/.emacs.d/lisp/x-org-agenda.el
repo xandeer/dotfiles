@@ -39,7 +39,12 @@
 (setq org-agenda-show-future-repeats 'next)
 (setq org-agenda-start-on-weekday 1)
 (setq org-agenda-start-with-clockreport-mode t)
-(setq org-agenda-use-time-grid nil)
+(setq org-agenda-use-time-grid t)
+(setq org-agenda-time-grid
+ '((daily today require-timed)
+   (800 930 1125 1625 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+(setq org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────────────")
 (setq org-agenda-clock-consistency-checks
       (quote (:max-duration "4:00"
                             :min-duration 0
@@ -59,7 +64,7 @@
 (setq org-agenda-sticky t)
 (setq org-agenda-text-search-extra-files '(agenda-archives))
 
-;; Custom agenda command definitions
+;;; Custom agenda command definitions
 (setq org-agenda-custom-commands
       '(("n" "Notes" tags "NOTE"
          ((org-agenda-overriding-header "Notes")
@@ -240,6 +245,7 @@ ARG is passed through to `x/org-schedule'."
    :repo "casouri/valign"))
 ;; In documents with more than 10 tables, it will be very stuck.
 (add-hook 'org-agenda-mode-hook #'valign-mode)
+(remove-hook 'org-agenda-mode-hook #'valign-mode)
 
 (provide 'x-org-agenda)
 ;;; x-org-agenda.el ends here
