@@ -55,7 +55,12 @@
       (telega)))
 
   (define-key telega-chat-mode-map (kbd "C-c C-f") 'x/telega-chatbuf-attach-file)
-  (define-key telega-chat-mode-map [remap self-insert-command] #'x-point-self-insert-command))
+  (define-key telega-chat-mode-map [remap self-insert-command] #'x-point-self-insert-command)
+
+  (defun x/telega--chat-mode-setup ()
+    (setq-local line-spacing 0))
+
+  (add-hook 'telega-chat-mode-hook #'x/telega--chat-mode-setup))
 
 (provide 'x-telega)
 ;;; x-telega.el ends here
