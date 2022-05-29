@@ -285,6 +285,7 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
         (:startgroup)
         ("Sunny")
         ("MostlySunny")
+        ("MostlyClear")
         ("Cloudy")
         ("PartlyCloudy")
         ("MostlyCloudy")
