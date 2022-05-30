@@ -192,6 +192,7 @@ Default use `point-min` or `point-max`."
   (let ((root (locate-dominating-file (buffer-file-name) "README.md")))
     (find-file-other-window (expand-file-name "README.md" root))))
 
+(autoload 'osx-lib-get-from-clipboard "osx-lib")
 (defun x/async-run-clipboard ()
   "Call `async-shell-command` with the clipboard content."
   (interactive)
