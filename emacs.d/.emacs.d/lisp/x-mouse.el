@@ -16,6 +16,7 @@
       scroll-preserve-screen-position 'always
       scroll-error-top-bottom         t)
 
+(setq pixel-scroll-precision-mode t)
 ;; (setq mouse-wheel-scroll-amount '(1))
 
 (require-package 'disable-mouse nil)
