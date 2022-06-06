@@ -56,6 +56,8 @@
 
   (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up-half)
   (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down-half)
+  (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up)
+  (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down)
   (define-key xwidget-webkit-mode-map (kbd "f") #'xwwp-ace-toggle)
   (define-key xwidget-webkit-mode-map (kbd "v") #'xwwp-follow-link))
 
