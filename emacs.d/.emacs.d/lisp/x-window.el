@@ -29,7 +29,7 @@
 
 (setq aw-dispatch-always nil)
 (setq aw-keys '(?j ?k ?l ?i ?h ?f ?d ?a))
-(setq aw-ignore-current t)
+;; (setq aw-ignore-current t)
 (setq aw-ignored-buffers
       '("*Calc Trail*"
         " *LV*"
