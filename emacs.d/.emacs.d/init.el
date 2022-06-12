@@ -101,7 +101,7 @@
 (require 'x-template)
 (require 'x-telega)
 (require 'x-vertico)
-(require 'x-point-mode)
+;; (require 'x-point-mode)
 (require 'x-xwidget)
 
 ;;; chores

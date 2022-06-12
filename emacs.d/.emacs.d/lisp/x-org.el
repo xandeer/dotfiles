@@ -38,7 +38,7 @@
 (setq org-cycle-separator-lines 0)
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
-(setq org-use-speed-commands nil)
+(setq org-use-speed-commands t)
 (setq org-blank-before-new-entry
       '((heading)
         (plain-list-item . auto)))
@@ -72,11 +72,11 @@
         ("Outline Visibility")
         (" " . org-display-outline-path)
         ("n" . org-toggle-narrow-to-subtree)
-        ("v" . lispy-view)
+        ("v" . (lambda () (interactive) (recenter-top-bottom 1)))
         ("=" . org-columns)
 
         ("Outline Structure Editing")
-        ("d" . org-cut-subtree)
+        ("c" . org-cut-subtree)
         ("w" . org-metaup)
         ("s" . org-metadown)
         ("." . org-metaright)
@@ -89,7 +89,6 @@
         ("a" . org-insert-heading-after-current)
 
         ("Clock Commands")
-        ("c" . org-clock-goto)
         ("i" . org-clock-in)
         ("l" . org-clock-out)
         ("S" . x/org-schedule)
@@ -103,9 +102,10 @@
         ("W" . (lambda (m) (interactive "sMinutes before warning: ") (org-entry-put (point) "APPT_WARNTIME" m)))
 
         ("Agenda Views etc")
-        ("q" . org-agenda-list)
+        ;; ("q" . org-agenda-list)
 
         ("Misc")
+        ("q" . x/fill-subtree)
         ("o" . org-open-at-point)
         ("?" . org-speed-command-help)))
 

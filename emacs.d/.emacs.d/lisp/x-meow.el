@@ -53,6 +53,96 @@
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet)))
 
+;;; find and till
+(defun x--meow-search-forward (s n)
+  (search-forward-regexp (pinyinlib-build-regexp-string s) nil t n))
+
+(defun x--meow-search-backward (s n)
+  (search-backward-regexp (pinyinlib-build-regexp-string s) nil t n))
+
+(defun x/meow--find-continue-forward ()
+  (when meow--last-find
+    (let ((case-fold-search nil)
+          (ch-str (char-to-string meow--last-find)))
+      (when (x--meow-search-forward ch-str 1)
+        (meow--hack-cursor-pos (point))))))
+
+(defun x/meow--find-continue-backward ()
+  (when meow--last-find
+    (let ((case-fold-search nil)
+          (ch-str (char-to-string meow--last-find)))
+      (x--meow-search-backward ch-str 1))))
+
+(defun x/meow-find (n &optional prompt expand)
+  "Find the next N char read from minibuffer."
+  (interactive "p")
+  (let* ((case-fold-search nil)
+         (ch (read-char (or prompt (message "Find(%d):" n))))
+         (ch-str (if (eq ch 13) "\n" (char-to-string ch)))
+         (beg (point))
+         end)
+    (save-mark-and-excursion
+      (setq end (search-forward-regexp (pinyinlib-build-regexp-string ch-str) nil t n)))
+    (if (not end)
+        (message "char %s not found" ch-str)
+      (thread-first
+        (meow--make-selection '(select . find)
+                              beg end expand)
+        (meow--select))
+      (setq meow--last-find ch)
+      (meow--maybe-highlight-num-positions
+       '(x/meow--find-continue-backward . x/meow--find-continue-forward)))))
+
+(defun x/meow-find-expand (n)
+  (interactive "p")
+  (x/meow-find n (message "Expand find(%d):" n) t))
+
+(defun x/meow--till-continue-forward ()
+  (when meow--last-till
+    (let ((case-fold-search nil)
+          (ch-str (char-to-string meow--last-till)))
+      (when (< (point) (point-max))
+        (forward-char 1)
+        (when (x--meow-search-forward ch-str 1)
+          (backward-char 1)
+          (meow--hack-cursor-pos (point)))))))
+
+(defun x/meow--till-continue-backward ()
+  (when meow--last-till
+    (let ((case-fold-search nil)
+          (ch-str (char-to-string meow--last-till)))
+      (when (> (point) (point-min))
+        (backward-char 1)
+        (when (x--meow-search-backward ch-str 1)
+          (forward-char 1)
+          (point))))))
+
+(defun x/meow-till (n &optional prompt expand)
+  "Forward till the next N char read from minibuffer."
+  (interactive "p")
+  (let* ((case-fold-search nil)
+         (ch (read-char (message (or prompt "Till(%d):") n)))
+         (ch-str (if (eq ch 13) "\n" (char-to-string ch)))
+         (beg (point))
+         (fix-pos (if (< n 0) 1 -1))
+         end)
+    (save-mark-and-excursion
+      (if (> n 0) (forward-char 1) (forward-char -1))
+      (setq end (x--meow-search-forward ch-str n)))
+    (if (not end)
+        (message "char %s not found" ch-str)
+      (thread-first
+        (meow--make-selection '(select . till)
+                              beg (+ end fix-pos) expand)
+        (meow--select))
+      (setq meow--last-till ch)
+      (meow--maybe-highlight-num-positions
+       '(x/meow--till-continue-backward . x/meow--till-continue-forward)))))
+
+(defun x/meow-till-expand (n)
+  (interactive "p")
+  (x/meow-till n (message "Expand till(%d):" n) t))
+
 (defun x--meow-define-normal-keys ()
   (meow-normal-define-key
    '("0" . meow-expand-0)
@@ -66,24 +156,24 @@
    '("2" . meow-expand-2)
    '("1" . meow-expand-1)
    '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
+   '(";" . meow-inner-of-thing)
+   '("'" . meow-bounds-of-thing)
+   '("." . repeat)
    '("[" . meow-beginning-of-thing)
    '("]" . meow-end-of-thing)
    '("a" . meow-append)
-   '("A" . meow-append-at-end)
+   '("A" . meow-open-below)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
-   '("c" . meow-change)
+   '("c" . meow-change-save)
    '("C" . meow-change-save)
-   '("d" . meow-kill)
-   '("D" . meow-backward-delete)
+   '("d" . meow-reverse)
+   '("D" . x/duplicate-line)
    '("e" . meow-next-word)
    '("E" . meow-next-symbol)
-   '("f" . meow-find)
-   '("F" . meow-find-expand)
-   '("g" . x/ace-pinyin-goto-char-2)
+   '("f" . x/meow-find)
+   '("F" . x/meow-find-expand)
+   '("g" . meow-cancel-selection)
    '("G" . meow-grab)
    '("h" . meow-left)
    '("H" . meow-left-expand)
@@ -98,17 +188,17 @@
    '("m" . meow-join)
    '("n" . meow-search)
    '("N" . meow-pop-search)
-   '("o" . meow-open-below)
+   '("o" . meow-open-above)
    '("O" . meow-open-above)
    '("p" . meow-yank)
    '("P" . meow-yank-pop)
    '("q" . meow-quit)
    '("Q" . meow-goto-line)
-   '("r" . meow-reverse)
+   '("r" . meow-replace)
    '("R" . meow-swap-grab)
    '("s" . er/expand-region)
-   '("t" . meow-till)
-   '("T" . meow-till-expand)
+   '("t" . x/meow-till)
+   '("T" . x/meow-till-expand)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
    '("v" . meow-visit)
@@ -116,24 +206,23 @@
    '("w" . meow-mark-word)
    '("W" . meow-mark-symbol)
    '("x" . meow-line)
-   '("X" . meow-kmacro-lines)
+   '("X" . meow-goto-line)
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
    '("Z" . meow-pop-all-selection)
    '("&" . meow-query-replace)
-   '("%" . meow-query-replace-regexp)
-   '("'" . repeat)
+   '("%" . anzu-query-replace-regexp)
    '("\\" . quoted-insert)
    '("\/" . meow-visit)
    '("<escape>" . meow-cancel)))
 
-(defun x--meow-enable-local-insert ()
-  "Set insert as default mode."
-  (setq-default meow-normal-mode nil)
-  (setq-default meow-insert-mode t))
+;; (defun x--meow-enable-local-insert ()
+;;   "Set insert as default mode."
+;;   (setq-default meow-normal-mode nil)
+;;   (setq-default meow-insert-mode t))
 
-(advice-add 'meow--global-enable :after 'x--meow-enable-local-insert)
+;; (advice-add 'meow--global-enable :after 'x--meow-enable-local-insert)
 
 (defun x--meow-setup ()
   "Meow setup."
@@ -152,8 +241,8 @@
 ;;; special modes
 (add-hook 'eshell-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
 (add-hook 'comint-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
-;; (add-hook 'eshell-mode-hook #'meow-insert)
-;; (remove-hook 'eshell-mode-hook #'meow-insert-mode)
+(add-hook 'org-mode-hook (lambda () (run-with-timer 0.3 nil #'meow-insert)))
+(add-hook 'emacs-lisp-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
 
 (provide 'x-meow)
 ;;; x-meow.el ends here
