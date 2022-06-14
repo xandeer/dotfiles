@@ -26,7 +26,7 @@
         :branch "main"))
 
 (require-package 'copilot)
-(require-package 'corfu)
+(require-package 'corfu t)
 (require-package 'cape)
 (require-package 'kind-icon t)
 (require-package 'corfu-doc)
@@ -34,7 +34,7 @@
 (setq corfu-auto t)
 (setq corfu-quit-no-match t)
 (setq corfu-auto-prefix 3)
-(corfu-global-mode)
+(global-corfu-mode)
 
 (setq tab-always-indent 'complete)
 (setq cape-dabbrev-min-length 2)

@@ -123,7 +123,11 @@ Default use `point-min` or `point-max`."
 
 (defun x/ifconfig ()
   (interactive)
-  (message (format-network-address (car (network-interface-info "en0")) t)))
+  (message (format-network-address
+            (or
+             (car (network-interface-info "en0"))
+             (car (network-interface-info "en1")))
+            t)))
 
 ;; https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
 (defun x/rename ()
