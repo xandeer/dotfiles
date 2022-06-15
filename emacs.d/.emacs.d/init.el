@@ -72,9 +72,11 @@
 (require 'x-anzu)
 (require 'x-avy)
 (require 'x-browser)
+
 (require 'x-calendar)
 ;; (require 'x-company)
 (require 'x-completion)
+(require 'x-devdocs)
 (require 'x-consult)
 (require 'x-dictionary)
 (require 'x-dired)
@@ -106,6 +108,7 @@
 
 ;;; chores
 (require 'x-mouse)
+(require 'x-wakatime)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)

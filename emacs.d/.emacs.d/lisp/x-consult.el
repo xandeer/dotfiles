@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(straight-register-package
+ '(consult :host github
+           :repo "minad/consult"
+           :tag "0.17"))
+
 (require-package 'consult t)
 (require-package 'wgrep)
 (require 'consult-imenu)
@@ -18,6 +23,7 @@
 
 ;; Optionally replace `completing-read-multiple' with an enhanced version.
 (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+;; (advice-remove #'completing-read-multiple  #'consult-completing-read-multiple)
 
 ;; Use Consult to select xref locations with preview
 (setq xref-show-xrefs-function #'consult-xref
