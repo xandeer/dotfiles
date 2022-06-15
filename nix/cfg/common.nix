@@ -59,6 +59,7 @@
     # xandeer.dots
     # xandeer.v2ray
 
+    deno
     yarn
 
     buku

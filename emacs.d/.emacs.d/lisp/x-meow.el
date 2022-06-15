@@ -192,7 +192,7 @@
    '("O" . meow-open-above)
    '("p" . meow-yank)
    '("P" . meow-yank-pop)
-   '("q" . meow-quit)
+   '("q" . quit-window)
    '("Q" . meow-goto-line)
    '("r" . meow-replace)
    '("R" . meow-swap-grab)
@@ -239,10 +239,16 @@
   (x--meow-setup))
 
 ;;; special modes
-(add-hook 'eshell-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
-(add-hook 'comint-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
-(add-hook 'org-mode-hook (lambda () (run-with-timer 0.3 nil #'meow-insert)))
-(add-hook 'emacs-lisp-mode-hook (lambda () (run-with-timer 0.1 nil #'meow-insert)))
+(defun x/meow-insert-with-timer (delay)
+  (lambda ()
+    (run-with-idle-timer delay nil #'meow-insert)))
+
+(add-hook 'eshell-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'comint-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'org-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'prog-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'text-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'telega-chat-mode-hook (x/meow-insert-with-timer 0.1))
 
 (provide 'x-meow)
 ;;; x-meow.el ends here

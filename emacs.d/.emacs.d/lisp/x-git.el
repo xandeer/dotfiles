@@ -27,7 +27,8 @@
   (abridge-diff-mode)
 
   (global-set-key (kbd "C-x g") #'magit-status)
-  (global-set-key (kbd "C-x M-g") #'magit-dispatch-popup)
+  (global-set-key (kbd "C-x M-g") #'magit-dispatch)
+  (define-key magit-status-mode-map (kbd "q") #'kill-current-buffer)
   (define-key magit-status-mode-map (kbd "K") #'magit-discard)
 
   (defun x/git-create-tag-and-update-chglog ()
