@@ -40,7 +40,7 @@
         :repo "jmfirth/yarn.el"))
 
 (require-package 'typescript-mode)
-(add-hook 'typescript-mode-hook #'lsp)
+;; (add-hook 'typescript-mode-hook #'lsp)
 
 (require-package 'tide)
 (with-eval-after-load 'typescript-mode

@@ -2,9 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(add-to-list 'exec-path
-             (expand-file-name
-              "~/projects/others/kotlin-language-server/server/build/install/server/bin"))
 (require-package 'flycheck-kotlin)
 (require-package 'kotlin-mode)
 (add-hook 'kotlin-mode-hook #'flycheck-kotlin-setup)
@@ -71,7 +68,7 @@ See `x-point-kotlin-speed-commands' for configuring them."
   "Gradlew file location for this project."
   (locate-dominating-file buffer-file-name "gradlew"))
 
-(setq lsp-clients-kotlin-server-executable (expand-file-name "kotlin/server/bin/kotlin-language-server" "~/.lsp"))
+;; (setq lsp-clients-kotlin-server-executable (expand-file-name "kotlin/server/bin/kotlin-language-server" "~/.lsp"))
 
 (defun x/kt-gradle-test ()
   (interactive)

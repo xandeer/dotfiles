@@ -60,13 +60,20 @@
     # xandeer.v2ray
 
     deno
+    nodejs
     yarn
+
+    jre
+    gradle
+    kotlin-language-server
+
+    # https://cloud.r-project.org/bin/macosx/
+    # R
 
     buku
     bukubrow
     hub
 
-    # openjdk8
     # python3
   #   (python3.withPackages(ps: with ps; [
   #     pip
