@@ -2,15 +2,24 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(copilot :host github
-           :repo "zerolfx/copilot.el"
-           :files ("*.el" "dist")))
 
-(straight-register-package
- '(cape :host github
-        :repo "minad/cape"
-        :branch "main"))
+(require-package 'corfu t)
+
+(setq corfu-auto t)
+(setq corfu-auto-prefix 3)
+(setq corfu-max-width 60)
+(setq corfu-quit-no-match t)
+(setq tab-always-indent 'complete)
+
+(define-key corfu-map " " #'corfu-insert-separator)
+(define-key corfu-map [tab] #'x/tab)
+(define-key corfu-map [(shift tab)] #'corfu-previous)
+(define-key corfu-map [return] #'corfu-insert)
+(define-key corfu-map [escape] #'corfu-quit)
+
+(global-corfu-mode)
+
+;;; icon
 ;; required by kind-icon
 (straight-register-package
  '(svg-lib :host github
@@ -20,46 +29,33 @@
  '(kind-icon :host github
         :repo "jdtsmith/kind-icon"
         :branch "main"))
-(straight-register-package
- '(corfu-doc :host github
-        :repo "galeo/corfu-doc"
-        :branch "main"))
 
-(require-package 'copilot)
-(require-package 'corfu t)
-(require-package 'cape)
 (require-package 'kind-icon t)
-(require-package 'corfu-doc)
-
-(setq corfu-auto t)
-(setq corfu-quit-no-match t)
-(setq corfu-auto-prefix 3)
-(global-corfu-mode)
-
-(setq tab-always-indent 'complete)
-(setq cape-dabbrev-min-length 2)
 
 (setq kind-icon-default-face 'corfu-default)
 (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
+;;; corfu-doc
+(straight-register-package
+ '(corfu-doc :host github
+             :repo "galeo/corfu-doc"
+             :branch "main"))
+(require-package 'corfu-doc)
+
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
-;; (remove-hook 'corfu-mode-hook #'corfu-doc-mode)
-
-(defun x/tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (corfu-next)))
-
-(add-hook 'prog-mode-hook 'copilot-mode)
 
 (define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
 (define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
 (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
-(define-key corfu-map " " #'corfu-insert-separator)
-(define-key corfu-map [tab] #'x/tab)
-(define-key corfu-map [(shift tab)] #'corfu-previous)
-(define-key corfu-map [return] #'corfu-insert)
-(define-key corfu-map [escape] #'corfu-quit)
+
+;;; cape
+(straight-register-package
+ '(cape :host github
+        :repo "minad/cape"
+        :branch "main"))
+(require-package 'cape)
+
+(setq cape-dabbrev-min-length 2)
 
 (add-to-list 'completion-at-point-functions #'cape-file)
 ;; (add-to-list 'completion-at-point-functions #'cape-tex)
@@ -72,21 +68,41 @@
   (setq-local corfu-auto nil)
   (corfu-mode))
 
+;;; eshell
+(add-hook 'eshell-mode-hook #'x-completion--disable-auto-locally)
+
+;;; org
 (with-eval-after-load 'org
-  (defun x--cape-org-setup ()
+  (defun x-completion--org-setup ()
     (x-completion--disable-auto-locally)
     (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
-  (add-hook 'org-mode-hook #'x--cape-org-setup))
+  (add-hook 'org-mode-hook #'x-completion--org-setup))
 
-(add-hook 'eshell-mode-hook #'x-completion--disable-auto-locally)
-
+;;; minibuffer
 (defun x-completion--enable-in-minibuffer ()
   "Enable Corfu in the minibuffer if `completion-at-point' is bound."
   (when (where-is-internal #'completion-at-point (list (current-local-map)))
     ;; (setq-local corfu-auto nil) Enable/disable auto completion
     (corfu-mode 1)))
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
+
+;;; copilot
+(straight-register-package
+ '(copilot :host github
+           :repo "zerolfx/copilot.el"
+           :files ("*.el" "dist")))
+
+(require-package 'copilot)
+(add-hook 'prog-mode-hook #'copilot-mode)
+
+(defun x/tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (corfu-next)
+      (indent-for-tab-command)))
+
+(global-set-key (kbd "TAB") #'x/tab)
 
 (provide 'x-completion)
 ;;; x-completion.el ends here

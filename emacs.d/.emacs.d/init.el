@@ -65,7 +65,7 @@
 (require 'x-elisp)
 (require 'x-elixir)
 (require 'x-json)
-(require 'x-kt)
+(require 'x-kotlin)
 (require 'x-web)
 
 ;;; tools

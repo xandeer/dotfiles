@@ -17,16 +17,18 @@
 (require-package 'lsp-mode)
 (require 'lsp-mode)
 
-(setq lsp-auto-guess-root nil)
+(setq lsp-auto-guess-root t)
 (setq lsp-enable-snippet nil)
 
 (define-key lsp-mode-map (kbd "C-x C-r") #'lsp-rename)
 (define-key lsp-mode-map (kbd "C-x f") #'lsp-format-buffer)
 
+;;; modes enabled lsp
 (add-hook 'typescript-mode-hook #'lsp)
+(add-hook 'kotlin-mode-hook #'lsp)
 
-(require-package 'lsp-ui)
-(require 'lsp-ui)
+;;; lsp-ui
+(require-package 'lsp-ui t)
 
 (setq lsp-ui-sideline-enable t)
 (setq lsp-ui-doc-enable t)
@@ -35,6 +37,19 @@
 
 (define-key lsp-ui-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
 (define-key lsp-ui-mode-map (kbd "M-,") #'lsp-ui-peek-find-references)
+
+;;; corfu
+;; https://www.reddit.com/r/emacs/comments/ql8cyp/corfu_orderless_and_lsp/
+(setq lsp-completion-provider :none)
+(defun x-lsp--corfu-setup ()
+  (setq-local completion-styles '(orderless)
+              completion-category-defaults nil))
+(add-hook 'lsp-mode-hook #'x-lsp--corfu-setup)
+
+;;; yasnippet
+(require-package 'yasnippet)
+(autoload 'yas-expand-snippet "yasnippet" nil t)
+(add-hook 'lsp-mode-hook #'yas-minor-mode)
 
 (provide 'x-lsp)
 ;;; x-lsp.el ends here

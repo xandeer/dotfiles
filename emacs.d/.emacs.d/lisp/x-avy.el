@@ -73,7 +73,7 @@
         ;;  (?K . avy-action-kill-whole-line)
         ;;  (?t . avy-action-teleport)
         ;;  (?T . avy-action-teleport-whole-line)
-        ;;  (?m . avy-action-mark)
+         (?m . avy-action-mark)
         ;;  (?  . avy-action-mark-to-char)
         ;;  (?w . avy-action-copy)
         ;;  (?W . avy-action-copy-whole-line)
