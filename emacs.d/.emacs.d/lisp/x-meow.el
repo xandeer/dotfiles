@@ -188,7 +188,7 @@
    '("m" . meow-join)
    '("n" . meow-search)
    '("N" . meow-pop-search)
-   '("o" . meow-open-above)
+   '("o" . meow-open-below)
    '("O" . meow-open-above)
    '("p" . meow-yank)
    '("P" . meow-yank-pop)
