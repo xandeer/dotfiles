@@ -180,6 +180,7 @@ Roam\n"
   ("a" org-roam-alias-add "roam add alias")
   (";" org-roam-tag-add "roam add tag")
   ("H-;" org-roam-tag-remove "roam remove tag")
+  ("." org-roam-dailies-goto-today "dailies goto today" :exit nil)
   ("k" org-roam-dailies-goto-previous-note "dailies previous" :exit nil)
   ("j" org-roam-dailies-goto-next-note "dailies next" :exit nil)
   ("l" x--remove-links "remove links")
