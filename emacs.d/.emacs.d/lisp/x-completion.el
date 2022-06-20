@@ -99,7 +99,7 @@
 (defun x/tab ()
   (interactive)
   (or (copilot-accept-completion)
-      (corfu-next)
+      (not (= (corfu-next) -1))
       (indent-for-tab-command)))
 
 (global-set-key (kbd "TAB") #'x/tab)
