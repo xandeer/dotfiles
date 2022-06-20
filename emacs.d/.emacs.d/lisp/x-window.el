@@ -33,10 +33,10 @@
 (setq aw-ignored-buffers
       '("*Calc Trail*"
         " *LV*"
-        "*Org Agenda(a)*"
-        "*Org Agenda(w)*"
-        "*Org Agenda(e)*"
-        "*Org Agenda(t)*"
+        ;; "*Org Agenda(a)*"
+        ;; "*Org Agenda(w)*"
+        ;; "*Org Agenda(e)*"
+        ;; "*Org Agenda(t)*"
         ;; "*Org Agenda(a)*"
         ))
 
@@ -58,10 +58,20 @@
 ;;                (reusable-frames . visible)
 ;;                (side . left)
 ;;                (window-width . 0.33)))
-(add-to-list 'display-buffer-alist
-             `("\\`\\*Org Agenda(.)\\*"
-               (display-buffer-reuse-window display-buffer-pop-up-frame)
-               (reusable-frames . t)))
+;; (add-to-list 'display-buffer-alist
+;;              `("\\`\\*Org Agenda(.)\\*"
+;;                (display-buffer-reuse-window display-buffer-pop-up-frame)
+;;                (reusable-frames . t)))
+
+;;; golden ratio
+(require-package 'golden-ratio)
+
+(setq golden-ratio-auto-scale t)
+(golden-ratio-mode 1)
+
+(add-hook 'buffer-list-update-hook #'golden-ratio)
+(add-hook 'focus-in-hook           #'golden-ratio)
+(add-hook 'focus-out-hook          #'golden-ratio)
 
 (provide 'x-window)
 ;;; x-window.el ends here

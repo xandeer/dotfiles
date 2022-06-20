@@ -52,7 +52,7 @@
                             :gap-ok-around ("4:00"))))
 (setq org-agenda-include-diary t)
 (setq diary-file (x/expand-note "gtd/standard-diary"))
-(setq org-agenda-window-setup 'other-window)
+(setq org-agenda-window-setup 'current-window)
 (setq org-agenda-sorting-strategy
       '((agenda time-up category-keep)
         (todo category-keep)
@@ -230,7 +230,7 @@ ARG is passed through to `x/org-schedule'."
 
 (with-eval-after-load 'org-agenda
   (define-key org-agenda-mode-map (kbd "M-l") #'x/agenda-toggle-clock-log)
-  (define-key org-agenda-mode-map (kbd "q") #'delete-frame)
+  (define-key org-agenda-mode-map (kbd "q") #'x/switch-to-last-buffer)
   (define-key org-agenda-mode-map (kbd "s") #'x/org-agenda-schedule)
   (define-key org-agenda-mode-map (kbd "k") #'org-agenda-previous-item)
   (define-key org-agenda-mode-map (kbd "p") #'org-agenda-previous-item)
