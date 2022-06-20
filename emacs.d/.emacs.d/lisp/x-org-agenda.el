@@ -246,8 +246,8 @@ ARG is passed through to `x/org-schedule'."
    :host github
    :repo "casouri/valign"))
 ;; In documents with more than 10 tables, it will be very stuck.
-(add-hook 'org-agenda-mode-hook #'valign-mode)
-(remove-hook 'org-agenda-mode-hook #'valign-mode)
+;; (add-hook 'org-agenda-mode-hook #'valign-mode)
+;; (remove-hook 'org-agenda-mode-hook #'valign-mode)
 
 (provide 'x-org-agenda)
 ;;; x-org-agenda.el ends here
