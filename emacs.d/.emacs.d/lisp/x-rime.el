@@ -26,6 +26,9 @@
   (setq rime-inline-ascii-trigger 'shift-l)
   (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-g" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
 
+  (defun x/rime--telega-msg-p ()
+    (and (fboundp 'telega-msg-at) (telega-msg-at)))
+
   (setq rime-disable-predicates
         '(rime-predicate-after-alphabet-char-p
           rime-predicate-current-uppercase-letter-p
@@ -36,7 +39,8 @@
           rime-predicate-hydra-p
           rime-predicate-ace-window-p
           rime-predicate-prog-in-code-p
-          rime-predicate-space-after-cc-p))
+          rime-predicate-space-after-cc-p
+          x/rime--telega-msg-p))
 
   (define-key rime-mode-map (kbd "M-I") 'rime-force-enable)
   (define-key rime-active-mode-map (kbd "M-i") 'rime-inline-ascii))
