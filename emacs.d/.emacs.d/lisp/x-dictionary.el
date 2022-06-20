@@ -44,15 +44,15 @@
 ;;; translate
 (require-package 'go-translate)
 
+(autoload #'facemenu-add-face "facemenu" nil t)
+(autoload #'gts-translator "go-translate" nil t)
+
 (setq gts-translate-list '(("zh" "en")))
 (setq gts-default-translator
       (gts-translator
        :picker (gts-prompt-picker)
        :engines (list (gts-google-engine) (gts-google-rpc-engine))
        :render (gts-buffer-render)))
-
-(autoload #'facemenu-add-face "facemenu" nil t)
-(autoload #'gts-do-translate "go-translate" nil t)
 
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here
