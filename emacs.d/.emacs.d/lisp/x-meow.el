@@ -246,8 +246,8 @@
 (add-hook 'eshell-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'comint-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'org-mode-hook (x/meow-insert-with-timer 0.1))
-(add-hook 'prog-mode-hook (x/meow-insert-with-timer 0.1))
-(add-hook 'text-mode-hook (x/meow-insert-with-timer 0.3))
+(add-hook 'prog-mode-hook (x/meow-insert-with-timer 0.5))
+(add-hook 'text-mode-hook (x/meow-insert-with-timer 0.5))
 (add-hook 'telega-chat-mode-hook (x/meow-insert-with-timer 0.1))
 
 (provide 'x-meow)
