@@ -25,7 +25,7 @@
     # tmuxPlugins.continuum
     # tmuxPlugins.resurrect
     # tmuxPlugins.yank
-    vim
+    # vim
     wget
 
     # ag
@@ -50,11 +50,11 @@
     pass
     hledger
 
-    font-awesome
-    material-icons
+    # font-awesome
+    # material-icons
 
-    graphviz
-    plantuml
+    # graphviz
+    # plantuml
 
     # xandeer.dots
     # xandeer.v2ray
@@ -63,16 +63,17 @@
     nodejs
     yarn
 
-    jre
+    # android-tools
     gradle
+    jre
     kotlin-language-server
 
     # https://cloud.r-project.org/bin/macosx/
     # R
 
     buku
-    bukubrow
-    hub
+    # bukubrow
+    # hub
 
     # python3
   #   (python3.withPackages(ps: with ps; [
