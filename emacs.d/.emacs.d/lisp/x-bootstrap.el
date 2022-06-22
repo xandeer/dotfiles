@@ -36,6 +36,11 @@ When REQUIRE is `t`, require the PACKAGE."
   (when require
     (require package)))
 
+(defun x-straight--fix-build ()
+  (interactive)
+  (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
+(advice-add 'straight--build-package :after #'x-straight--fix-build)
+
 (require-package 'no-littering t)
 (require-package 'hydra)
 

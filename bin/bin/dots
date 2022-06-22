@@ -17,6 +17,6 @@ case "$1" in
     syncRime;;
   *)
     echo "== ! dots: missing or invalid argument ! =="
-    echo "Try again with: install)|rime(r)"
+    echo "Try again with: install(i)|rime(r)"
     exit 2
 esac

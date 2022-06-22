@@ -166,10 +166,6 @@ Default use `point-min` or `point-max`."
   (interactive)
   (load-file (buffer-file-name)))
 
-(defun x/fix-straight-build ()
-  (interactive)
-  (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
-
 (defun x/toggle-narrow (arg)
   (interactive "p")
   (if (buffer-narrowed-p)
@@ -228,6 +224,12 @@ Default use `point-min` or `point-max`."
   (x/async-command
    (format "null.exs %s"
            (buffer-file-name))))
+
+;;; dots
+(defun x/dots ()
+  "Run make with dotfiles/Makefile."
+  (interactive)
+  (makefile-executor-execute-target (expand-file-name "~/projects/personal/dotfiles/Makefile")))
 
 (provide 'x-utils)
 ;;; x-utils.el ends here
