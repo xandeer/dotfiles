@@ -18,7 +18,7 @@
 
 (with-eval-after-load 'rime
   (setq rime-user-data-dir "~/.cache/rime")
-  (setq rime-librime-root "~/.local/share/librime/dist")
+  (setq rime-librime-root "~/projects/personal/librime")
   (setq rime-emacs-module-header-root "/opt/homebrew/opt/emacs-plus@29/include/")
   (setq rime-show-candidate 'posframe)
   (setq rime-show-preedit t)
