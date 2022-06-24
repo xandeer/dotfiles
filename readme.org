@@ -29,6 +29,7 @@ stow -t ~ wakatime
 
 For me, insert wakatime in Makefile, then =make install=.
 **** Finally, encrypt
+Look at [[https://github.com/xandeer/dotfiles/blob/master/bin/bin/dots#L15][bin/dots]].
 #+begin_src sh
 make endot
 #+end_src
