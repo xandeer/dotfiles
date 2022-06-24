@@ -33,3 +33,5 @@ Look at [[https://github.com/xandeer/dotfiles/blob/master/bin/bin/dots#L15][bin/
 #+begin_src sh
 make endot
 #+end_src
+** Resources
+- https://dotfiles.github.io/
