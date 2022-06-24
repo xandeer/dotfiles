@@ -12,16 +12,15 @@ install() {
   make -C $DOTS_ROOT install
 }
 
-endot()
-{
+endot() {
   cd $DOTS_ROOT
+  rm encrypted.tar.gz.gpg
   tar czf encrypted.tar.gz etc/.local/share/misc
   gpg -er kkxandeer@gmail.com encrypted.tar.gz
   rm encrypted.tar.gz
 }
 
-dedot()
-{
+dedot() {
   cd $DOTS_ROOT
   gpg -do encrypted.tar.gz encrypted.tar.gz.gpg
   tar xvf encrypted.tar.gz

@@ -1,3 +1,34 @@
 * Xandeer's dotfiles
 ** Encrypted dotfiles with GnuPG
 Step by step with https://www.abdullah.today/encrypted-dotfiles/
+*** Add for example .wakatime.cfg
+**** Create directory in root.
+#+begin_src sh
+mkdir wakatime
+#+end_src
+**** Move =~/.wakatime.cfg= to =misc=
+#+begin_src sh
+mv ~/.wakatime.cfg etc/.local/share/misc/.wakatime.cfg
+#+end_src
+
+#+RESULTS:
+
+**** Alias in dots
+#+begin_src sh
+cd wakatime
+ln -sf ../etc/.local/share/misc/.wakatime.cfg .wakatime.cfg
+#+end_src
+
+#+RESULTS:
+**** Stow it
+#+begin_src sh
+stow -t ~ wakatime
+#+end_src
+
+#+RESULTS:
+
+For me, insert wakatime in Makefile, then =make install=.
+**** Finally, encrypt
+#+begin_src sh
+make endot
+#+end_src
