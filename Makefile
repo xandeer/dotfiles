@@ -6,7 +6,7 @@ IS_TERMUX := $(shell command -v $(TERMUX_CHECK))
 
 UNAME := $(shell uname -s)
 # CONFIGS := doom fonts git mr tmux zsh ideavim bin
-CONFIGS := git mr tmux zsh bin emacs.d lein stardict gpg
+CONFIGS := git mr tmux zsh bin emacs.d lein stardict gpg exercism copilot
 
 ifneq ($(IS_TERMUX),)
 UNAME := TERMUX
@@ -50,6 +50,14 @@ update: pull install ## Git pull and install all.
 .PHONY: pull
 pull: ## Git pull.
 	git pull
+
+.PHONY: endot
+endot: ## Encrypt dotfiles.
+	~/bin/dots endot
+
+.PHONY: dedot
+dedot: ## Decrypt dotfiles.
+	~/bin/dots dedot
 
 .PHONY: help
 help: ## Show help.

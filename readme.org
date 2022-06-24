@@ -1,0 +1,3 @@
+* Xandeer's dotfiles
+** Encrypted dotfiles with GnuPG
+Step by step with https://www.abdullah.today/encrypted-dotfiles/

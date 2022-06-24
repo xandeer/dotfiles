@@ -2,12 +2,30 @@
 
 DOTS_ROOT=$HOME/projects/personal/dotfiles
 
-function syncRime() {
+PATH=/opt/homebrew/bin/:$PATH
+
+syncRime() {
   make -C $DOTS_ROOT/rime
 }
 
-function install() {
+install() {
   make -C $DOTS_ROOT install
+}
+
+endot()
+{
+  cd $DOTS_ROOT
+  tar czf encrypted.tar.gz etc/.local/share/misc
+  gpg -er kkxandeer@gmail.com encrypted.tar.gz
+  rm encrypted.tar.gz
+}
+
+dedot()
+{
+  cd $DOTS_ROOT
+  gpg -do encrypted.tar.gz encrypted.tar.gz.gpg
+  tar xvf encrypted.tar.gz
+  rm encrypted.tar.gz
 }
 
 case "$1" in
@@ -15,8 +33,12 @@ case "$1" in
     install;;
   rime|r)
     syncRime;;
+  endot|e)
+    endot;;
+  dedot|d)
+    dedot;;
   *)
     echo "== ! dots: missing or invalid argument ! =="
-    echo "Try again with: install(i)|rime(r)"
+    echo "Try again with: install(i)|rime(r)|endot(e)|dedot(d)"
     exit 2
 esac
