@@ -35,3 +35,4 @@ make endot
 #+end_src
 ** Resources
 - https://dotfiles.github.io/
+- https://www.abdullah.today/encrypted-dotfiles/
