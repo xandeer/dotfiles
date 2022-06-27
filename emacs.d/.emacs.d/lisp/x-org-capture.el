@@ -92,7 +92,7 @@
                '("f" "Financial" plain
                  (file "hledger-financial.org")
                  (file "capture-templates/financial.tmpl")
-                 :jump-to-captured t
+                 ;; :jump-to-captured t
                  :empty-lines 1)))
 
 (provide 'x-org-capture)

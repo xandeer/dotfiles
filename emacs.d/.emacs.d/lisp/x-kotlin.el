@@ -49,6 +49,7 @@
   (add-hook 'kotlin-mode-hook #'x/kotlin-setup))
 
 (defun x/kotlin-new-lib-project ()
+  "Create a new kotlin project in ~/temp."
   (interactive)
   (let* ((root-name (read-from-minibuffer "Project root name: "))
          (root (expand-file-name root-name "~/temp")))
@@ -57,6 +58,11 @@
                     "cd " root
                     ";gradle init --type kotlin-library --dsl kotlin"))
     (dired root)))
+
+(defun x/kotlin-open-in-studio ()
+  "Open the current file in Android Studio."
+  (interactive)
+  (shell-command (concat "studio " buffer-file-name)))
 
 (provide 'x-kotlin)
 ;;; x-kotlin.el ends here
