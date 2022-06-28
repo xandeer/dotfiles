@@ -22,7 +22,8 @@
     (define-key map (kbd "n") 'dired-unmark)
     (define-key map (kbd "N") 'dired-unmark-all-marks)
     (define-key map (kbd "@") #'x/change-hs-on-dired)
-    (define-key map (kbd "^") #'x/cow-current)))
+    (define-key map (kbd "^") #'x/cow-current)
+    (define-key map (kbd ">") #'x/telega-send-to-chat)))
 
 (require-package 'dired-hacks)
 (require 'dired-x)

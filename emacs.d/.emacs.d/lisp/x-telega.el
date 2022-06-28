@@ -27,13 +27,50 @@
                      required-version ts-version))))
 
 (defun x/telega-chatbuf-attach-file (filename &optional preview-p)
-    "Attach FILE as document to the current input."
-    (interactive (list (read-file-name "Attach file: " (expand-file-name "~/syncthing/") nil nil nil (lambda (n) (not (string-equal n ".DS_Store"))))))
-    (let ((ifile (telega-chatbuf--gen-input-file filename 'Document preview-p)))
-      (telega-chatbuf-input-insert
-       (list :@type "inputMessageDocument"
-             :document ifile))))
+  "Attach FILE as document to the current input."
+  (interactive (list (read-file-name "Attach file: " (expand-file-name "~/syncthing/") nil nil nil (lambda (n) (not (string-equal n ".DS_Store"))))))
+  (if (telega-server-live-p)
+      (let ((file-mime (or (mailcap-extension-to-mime
+                            (or (file-name-extension filename) ""))
+                           "telega/unknown")))
+        (cond ((string= "image/gif" file-mime)
+               (telega-chatbuf-attach-animation filename))
+              ((string-prefix-p "image/" file-mime)
+               (telega-chatbuf-attach-photo filename))
+              ((string-prefix-p "audio/" file-mime)
+               (telega-chatbuf-attach-audio filename))
+              ((string-prefix-p "video/" file-mime)
+               (telega-chatbuf-attach-video filename))
+              ((string-match-p "^https?://" filename)
+               (telega-chatbuf-input-insert filename))
+              (t
+               (telega-chatbuf-attach-file filename t))))))
 
+(defun x/telega-send-to-chat (&optional filename)
+  "Attach FILE as document to the chat input."
+  (interactive)
+  (setq filename (or filename
+                     (and (equal major-mode 'dired-mode) (dired-get-filename))
+                     (buffer-file-name)))
+  (call-interactively 'x/telega-chat-with)
+  (if (telega-server-live-p)
+      (let ((file-mime (or (mailcap-extension-to-mime
+                            (or (file-name-extension filename) ""))
+                           "telega/unknown")))
+        (cond ((string= "image/gif" file-mime)
+               (telega-chatbuf-attach-animation filename))
+              ((string-prefix-p "image/" file-mime)
+               (telega-chatbuf-attach-photo filename))
+              ((string-prefix-p "audio/" file-mime)
+               (telega-chatbuf-attach-audio filename))
+              ((string-prefix-p "video/" file-mime)
+               (telega-chatbuf-attach-video filename))
+              ((string-match-p "^https?://" filename)
+               (telega-chatbuf-input-insert filename))
+              (t
+               (telega-chatbuf-attach-file filename t))))))
+
+(autoload #'x/telega-send-to-chat "telega" nil t)
 (autoload #'x/telega-chat-with "telega" nil t)
 (autoload #'x/open-telega-root "telega" nil t)
 (with-eval-after-load 'telega

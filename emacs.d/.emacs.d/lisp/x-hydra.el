@@ -64,7 +64,8 @@ Buffer\n"
   ("H-f" projectile-find-file "project find file")
   ("l" consult-recent-file "recent files")
   ("s" x/telega-chat-with "telega chat with")
-  ("H-s" x/open-telega-root "telega root"))
+  ("H-s" x/open-telega-root "telega root")
+  (">" x/telega-send-to-chat "send file to telega"))
 
 (global-set-key (kbd "H-x") 'x-hydra-x/body)
 (global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
