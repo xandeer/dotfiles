@@ -107,6 +107,7 @@
 (require 'x-xwidget)
 
 ;;; chores
+(require 'x-image)
 (require 'x-mouse)
 (require 'x-wakatime)
 
