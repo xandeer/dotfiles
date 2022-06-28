@@ -76,7 +76,7 @@
   (global-set-key (kbd "M-g M-g") 'consult-goto-line)           ;; orig. goto-line
   (global-set-key (kbd "M-g h") 'consult-outline)               ;; Alternative: consult-org-heading
   (global-set-key (kbd "M-g m") 'consult-mark)
-  (global-set-key (kbd "M-g k") 'consult-global-mark)
+  (global-set-key (kbd "M-g M-m") 'consult-global-mark)
   (global-set-key (kbd "M-g i") 'consult-imenu)
   (global-set-key (kbd "M-g I") 'consult-imenu-multi)
   ;; M-s bindings (search-map)

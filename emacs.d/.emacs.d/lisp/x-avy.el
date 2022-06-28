@@ -89,6 +89,8 @@
 (global-set-key (kbd "M-g v") 'scroll-other-window)
 (global-set-key (kbd "M-g M-v") 'scroll-other-window-down)
 (global-set-key (kbd "M-g l") 'avy-goto-line)
+(global-set-key (kbd "M-g j") 'avy-goto-line-below)
+(global-set-key (kbd "M-g k") 'avy-goto-line-above)
 (define-key isearch-mode-map (kbd "M-j") 'avy-isearch)
 
 (provide 'x-avy)
