@@ -152,6 +152,11 @@ Default use `point-min` or `point-max`."
         (error "Cannot open tramp file")
       (browse-url (concat "file://" file-name)))))
 
+(defun x/copy-file-path ()
+  "Copy the current buffer's file path to the kill ring."
+  (interactive)
+  (kill-new (buffer-file-name)))
+
 (defun x--launch-separate-emacs-under-x ()
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
