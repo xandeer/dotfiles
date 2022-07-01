@@ -19,6 +19,6 @@ install:
 	for dir in $(DIRS); do \
 		mkdir -p $$dir; \
 		cp -n $(CURDIR)/$(LOCAL) $$dir/$(LOCAL).yaml; \
-		cp -a $(CURDIR)/*.yaml $$dir; \
+		cp -RL $(CURDIR)/*.yaml $$dir; \
 		cp -a $(CURDIR)/$(OS)/*.yaml $$dir; \
 	done
