@@ -41,6 +41,7 @@
 
 (require 'x-basic)
 (require 'x-editor)
+(require 'x-devdocs)
 
 ;;; ui
 (require 'x-window)
@@ -76,7 +77,6 @@
 (require 'x-calendar)
 ;; (require 'x-company)
 (require 'x-completion)
-(require 'x-devdocs)
 (require 'x-consult)
 (require 'x-dictionary)
 (require 'x-dired)

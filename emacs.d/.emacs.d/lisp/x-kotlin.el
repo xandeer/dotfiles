@@ -69,7 +69,8 @@ Kotlin\n"
   (defun x/kotlin--setup ()
     (setq-local projectile-project-root-functions (cons 'x/kotlin-locate-gradlew-file projectile-project-root-functions)))
 
-  (add-hook 'kotlin-mode-hook #'x/kotlin--setup))
+  (add-hook 'kotlin-mode-hook #'x/kotlin--setup)
+  (add-hook 'markdown-mode-hook #'x/kotlin--setup))
 
 (provide 'x-kotlin)
 ;;; x-kotlin.el ends here
