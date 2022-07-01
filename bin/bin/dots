@@ -15,7 +15,7 @@ install() {
 endot() {
   cd $DOTS_ROOT
   rm encrypted.tar.gz.gpg
-  tar czf encrypted.tar.gz etc/.local/share/misc
+  tar czf encrypted.tar.gz etc
   gpg -er kkxandeer@gmail.com encrypted.tar.gz
   rm encrypted.tar.gz
 }

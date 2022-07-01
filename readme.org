@@ -6,9 +6,9 @@ Step by step with https://www.abdullah.today/encrypted-dotfiles/
 #+begin_src sh
 mkdir wakatime
 #+end_src
-**** Move =~/.wakatime.cfg= to =misc=
+**** Move =~/.wakatime.cfg= to =etc=
 #+begin_src sh
-mv ~/.wakatime.cfg etc/.local/share/misc/.wakatime.cfg
+mv ~/.wakatime.cfg etc
 #+end_src
 
 #+RESULTS:
@@ -16,7 +16,7 @@ mv ~/.wakatime.cfg etc/.local/share/misc/.wakatime.cfg
 **** Alias in dots
 #+begin_src sh
 cd wakatime
-ln -sf ../etc/.local/share/misc/.wakatime.cfg .wakatime.cfg
+ln -sf ../etc/.wakatime.cfg .wakatime.cfg
 #+end_src
 
 #+RESULTS:
