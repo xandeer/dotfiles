@@ -6,8 +6,6 @@
     ./xserver.nix
     ./users.nix
 
-    ../services/clash.nix
-    ../services/v2ray.nix
     ../services/xkeysnail.nix
   ];
 
@@ -18,16 +16,6 @@
   networking.proxy.default = "http://127.0.0.1:8010";
   networking.firewall.allowedTCPPorts = [ 80 443 3000 ];
   services.openssh.enable = true;
-
-  services.clash = {
-    enable = true;
-    configDir = "/etc/clash";
-  };
-
-  services.v2ray = {
-    enable = false;
-    configFile = "/etc/v2ray/client.json";
-  };
 
   services.xkeysnail.enable = false;
 
@@ -114,10 +102,8 @@
     symbola
     twitter-color-emoji
 
-    xandeer.clash
     xandeer.greenclip
     xandeer.i3exit
-    xandeer.tdlib
     xandeer.xkeysnail
   ];
 

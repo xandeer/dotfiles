@@ -2,13 +2,9 @@
 
 {
   xandeer = pkgs.recurseIntoAttrs {
-    dots = pkgs.callPackage ./scripts/dots {};
     i3exit = pkgs.callPackage ./scripts/i3exit {};
 
-    clash = pkgs.callPackage ./clash {};
     greenclip = pkgs.callPackage ./greenclip {};
-    tdlib = pkgs.callPackage ./tdlib {};
-    v2ray = pkgs.callPackage ./v2ray {};
     xkeysnail = pkgs.callPackage ./xkeysnail {
         inherit (pkgs.python36Packages)
             buildPythonPackage

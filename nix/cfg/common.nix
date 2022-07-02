@@ -28,6 +28,8 @@
     # vim
     wget
 
+    # iterm2
+
     # ag
     bat
     # broot
@@ -56,9 +58,6 @@
     # graphviz
     # plantuml
 
-    # xandeer.dots
-    # xandeer.v2ray
-
     deno
     nodejs
     yarn
@@ -72,14 +71,5 @@
     # R
 
     buku
-    # bukubrow
-    # hub
-
-    # python3
-  #   (python3.withPackages(ps: with ps; [
-  #     pip
-  #     setuptools
-  #   ]))
-    # shadowfox
   ];
 }
