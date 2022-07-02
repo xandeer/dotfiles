@@ -27,17 +27,29 @@ dedot() {
   rm encrypted.tar.gz
 }
 
+startSyncthing() {
+  docker-compose -f $DOTS_ROOT/syncthing/docker-compose.yml up -d
+}
+
+killSyncthing() {
+  docker-compose -f $DOTS_ROOT/syncthing/docker-compose.yml stop
+}
+
 case "$1" in
+  dedot|d)
+    dedot;;
+  endot|e)
+    endot;;
   install|i)
     install;;
   rime|r)
     syncRime;;
-  endot|e)
-    endot;;
-  dedot|d)
-    dedot;;
+  startSyncthing|ss)
+    startSyncthing;;
+  killSyncthing|ks)
+    killSyncthing;;
   *)
     echo "== ! dots: missing or invalid argument ! =="
-    echo "Try again with: install(i)|rime(r)|endot(e)|dedot(d)"
+    echo "Try again with: dedot(d)|endot(e)|install(i)|rime(r)|startSyncthing(ss)|killSyncthing(ks)"
     exit 2
 esac

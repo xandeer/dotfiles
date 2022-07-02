@@ -51,13 +51,25 @@ update: pull install ## Git pull and install all.
 pull: ## Git pull.
 	git pull
 
+.PHONY: dedot
+dedot: ## Decrypt dotfiles.
+	~/bin/dots dedot
+
 .PHONY: endot
 endot: ## Encrypt dotfiles.
 	~/bin/dots endot
 
-.PHONY: dedot
-dedot: ## Decrypt dotfiles.
-	~/bin/dots dedot
+.PHONY: rime
+rime: ## Sync rime.
+	~/bin/dots rime
+
+.PHONY: startSyncthing
+startSyncthing: ## Start syncthing docker.
+	~/bin/dots startSyncthing
+
+.PHONY: killSyncthing
+killSyncthing: ## Stop syncthing docker.
+	~/bin/dots killSyncthing
 
 .PHONY: help
 help: ## Show help.
