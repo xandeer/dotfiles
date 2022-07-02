@@ -16,38 +16,35 @@
 (add-hook 'after-make-frame-functions 'ns-auto-titlebar-set-frame)
 (advice-add 'frame-set-background-mode :after 'ns-auto-titlebar-set-frame)
 
-(defun x--set-font (frame)
+(defun x/fonts--setup (frame)
   "Xandeer set font for `FRAME'."
   (when (display-graphic-p)
     (set-face-attribute
      'default nil
      :font (font-spec
-            :name   "Consola Mono"
+            :name "Latin Modern Mono"
             :weight 'normal
-            :size   14))
+            :size 16))
 
     (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         (font-spec
-                         :name   "PingFang SC"
+                         :name "Sarasa Mono SC Nerd"
                          :weight 'normal
-                         :size   14)
+                         :size 16)
                         frame
                         'prepend))
 
     ;; For NS/Cocoa
     (set-fontset-font
-     t
-     'symbol
-     (font-spec :family "Apple Color Emoji")
-     frame
+     t 'symbol (font-spec :family "Apple Color Emoji") frame
      'append)))
 
 (defun x/set-font (&rest _)
   "Xandeer set font."
   (interactive)
-  (x--set-font nil))
+  (x/fonts--setup nil))
 
 (require-package 'doom-themes)
 (x/append-init-hook (lambda ()
