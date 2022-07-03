@@ -62,6 +62,8 @@
     nodejs
     yarn
 
+    elixir
+
     # android-tools
     gradle
     jre
