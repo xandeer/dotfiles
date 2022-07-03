@@ -82,7 +82,8 @@ org-mode
        :post (progn (tempel-done) (org-edit-src-code)))
 (day (format-time-string "%d(%a)" (current-time)))
 (weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) p
-        n "**** Review" n "1. ")
+        n "**** Review" n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:"
+        n "**** Next" n "1. donut:")
 (monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
 (author "- author :: " p n)
 (from "- from :: " p n)
