@@ -71,5 +71,10 @@ Magit\n"
   (setq git-messenger:show-detail t)
   (define-key vc-prefix-map (kbd "p") #'git-messenger:popup-message))
 
+;;;
+(require-package 'forge)
+(with-eval-after-load 'magit
+  (require 'forge))
+
 (provide 'x-git)
 ;;; x-git.el ends here
