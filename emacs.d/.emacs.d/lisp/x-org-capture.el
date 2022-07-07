@@ -9,7 +9,7 @@
 
 (defun x/org-capture-expense-item ()
   (interactive)
-  (completing-read "Expense: " x/expenses-history nil nil nil 'x/expenses-history "groceries"))
+  (completing-read "Expense: " x/expenses-history nil nil nil 'x/expenses-history "food"))
 
 (with-eval-after-load 'org-capture
   (unless (boundp 'org-capture-templates)

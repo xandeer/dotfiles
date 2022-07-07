@@ -67,6 +67,7 @@
     # android-tools
     gradle
     jre
+    openjdk17
     kotlin-language-server
 
     # https://cloud.r-project.org/bin/macosx/
