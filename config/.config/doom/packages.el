@@ -60,3 +60,5 @@
            :repo "minad/consult")
   ;; tag 0.17
   :pin "f517b70dd8a3be0b8c883633f2a7721448b40f0f")
+
+(package! ws-butler :disable t)
