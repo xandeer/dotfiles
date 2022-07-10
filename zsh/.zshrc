@@ -23,6 +23,7 @@ zplug "peco/peco", as:command, from:gh-r, use:"*${(L)$(uname -s)}*amd64*"
 # Supports oh-my-zsh plugins and the like
 zplug "lib/completion",                   from:oh-my-zsh
 zplug "lib/directories",                  from:oh-my-zsh
+zplug "lib/functions",                    from:oh-my-zsh
 zplug "lib/git",                          from:oh-my-zsh
 zplug "lib/history",                      from:oh-my-zsh
 zplug "lib/theme-and-appearance",         from:oh-my-zsh
@@ -40,6 +41,7 @@ zplug "plugins/cargo",                    from:oh-my-zsh, if:"(( $+commands[carg
 zplug "plugins/colored-man-pages",        from:oh-my-zsh
 zplug "plugins/colorize",                 from:oh-my-zsh
 zplug "plugins/command-not-found",        from:oh-my-zsh, if:"(( $+commands[cnf-lookup] ))"
+zplug "plugins/emacs",                    from:oh-my-zsh, if:"(( $+commands[emacsclient] ))"
 zplug "plugins/git",                      from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/git-extras",               from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
