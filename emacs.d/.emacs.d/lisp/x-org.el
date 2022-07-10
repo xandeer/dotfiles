@@ -305,6 +305,9 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
    :repo "minad/org-modern"))
 (require-package 'org-modern)
 (global-org-modern-mode)
+(with-eval-after-load 'org-modern
+  (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
+  (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono"))
 
 (provide 'x-org)
 ;;; x-org.el ends here
