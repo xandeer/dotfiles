@@ -48,16 +48,9 @@
 
     (setq consult--regexp-compiler #'consult--orderless-regexp-compiler))
 
-  (defun xr/search-in-lisp ()
-    "Start searching in `user-emacs-directory`."
-    (interactive)
-    (consult-ripgrep
-      (expand-file-name "lisp" user-emacs-directory)))
-
   (global-set-key (kbd "C-c h") 'consult-history)
   (global-set-key (kbd "C-c m") 'consult-mode-command)
   (global-set-key (kbd "C-c k") 'consult-kmacro)
-  (global-set-key (kbd "C-c f e") 'xr/search-in-lisp)
   ;; C-x bindings (ctl-x-map)
   (global-set-key (kbd "C-x M-:") 'consult-complex-command)     ;; orig. repeat-complex-command
   (global-set-key (kbd "C-x b") 'consult-buffer)                ;; orig. switch-to-buffer

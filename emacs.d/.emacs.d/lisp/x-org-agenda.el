@@ -241,10 +241,10 @@ ARG is passed through to `x/org-schedule'."
   (define-key org-agenda-mode-map (kbd "o") #'org-agenda-clock-goto))
 
 ;;; valign
-(require-package
- '(valign
-   :host github
-   :repo "casouri/valign"))
+;; (require-package
+;;  '(valign
+;;    :host github
+;;    :repo "casouri/valign"))
 ;; In documents with more than 10 tables, it will be very stuck.
 ;; (add-hook 'org-agenda-mode-hook #'valign-mode)
 ;; (remove-hook 'org-agenda-mode-hook #'valign-mode)

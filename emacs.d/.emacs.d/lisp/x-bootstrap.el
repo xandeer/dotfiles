@@ -17,18 +17,18 @@
 
 (defvar bootstrap-version)
 
-(unless (boundp 'vanilla-path)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage)))
+(unless doom-version
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
 
 (defun require-package (package &optional require)
   "Just wrap PACKAGE with `straight-use-package`.
@@ -39,7 +39,8 @@ When REQUIRE is `t`, require the PACKAGE."
 
 (defun x/straight--fix-build (recipe &optional cause)
   (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
-(advice-add 'straight--build-package :after #'x/straight--fix-build)
+(unless doom-version
+  (advice-add 'straight--build-package :after #'x/straight--fix-build))
 
 (require-package 'no-littering t)
 (require-package 'hydra)

@@ -9,7 +9,7 @@
 (require-package 'tempel t)
 
 ;;; config
-(setq tempel-path (expand-file-name "etc/templates" user-emacs-directory))
+(setq tempel-path (expand-file-name "etc/templates" vanilla-path))
 
 (defun x-template--setup-capf ()
   "Add the Tempel Capf to `completion-at-point-functions".

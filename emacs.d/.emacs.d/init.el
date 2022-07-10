@@ -13,7 +13,9 @@
 ;; (setq debug-on-error t)
 (setq-default lexical-binding t)
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
+
+(add-to-list 'load-path (expand-file-name "lisp" vanilla-path))
 
 ;;; Adjust garbage collection thresholds during startup, and thereafter
 (let ((init-gc-cons-threshold (* 128 1024 1024)))
@@ -116,7 +118,7 @@
   (load custom-file))
 
 (defvar x/writing-config? nil)
-(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+(let ((local-file (expand-file-name "local.el" vanilla-path)))
   (when (file-exists-p local-file)
     (load-file local-file)))
 
@@ -133,7 +135,7 @@
 
 (let ((init-fn
        (if x/writing-config?
-           (lambda () (find-file (expand-file-name "init.el" user-emacs-directory)))
+           (lambda () (find-file (expand-file-name "init.el" vanilla-path)))
          #'x/load-init-session)))
   (run-with-idle-timer 1 nil init-fn))
 

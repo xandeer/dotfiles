@@ -49,5 +49,5 @@ update_path() {
 
 if [[ "$XANDEER_PROFILE" != loaded ]] ; then
   export XANDEER_PROFILE=loaded
-  update-path
+  update_path
 fi
