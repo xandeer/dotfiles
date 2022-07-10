@@ -24,7 +24,7 @@
 (defun x/start-timer-session ()
   (run-with-idle-timer
    5 nil (lambda ()
-           ;; (eva-query-mood)
+           (eva-query-mood)
            (x--push-notes)
            (setq x--auto-timer
                  (run-with-timer 3600 nil #'x/start-timer-session)))))

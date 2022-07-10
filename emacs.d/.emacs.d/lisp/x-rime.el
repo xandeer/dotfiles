@@ -32,7 +32,7 @@
   (setq rime-disable-predicates
         '(rime-predicate-after-alphabet-char-p
           rime-predicate-current-uppercase-letter-p
-          ;; meow-normal-mode-p
+          meow-normal-mode-p
           x/ace-mode-p
           ;; x-point-speed-activate-p
           x/org-heading-beginning-p

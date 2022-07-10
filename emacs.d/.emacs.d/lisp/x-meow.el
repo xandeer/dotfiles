@@ -232,19 +232,20 @@
   (x--meow-define-normal-keys))
 
 (require-package 'meow)
-;; (x/append-init-hook 'meow-global-mode)
-;; (with-eval-after-load 'meow-core
-;;   (require 'meow-cheatsheet)
-;;   (require 'meow-helpers)
-;;   (x--meow-setup))
+(x/append-init-hook #'meow-global-mode)
+(with-eval-after-load 'meow-core
+  (require 'meow-cheatsheet)
+  (require 'meow-helpers)
+  (x--meow-setup))
 
 ;;; special modes
 (defun x/meow-insert-with-timer (delay)
   (lambda ()
-    ;; (run-with-idle-timer delay nil #'meow-insert)
+    (run-with-idle-timer delay nil #'meow-insert)
     ))
 
 (add-hook 'eshell-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'vterm-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'comint-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'org-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'prog-mode-hook (x/meow-insert-with-timer 0.5))

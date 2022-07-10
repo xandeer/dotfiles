@@ -93,7 +93,7 @@
 (require 'x-lispy)
 (require 'x-lsp)
 (require 'x-git)
-;; (require 'x-meow)
+(require 'x-meow)
 (require 'x-pass)
 (require 'x-pinyin)
 (require 'x-projectile)
