@@ -1,6 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-function update-path() {
+update_path() {
   # update path for gnu coreutils, make & find on darwin
   export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
   export MANPATH=/usr/local/opt/coreutils/libexec/gnuman:$MANPATH
@@ -30,6 +30,7 @@ function update-path() {
 
   # add doom path
   export PATH=$PATH:$HOME/.emacs.d/bin
+  export PATH=$PATH:$HOME/projects/others/doom/bin
 
 
   # The next line updates PATH for the Google Cloud SDK.

@@ -24,7 +24,7 @@
       (consult-ripgrep (projectile-project-root)))
     (global-set-key (kbd "C-c p s") 'x/search-in-project))
 
-  (add-hook 'after-init-hook 'projectile-mode))
+  (x/append-init-hook 'projectile-mode))
 
 (provide 'x-projectile)
 ;;; x-projectile.el ends here

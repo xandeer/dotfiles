@@ -17,6 +17,7 @@
 
 (defvar bootstrap-version)
 
+(unless (boundp 'vanilla-path)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
@@ -27,7 +28,7 @@
          'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+  (load bootstrap-file nil 'nomessage)))
 
 (defun require-package (package &optional require)
   "Just wrap PACKAGE with `straight-use-package`.

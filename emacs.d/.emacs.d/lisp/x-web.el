@@ -32,8 +32,9 @@
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
   (add-to-list 'org-babel-tangle-lang-exts
                '("js" . "js"))
-  (add-to-list 'org-babel-default-header-args:js
-               '(:results . "output")))
+  ;; (add-to-list 'org-babel-default-header-args:js
+  ;;             '(:results . "output"))
+             )
 
 (require-package
  '(yarn :host github

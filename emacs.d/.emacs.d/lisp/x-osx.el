@@ -3,6 +3,7 @@
 ;;; Code:
 
 (setq mac-option-modifier 'meta)
+(setq mac-right-option-modifier 'meta)
 (setq mac-command-modifier 'hyper)
 (setq mac-right-command-modifier 'hyper)
 (setq mac-function-modifier 'super)

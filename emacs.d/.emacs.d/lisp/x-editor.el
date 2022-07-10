@@ -10,7 +10,7 @@
 (require-package 'hungry-delete)
 (add-hook 'activate-mark-hook (lambda () (hungry-delete-mode -1)))
 (add-hook 'deactivate-mark-hook 'hungry-delete-mode)
-(add-hook 'after-init-hook 'global-hungry-delete-mode)
+(x/append-init-hook #'global-hungry-delete-mode)
 
 (require-package 'easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
@@ -19,18 +19,17 @@
 (unless
     (fboundp 'auto-compression-mode)
   (autoload #'auto-compression-mode "jka-cmpr" nil t))
-(add-hook 'after-init-hook #'auto-compression-mode)
+(x/append-init-hook #'auto-compression-mode)
 
 (straight-register-package
  '(auto-save :host github
              :repo "manateelazycat/auto-save"))
-(require-package 'auto-save)
-(require 'auto-save)
+(require-package 'auto-save t)
 (setq auto-save-silent t)
 (setq auto-save-delete-trailing-whitespace t)
-(add-hook 'org-capture-mode-hook 'auto-save-disable)
-(add-hook 'org-capture-prepare-finalize-hook 'auto-save-enable)
-(add-hook 'after-init-hook 'auto-save-enable)
+(add-hook 'org-capture-mode-hook #'auto-save-disable)
+(add-hook 'org-capture-prepare-finalize-hook #'auto-save-enable)
+(x/append-init-hook #'auto-save-enable)
 
 ;; (require-package 'eldoc-box)
 ;; (add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
@@ -51,14 +50,14 @@
            (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
 
 (require-package 'page-break-lines)
-(add-hook 'after-init-hook #'global-page-break-lines-mode)
+(x/append-init-hook #'global-page-break-lines-mode)
 (setq page-break-lines-max-width 80)
 (with-eval-after-load 'page-break-lines
   (when
       (fboundp 'diminish)
     (diminish 'page-break-lines-mode)))
 
-(add-hook 'after-init-hook #'global-hl-line-mode)
+(x/append-init-hook #'global-hl-line-mode)
 
 
 (require-package 'color-identifiers-mode)
@@ -76,7 +75,7 @@
 (setq highlight-indent-guides-delay 0.5)
 
 (require-package 'rainbow-mode)
-(add-hook 'after-init-hook #'rainbow-mode)
+(x/append-init-hook #'rainbow-mode)
 (add-hook 'text-mode-hook #'rainbow-mode)
 (add-hook 'org-mode-hook #'rainbow-mode)
 (add-hook 'css-mode-hook #'rainbow-mode)
@@ -87,7 +86,7 @@
     (diminish 'rainbow-mode)))
 
 (require-package 'rainbow-identifiers)
-;; (add-hook 'after-init-hook #'rainbow-identifiers-mode)
+;; (x/append-init-hook #'rainbow-identifiers-mode)
 ;; (add-hook 'text-mode-hook #'rainbow-identifiers-mode)
 ;; (add-hook 'org-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'css-mode-hook #'rainbow-identifiers-mode)
@@ -104,11 +103,11 @@
 (require-package 'htmlize)
 (setq htmlize-pre-style t)
 
-(add-hook 'after-init-hook #'show-paren-mode)
+(x/append-init-hook #'show-paren-mode)
 
 (require-package 'smartparens)
 
-(add-hook 'after-init-hook #'smartparens-global-mode)
+(x/append-init-hook #'smartparens-global-mode)
 (setq sp-hybrid-kill-entire-symbol nil)
 (defhydra hydra-sp
   (:hint nil)

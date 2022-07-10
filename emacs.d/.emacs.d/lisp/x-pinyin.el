@@ -85,7 +85,7 @@
   (setq x/ace-mode nil))
 
 (global-set-key (kbd "M-j") 'x/ace-goto-char-timer)
-(add-hook 'after-init-hook 'ace-pinyin-global-mode)
+(x/append-init-hook 'ace-pinyin-global-mode)
 
 (provide 'x-pinyin)
 ;;; x-pinyin.el ends here

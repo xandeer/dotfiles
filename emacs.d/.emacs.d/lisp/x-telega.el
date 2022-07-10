@@ -2,10 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(telega :host github
-          :repo "zevlg/telega.el"
-          :branch "release-0.8.0"))
+(unless doom-version
+  (straight-register-package
+   '(telega :host github
+            :repo "zevlg/telega.el"
+            :branch "release-0.8.0")))
 
 ;; dependencies: brew install ffmpeg
 (require-package 'telega)

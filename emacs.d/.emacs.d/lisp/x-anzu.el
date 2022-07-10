@@ -3,7 +3,7 @@
 ;;; Code:
 
 (require-package 'anzu)
-(add-hook 'after-init-hook #'global-anzu-mode)
+(x/append-init-hook #'global-anzu-mode)
 (global-set-key (kbd "H-K") 'anzu-query-replace-regexp)
 
 (provide 'x-anzu)

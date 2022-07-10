@@ -33,6 +33,7 @@
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
 (add-hook 'dired-mode-hook 'dired-collapse-mode)
+(remove-hook 'dired-mode-hook 'dired-collapse-mode)
 
 (require 'dired-filter)
 (with-eval-after-load 'dired-filter

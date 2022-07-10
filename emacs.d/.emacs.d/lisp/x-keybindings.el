@@ -29,11 +29,11 @@ If point was already at that position, move point to beginning of line."
 
 (setq which-key-allow-imprecise-window-fit nil)
 (require-package 'which-key)
-(add-hook 'after-init-hook 'which-key-mode)
+(x/append-init-hook 'which-key-mode)
 
 (require-package 'keyfreq)
-(add-hook 'after-init-hook 'keyfreq-mode)
-(add-hook 'after-init-hook 'keyfreq-autosave-mode)
+(x/append-init-hook 'keyfreq-mode)
+(x/append-init-hook 'keyfreq-autosave-mode)
 (setq keyfreq-excluded-commands
         '(self-insert-command
           org-self-insert-command

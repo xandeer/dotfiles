@@ -20,11 +20,7 @@
 
 (defhydra x-hydra-x (:exit t :columns 4 :idle 0.3)
   ""
-  ("u"
-   (lambda nil
-     (interactive)
-     (shell-command "mr -d ~ update")
-     (bookmark-maybe-load-default-file)) "mr update")
+  ("u" (x/async-command "mr -d ~ update") "mr update")
   ("r"
    (lambda nil
      (interactive)

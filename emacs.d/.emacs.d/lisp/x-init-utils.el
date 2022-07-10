@@ -4,9 +4,11 @@
 
 (defun x/append-init-hook (arg)
   "Add ARG as hook on `after-init-hook`."
-  (cond ((functionp arg) (add-hook 'after-init-hook arg))
+  (cond ((functionp arg) ;; (add-hook 'after-init-hook arg)
+         (run-with-idle-timer 0.1 nil arg))
         (t (dolist (fn arg)
-             (add-hook 'after-init-hook fn)))))
+             ;; (add-hook 'after-init-hook fn)
+             (run-with-idle-timer 0.1 nil fn)))))
 
 (defun x--push-notes ()
   (when (y-or-n-p "Push notes to github? ")
@@ -22,7 +24,7 @@
 (defun x/start-timer-session ()
   (run-with-idle-timer
    5 nil (lambda ()
-           (eva-query-mood)
+           ;; (eva-query-mood)
            (x--push-notes)
            (setq x--auto-timer
                  (run-with-timer 3600 nil #'x/start-timer-session)))))

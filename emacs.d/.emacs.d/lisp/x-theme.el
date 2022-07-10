@@ -12,8 +12,8 @@
   "Set ns-appearance frame parameter for all frames to match their background-mode parameter."
     (mapc 'ns-auto-titlebar-set-frame (frame-list)))
 
-(x/append-init-hook 'ns-auto-titlebar-set-all-frames)
-(add-hook 'after-make-frame-functions 'ns-auto-titlebar-set-frame)
+(add-hook 'after-init-hook #'ns-auto-titlebar-set-all-frames)
+(add-hook 'after-make-frame-functions #'ns-auto-titlebar-set-frame)
 (advice-add 'frame-set-background-mode :after 'ns-auto-titlebar-set-frame)
 
 (defun x/fonts--setup (frame)
@@ -47,20 +47,21 @@
   (x/fonts--setup nil))
 
 (require-package 'doom-themes)
-(x/append-init-hook (lambda ()
-                      (require 'doom-themes)
-                      (load-theme 'x-vibrant t)))
+(setq custom-theme-directory (expand-file-name "theme" "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
+(add-hook 'after-init-hook (lambda ()
+                             (require 'doom-themes)
+                             (load-theme 'x-vibrant t)))
 
 (with-eval-after-load 'doom-theme
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
 
-(x/append-init-hook 'x/set-font)
+(add-hook 'after-init-hook #'x/set-font)
 (add-hook 'after-make-frame-functions   #'x/set-font)
 (add-hook 'server-after-make-frame-hook #'x/set-font)
 
 (require-package 'default-text-scale)
-(x/append-init-hook #'default-text-scale-mode)
+(add-hook 'after-init-hook #'default-text-scale-mode)
 
 (provide 'x-theme)
 ;;; x-theme.el ends here
