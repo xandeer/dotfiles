@@ -73,6 +73,8 @@
     # https://cloud.r-project.org/bin/macosx/
     # R
 
+    python
+
     buku
   ];
 }

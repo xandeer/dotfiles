@@ -53,7 +53,7 @@
   :recipe (:host github
            :repo "zevlg/telega.el"
            :branch "master")
-  :pin "733194c")
+  :pin "1080f10d1f87ea8f096ff451be831b953e4ccb98")
 
 (package! consult
   :recipe (:host github
