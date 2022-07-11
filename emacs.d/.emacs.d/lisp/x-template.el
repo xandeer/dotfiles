@@ -4,8 +4,7 @@
 
 (straight-register-package
  '(tempel :host github
-          :repo "minad/tempel"
-          :branch "main"))
+          :repo "minad/tempel"))
 (require-package 'tempel t)
 
 ;;; config

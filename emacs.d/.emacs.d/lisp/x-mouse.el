@@ -19,10 +19,10 @@
 (setq pixel-scroll-precision-mode t)
 ;; (setq mouse-wheel-scroll-amount '(1))
 
-(require-package 'disable-mouse nil)
-(with-eval-after-load 'disable-mouse
-  (setq disable-mouse-wheel-events nil)
-  (global-disable-mouse-mode))
+;; (require-package 'disable-mouse nil)
+;; (with-eval-after-load 'disable-mouse
+;;   (setq disable-mouse-wheel-events nil)
+;;   (global-disable-mouse-mode))
 
 (provide 'x-mouse)
 ;;; x-mouse.el ends here

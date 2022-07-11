@@ -21,14 +21,15 @@
 
 ;;; icon
 ;; required by kind-icon
-(straight-register-package
- '(svg-lib :host github
-           :repo "rougier/svg-lib"
-           :branch "master"))
-(straight-register-package
- '(kind-icon :host github
-        :repo "jdtsmith/kind-icon"
-        :branch "main"))
+(unless doom-version
+  (straight-register-package
+   '(svg-lib :host github
+             :repo "rougier/svg-lib"
+             :branch "master"))
+  (straight-register-package
+   '(kind-icon :host github
+               :repo "jdtsmith/kind-icon"
+               :branch "main")))
 
 (require-package 'kind-icon t)
 
@@ -36,10 +37,11 @@
 (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
 ;;; corfu-doc
-(straight-register-package
- '(corfu-doc :host github
-             :repo "galeo/corfu-doc"
-             :branch "main"))
+(unless doom-version
+  (straight-register-package
+   '(corfu-doc :host github
+               :repo "galeo/corfu-doc"
+               :branch "main")))
 (require-package 'corfu-doc)
 
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
@@ -49,10 +51,11 @@
 (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
 
 ;;; cape
-(straight-register-package
- '(cape :host github
-        :repo "minad/cape"
-        :branch "main"))
+(unless doom-version
+  (straight-register-package
+   '(cape :host github
+          :repo "minad/cape"
+          :branch "main")))
 (require-package 'cape)
 
 (setq cape-dabbrev-min-length 2)

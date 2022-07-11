@@ -2,10 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(vertico-posframe :host github
-        :repo "tumashu/vertico-posframe"
-        :branch "main"))
+(unless doom-version
+  (straight-register-package
+   '(vertico-posframe :host github
+                      :repo "tumashu/vertico-posframe"
+                      :branch "main")))
 
 (require-package 'vertico)
 (require-package 'vertico-posframe t)

@@ -5,7 +5,7 @@
 (require-package
  '(xwwp
    :host github :repo "xandeer/xwwp"
-   :branch "master"
+   ;; :branch "master"
    :files (:defaults "*.js" "*.css")
    ;; :pre-build ("make")
    ))

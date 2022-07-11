@@ -5,8 +5,7 @@
 (straight-register-package
  '(engine-mode
    :host github
-   :repo "hrs/engine-mode"
-   :branch "main"))
+   :repo "hrs/engine-mode"))
 
 (require-package 'engine-mode)
 (x/append-init-hook (lambda () (engine-mode t)))

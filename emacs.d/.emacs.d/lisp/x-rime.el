@@ -11,7 +11,7 @@
 (straight-register-package
  '(rime :host github
         :repo "DogLooksGood/emacs-rime"
-        :files ( "Makefile" "*.el" "lib.c")))
+        :files ("Makefile" "*.el" "lib.c")))
 
 (require-package 'rime)
 (require-package 'posframe)
