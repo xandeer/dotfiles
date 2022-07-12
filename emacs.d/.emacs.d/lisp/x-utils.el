@@ -108,14 +108,23 @@ Default use `point-min` or `point-max`."
           ;; (lambda ()
             ;; (async-shell-command "~/bin/hs -d ~/Downloads" "*hs-daemon*")))
 
+;; (defun x/change-hs-root (path)
+;;   (interactive)
+;;   (let ((url-request-method "PUT"))
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;;          (concat "http://localhost"
+;;                  (expand-file-name path)))
+;;       (buffer-string))))
+
 (defun x/change-hs-root (path)
+  "Start dufs at PATH."
   (interactive)
-  (let ((url-request-method "PUT"))
-    (with-current-buffer
-        (url-retrieve-synchronously
-         (concat "http://localhost"
-                 (expand-file-name path)))
-      (buffer-string))))
+  (let ((buf "*hs-daemon*")
+        (kill-buffer-query-functions nil))
+    (if (get-buffer buf)
+        (kill-buffer buf))
+    (async-shell-command (concat "hs " path) buf)))
 
 (defun x/change-hs-on-dired ()
   (interactive)

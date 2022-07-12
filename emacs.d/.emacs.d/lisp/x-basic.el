@@ -20,6 +20,7 @@
 (setq find-file-visit-truename t)
 (setq enable-recursive-minibuffers nil)
 (setq use-dialog-box nil)
+(setq large-file-warning-threshold 30000000)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;; Indentations

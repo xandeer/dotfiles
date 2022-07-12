@@ -24,6 +24,8 @@
 (require 'xwwp-ace)
 
 (with-eval-after-load 'xwidget
+  (setq kill-buffer-query-functions
+        (delq 'xwidget-kill-buffer-query-function kill-buffer-query-functions))
   (defun x-xwidget--get-half-window-height ()
     (/ (xwidget-window-inside-pixel-height (selected-window))
        2))

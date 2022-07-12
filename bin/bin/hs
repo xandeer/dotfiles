@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-java -jar ~/bin/hs.jar $*
+echo "File server starting at: $*"
+
+# java -jar ~/bin/hs.jar $*
+
+dufs --allow-upload --hidden .DS_Store -p 80 $*
