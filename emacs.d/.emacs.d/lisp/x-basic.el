@@ -21,6 +21,7 @@
 (setq enable-recursive-minibuffers nil)
 (setq use-dialog-box nil)
 (setq large-file-warning-threshold 30000000)
+(setq display-line-numbers-type nil)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;; Indentations
@@ -56,6 +57,14 @@
 (setq bookmark-default-file (x/expand-note "etc/bookmarks.el"))
 (setq bookmark-save-flag 1)
 (x/append-init-hook #'bookmark-maybe-load-default-file)
+
+;;; Move
+(defun x/line-move-visual (num)
+  "Move NUM lines visual."
+  (interactive "nMove: ")
+  (line-move-visual num))
+
+;; (global-set-key (kbd "M-j") #'x/line-move-visual)
 
 (provide 'x-basic)
 ;;; x-basic.el ends here

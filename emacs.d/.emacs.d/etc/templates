@@ -73,13 +73,13 @@ org-mode
 (verse "#+begin_verse" n> r> n> "#+end_verse")
 (src "#+begin_src " p n> r> n> "#+end_src")
 (elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
-       :post (progn (tempel-done) (org-edit-src-code)))
+       :post (org-edit-src-code))
 (sh "#+begin_src sh" n> r> n "#+end_src"
-       :post (progn (tempel-done) (org-edit-src-code)))
+    :post (org-edit-src-code))
 (kotlin "#+begin_src kotlin" n> r> n "#+end_src"
-       :post (progn (tempel-done) (org-edit-src-code)))
+        :post (org-edit-src-code))
 (clojure "#+begin_src clojure" n> r> n "#+end_src"
-       :post (progn (tempel-done) (org-edit-src-code)))
+         :post (org-edit-src-code))
 (day (format-time-string "%d(%a)" (current-time)))
 (weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) p
         n "**** Review" n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:"

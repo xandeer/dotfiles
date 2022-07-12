@@ -306,6 +306,7 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 (require-package 'org-modern)
 (global-org-modern-mode)
 (with-eval-after-load 'org-modern
+  (setq org-modern-star '("◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono"))
 
