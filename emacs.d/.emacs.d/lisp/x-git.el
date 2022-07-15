@@ -55,15 +55,17 @@
       ("p"  "prune"   magit-tag-prune)]]))
 
 (defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
-	"
+  "
 Magit\n"
-	("n" (magit-status org-directory) "notes")
+  ("n" (magit-status org-directory) "notes")
   ("w" (magit-status x/work-directory) "work")
   ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
   ("l" (magit-status (expand-file-name "~/projects/personal/android-lab/")) "android-lab")
   ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure")
   ("k" (magit-status (expand-file-name "~/Exercism/kotlin/")) "exercism/kotlin")
+  ("t" (magit-status (expand-file-name "~/Exercism/typescript/")) "exercism/typescript")
   ("e" (magit-status (expand-file-name "~/Exercism/elixir/")) "exercism/elixir"))
+
 (global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
 
 ;;; git-messenger
