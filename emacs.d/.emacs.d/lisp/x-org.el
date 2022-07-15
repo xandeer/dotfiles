@@ -44,7 +44,7 @@
         (plain-list-item . auto)))
 (setq org-adapt-indentation nil)
 (setq org-confirm-babel-evaluate nil)
-(setq org-startup-indented t)
+(setq org-startup-indented nil)
 (setq org-cycle-level-faces t)
 (setq org-fontify-done-headline t)
 (setq org-fontify-todo-headline t)

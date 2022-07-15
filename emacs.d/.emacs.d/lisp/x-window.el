@@ -67,6 +67,7 @@
 (require-package 'golden-ratio)
 
 (setq golden-ratio-auto-scale t)
+(setq golden-ratio-max-width 80)
 (golden-ratio-mode 1)
 
 (add-hook 'buffer-list-update-hook #'golden-ratio)
