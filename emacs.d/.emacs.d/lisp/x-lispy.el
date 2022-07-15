@@ -24,7 +24,7 @@
     (insert "]"))
 
   (let ((map lispy-mode-map))
-    (define-key map (kbd "M-j") 'x/ace-goto-char-timer)
+    (define-key map (kbd "M-j") 'x-navigation-map)
     (define-key map (kbd "M-k") 'x/switch-to-last-buffer)
     (define-key map (kbd "C-a") 'x/smart-beginning-of-line)
 

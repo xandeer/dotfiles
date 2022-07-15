@@ -66,13 +66,6 @@
   ;; M-g bindings (goto-map)
   ;; (global-set-key (kbd "M-g e") 'consult-compile-error)
   ;; (global-set-key (kbd "M-g f") 'consult-flymake)               ;; Alternative: consult-flycheck
-  (global-set-key (kbd "M-g g") 'consult-goto-line)             ;; orig. goto-line
-  (global-set-key (kbd "M-g M-g") 'consult-goto-line)           ;; orig. goto-line
-  (global-set-key (kbd "M-g h") 'consult-outline)               ;; Alternative: consult-org-heading
-  (global-set-key (kbd "M-g m") 'consult-mark)
-  (global-set-key (kbd "M-g M-m") 'consult-global-mark)
-  (global-set-key (kbd "M-g i") 'consult-imenu)
-  (global-set-key (kbd "M-g I") 'consult-imenu-multi)
   ;; M-s bindings (search-map)
   (global-set-key (kbd "M-s f") 'consult-find)
   (global-set-key (kbd "M-s F") 'consult-locate)

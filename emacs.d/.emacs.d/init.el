@@ -40,6 +40,7 @@
 (require 'x-exec-path)
 ;; which-key, keyfreq, osx-modifiers
 (require 'x-keybindings)
+(require 'x-navigation)
 
 (require 'x-basic)
 (require 'x-editor)

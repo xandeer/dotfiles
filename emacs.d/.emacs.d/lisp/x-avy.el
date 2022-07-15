@@ -67,30 +67,21 @@
 
 (setq avy-timeout-seconds 0.3)
 (setq avy-all-windows 'all-frames)
+(setq avy-single-candidate-jump t)
 (setq avy-dispatch-alist
       '(
         ;; (?k . avy-action-kill-stay)
         ;;  (?K . avy-action-kill-whole-line)
         ;;  (?t . avy-action-teleport)
         ;;  (?T . avy-action-teleport-whole-line)
-         (?m . avy-action-mark)
+        (?m . avy-action-mark)
         ;;  (?  . avy-action-mark-to-char)
         ;;  (?w . avy-action-copy)
         ;;  (?W . avy-action-copy-whole-line)
         ;;  (?y . avy-action-yank)
         ;;  (?Y . avy-action-yank-line)
-        (?. . avy-action-embark)
-        ))
+        (?. . avy-action-embark)))
 
-(global-set-key (kbd "M-g a") 'beginning-of-buffer)
-(global-set-key (kbd "M-g e") 'end-of-buffer)
-(global-set-key (kbd "M-g M-a") 'beginning-of-buffer-other-window)
-(global-set-key (kbd "M-g M-e") 'end-of-buffer-other-window)
-(global-set-key (kbd "M-g v") 'scroll-other-window)
-(global-set-key (kbd "M-g M-v") 'scroll-other-window-down)
-(global-set-key (kbd "M-g l") 'avy-goto-line)
-(global-set-key (kbd "M-g j") 'avy-goto-line-below)
-(global-set-key (kbd "M-g k") 'avy-goto-line-above)
 (define-key isearch-mode-map (kbd "M-j") 'avy-isearch)
 
 (provide 'x-avy)
