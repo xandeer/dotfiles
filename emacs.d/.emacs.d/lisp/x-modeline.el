@@ -9,10 +9,7 @@
     (fboundp 'column-number-mode)
   (autoload #'column-number-mode "doom-modeline" nil t))
 
-(require-package 'doom-modeline)
-(require 'x-init-utils)
-
-(x/append-init-hook 'doom-modeline-mode)
+(x/append-init-hook #'doom-modeline-mode)
 (add-hook 'doom-modeline-mode-hook #'column-number-mode)
 
 ;; Prevent flash of unstyled modeline at startup
@@ -27,8 +24,13 @@
 (setq doom-modeline-buffer-state-icon nil)
 (setq doom-modeline-buffer-modification-icon nil)
 ;; doom-modeline-indent-alist
-(setq doom-modeline-indent-info t)
+(setq doom-modeline-indent-info nil)
 (setq doom-modeline-workspace-name nil)
+(setq doom-modeline-window-width-limit 80)
+
+(with-eval-after-load 'which-func
+  (setq mode-line-misc-info
+        (delq (assq 'which-function-mode mode-line-misc-info) mode-line-misc-info)))
 
 (provide 'x-modeline)
 ;;; x-modeline.el ends here

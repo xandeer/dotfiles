@@ -2,10 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'marginalia t)
-(x/append-init-hook 'marginalia-mode)
+(require 'marginalia)
+(x/append-init-hook #'marginalia-mode)
 
-(require-package 'embark t)
+(require 'embark)
 
 ;; Hide the mode line of the Embark live/completions buffers
 (add-to-list 'display-buffer-alist
@@ -24,7 +24,7 @@
 (autoload #'consult-recent-file "consult")
 
 (with-eval-after-load 'consult
-  (require-package 'embark-consult t))
+  (require 'embark-consult))
 
 (defgroup x/embark ()
   "Extensions for `embark`."

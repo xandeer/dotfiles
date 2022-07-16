@@ -28,12 +28,10 @@ If point was already at that position, move point to beginning of line."
 (global-set-key (kbd "C-x k") 'kill-current-buffer) ; override kill-buffer
 
 (setq which-key-allow-imprecise-window-fit nil)
-(require-package 'which-key)
-(x/append-init-hook 'which-key-mode)
+(x/append-init-hook #'which-key-mode)
 
-(require-package 'keyfreq)
-(x/append-init-hook 'keyfreq-mode)
-(x/append-init-hook 'keyfreq-autosave-mode)
+(x/append-init-hook #'keyfreq-mode)
+(x/append-init-hook #'keyfreq-autosave-mode)
 (setq keyfreq-excluded-commands
         '(self-insert-command
           org-self-insert-command
@@ -43,8 +41,6 @@ If point was already at that position, move point to beginning of line."
           previous-line
           next-line
           newline-and-indent))
-
-(require-package 'command-log-mode)
 
 (provide 'x-keybindings)
 ;;; x-keybindings.el ends here

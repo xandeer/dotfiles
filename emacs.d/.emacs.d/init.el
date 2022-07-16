@@ -13,6 +13,12 @@
 ;; (setq debug-on-error t)
 (setq-default lexical-binding t)
 
+(defvar x/doom? (boundp 'doom-version)
+  "Whether use doom-emacs or not.")
+
+(defvar x/vertico-posframe? t
+  "Whether use vertico-posframe or not.")
+
 (setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
 
 (add-to-list 'load-path (expand-file-name "lisp" vanilla-path))
@@ -29,8 +35,10 @@
               (setq gcmh-high-cons-threshold #x880000))))
 
 ;;; Bootstrap
-;; straight, leaf, hydra, no-littering
+;; straight
 (require 'x-bootstrap)
+(require 'x-packages)
+(require 'no-littering)
 (require 'x-init-utils)
 (require 'x-utils)
 ;; osx
@@ -92,7 +100,6 @@
 ;; (require 'x-ivy)
 (require 'x-jieba)
 ;; (require 'x-key-chord)
-(require 'x-link-hint)
 (require 'x-lispy)
 (require 'x-lsp)
 (require 'x-git)

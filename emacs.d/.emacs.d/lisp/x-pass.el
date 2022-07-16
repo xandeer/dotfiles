@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'password-store)
-
 (setq epg-gpg-home-directory "~/.gnupg")
 
 (with-eval-after-load 'password-store

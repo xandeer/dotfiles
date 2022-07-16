@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'anzu)
 (x/append-init-hook #'global-anzu-mode)
 (global-set-key (kbd "H-K") 'anzu-query-replace-regexp)
 

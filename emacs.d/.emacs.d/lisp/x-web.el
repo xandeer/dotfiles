@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'web-mode)
-(require-package 'company-web)
 (add-to-list 'auto-mode-alist
              '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist
@@ -36,14 +34,6 @@
   ;;             '(:results . "output"))
              )
 
-(require-package
- '(yarn :host github
-        :repo "jmfirth/yarn.el"))
-
-(require-package 'typescript-mode)
-;; (add-hook 'typescript-mode-hook #'lsp)
-
-(require-package 'tide)
 (with-eval-after-load 'typescript-mode
   (add-hook 'typescript-mode-hook #'tide-setup)
   (add-hook 'typescript-mode-hook #'tide-hl-identifier-mode)
@@ -54,7 +44,6 @@
   (define-key tide-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
   (define-key tide-mode-map (kbd "M-,") #'lsp-ui-peek-find-references))
 
-(require-package 'skewer-mode)
 (setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
 
 (provide 'x-web)

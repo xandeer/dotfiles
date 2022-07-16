@@ -2,10 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'restclient)
-(require-package 'ob-restclient)
-
-(require-package '(org :type built-in))
+;; (straight-use-package '(org :type built-in))
 
 (setq org-modules
       '(ol-docview
@@ -249,13 +246,6 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 ;; (require-package 'org-bars t)
 ;; (add-hook 'org-mode-hook #'org-bars-mode)
 
-;;; org bullets
-;; (require-package 'org-bullets t)
-;; (add-hook 'org-mode-hook #'org-bullets-mode)
-;; (setq org-bullets-bullet-list '(
-;;                                 "♥"
-;;                                 "◉"
-;;                                 "○"))
 
 ;;; utils
 (defun x/wiki-with-title ()
@@ -299,16 +289,11 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (org-set-tags-command '(16)))
 
 ;;; org modern
-(straight-register-package
- '(org-modern
-   :host github
-   :repo "minad/org-modern"))
-(require-package 'org-modern)
-(global-org-modern-mode)
 (with-eval-after-load 'org-modern
-  (setq org-modern-star '("◉" "◈" "◇"))
+  (setq org-modern-star '("♥" "◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono"))
+(global-org-modern-mode)
 
 (provide 'x-org)
 ;;; x-org.el ends here

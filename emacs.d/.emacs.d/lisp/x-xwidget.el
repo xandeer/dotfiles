@@ -2,15 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package
- '(xwwp
-   :host github :repo "xandeer/xwwp"
-   ;; :branch "master"
-   :files (:defaults "*.js" "*.css")
-   ;; :pre-build ("make")
-   ))
-(require-package 'ctable)
-
+;; :pre-build ("make")
 (require 'xwwp)
 (require 'xwwp-follow-link)
 (require 'xwwp-history)

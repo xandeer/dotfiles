@@ -8,14 +8,6 @@
 
 ;;; Code:
 
-(straight-register-package
- '(rime :host github
-        :repo "DogLooksGood/emacs-rime"
-        :files ("Makefile" "*.el" "lib.c")))
-
-(require-package 'rime)
-(require-package 'posframe)
-
 (with-eval-after-load 'rime
   (setq rime-user-data-dir "~/.cache/rime")
   (setq rime-librime-root "~/projects/personal/dotfiles/librime")

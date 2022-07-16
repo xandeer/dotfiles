@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'hydra)
-
 (defvar x/adb-history nil
   "The history list for adb connect functions.")
 

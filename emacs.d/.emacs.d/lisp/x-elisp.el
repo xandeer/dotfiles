@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'helpful)
 (global-set-key (kbd "C-h f") #'helpful-callable)
 (global-set-key (kbd "C-h v") #'helpful-variable)
 (global-set-key (kbd "C-h k") #'helpful-key)
@@ -38,10 +37,7 @@ Elisp\n"
 ;; (require-package 'elisp-demos)
 ;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
 
-(require-package 'elisp-def)
 (define-key emacs-lisp-mode-map (kbd "M-.") #'elisp-def)
-
-(require-package 'suggest)
 
 (provide 'x-elisp)
 ;;; x-elisp.el ends here

@@ -4,17 +4,16 @@
 
 ;; The old version 2.17 doesn't provide function =-compose=,
 ;; which is required by =lsp-mode=.
-(require-package
- '(dash
-   :host github
-   :repo "magnars/dash.el"
-   :tag "2.18.1"))
+;; (require-package
+;;  '(dash
+;;    :host github
+;;    :repo "magnars/dash.el"
+;;    :tag "2.18.1"))
 
-(require 'dash)
-(with-eval-after-load 'dash
-  (dash-enable-font-lock))
+;; (require 'dash)
+;; (with-eval-after-load 'dash
+;;   (dash-enable-font-lock))
 
-(require-package 'lsp-mode)
 (require 'lsp-mode)
 
 (setq lsp-auto-guess-root t)
@@ -28,8 +27,7 @@
 (add-hook 'kotlin-mode-hook #'lsp)
 
 ;;; lsp-ui
-(require-package 'lsp-ui t)
-
+(require 'lsp-ui)
 (setq lsp-ui-sideline-enable t)
 (setq lsp-ui-doc-enable t)
 (setq lsp-ui-peek-enable t)
@@ -47,7 +45,6 @@
 (add-hook 'lsp-mode-hook #'x-lsp--corfu-setup)
 
 ;;; yasnippet
-(require-package 'yasnippet)
 (autoload 'yas-expand-snippet "yasnippet" nil t)
 (add-hook 'lsp-mode-hook #'yas-minor-mode)
 

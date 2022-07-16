@@ -56,9 +56,9 @@
   "Max MINUTES while clock in."
   (when (s-blank-str? minutes)
     (setq minutes (read-from-minibuffer "Set a timer to stop(with siri?), default[52], j[45], k[25]: ")))
-  (setq minutes (cond ((s-blank-str? minutes) 52)
+  (setq minutes (cond ((s-blank-str? minutes) 25)
                       ((s-equals? minutes "j") 45)
-                      ((s-equals? minutes "k") 25)
+                      ((s-equals? minutes "k") 52)
                       (t (string-to-number minutes))))
   (x--clock-cancel)
   (when (> minutes 0)

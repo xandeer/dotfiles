@@ -13,9 +13,6 @@
 (setq mac-redisplay-dont-reset-vscroll t
       mac-mouse-wheel-smooth-scroll nil)
 
-(require-package 'osx-lib)
-(require-package 'osx-trash)
-
 (setq delete-by-moving-to-trash t)
 (autoload #'osx-trash-move-file-to-trash "osx-trash" nil t)
 
@@ -78,5 +75,6 @@
 
 ;;;###autoload (autoload 'x/open-in-iterm "lisp/x/osx" nil t)
 (x--open-with open-in-iterm "iTerm" default-directory)
+
 (provide 'x-osx)
 ;;; x-osx.el ends here

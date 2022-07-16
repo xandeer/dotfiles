@@ -18,7 +18,7 @@
  window-resize-pixelwise t
  frame-resize-pixelwise t)
 
-(add-to-list 'default-frame-alist '(internal-border-width . 12))
+(add-to-list 'default-frame-alist '(internal-border-width . 2))
 (add-to-list 'default-frame-alist '(top . 50))
 (add-to-list 'default-frame-alist '(left . 0.5))
 (add-to-list 'default-frame-alist '(width . 0.33))

@@ -2,12 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(engine-mode
-   :host github
-   :repo "hrs/engine-mode"))
-
-(require-package 'engine-mode)
 (x/append-init-hook (lambda () (engine-mode t)))
 
 (setq browse-url-firefox-program "/Applications/Firefox.app/Contents/MacOS/firefox")

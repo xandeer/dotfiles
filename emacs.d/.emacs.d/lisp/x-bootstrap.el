@@ -17,7 +17,13 @@
 
 (defvar bootstrap-version)
 
-(unless doom-version
+;; Tell straight.el about the profiles we are going to be using.
+(setq straight-profiles
+      `((nil . ,(expand-file-name "etc/packages-default.el" vanilla-path))
+        ;; Packages which are pinned to a specific commit.
+        (pinned . ,(expand-file-name "etc/packages-pinned.el" vanilla-path))))
+
+(unless (boundp 'doom-version)
   (let ((bootstrap-file
          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
         (bootstrap-version 5))
@@ -39,11 +45,9 @@ When REQUIRE is `t`, require the PACKAGE."
 
 (defun x/straight--fix-build (recipe &optional cause)
   (shell-command "gsed -i 's#../../../../../../../../.emacs.d#/Users/kevin/.emacs.d#g' ~/.emacs.d/straight/build/*/*autoloads.el"))
-(unless doom-version
-  (advice-add 'straight--build-package :after #'x/straight--fix-build))
-
-(require-package 'no-littering t)
-(require-package 'hydra)
+(unless (boundp 'doom-version)
+  ;; (advice-add 'straight--build-package :after #'x/straight--fix-build)
+  )
 
 (provide 'x-bootstrap)
 ;;; x-bootstrap.el ends here

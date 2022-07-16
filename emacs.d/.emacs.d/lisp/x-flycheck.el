@@ -2,9 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; package
-(require-package 'flycheck)
-
 ;;; config
 (with-eval-after-load 'flycheck
   (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)

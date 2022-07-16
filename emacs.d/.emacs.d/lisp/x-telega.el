@@ -1,15 +1,7 @@
 ;;; x-telega.el --- Xandeer's Emacs Configuration tools telega file.  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
-
-(unless doom-version
-  (straight-register-package
-   '(telega :host github
-            :repo "zevlg/telega.el"
-            :branch "release-0.8.0")))
-
-;; dependencies: brew install ffmpeg
-(require-package 'telega)
+;;; Dependencies: brew install ffmpeg
 
 (setq telega-root-fill-column 48)
 (setq telega-chat-fill-column 65)

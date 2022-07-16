@@ -2,13 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'flycheck-kotlin)
-(require-package 'kotlin-mode)
 (add-hook 'kotlin-mode-hook #'flycheck-kotlin-setup)
 
-(require-package
- '(ob-kotlin :host github
-             :repo "zweifisch/ob-kotlin"))
 (autoload #'org-babel-execute:kotlin "ob-kotlin" nil t)
 (with-eval-after-load 'org
   (add-to-list 'org-babel-load-languages

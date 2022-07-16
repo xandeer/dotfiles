@@ -33,11 +33,6 @@
 
 ;; pinyinlib
 
-(straight-register-package
- '(pinyinlib :host github
-             :repo "xlshiz/pinyinlib.el"))
-
-(require-package 'pinyinlib)
 (with-eval-after-load 'pinyinlib
   (setq pinyinlib--simplified-char-table 'x/pinyinlib--simplified-xiaohe))
 
@@ -49,7 +44,6 @@
   "Whether ace goto word."
   (bound-and-true-p x/ace-mode))
 
-(require-package 'ace-pinyin)
 (defun x/ace-goto-char-timer ()
   "Like the `avy-goto-char-timer`."
   (interactive)

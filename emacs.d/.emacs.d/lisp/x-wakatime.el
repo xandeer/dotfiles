@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'wakatime-mode t)
+(require 'wakatime-mode)
 (setq wakatime-cli-path (expand-file-name "/opt/homebrew/bin/wakatime-cli"))
 
 ;; override default wakatime-call for errcode 112

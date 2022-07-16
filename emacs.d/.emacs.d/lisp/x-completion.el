@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-(require-package 'corfu t)
-
+;;; corfu
+(require 'corfu)
 (setq corfu-auto t)
 (setq corfu-auto-prefix 3)
 (setq corfu-max-width 60)
@@ -20,29 +20,13 @@
 (global-corfu-mode)
 
 ;;; icon
-;; required by kind-icon
-(unless doom-version
-  (straight-register-package
-   '(svg-lib :host github
-             :repo "rougier/svg-lib"
-             :branch "master"))
-  (straight-register-package
-   '(kind-icon :host github
-               :repo "jdtsmith/kind-icon"
-               :branch "main")))
-
-(require-package 'kind-icon t)
+(require 'kind-icon)
 
 (setq kind-icon-default-face 'corfu-default)
 (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
 ;;; corfu-doc
-(unless doom-version
-  (straight-register-package
-   '(corfu-doc :host github
-               :repo "galeo/corfu-doc"
-               :branch "main")))
-(require-package 'corfu-doc)
+(require 'corfu-doc)
 
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
 
@@ -51,13 +35,6 @@
 (define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
 
 ;;; cape
-(unless doom-version
-  (straight-register-package
-   '(cape :host github
-          :repo "minad/cape"
-          :branch "main")))
-(require-package 'cape)
-
 (setq cape-dabbrev-min-length 2)
 
 (add-to-list 'completion-at-point-functions #'cape-file)
@@ -91,12 +68,6 @@
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
 
 ;;; copilot
-(straight-register-package
- '(copilot :host github
-           :repo "zerolfx/copilot.el"
-           :files ("*.el" "dist")))
-
-(require-package 'copilot)
 (add-hook 'prog-mode-hook #'copilot-mode)
 
 (defun x/tab ()

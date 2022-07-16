@@ -46,8 +46,7 @@
   (interactive)
   (x/fonts--setup nil))
 
-(require-package 'doom-themes)
-(setq custom-theme-directory (expand-file-name "theme" "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
+(setq custom-theme-directory (expand-file-name "theme" vanilla-path))
 (add-hook 'after-init-hook (lambda ()
                              (require 'doom-themes)
                              (load-theme 'x-vibrant t)))
@@ -60,7 +59,6 @@
 (add-hook 'after-make-frame-functions   #'x/set-font)
 (add-hook 'server-after-make-frame-hook #'x/set-font)
 
-(require-package 'default-text-scale)
 (add-hook 'after-init-hook #'default-text-scale-mode)
 
 (provide 'x-theme)

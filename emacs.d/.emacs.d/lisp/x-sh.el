@@ -39,11 +39,8 @@
           (insert (substring-no-properties his)))))
     (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map [(control ?s)] #'x/consult-eshell-history)))))
 
-(require-package 'eshell-z)
 (with-eval-after-load 'eshell
   (add-hook 'eshell-mode-hook (lambda () (require 'eshell-z))))
-
-(require-package 'makefile-executor)
 
 (provide 'x-sh)
 ;;; x-sh.el ends here

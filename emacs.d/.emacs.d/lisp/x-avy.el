@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'avy)
 (defun avy-action-embark (pt)
   (unwind-protect
       (save-excursion

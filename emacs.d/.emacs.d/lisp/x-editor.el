@@ -2,29 +2,23 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'mmm-mode)
 (setq mmm-global-mode 'buffers-with-submode-classes)
 (setq mmm-submode-decoration-level 2)
 
 ;; Delete multiple consecutive blank characters at once
-(require-package 'hungry-delete)
 (add-hook 'activate-mark-hook (lambda () (hungry-delete-mode -1)))
-(add-hook 'deactivate-mark-hook 'hungry-delete-mode)
+(add-hook 'deactivate-mark-hook #'hungry-delete-mode)
 (x/append-init-hook #'global-hungry-delete-mode)
 
-(require-package 'easy-kill)
-(global-set-key [remap kill-ring-save] 'easy-kill)
-(global-set-key [remap mark-sexp] 'easy-mark)
+(global-set-key [remap kill-ring-save] #'easy-kill)
+(global-set-key [remap mark-sexp] #'easy-mark)
 
 (unless
     (fboundp 'auto-compression-mode)
   (autoload #'auto-compression-mode "jka-cmpr" nil t))
 (x/append-init-hook #'auto-compression-mode)
 
-(straight-register-package
- '(auto-save :host github
-             :repo "manateelazycat/auto-save"))
-(require-package 'auto-save t)
+(require 'auto-save)
 (setq auto-save-silent t)
 (setq auto-save-delete-trailing-whitespace t)
 (add-hook 'org-capture-mode-hook #'auto-save-disable)
@@ -34,22 +28,18 @@
 ;; (require-package 'eldoc-box)
 ;; (add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
 
-(require-package 'expand-region)
 (setq expand-region-subword-enabled t)
 (global-set-key (kbd "C-;") #'er/expand-region)
 
-(require-package 'unfill)
 (global-set-key (kbd "M-q") 'unfill-toggle)
 
 
-(require-package 'visual-fill-column)
 (with-eval-after-load 'visual-fill-column
   (defun maybe-adjust-visual-fill-column nil "Readjust visual fill column when the global font size is modified.\nThis is helpful for writeroom-mode, in particular."
          (if visual-fill-column-mode
              (add-hook 'after-setting-font-hook 'visual-fill-column--adjust-window nil t)
            (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
 
-(require-package 'page-break-lines)
 (x/append-init-hook #'global-page-break-lines-mode)
 (setq page-break-lines-max-width 80)
 (with-eval-after-load 'page-break-lines
@@ -60,21 +50,17 @@
 (x/append-init-hook #'global-hl-line-mode)
 
 
-(require-package 'color-identifiers-mode)
 (add-hook 'prog-mode-hook #'color-identifiers-mode)
 
 (unless
     (fboundp 'indent-tools-hydra/body)
   (autoload #'indent-tools-hydra/body "indent-tools" nil t))
-(require-package 'indent-tools)
 (global-set-key (kbd "C-c TAB") 'indent-tools-hydra/body)
 
-(require-package 'highlight-indent-guides)
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 (setq highlight-indent-guides-responsive nil)
 (setq highlight-indent-guides-delay 0.5)
 
-(require-package 'rainbow-mode)
 (x/append-init-hook #'rainbow-mode)
 (add-hook 'text-mode-hook #'rainbow-mode)
 (add-hook 'org-mode-hook #'rainbow-mode)
@@ -85,7 +71,6 @@
   (when (fboundp 'diminish)
     (diminish 'rainbow-mode)))
 
-(require-package 'rainbow-identifiers)
 ;; (x/append-init-hook #'rainbow-identifiers-mode)
 ;; (add-hook 'text-mode-hook #'rainbow-identifiers-mode)
 ;; (add-hook 'org-mode-hook #'rainbow-identifiers-mode)
@@ -96,16 +81,12 @@
   (when (fboundp 'diminish)
     (diminish 'rainbow-identifiers-mode)))
 
-(require-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'org-src-mode-hook #'rainbow-delimiters-mode)
 
-(require-package 'htmlize)
 (setq htmlize-pre-style t)
 
 (x/append-init-hook #'show-paren-mode)
-
-(require-package 'smartparens)
 
 (x/append-init-hook #'smartparens-global-mode)
 (setq sp-hybrid-kill-entire-symbol nil)
@@ -158,7 +139,6 @@
     (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
     (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))))
 
-(require-package 'quick-peek)
 (custom-set-faces
  '(quick-peek-border-face
    ((t

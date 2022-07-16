@@ -2,10 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(straight-register-package
- '(tempel :host github
-          :repo "minad/tempel"))
-(require-package 'tempel t)
+(require 'tempel)
 
 ;;; config
 (setq tempel-path (expand-file-name "etc/templates" vanilla-path))
@@ -79,6 +76,56 @@ Global Templates
   ("v" (tempel-insert 'version) "git app version")
   ("t" (tempel-insert 'time) "timestamp"))
 (global-set-key (kbd "M-t") #'x/hydra-template-global/body)
+
+;;; file templates
+;; Copied from doom
+(defun x/template--file-templates-in-emacs-dirs-p (file)
+  "Returns t if FILE is in your emacs.d directory."
+  (file-in-directory-p file vanilla-path))
+
+(defvar x/template--file-templates-alist
+  ;; elisp
+  '(("\\.el$" ;; :when x/template--file-templates-in-emacs-dirs-p
+     :mode emacs-lisp-mode
+     :template docs))
+  "An alist of file template rules. The CAR of each rule is either a major mode
+symbol or regexp string. The CDR is a plist.")
+
+(defun x/template--file-template-p (rule)
+  "Return t if RULE applies to the current buffer."
+  (let ((pred (car rule))
+        (plist (cdr rule)))
+    (and (or (and (symbolp pred)
+                  (eq major-mode pred))
+             (and (stringp pred)
+                  (stringp buffer-file-name)
+                  (string-match-p pred buffer-file-name)))
+         (or (not (plist-member plist :when))
+             (and (funcall (plist-get plist :when)
+                           buffer-file-name)))
+         rule)))
+
+(defun x/template--file-templates-check-h ()
+  "Check if the current buffer is a candidate for file template expansion. It
+must be non-read-only, empty, and there must be a rule in
+`x/template--file-templates-alist' that applies to it."
+  (and buffer-file-name
+       (not buffer-read-only)
+       (bobp) (eobp)
+       (not (member (substring (buffer-name) 0 1) '("*" " ")))
+       (not (file-exists-p buffer-file-name))
+       (not (buffer-modified-p))
+       (null (buffer-base-buffer))
+       (when-let (rule (cl-find-if #'x/template--file-template-p x/template--file-templates-alist))
+         (let ((template (plist-get (cdr rule) :template)))
+           (run-with-idle-timer 0.1 nil
+                                (lambda ()
+                                  (when (functionp 'meow-insert-mode)
+                                    (meow-insert-mode))
+                                  (tempel-insert template)))))))
+
+(with-eval-after-load 'tempel
+  (add-hook 'find-file-hook #'x/template--file-templates-check-h))
 
 (provide 'x-template)
 ;;; x-template.el ends here

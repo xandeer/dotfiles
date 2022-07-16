@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;; (require 'consult)
-;; (require 'marginalia)
-
-(require-package 'ebuku)
-
 (defvar x/bookmarks bookmark-alist)
 
 (defvar x/buku-bookmarks nil)

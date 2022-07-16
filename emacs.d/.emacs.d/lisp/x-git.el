@@ -2,15 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; package
-(require-package 'git-blamed)
-(require-package 'git-modes)
-(require-package 'git-timemachine)
-(require-package 'diff-hl)
-(require-package 'abridge-diff)
-(require-package 'magit)
-(require-package 'git-messenger)
-
 ;;; diff-hl
 (autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
 (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
@@ -73,10 +64,36 @@ Magit\n"
   (setq git-messenger:show-detail t)
   (define-key vc-prefix-map (kbd "p") #'git-messenger:popup-message))
 
-;;;
-(require-package 'forge)
+;;; forge
 (with-eval-after-load 'magit
   (require 'forge))
+
+;;; gutter
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+(with-eval-after-load 'git-gutter-fringe
+  ;; standardize default fringe width
+  (if (fboundp 'fringe-mode) (fringe-mode '4))
+
+  ;; places the git gutter outside the margins.
+  (setq-default fringes-outside-margins t)
+  ;; thin fringe bitmaps
+  (define-fringe-bitmap 'git-gutter-fr:added [224]
+    nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224]
+    nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
+    nil nil 'bottom)
+
+  ;; Update git-gutter on focus (in case I was using git externally)
+  (add-hook 'focus-in-hook #'git-gutter:update-all-windows)
+
+  (with-eval-after-load 'flycheck
+    ;; let diff have left fringe, flycheck can have right fringe
+    (setq flycheck-indication-mode 'right-fringe)
+    ;; A non-descript, left-pointing arrow
+    (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+      [16 48 112 240 112 48 16] nil nil 'center)))
 
 (provide 'x-git)
 ;;; x-git.el ends here

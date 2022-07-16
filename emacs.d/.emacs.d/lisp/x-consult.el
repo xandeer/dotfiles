@@ -2,14 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(unless doom-version
-  (straight-register-package
-   '(consult :host github
-             :repo "minad/consult"
-             :tag "0.17")))
-
-(require-package 'consult t)
-(require-package 'wgrep)
+(require 'consult)
 (require 'consult-imenu)
 
 ;; Optionally configure the register formatting. This improves the register

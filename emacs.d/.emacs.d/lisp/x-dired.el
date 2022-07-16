@@ -25,7 +25,6 @@
     (define-key map (kbd "^") #'x/cow-current)
     (define-key map (kbd ">") #'x/telega-send-to-chat)))
 
-(require-package 'dired-hacks)
 (require 'dired-x)
 
 (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))

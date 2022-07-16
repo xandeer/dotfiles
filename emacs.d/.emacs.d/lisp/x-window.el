@@ -2,6 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
+(setq window-divider-default-right-width 1)
+(x/append-init-hook #'window-divider-mode)
+
+;;; libs
 (defun x/delete-window-or-frame ()
   (interactive)
   (if (eq (window-deletable-p) 't)
@@ -25,7 +29,8 @@
   (interactive)
   (x/roam-or-projectile-find-file (split-window-right)))
 
-(require-package 'ace-window t)
+;;; ace window
+(require 'ace-window)
 
 (setq aw-dispatch-always nil)
 (setq aw-keys '(?j ?k ?l ?i ?h ?f ?d ?a))
@@ -40,14 +45,14 @@
         ;; "*Org Agenda(a)*"
         ))
 
-(global-set-key (kbd "H-o") 'ace-window)
-(global-set-key (kbd "H-0") 'x/delete-window-or-frame)
-(global-set-key (kbd "H-1") 'delete-other-windows)
-(global-set-key (kbd "H-2") 'x/split-below-find-file)
-(global-set-key (kbd "H-3") 'x/split-right-find-file)
-(global-set-key [remap split-window-right] 'x/split-right-find-file)
-(global-set-key [remap split-window-below] 'x/split-below-find-file)
-(global-set-key (kbd "C-x x") 'ace-swap-window)
+(global-set-key (kbd "H-o") #'ace-window)
+(global-set-key (kbd "H-0") #'x/delete-window-or-frame)
+(global-set-key (kbd "H-1") #'delete-other-windows)
+(global-set-key (kbd "H-2") #'x/split-below-find-file)
+(global-set-key (kbd "H-3") #'x/split-right-find-file)
+(global-set-key [remap split-window-right] #'x/split-right-find-file)
+(global-set-key [remap split-window-below] #'x/split-below-find-file)
+(global-set-key (kbd "C-x x") #'ace-swap-window)
 
 ;; Display agenda buffers always at the left.
 ;; (add-to-list 'display-buffer-alist
@@ -64,8 +69,6 @@
 ;;                (reusable-frames . t)))
 
 ;;; golden ratio
-(require-package 'golden-ratio)
-
 (setq golden-ratio-auto-scale t)
 (setq golden-ratio-max-width 80)
 (golden-ratio-mode 1)

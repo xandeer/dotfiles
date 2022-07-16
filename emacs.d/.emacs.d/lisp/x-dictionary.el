@@ -2,13 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package
- '(sdcv :host github
-        :repo "manateelazycat/sdcv"))
-
-(require-package 'posframe)
-(require-package 'sdcv)
-
 (autoload #'sdcv-search-pointer "sdcv" nil t)
 (autoload #'sdcv-search-input "sdcv" nil t)
 
@@ -42,8 +35,6 @@
                 (osx-lib-say sdcv-current-translate-object))))
 
 ;;; translate
-(require-package 'go-translate)
-
 (autoload #'facemenu-add-face "facemenu" nil t)
 (autoload #'gts-translator "go-translate" nil t)
 

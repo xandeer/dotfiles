@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'elixir-mode)
-(require-package 'alchemist)
-(require-package 'exunit)
-(require-package 'flycheck-credo)
-
 (with-eval-after-load 'smartparens-mode
   (sp-with-modes 'elixir-mode
     (sp-local-pair "do" "end"

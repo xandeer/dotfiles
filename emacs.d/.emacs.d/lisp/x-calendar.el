@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'cal-china-x)
 (with-eval-after-load 'cal-china-x
   (require 'holidays)
   (setq calendar-holidays cal-china-x-chinese-holidays))

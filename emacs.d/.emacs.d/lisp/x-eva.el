@@ -9,13 +9,6 @@
 
 ;;; Code:
 
-(require-package
- '(eva
-   :host github
-   :repo "meedstrom/eva"
-   :branch "master"
-   :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
-
 (setq eva-cache-dir-path (no-littering-expand-var-file-name "eva"))
 (setq eva-idle-log-path (expand-file-name "idle.tsv" eva-cache-dir-path))
 (setq eva-buffer-info-path (expand-file-name "buffer-info.tsv" eva-cache-dir-path))

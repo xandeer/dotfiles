@@ -2,18 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(unless doom-version
-  (straight-register-package
-   '(vertico-posframe :host github
-                      :repo "tumashu/vertico-posframe"
-                      :branch "main")))
-
-(require-package 'vertico)
-(require-package 'vertico-posframe t)
-(require-package 'orderless)
-
 (x/append-init-hook #'vertico-mode)
-(x/append-init-hook #'vertico-posframe-mode)
+
+(when x/vertico-posframe?
+  (require 'vertico-posframe)
+  (x/append-init-hook #'vertico-posframe-mode))
 
 (with-eval-after-load 'orderless
   ;; (setq completion-styles '(substring orderless))

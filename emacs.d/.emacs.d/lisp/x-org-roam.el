@@ -3,7 +3,6 @@
 ;;; Code:
 
 (setq org-roam-v2-ack t)
-(require-package 'org-roam)
 (with-eval-after-load 'gcmh
   (require 'org-roam))
 

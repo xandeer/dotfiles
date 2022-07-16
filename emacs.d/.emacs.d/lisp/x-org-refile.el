@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                  (org-agenda-files :maxlevel . 9))))
 (setq org-refile-use-outline-path t)
@@ -18,7 +17,6 @@
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 
 (setq org-refile-target-verify-function 'x/verify-refile-target)
-
 
 (provide 'x-org-refile)
 ;;; x-org-refile.el ends here

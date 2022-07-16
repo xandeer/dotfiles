@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'flycheck-clj-kondo)
-(require-package 'parseclj)
-
-(require-package 'clojure-mode)
-
 (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.cljc$" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
@@ -31,10 +26,8 @@
   ;; (leaf clojure-mode-extra-font-locking
   ;; :after clojure-mode)
 
-  (require-package 'cider)
-  
   (defun x/cider-hook ()
-    (add-hook 'before-save-hook 'cider-format-buffer nil t))
+    (add-hook 'before-save-hook #'cider-format-buffer nil t))
 
   ;; https://docs.cider.mx/cider/0.23/repl/configuration.html#_set_ns_in_repl
   (setq cider-repl-require-ns-on-set t

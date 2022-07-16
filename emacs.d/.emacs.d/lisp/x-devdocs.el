@@ -3,7 +3,6 @@
 ;;; Code:
 
 (require 'thingatpt)
-(require-package 'devdocs)
 
 (defun x/devdocs--setup (docs)
   (lambda () (setq-local devdocs-current-docs docs)))

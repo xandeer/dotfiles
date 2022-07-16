@@ -37,7 +37,6 @@
 (x/append-init-hook #'savehist-mode)
 (setq history-length 1000)
 
-(require-package 'session)
 (x/append-init-hook #'session-initialize)
 (setq session-save-file (no-littering-expand-var-file-name "session"))
 (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
