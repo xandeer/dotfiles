@@ -63,13 +63,13 @@
   "Ace-pinyin replacement of `avy-goto-char-2'."
   (interactive)
   (setq x/ace-mode t)
-  (call-interactively 'ace-pinyin-jump-char-2)
+  (call-interactively #'ace-pinyin-jump-char-2)
   (setq x/ace-mode nil))
 (defun x/ace-pinyin-goto-word-1 ()
   "Ace-pinyin replacement of `avy-goto-word-1'."
   (interactive)
   (setq x/ace-mode t)
-  (call-interactively 'ace-pinyin-goto-word-1)
+  (call-interactively #'ace-pinyin-goto-word-1)
   (setq x/ace-mode nil))
 (defun x/ace-pinyin-goto-char-1 ()
   "Ace-pinyin replacement of `avy-goto-char'."
@@ -78,7 +78,7 @@
   (call-interactively 'ace-pinyin-jump-char)
   (setq x/ace-mode nil))
 
-(x/append-init-hook 'ace-pinyin-global-mode)
+(x/append-init-hook #'ace-pinyin-global-mode)
 
 (provide 'x-pinyin)
 ;;; x-pinyin.el ends here

@@ -35,13 +35,16 @@ Usages:
     (straight-use-package `,plist)))
 
 ;;; pinned
+;; Save versions without pinned by `straight-x-freeze-versions'.
+;; Save pinned by `straight-x-freeze-pinned-versions'.
+;; Sync all by `straight-x-pull-all'.
 ;; Tell straight.el about the profiles we are going to be using.
 (setq straight-profiles
       '((nil . (expand-file-name "etc/packages-default.el" vanilla-path))
         ;; Packages which are pinned to a specific commit.
         (pinned . (expand-file-name "etc/packages-pinned.el" vanilla-path))))
 
-;; Could restore with `straight-x-thaw-pinned-versions'.
+;; Sync just pinned by `straight-x-thaw-pinned-versions'.
 (defvar x/packages-pinned
   '((consult . "minad/consult")
     telega)
