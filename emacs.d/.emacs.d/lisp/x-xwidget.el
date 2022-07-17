@@ -42,18 +42,20 @@
     (interactive)
     (xwidget-webkit-scroll-down (x-xwidget--get-window-height-with-margin 3)))
 
-  (define-key xwidget-webkit-mode-map [remap meow-next] #'x-xwidget--scroll-up)
-  (define-key xwidget-webkit-mode-map [remap scroll-up] #'x-xwidget--scroll-up)
+  (let ((map xwidget-webkit-mode-map))
+    (define-key map [remap meow-next] #'x-xwidget--scroll-up)
+    (define-key map [remap scroll-up] #'x-xwidget--scroll-up)
 
-  (define-key xwidget-webkit-mode-map [remap meow-prev] #'x-xwidget--scroll-down)
-  (define-key xwidget-webkit-mode-map [remap scroll-down] #'x-xwidget--scroll-down)
+    (define-key map [remap meow-prev] #'x-xwidget--scroll-down)
+    (define-key map [remap scroll-down] #'x-xwidget--scroll-down)
 
-  (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up-half)
-  (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down-half)
-  (define-key xwidget-webkit-mode-map (kbd "d") #'x-xwidget--scroll-up)
-  (define-key xwidget-webkit-mode-map (kbd "e") #'x-xwidget--scroll-down)
-  (define-key xwidget-webkit-mode-map (kbd "f") #'xwwp-ace-toggle)
-  (define-key xwidget-webkit-mode-map (kbd "v") #'xwwp-follow-link))
+    (define-key map "d" #'x-xwidget--scroll-up-half)
+    (define-key map "e" #'x-xwidget--scroll-down-half)
+    (define-key map "d" #'x-xwidget--scroll-up)
+    (define-key map "e" #'x-xwidget--scroll-down)
+    (define-key map "f" #'xwwp-ace-toggle)
+    (define-key map "v" #'xwwp-follow-link)
+    (define-key map "x" #'kill-current-buffer)))
 
 (defun x/xwidget-browse (url)
   "Ask xwidget-webkit to browse URL in a new session."

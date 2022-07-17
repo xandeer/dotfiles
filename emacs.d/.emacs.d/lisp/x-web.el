@@ -46,5 +46,18 @@
 
 (setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
 
+;;; exercism typescript
+(with-eval-after-load 'typescript-mode
+  (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
+    "
+Typescript\n"
+    ("d" x/devdocs-lookup "devdocs lookup at point")
+    ("r" x/exercism-open-readme-other-window "open readme in other window")
+    ;; ("i" x/kotlin-exercism-clear "clear useless comments")
+    ("t" yarn-test "yarn test")
+    ("u" x/exercism-submit "submit to exercism"))
+
+  (define-key typescript-mode-map (kbd "H-k") #'x/hydra-typescript/body))
+
 (provide 'x-web)
 ;;; x-web.el ends here

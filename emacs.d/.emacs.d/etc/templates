@@ -29,7 +29,7 @@ lisp-mode emacs-lisp-mode ;; Specify multiple modes
 (star "(let* (" p ")" n> r> ")")
 (rec "(letrec (" p ")" n> r> ")")
 (command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive)" n> r> ")")
-(hydra "(defhydra x-hydra-" p
+(hydra "(defhydra x/hydra-" p
          " (:exit t :columns 4 :idle 0.3)" n> "\"" p "\"" n> r> ")")
 (docs ";;; " (buffer-name) " --- " (string-remove-suffix ".el" (buffer-name)) " -*- lexical-binding: t -*-\n"
       ";;; Commentary:" n
