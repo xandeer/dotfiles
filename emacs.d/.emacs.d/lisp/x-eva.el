@@ -9,6 +9,7 @@
 
 ;;; Code:
 
+(setq eva-init-r nil)
 (setq eva-cache-dir-path (no-littering-expand-var-file-name "eva"))
 (setq eva-idle-log-path (expand-file-name "idle.tsv" eva-cache-dir-path))
 (setq eva-buffer-info-path (expand-file-name "buffer-info.tsv" eva-cache-dir-path))
