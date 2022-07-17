@@ -22,7 +22,7 @@
     (set-face-attribute
      'default nil
      :font (font-spec
-            :name "Latin Modern Mono"
+            :name "Latin Modern Mono Light"
             :weight 'normal
             :size 16))
 
@@ -30,8 +30,9 @@
       (set-fontset-font (frame-parameter nil 'font)
                         charset
                         (font-spec
-                         :name "Sarasa Mono SC Nerd"
-                         :weight 'normal
+                         :name "Weibei SC"
+                         :weight 'bold
+                         ;; :slant 'normal
                          :size 16)
                         frame
                         'prepend))
