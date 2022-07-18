@@ -28,7 +28,7 @@
   (setq gc-cons-threshold init-gc-cons-threshold)
   (add-hook 'emacs-startup-hook
             (lambda ()
-              (require-package 'gcmh)
+              (require 'gcmh)
               (gcmh-mode)
               ;; (setq gcmh-verbose t)
               (setq gcmh-low-cons-threshold #x800000)

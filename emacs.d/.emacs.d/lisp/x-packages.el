@@ -40,9 +40,9 @@ Usages:
 ;; Sync all by `straight-x-pull-all'.
 ;; Tell straight.el about the profiles we are going to be using.
 (setq straight-profiles
-      '((nil . (expand-file-name "etc/packages-default.el" vanilla-path))
+      `((nil . ,(expand-file-name "etc/packages-default.el" vanilla-path))
         ;; Packages which are pinned to a specific commit.
-        (pinned . (expand-file-name "etc/packages-pinned.el" vanilla-path))))
+        (pinned . ,(expand-file-name "etc/packages-pinned.el" vanilla-path))))
 
 ;; Sync just pinned by `straight-x-thaw-pinned-versions'.
 (defvar x/packages-pinned
@@ -61,7 +61,7 @@ Usages:
     anzu
     avy
     (consult . "minad/consult")
-    hydra
+    (hydra . "abo-abo/hydra")
     no-littering
     session
     wgrep
@@ -101,7 +101,7 @@ Usages:
     (cape  . "minad/cape")
     (copilot . ("zerolfx/copilot.el" :files ("*.el" "dist")))
     corfu
-    corfu-doc
+    (corfu-doc . "galeo/corfu-doc")
     ;; (kind-icon . "jdtsmith/kind-icon")
     ;; required by hind-icon
     ;; (svg-lib . "rougier/svg-lib")
@@ -184,7 +184,7 @@ Usages:
     (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
     dired-hacks
     go-translate
-    (jieba . ("ciel/jieba.el" :files ("*.el" "*.json" "*.js")))
+    (jieba . ("cireu/jieba.el" :files ("*.el" "*.json" "*.js")))
     link-hint
     makefile-executor
     marginalia
