@@ -61,6 +61,7 @@ Usages:
     anzu
     avy
     (consult . "minad/consult")
+    gcmh
     (hydra . "abo-abo/hydra")
     no-littering
     session
