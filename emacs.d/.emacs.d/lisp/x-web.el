@@ -46,14 +46,26 @@
 
 (setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
 
+;;; yarn
+(autoload 'yarn-install "yarn" nil t)
+(autoload 'yarn-test "yarn" nil t)
+
 ;;; exercism typescript
 (with-eval-after-load 'typescript-mode
+  (defun x/web-unskip-test ()
+    "Unskip test in current buffer."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "xit" nil t)
+        (replace-match "it"))))
+
   (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
     "
 Typescript\n"
     ("d" x/devdocs-lookup "devdocs lookup at point")
     ("r" x/exercism-open-readme-other-window "open readme in other window")
-    ;; ("i" x/kotlin-exercism-clear "clear useless comments")
+    ("i" x/web-unskip-test "unskip test")
     ("t" yarn-test "yarn test")
     ("u" x/exercism-submit "submit to exercism"))
 

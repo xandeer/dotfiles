@@ -10,7 +10,8 @@
 (add-hook 'css-mode-hook (x/devdocs--setup '("css")))
 (add-hook 'elixir-mode-hook (x/devdocs--setup '("elixir~1.13")))
 (add-hook 'kotlin-mode-hook (x/devdocs--setup '("kotlin~1.6" "openjdk~18")))
-(add-hook 'typescript-mode-hook (x/devdocs--setup '("typescript")))
+(add-hook 'typescript-mode-hook (x/devdocs--setup '("typescript" "javascript")))
+(add-hook 'clojure-mode-hook (x/devdocs--setup '("clojure~1.11")))
 
 (defun x/devdocs-lookup ()
   "Lookup the symbol at point in devdocs."
