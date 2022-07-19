@@ -50,6 +50,15 @@
 (autoload 'yarn-install "yarn" nil t)
 (autoload 'yarn-test "yarn" nil t)
 
+;;; repl
+(x/package-use 'ts-comint)
+(defun x/web--setup-ts-repl ()
+  "Setup ts-repl."
+  (local-set-key (kbd "C-x C-e") #'ts-send-last-sexp-and-go)
+  (local-set-key (kbd "C-c C-b") #'ts-send-buffer-and-go)
+  (local-set-key (kbd "C-c C-z") #'ts-repl))
+(add-hook 'typescript-mode-hook #'x/web--setup-ts-repl)
+
 ;;; exercism typescript
 (with-eval-after-load 'typescript-mode
   (defun x/web-unskip-test ()
