@@ -158,6 +158,7 @@ Usages:
     skewer-mode
     typescript-mode
     tide
+    ts-comint
     (yarn . "jmfirth/yarn.el")
 
 ;;; git

@@ -125,7 +125,9 @@ must be non-read-only, empty, and there must be a rule in
                                   (tempel-insert template)))))))
 
 (with-eval-after-load 'tempel
-  (add-hook 'find-file-hook #'x/template--file-templates-check-h))
+  (add-hook 'window-buffer-change-functions #'x/template--file-templates-check-h)
+  ;; `window-buffer-change-functions' doesn't trigger for files visited via the server.
+  (add-hook 'server-visit-hook #'x/template--file-templates-check-h))
 
 (provide 'x-template)
 ;;; x-template.el ends here

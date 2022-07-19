@@ -44,19 +44,31 @@
   (define-key tide-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
   (define-key tide-mode-map (kbd "M-,") #'lsp-ui-peek-find-references))
 
-(setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
-
 ;;; yarn
 (autoload 'yarn-install "yarn" nil t)
 (autoload 'yarn-test "yarn" nil t)
 
 ;;; repl
-(x/package-use 'ts-comint)
+(setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
+;; yarn add global typescript ts-node
+;; for console
+;; yarn add global @types/node
+(setq ts-comint-program-command "ts-node")
+(setq ts-comint-program-arguments '("--skipProject"))
+
+(defun x/web-kill-ts-repl ()
+  "Kill the typescript REPL process."
+  (interactive)
+  (let ((process (get-buffer-process ts-comint-buffer)))
+    (when process
+      (kill-process process))))
+
 (defun x/web--setup-ts-repl ()
   "Setup ts-repl."
-  (local-set-key (kbd "C-x C-e") #'ts-send-last-sexp-and-go)
-  (local-set-key (kbd "C-c C-b") #'ts-send-buffer-and-go)
-  (local-set-key (kbd "C-c C-z") #'ts-repl))
+  (local-set-key (kbd "C-x C-e") #'ts-send-last-sexp)
+  (local-set-key (kbd "C-c C-b") #'ts-send-buffer)
+  (local-set-key (kbd "C-c C-z") #'run-ts)
+  (local-set-key (kbd "C-c C-k") #'x/web-kill-ts-repl))
 (add-hook 'typescript-mode-hook #'x/web--setup-ts-repl)
 
 ;;; exercism typescript
