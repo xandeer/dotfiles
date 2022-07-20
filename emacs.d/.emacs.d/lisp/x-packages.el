@@ -20,13 +20,18 @@ Usages:
                       (and (listp (cdr package))
                            (not (plistp (cdr package)))
                            (cadr package))))
+            (host (if (and (listp (cdr package))
+                           (plistp (cddr package))
+			   (plist-member (cddr package) :host))
+		      (plist-get (cddr package) :host)
+                      'github))
             (files (and (listp (cdr package))
                         (plistp (cddr package))
                         (plist-get (cddr package) :files)))
             (type (and (plistp (cdr package))
                        (plist-get (cdr package) :type))))
         (when repo
-          (setq plist `(,@plist :host github :repo ,repo)))
+          (setq plist `(,@plist :host ,host :repo ,repo)))
         (when files
           (setq plist `(,@plist :files ,files)))
         (when type
@@ -170,7 +175,7 @@ Usages:
     (git-gutter-fringe . "emacsorphanage/git-gutter-fringe")
     git-messenger
     git-modes
-    git-timemachine
+    (git-timemachine . ("https://codeberg.org/pidu/git-timemachine.git" :host nil))
     magit
 
 ;;; keybindings

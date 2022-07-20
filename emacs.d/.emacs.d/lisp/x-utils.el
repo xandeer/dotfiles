@@ -120,11 +120,13 @@ Default use `point-min` or `point-max`."
 (defun x/change-hs-root (path)
   "Start dufs at PATH."
   (interactive)
-  (let ((buf "*hs-daemon*")
-        (kill-buffer-query-functions nil))
-    (if (get-buffer buf)
-        (kill-buffer buf))
-    (async-shell-command (concat "hs " path) buf)))
+  (let* ((program "hs")
+         (buffer (x/process-buffer-get program))
+         (process (get-buffer-process buffer)))
+    (when process
+      (kill-process process)
+      (sleep-for 0.1))
+    (x/start-process (format "%s %s" program path))))
 
 (defun x/change-hs-on-dired ()
   (interactive)
@@ -206,16 +208,10 @@ Default use `point-min` or `point-max`."
   (let ((root (locate-dominating-file (buffer-file-name) "README.md")))
     (find-file-other-window (expand-file-name "README.md" root))))
 
-(autoload 'osx-lib-get-from-clipboard "osx-lib")
-(defun x/async-run-clipboard ()
-  "Call `async-shell-command` with the clipboard content."
-  (interactive)
-  (x/async-command (osx-lib-get-from-clipboard)))
-
 ;;; cow
 (defun x--cow (file)
   "Upload the FILE to cow."
-  (x/async-command (format "%s %s"
+  (x/start-process (format "%s %s"
                            (expand-file-name "~/bin/cow")
                            file)))
 
@@ -235,7 +231,7 @@ Default use `point-min` or `point-max`."
 (defun x/null-st ()
   "Upload the current file to 0x0.st"
   (interactive)
-  (x/async-command
+  (x/start-process
    (format "null.exs %s"
            (buffer-file-name))))
 

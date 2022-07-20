@@ -2,37 +2,23 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar x/adb-history nil
-  "The history list for adb connect functions.")
-
-(defun x/adb-connect ()
-  (interactive)
-  (let ((ip (completing-read "Adb Connect: "
-                             x/adb-history
-                             nil nil
-                             (concat (s-join "." (butlast (s-split "\\." (x/ifconfig)))) ".")
-                             'x/adb-history)))
-    (x/async-command
-      (concat "~/Library/Android/sdk/platform-tools/adb connect " ip))))
-
-
-(defhydra x-hydra-x (:exit t :columns 4 :idle 0.3)
+(defhydra x/hydra-x (:exit t :columns 4 :idle 0.3)
   ""
-  ("u" (x/async-command "mr -d ~ update") "mr update")
+  ("u" (x/start-process "mr -d ~ update") "mr update")
   ("r"
    (lambda nil
      (interactive)
      (shell-command "mr -d ~ update")
      (bookmark-maybe-load-default-file)
      (x/restart-emacs)) "restart after mr update")
-  ("c" (lambda () (interactive) (recentf-save-list) (x/async-command "mr -d ~ commit")) "mr commit")
+  ("c" (lambda () (interactive) (recentf-save-list) (x/start-process "mr -d ~ commit")) "mr commit")
   ("H-r" x/restart-emacs "restart")
   ("hd" (x/change-hs-root "~/Downloads") "hs downloads")
   ("ht" (x/change-hs-root "~/temp") "hs temp")
   ("hs" (x/change-hs-root "~/syncthing") "hs syncthing")
   ("hp" (x/change-hs-root "~/syncthing/personal") "hs personal")
   ("hw" (x/change-hs-root "~/syncthing/donut") "hs work")
-  ("a" x/adb-connect "adb connect")
+  ("a" x/sh-adb-connect "adb connect")
   ("l" (lambda (ip)
          (interactive (list (read-string "Ip: " (x/ifconfig))))
          (x/open (concat "http://" ip))) "open localhost")
@@ -42,7 +28,7 @@
   ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io")
   ("s" #'eva-query-sleep "eva query sleep"))
 
-(defhydra x-hydra-open-buffer (:exit t :columns 4 :idle 0.3)
+(defhydra x/hydra-open-buffer (:exit t :columns 4 :idle 0.3)
   "
 Buffer\n"
   ("p" projectile-switch-project "switch project")
@@ -61,8 +47,8 @@ Buffer\n"
   ("H-s" x/open-telega-root "telega root")
   (">" x/telega-send-to-chat "send file to telega"))
 
-(global-set-key (kbd "H-x") 'x-hydra-x/body)
-(global-set-key (kbd "H-f") #'x-hydra-open-buffer/body)
+(global-set-key (kbd "H-x") 'x/hydra-x/body)
+(global-set-key (kbd "H-f") #'x/hydra-open-buffer/body)
 
 (defun x--bookmark-set ()
   (interactive)
@@ -70,7 +56,7 @@ Buffer\n"
       (bookmark-set (org-roam--get-keyword "title"))
     (bookmark-set)))
 
-(defhydra x-hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
+(defhydra x/hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
   ""
   ("f" consult-mark "mark")
   ("H-f" consult-global-mark "global mark")
@@ -97,9 +83,9 @@ Buffer\n"
   ("H-w" (dired "~/syncthing/donut") "work temp")
   ("H-n" (dired org-directory) "notes"))
 
-(global-set-key (kbd "H-j") #'x-hydra-deal-special-position/body)
+(global-set-key (kbd "H-j") #'x/hydra-deal-special-position/body)
 
-(defhydra x-hydra-global-actions (:exit t :columns 4 :idle 0.3)
+(defhydra x/hydra-global-actions (:exit t :columns 4 :idle 0.3)
   ""
   ("n" consult-focus-lines "focus lines")
   ("o" consult-outline "consult outline")
@@ -115,11 +101,11 @@ Buffer\n"
   ("H-l" bh/clock-in-organization-task-as-default "in organization")
   ("l" org-clock-out "out"))
 
-(global-set-key (kbd "H-d") #'x-hydra-global-actions/body)
+(global-set-key (kbd "H-d") #'x/hydra-global-actions/body)
 (global-set-key (kbd "M-k") #'x/switch-to-last-buffer)
 (global-set-key (kbd "H-c") #'org-capture)
 
-(defhydra x-hydra-search (:exit t :columns 4 :idle 0.3)
+(defhydra x/hydra-search (:exit t :columns 4 :idle 0.3)
   ""
   ("s" (consult-ripgrep default-directory) "rg current directory")
   ("H-s" consult-ripgrep "rg project")
@@ -134,7 +120,7 @@ Buffer\n"
   ("H-l" sdcv-search-input "lookup input")
   ("k" gts-do-translate "translate"))
 
-(global-set-key (kbd "H-s") #'x-hydra-search/body)
+(global-set-key (kbd "H-s") #'x/hydra-search/body)
 
 (provide 'x-hydra)
 ;;; x-hydra.el ends here

@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; eshell
 (with-eval-after-load 'org
   (setq eshell-aliases-file (x/expand-note "etc/eshell.alias"))
   (setq eshell-rc-script (x/expand-note "etc/eshell.profile")))
@@ -41,6 +42,39 @@
 
 (with-eval-after-load 'eshell
   (add-hook 'eshell-mode-hook (lambda () (require 'eshell-z))))
+
+;;; async commands
+(defvar x/sh-async-command-history nil
+  "The history list for async shell commands.")
+
+(defun x/sh-exec-async ()
+  "Execute a shell command asynchronously."
+  (interactive)
+  (let ((command (completing-read "Command: "
+                                  x/sh-async-command-history
+                                  nil nil nil
+                                  'x/sh-async-command-history)))
+    (x/start-process command)))
+
+(defvar x/sh-adb-history nil
+  "The history list for adb connect functions.")
+
+(defun x/sh-adb-connect ()
+  "Connect to an android device."
+  (interactive)
+  (let ((ip (completing-read "Adb Connect: "
+                             x/sh-adb-history
+                             nil nil
+                             (concat (s-join "." (butlast (s-split "\\." (x/ifconfig)))) ".")
+                             'x/sh-adb-history)))
+    (x/start-process
+     (concat "adb connect " ip))))
+
+(autoload 'osx-lib-get-from-clipboard "osx-lib")
+(defun x/sh-run-clipboard ()
+  "Call `x/start-process' with the clipboard content."
+  (interactive)
+  (x/start-process (osx-lib-get-from-clipboard)))
 
 (provide 'x-sh)
 ;;; x-sh.el ends here

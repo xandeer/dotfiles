@@ -27,9 +27,22 @@
 (defun x/prepend-homebrew-path (cmd)
   (concat "PATH=$HOME/bin:/opt/homebrew/bin:$PATH; " cmd))
 
-(defun x/async-command (cmd)
-  (interactive)
-  (async-shell-command cmd "*x/async*"))
+(defvar x/process-prefix "x/exec-"
+  "Prefix of the subprocess.")
+
+(defun x/process-buffer-get (program)
+  "Return the process buffer associated with the PROGRAM."
+  (format "*%s%s*" x/process-prefix program))
+
+(defun x/start-process (cmd)
+  "Execute CMD in a subprocess."
+  (let* ((program (car (split-string cmd)))
+         (name (concat x/process-prefix program))
+         (buffer (x/process-buffer-get program)))
+    (apply #'make-process
+           `(:name ,name
+                   :buffer ,buffer
+                   :command ,(split-string cmd)))))
 
 (defun x/append-exec-path (args)
   "Append `/opt/homebrew/bin` to PATH with `shell-command`."

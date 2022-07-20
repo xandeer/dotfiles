@@ -18,11 +18,11 @@ prog-mode
 lisp-mode emacs-lisp-mode ;; Specify multiple modes
 
 (lambda "(lambda (" p ")" n> r> ")")
-(var "(defvar " p "\n  \"" p "\")")
-(const "(defconst " p "\n  \"" p "\")")
-(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" p ")")
-(face "(defface " p " '((t :inherit " p "))\n  \"" p "\")")
-(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" p "-\")")
+(var "(defvar " p "\n  \"" r "\")")
+(const "(defconst " p "\n  \"" r "\")")
+(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" r ")")
+(face "(defface " p " '((t :inherit " p "))\n  \"" r "\")")
+(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" r "-\")")
 (macro "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
 (fun "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
 (let "(let (" p ")" n> r> ")")
@@ -31,7 +31,7 @@ lisp-mode emacs-lisp-mode ;; Specify multiple modes
 (command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive)" n> r> ")")
 (hydra "(defhydra x/hydra-" p
          " (:exit t :columns 4 :idle 0.3)" n> "\"" p "\"" n> r> ")")
-(docs ";;; " (buffer-name) " --- " (string-remove-suffix ".el" (buffer-name)) " -*- lexical-binding: t -*-\n"
+(file-template ";;; " (buffer-name) " --- " (string-remove-suffix ".el" (buffer-name)) p " -*- lexical-binding: t -*-\n"
       ";;; Commentary:" n
       ";;; Code:" n n r n n
       "(provide '" (string-remove-suffix ".el" (buffer-name)) ")" n
@@ -64,7 +64,6 @@ text-mode
 ;;; org
 org-mode
 
-(title "#+title: " p n "#+author: Daniel Mendler" n "#+language: en" n n)
 (quote "#+begin_quote" n> r> n> "#+end_quote")
 (example "#+begin_example" n> r> n> "#+end_example")
 (center "#+begin_center" n> r> n> "#+end_center")
@@ -80,10 +79,28 @@ org-mode
 (clojure "#+begin_src clojure" n> r> n "#+end_src"
          :post (org-edit-src-code))
 (day (format-time-string "%d(%a)" (current-time)))
-(weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) p
+(weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) r
         n "**** Review" n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:"
         n "**** Next" n "1. donut:")
 (monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
-(author "- author :: " p n)
-(from "- from :: " p n)
-(link "- link :: " p n)
+(author "- author :: " r n)
+(from "- from :: " r n)
+(link "- link :: " r n)
+
+;;; html
+web-mode
+
+(file-template "<!doctype html>" n
+      "<html>" n
+      "<head>" n
+      "  <meta charset=\"utf-8\">" n
+      "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" n
+      "  <title>" p "</title>" n
+      "</head>" n
+      "<body>" n
+      "  <div class=\"container\">" n
+      "    <h1>" p "</h1>" n
+      "    <p>" r "</p>" n
+      "  </div>" n
+      "</body>" n
+      "</html>")
