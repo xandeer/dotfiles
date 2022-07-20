@@ -56,6 +56,57 @@
 (setq ts-comint-program-command "ts-node")
 (setq ts-comint-program-arguments '("--skipProject"))
 
+(with-eval-after-load 'ts-comint
+  ;; redefine it to disable reset `ts-comint-program-arguments'
+  (defun run-ts (&optional cmd dont-switch-p)
+    "Run an inferior Typescript process, via buffer `*Typescript*'.
+If there is a process already running in `*Typescript*', switch
+to that buffer.  With argument `CMD', allows you to edit the
+command line (default is value of `ts-comint-program-command').
+Runs the hook `ts-comint-mode-hook' \(after the
+`comint-mode-hook' is run).  \(Type \\[describe-mode] in the
+process buffer for a list of commands). Use `DONT-SWITCH-P' to
+prevent switching to the new buffer once created."
+    (interactive
+     (list
+      (when current-prefix-arg
+        (read-string "Run typescript: "
+                     (mapconcat
+                      'identity
+                      (cons
+                       ts-comint-program-command
+                       ts-comint-program-arguments)
+                      " ")))))
+
+    ;; (when cmd
+    ;; (setq ts-comint-program-arguments (split-string cmd))
+    ;; (setq ts-comint-program-command (pop ts-comint-program-arguments)))
+
+    (if (not (comint-check-proc "*Typescript*"))
+        (with-current-buffer
+            (apply 'make-comint "Typescript" ts-comint-program-command
+                   nil ts-comint-program-arguments)
+          (ts-comint-mode)))
+    (setq ts-comint-buffer "*Typescript*")
+    (if (not dont-switch-p)
+        (pop-to-buffer "*Typescript*"))
+
+    ;; apply terminal preferences
+    (if ts-comint-mode-ansi-color
+        (progn
+          ;; based on
+          ;; http://stackoverflow.com/questions/13862471/using-node-ts-with-ts-comint-in-emacs
+
+          ;; We like nice colors
+          (ansi-color-for-comint-mode-on)
+          ;; Deal with some prompt nonsense
+          (make-local-variable 'comint-preoutput-filter-functions)
+          (add-to-list
+           'comint-preoutput-filter-functions
+           (lambda (output)
+             (replace-regexp-in-string "\033\\[[0-9]+[GKJ]" "" output))))
+      (setenv "NODE_NO_READLINE" "1"))))
+
 (defun x/web-kill-ts-repl ()
   "Kill the typescript REPL process."
   (interactive)

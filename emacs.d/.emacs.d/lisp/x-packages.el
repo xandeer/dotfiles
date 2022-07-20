@@ -132,6 +132,7 @@ Usages:
 
     ;; elisp
     elisp-def
+    eros
     helpful
     lispy
     multiple-cursors

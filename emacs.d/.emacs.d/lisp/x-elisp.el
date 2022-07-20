@@ -33,6 +33,7 @@ Elisp\n"
 
 (setq-default enable-local-variables :safe)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
+(x/append-init-hook #'eros-mode)
 
 ;; (require-package 'elisp-demos)
 ;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)

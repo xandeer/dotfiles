@@ -51,11 +51,14 @@
 
     (define-key map "d" #'x-xwidget--scroll-up-half)
     (define-key map "e" #'x-xwidget--scroll-down-half)
-    (define-key map "d" #'x-xwidget--scroll-up)
-    (define-key map "e" #'x-xwidget--scroll-down)
+    (define-key map "j" #'x-xwidget--scroll-up)
+    (define-key map "k" #'x-xwidget--scroll-down)
     (define-key map "f" #'xwwp-ace-toggle)
     (define-key map "v" #'xwwp-follow-link)
-    (define-key map "x" #'kill-current-buffer)))
+    (define-key map "x" #'kill-current-buffer)
+    ;; todo: doesn't work in the input field
+    (define-key map "<escape>" #'keyboard-quit)
+    ))
 
 (defun x/xwidget-browse (url)
   "Ask xwidget-webkit to browse URL in a new session."
