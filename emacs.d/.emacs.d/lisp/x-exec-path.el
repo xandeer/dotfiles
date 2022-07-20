@@ -42,7 +42,11 @@
     (apply #'make-process
            `(:name ,name
                    :buffer ,buffer
-                   :command ,(split-string cmd)))))
+                   :command ,(mapcar (lambda (it)
+                                       (if (s-starts-with? "~" it)
+                                           (expand-file-name it)
+                                         it))
+                                     (split-string cmd))))))
 
 (defun x/append-exec-path (args)
   "Append `/opt/homebrew/bin` to PATH with `shell-command`."
