@@ -1,6 +1,6 @@
 [DEFAULT]
 jobs = 8
-commit = git status | grep 'nothing to commit' || git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
