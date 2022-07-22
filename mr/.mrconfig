@@ -1,6 +1,16 @@
 [DEFAULT]
 jobs = 8
 commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+skip = [ "$1" = commit ] && [ -z "$(git status --porcelain)" ]
+
+[.password-store]
+checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
+
+[projects/personal/dotfiles]
+checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+
+[projects/personal/notes]
+checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
 
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
@@ -21,20 +31,6 @@ commit = echo "skip exercism/kotlin"
 checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
 commit = echo "skip exercism/typescript"
 
-[projects/personal/dotfiles]
-checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
-
-[projects/personal/notes]
-checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
-
-# [projects/personal/xandeer.github.io]
-# checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
-# commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
-# commit = echo "skip github.io"
-
-[.password-store]
-checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
-
 [projects/others/zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
 commit = echo "skip zplug"
@@ -46,3 +42,8 @@ commit = echo "skip doom"
 [.emacs.d]
 checkout = git clone 'git@github.com:plexus/chemacs2.git' '.emacs.d'
 commit = echo "skip chemacs2"
+
+# [projects/personal/xandeer.github.io]
+# checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
+# commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
+# commit = echo "skip github.io"
