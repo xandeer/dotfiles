@@ -4,7 +4,6 @@ commit = git status | grep 'nothing to commit' || git add --all && git commit -m
 
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
-# commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [Exercism/clojure]
 checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
@@ -27,7 +26,6 @@ checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
 
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
-# commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 # [projects/personal/xandeer.github.io]
 # checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
