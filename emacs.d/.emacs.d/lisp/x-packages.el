@@ -69,6 +69,7 @@ Usages:
     gcmh
     (hydra . "abo-abo/hydra")
     no-littering
+    ;; pcache
     session
     wgrep
 
@@ -123,6 +124,8 @@ Usages:
     ob-restclient
     (org-modern . "minad/org-modern")
     org-roam
+    ;; used for roam
+    emacsql-sqlite-builtin
     restclient
 
 ;;; programs
@@ -159,12 +162,13 @@ Usages:
     (ob-kotlin . "zweifisch/ob-kotlin")
 
     ;; web
-    web-mode
     ;; company-web
+    ob-typescript
     skewer-mode
     typescript-mode
     tide
     ts-comint
+    web-mode
     (yarn . "jmfirth/yarn.el")
 
 ;;; git

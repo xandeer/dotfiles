@@ -59,5 +59,22 @@
   (when (timerp x--auto-timer)
     (setq x--auto-timer (cancel-timer x--auto-timer))))
 
+(defvar x/configing? nil
+  "If configing, something will not run.")
+
+(defvar x/configing-flag (no-littering-expand-var-file-name "x-configing"))
+
+(when (file-exists-p x/configing-flag)
+  (setq x/configing? t))
+
+(defun x/init-toggle-configing ()
+  "Toggle configing. When toggle to nil, restart emacs."
+  (interactive)
+  (setq x/configing? (not x/configing?))
+  (if x/configing?
+      (write-region "" nil x/configing-flag)
+    (delete-file x/configing-flag)
+    (restart-emacs)))
+
 (provide 'x-init-utils)
 ;;; x-init-utils.el ends here

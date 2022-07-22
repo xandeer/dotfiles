@@ -12,6 +12,7 @@
 ;; (require-package 'counsel-css)
 ;; (add-hook 'css-mode-hook #'counsel-css-imenu-setup)
 
+;;; js, javascript
 (add-to-list 'auto-mode-alist
              '("\\.js\\'" . js-mode))
 (add-hook 'js-mode-hook #'lsp)
@@ -34,11 +35,25 @@
   ;;             '(:results . "output"))
              )
 
+;;; ts, typescript
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+
+(with-eval-after-load 'org
+  (defalias 'ts-mode #'typescript-mode)
+  (defalias 'org-babel-execute:ts #'org-babel-execute:typescript)
+  (add-to-list 'org-babel-load-languages '(typescript . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+
 (with-eval-after-load 'typescript-mode
-  (add-hook 'typescript-mode-hook #'tide-setup)
-  (add-hook 'typescript-mode-hook #'tide-hl-identifier-mode)
-  ;; (add-hook 'before-save-hook #'tide-format-before-save)
-  )
+  (defun x/ts-setup ()
+    "Setup for `typescript-mode'."
+    ;; Check for forbiding org-babel
+    (when (s-ends-with? ".ts" (buffer-file-name))
+      (tide-setup)
+      (tide-hl-identifier-mode)))
+
+  (add-hook 'typescript-mode-hook #'x/ts-setup))
+
 (with-eval-after-load 'tide
   (define-key tide-mode-map (kbd "C-x f") #'tide-format)
   (define-key tide-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
@@ -47,6 +62,8 @@
 ;;; yarn
 (autoload 'yarn-install "yarn" nil t)
 (autoload 'yarn-test "yarn" nil t)
+(with-eval-after-load 'yarn
+  (require 'cl))
 
 ;;; repl
 (setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
@@ -132,6 +149,17 @@ prevent switching to the new buffer once created."
       (while (re-search-forward "xit" nil t)
         (replace-match "it"))))
 
+  (defun x/ts-to-js ()
+    "Run `tsc -out' on current buffer."
+    (interactive)
+    (let* ((input (buffer-name))
+           (name (file-name-sans-extension input))
+           (output (make-temp-file name nil ".js")))
+      (if (not input)
+          (error "Buffer is not visiting a file"))
+      (x/start-process (format "tsc -t es2022 -m amd --moduleResolution node --outFile %s %s" output input))
+      (find-file output)))
+
   (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
     "
 Typescript\n"
@@ -139,6 +167,7 @@ Typescript\n"
     ("r" x/exercism-open-readme-other-window "open readme in other window")
     ("i" x/web-unskip-test "unskip test")
     ("t" yarn-test "yarn test")
+    ("H-t" x/ts-to-js "ts to js")
     ("u" x/exercism-submit "submit to exercism"))
 
   (define-key typescript-mode-map (kbd "H-k") #'x/hydra-typescript/body))

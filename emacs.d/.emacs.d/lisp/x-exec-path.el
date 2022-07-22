@@ -34,8 +34,9 @@
   "Return the process buffer associated with the PROGRAM."
   (format "*%s%s*" x/process-prefix program))
 
-(defun x/start-process (cmd)
-  "Execute CMD in a subprocess."
+(defun x/start-process (cmd &optional switch?)
+  "Execute CMD in a subprocess.
+If SWITCH? is non-nil, switch to the process buffer."
   (let* ((program (car (split-string cmd)))
          (name (concat x/process-prefix program))
          (buffer (x/process-buffer-get program)))
@@ -46,13 +47,17 @@
                                        (if (s-starts-with? "~" it)
                                            (expand-file-name it)
                                          it))
-                                     (split-string cmd))))))
+                                     (split-string cmd))))
+    (when switch?
+      (switch-to-buffer buffer)
+      (goto-char (point-max)))))
 
 (defun x/append-exec-path (args)
   "Append `/opt/homebrew/bin` to PATH with `shell-command`."
   (list (x/prepend-homebrew-path (car args)) (cadr args)))
 
 (advice-add 'shell-command :filter-args #'x/append-exec-path)
+(advice-add 'org-babel-eval :filter-args #'x/append-exec-path)
 ;; (advice-add 'async-shell-command :filter-args #'x/append-exec-path)
 
 (provide 'x-exec-path)

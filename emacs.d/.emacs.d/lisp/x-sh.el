@@ -54,7 +54,7 @@
                                   x/sh-async-command-history
                                   nil nil nil
                                   'x/sh-async-command-history)))
-    (x/start-process command)))
+    (x/start-process command t)))
 
 (defvar x/sh-adb-history nil
   "The history list for adb connect functions.")

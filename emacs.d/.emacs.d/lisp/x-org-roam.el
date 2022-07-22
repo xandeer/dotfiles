@@ -3,11 +3,9 @@
 ;;; Code:
 
 (setq org-roam-v2-ack t)
-(with-eval-after-load 'gcmh
-  (require 'org-roam))
-
 (setq org-roam-directory org-directory)
-(setq org-roam-db-gc-threshold gc-cons-threshold)
+(setq org-roam-database-connector 'sqlite-builtin)
+(setq org-roam-db-gc-threshold most-positive-fixnum)
 (setq org-roam-db-location (no-littering-expand-var-file-name "roam.db"))
 (setq org-roam-dailies-directory "journal/")
 (setq org-roam-node-display-template "${title:48} ${tags:36}")
