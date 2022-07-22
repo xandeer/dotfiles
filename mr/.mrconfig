@@ -1,10 +1,10 @@
 [DEFAULT]
 jobs = 8
 commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
-skip = [ "$1" = commit ] && [ -z "$(git status --porcelain)" ]
 
 [.password-store]
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
+skip = [ -z "$(git status --porcelain)" ]
 
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
