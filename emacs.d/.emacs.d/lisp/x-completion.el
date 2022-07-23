@@ -43,6 +43,8 @@
 (add-to-list 'completion-at-point-functions #'cape-symbol)
 (add-to-list 'completion-at-point-functions #'cape-dabbrev)
 
+(autoload 'company-grab-symbol-cons "company")
+
 (defun x-completion--disable-auto-locally ()
   "Disable auto completing locally."
   (setq-local corfu-auto nil)

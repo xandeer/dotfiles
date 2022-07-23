@@ -23,7 +23,6 @@
 (define-key lsp-mode-map (kbd "C-x f") #'lsp-format-buffer)
 
 ;;; modes enabled lsp
-(add-hook 'typescript-mode-hook #'lsp)
 (add-hook 'kotlin-mode-hook #'lsp)
 
 ;;; lsp-ui

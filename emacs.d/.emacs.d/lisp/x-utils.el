@@ -241,5 +241,17 @@ Default use `point-min` or `point-max`."
   (interactive)
   (makefile-executor-execute-target (expand-file-name "~/projects/personal/dotfiles/Makefile")))
 
+;;; string
+;; copy from https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
+;; Like diminish, but for major modes
+(defun x/set-major-mode-name (name)
+  "Override the major mode NAME in this buffer."
+  (setq-local mode-name name))
+
+(autoload 'derived-mode-hook-name "derived")
+(defun x/major-mode-lighter (mode name)
+  (add-hook (derived-mode-hook-name mode)
+            (apply-partially 'x/set-major-mode-name name)))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here

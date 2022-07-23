@@ -106,6 +106,7 @@ Usages:
 
 ;;; completion
     (cape  . "minad/cape")
+    company
     (copilot . ("zerolfx/copilot.el" :files ("*.el" "dist")))
     corfu
     (corfu-doc . "galeo/corfu-doc")
