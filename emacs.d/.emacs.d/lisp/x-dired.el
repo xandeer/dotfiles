@@ -13,17 +13,23 @@
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always)
   (setq dired-create-destination-dirs 'always)
+  (setq dired-mouse-drag-files t)
 
   (let ((map dired-mode-map))
-    (define-key map (kbd "* n") 'dired-next-marked-file)
-    (define-key map (kbd "* p") 'dired-prev-marked-file)
-    (define-key map (kbd "d") 'dired-do-delete)
-    (define-key map (kbd "u") 'dired-up-directory)
-    (define-key map (kbd "n") 'dired-unmark)
-    (define-key map (kbd "N") 'dired-unmark-all-marks)
-    (define-key map (kbd "@") #'x/change-hs-on-dired)
-    (define-key map (kbd "^") #'x/cow-current)
-    (define-key map (kbd ">") #'x/telega-send-to-chat)))
+    (define-key map (kbd "* n") #'dired-next-marked-file)
+    (define-key map (kbd "* p") #'dired-prev-marked-file)
+    (define-key map "d" #'dired-do-delete)
+    (define-key map "h" #'dired-up-directory)
+    (define-key map "u" #'dired-up-directory)
+    (define-key map "n" #'dired-unmark)
+    (define-key map "N" #'dired-unmark-all-marks)
+    (define-key map "@" #'x/change-hs-on-dired)
+    (define-key map "^" #'x/cow-current)
+    (define-key map ">" #'x/telega-send-to-chat)
+    (define-key map "j" #'dired-next-line)
+    (define-key map "k" #'dired-previous-line)
+    (define-key map "l" #'dired-find-file)
+    (define-key map "." #'dirvish)))
 
 (require 'dired-x)
 
@@ -31,13 +37,13 @@
 (setq dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
-(add-hook 'dired-mode-hook 'dired-collapse-mode)
-(remove-hook 'dired-mode-hook 'dired-collapse-mode)
+(add-hook 'dired-mode-hook #'dired-collapse-mode)
+(remove-hook 'dired-mode-hook #'dired-collapse-mode)
 
 (require 'dired-filter)
 (with-eval-after-load 'dired-filter
-  (add-hook 'dired-mode-hook 'dired-filter-group-mode)
-  (define-key dired-filter-map (kbd "p") 'dired-filter-pop-all)
+  (add-hook 'dired-mode-hook #'dired-filter-group-mode)
+  (define-key dired-filter-map "p" #'dired-filter-pop-all)
 
   (setq dired-filter-revert 'always)
   (setq dired-filter-group-saved-groups
@@ -108,6 +114,11 @@
   (define-key dired-narrow-map (kbd "<down>") 'dired-narrow-next-file)
   (define-key dired-narrow-map (kbd "<up>") 'dired-narrow-previous-file)
   (define-key dired-narrow-map (kbd "<right>") 'dired-narrow-enter-directory))
+
+(dirvish-override-dired-mode)
+;; (add-hook 'dired-mode-hook (lambda ()
+;;                              (unless (equal major-mode 'dirvish-mode)
+;;                                (dirvish))))
 
 (provide 'x-dired)
 ;;; x-dired.el ends here

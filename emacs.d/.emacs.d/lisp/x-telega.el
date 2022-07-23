@@ -43,7 +43,8 @@
   "Attach FILE as document to the chat input."
   (interactive)
   (setq filename (or filename
-                     (and (equal major-mode 'dired-mode) (dired-get-filename))
+                     (and (or (equal major-mode 'dired-mode)
+                              (equal major-mode 'dirvish-mode)) (dired-get-filename))
                      (buffer-file-name)))
   (call-interactively 'x/telega-chat-with)
   (if (telega-server-live-p)

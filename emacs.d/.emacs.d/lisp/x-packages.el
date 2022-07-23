@@ -196,6 +196,7 @@ Usages:
     embark-consult
     (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
     dired-hacks
+    dirvish
     go-translate
     (jieba . ("cireu/jieba.el" :files ("*.el" "*.json" "*.js")))
     link-hint

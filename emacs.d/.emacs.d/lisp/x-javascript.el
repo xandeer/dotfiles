@@ -16,7 +16,6 @@
 
 ;;; repl
 (setq skewer-bower-cache-dir (no-littering-expand-var-file-name "skewer-cache"))
-
 (with-eval-after-load 'js2-mode
   ;; fix `js-find-symbol' [M-.] overriding other packages' keybinding.
   (substitute-key-definition 'js-find-symbol 'xref-find-definitions js-mode-map)
