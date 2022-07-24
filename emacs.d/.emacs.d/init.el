@@ -50,8 +50,10 @@
 (require 'x-navigation)
 
 (require 'x-basic)
+(require 'x-buffer)
 (require 'x-editor)
-(require 'x-devdocs)
+(require 'x-docs)
+;; (require 'x-devdocs)
 
 ;;; ui
 (require 'x-window)

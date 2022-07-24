@@ -52,7 +52,7 @@
   (defhydra x/hydra-kotlin (:exit t :columns 4 :idle 0.3)
     "
 Kotlin\n"
-    ("d" x/devdocs-lookup "devdocs lookup at point")
+    ("d" x/docs-lookup "docs lookup at point")
     ("r" x/exercism-open-readme-other-window "open readme in other window")
     ("i" x/kotlin-exercism-clear "clear useless comments")
     ("t" x/kotlin-gradle-test "run gradle test")

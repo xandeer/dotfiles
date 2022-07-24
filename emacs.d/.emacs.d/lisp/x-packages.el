@@ -125,12 +125,15 @@ Usages:
     ob-restclient
     (org-modern . "minad/org-modern")
     org-roam
+    consult-org-roam
     ;; used for roam
     emacsql-sqlite-builtin
     restclient
 
 ;;; programs
-    devdocs
+    ;; devdocs
+    consult-dash
+    dash-docs
     flycheck
 
     ;; clojure

@@ -15,9 +15,19 @@
   (setq dired-create-destination-dirs 'always)
   (setq dired-mouse-drag-files t)
 
+  ;; (dirvish-override-dired-mode)
+
+  ;; copy from doom
+  (defun +dired/quit-all ()
+    "Kill all `dired-mode' buffers."
+    (interactive)
+    (mapc #'kill-buffer (doom-buffers-in-mode 'dired-mode))
+    (message "Killed all dired buffers"))
+
   (let ((map dired-mode-map))
     (define-key map (kbd "* n") #'dired-next-marked-file)
     (define-key map (kbd "* p") #'dired-prev-marked-file)
+    (define-key map "q" #'+dired/quit-all)
     (define-key map "d" #'dired-do-delete)
     (define-key map "h" #'dired-up-directory)
     (define-key map "u" #'dired-up-directory)
@@ -114,11 +124,6 @@
   (define-key dired-narrow-map (kbd "<down>") 'dired-narrow-next-file)
   (define-key dired-narrow-map (kbd "<up>") 'dired-narrow-previous-file)
   (define-key dired-narrow-map (kbd "<right>") 'dired-narrow-enter-directory))
-
-(dirvish-override-dired-mode)
-;; (add-hook 'dired-mode-hook (lambda ()
-;;                              (unless (equal major-mode 'dirvish-mode)
-;;                                (dirvish))))
 
 (provide 'x-dired)
 ;;; x-dired.el ends here

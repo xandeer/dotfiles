@@ -30,7 +30,7 @@
   (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
     "
 Typescript\n"
-    ("d" x/devdocs-lookup "devdocs lookup at point")
+    ("d" x/docs-lookup "docs lookup at point")
     ("r" x/exercism-open-readme-other-window "open readme in other window")
     ("i" x/web-unskip-test "unskip test")
     ("t" yarn-test "yarn test")

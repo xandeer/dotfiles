@@ -54,13 +54,26 @@
 (defun x/consult-bookmark (title)
   "Select pattern with buku."
   (interactive
-   (list (consult--read
-          (x/bookmark-candidates)
-          :prompt "Bookmark: "
-          :category 'bookmark
-          :history 'x/bookmark-history)))
+   (list (let ((narrow (mapcar (pcase-lambda (`(,x ,y ,_)) (cons x y))
+                               consult-bookmark-narrow)))
+           (consult--read
+            (x/bookmark-candidates)
+            :prompt "Bookmark: "
+            :state (consult--bookmark-preview)
+            :category 'bookmark
+            :history 'x/bookmark-history
+            ;; Add default names to future history.
+            ;; Ignore errors such that `consult-bookmark' can be used in
+            ;; buffers which are not backed by a file.
+            :add-history (ignore-errors (bookmark-prop-get (bookmark-make-record) 'defaults))
+            :group (consult--type-group narrow)
+            :narrow (consult--type-narrow narrow)))))
   (x/update-bookmarks)
   (x/open-bookmark title))
+
+(x/package-use 'consult-dir)
+(x/package-use 'dash-docs)
+(x/package-use 'consult-dash)
 
 (defun x/buku--candidates ()
   (mapcar (lambda (cand)

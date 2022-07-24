@@ -20,7 +20,9 @@
   ;; fix `js-find-symbol' [M-.] overriding other packages' keybinding.
   (substitute-key-definition 'js-find-symbol 'xref-find-definitions js-mode-map)
 
-  (x/major-mode-lighter 'js2-mode "JS"))
+  (x/major-mode-lighter 'js2-mode "JS")
+
+  (setq-local consult-dash-docsets '("JavaScript")))
 
 ;;; org babel
 (with-eval-after-load 'org
