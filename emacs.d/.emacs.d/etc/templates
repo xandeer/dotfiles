@@ -31,10 +31,10 @@ lisp-mode emacs-lisp-mode ;; Specify multiple modes
 (command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive)" n> r> ")")
 (hydra "(defhydra x/hydra-" p
          " (:exit t :columns 4 :idle 0.3)" n> "\"" p "\"" n> r> ")")
-(file-template ";;; " (buffer-name) " --- " (string-remove-suffix ".el" (buffer-name)) p " -*- lexical-binding: t -*-\n"
+(file-template ";;; " (buffer-name) " --- " p " -*- lexical-binding: t -*-\n"
       ";;; Commentary:" n
       ";;; Code:" n n r n n
-      "(provide '" (string-remove-suffix ".el" (buffer-name)) ")" n
+      "(provide '" (file-name-sans-extension (buffer-name)) ")" n
       ";;; " (buffer-name) " ends here")
 
 ;;; eshell

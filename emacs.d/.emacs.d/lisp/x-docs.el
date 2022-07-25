@@ -12,7 +12,8 @@
   (require 'devdocs)
 
   (defun x/devdocs-setup (docs)
-    (lambda () (setq-local devdocs-current-docs docs)))
+    (lambda ()
+      (setq-local devdocs-current-docs docs)))
 
   (add-hook 'css-mode-hook (x/devdocs-setup '("css")))
   (add-hook 'elixir-mode-hook (x/devdocs-setup '("elixir~1.13")))
@@ -20,6 +21,14 @@
   (add-hook 'typescript-mode-hook (x/devdocs-setup '("typescript" "javascript" "rxjs")))
   (add-hook 'js2-mode-hook (x/devdocs-setup '("javascript" "rxjs")))
   (add-hook 'clojure-mode-hook (x/devdocs-setup '("clojure~1.11")))
+
+  (defun x/devdocs-mode-setup ()
+    "Setup `devdocs-mode'."
+    (setq-local avy-all-windows nil)
+    (let ((map devdocs-mode-map))
+      (define-key map "f" #'link-hint-open-link)))
+
+  (add-hook 'devdocs-mode-hook #'x/devdocs-mode-setup)
 
   (defun x/devdocs-lookup ()
     "Lookup the symbol at point in devdocs."
@@ -78,4 +87,3 @@
 
 (provide 'x-docs)
 ;;; x-doc.el ends here
-
