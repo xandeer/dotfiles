@@ -53,7 +53,6 @@
 (require 'x-buffer)
 (require 'x-editor)
 (require 'x-docs)
-;; (require 'x-devdocs)
 
 ;;; ui
 (require 'x-window)

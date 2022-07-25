@@ -131,7 +131,7 @@ Usages:
     restclient
 
 ;;; programs
-    ;; devdocs
+    devdocs
     consult-dash
     dash-docs
     flycheck
