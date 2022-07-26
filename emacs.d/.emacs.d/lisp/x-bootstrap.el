@@ -15,6 +15,8 @@
       straight-enable-use-package-integration nil
       straight-check-for-modifications        '(find-when-checking))
 
+(setq warning-suppress-types '((straight)))
+
 (defvar bootstrap-version)
 
 ;; Tell straight.el about the profiles we are going to be using.
