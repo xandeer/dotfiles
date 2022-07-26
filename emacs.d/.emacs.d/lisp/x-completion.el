@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-
 ;;; corfu
 (require 'corfu)
 (setq corfu-auto t)
@@ -42,6 +41,7 @@
 (add-to-list 'completion-at-point-functions #'cape-keyword)
 (add-to-list 'completion-at-point-functions #'cape-symbol)
 (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+(add-to-list 'completion-at-point-functions #'cape-abbrev)
 
 (autoload 'company-grab-symbol-cons "company")
 
@@ -56,8 +56,10 @@
 ;;; org
 (with-eval-after-load 'org
   (defun x-completion--org-setup ()
-    (x-completion--disable-auto-locally)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+    ;; (x-completion--disable-auto-locally)
+    (setq-local corfu-auto-prefix 2)
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-abbrev))
 
   (add-hook 'org-mode-hook #'x-completion--org-setup))
 

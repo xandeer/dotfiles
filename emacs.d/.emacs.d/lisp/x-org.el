@@ -296,5 +296,8 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono"))
 (global-org-modern-mode)
 
+;;; verse block
+(set-face-attribute 'org-verse nil :slant 'italic)
+
 (provide 'x-org)
 ;;; x-org.el ends here

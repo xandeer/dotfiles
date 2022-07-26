@@ -36,7 +36,7 @@
 
 (with-eval-after-load 'org-roam
   (org-roam-db-autosync-enable)
-  (consult-org-roam-mode 1)
+  ;; (consult-org-roam-mode 1)
 
   (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
     (let* ((count (caar (org-roam-db-query
