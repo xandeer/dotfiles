@@ -27,7 +27,8 @@
 
 (with-eval-after-load 'tide
   (let ((map tide-mode-map))
-    (define-key map (kbd "C-x C-f") #'x/tide-format)
+    (define-key map (kbd "C-c C-f") #'x/tide-format)
+    (define-key map (kbd "C-c r") #'tide-rename-symbol)
     (define-key map (kbd "M-k") #'tide-jump-back)
     (define-key map (kbd "M-,") #'tide-references)
     (define-key map (kbd "H-r") #'yarn-run)))
