@@ -56,6 +56,9 @@ Buffer\n"
       (bookmark-set (org-roam--get-keyword "title"))
     (bookmark-set)))
 
+(defalias 'x/consult-dir #'consult-bookmark)
+(consult-customize x/consult-dir :initial "dir: ")
+
 (defhydra x/hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
   ""
   ("f" consult-mark "mark")
@@ -74,14 +77,8 @@ Buffer\n"
   ("p" (org-agenda nil "p") "agenda personal")
   ("v" org-agenda "agenda list")
   ("w" (org-agenda nil "w") "agenda work")
-
-  ("H-h" (dired "~") "home")
-  ("H-d" (dired "~/Downloads") "downloads")
-  ("H-e" (dired "~/.emacs.d") ".emacs.d")
-  ("H-t" (dired "~/syncthing/personal/telega/documents") "telega")
-  ("H-s" (dired "~/syncthing/personal") "syncthing personal")
-  ("H-w" (dired "~/syncthing/donut") "work temp")
-  ("H-n" (dired org-directory) "notes"))
+  ("H-h" x/consult-dir "bookmark dir")
+  ("H-i" consult-org-agenda "consult agenda"))
 
 (global-set-key (kbd "H-j") #'x/hydra-deal-special-position/body)
 
