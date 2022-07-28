@@ -1,3 +1,5 @@
+const { Clipboard, Hints, RUNTIME, Front, addSearchAlias, iunmap, map, mapkey, tabOpenLink, unmap } = api;
+
 map('J', 'D');
 map('K', 'S');
 map('t', 'T');
@@ -11,7 +13,7 @@ settings.focusFirstCandidate = true;
 settings.nextLinkRegex = /((>>|next|pre)+)/i;
 settings.prevLinkRegex = /((<<|prev(ious)?)+)/;
 
-addSearchAliasX('c', 'grep.app', 'https://grep.app/search?q=', 's', 'https://grep.app/search?q=', function(response) {
+addSearchAlias('c', 'grep.app', 'https://grep.app/search?q=', 's', 'https://grep.app/search?q=', function(response) {
     var res = JSON.parse(response.text);
     return res.map(function(r){
         return r.phrase;
@@ -20,10 +22,10 @@ addSearchAliasX('c', 'grep.app', 'https://grep.app/search?q=', 's', 'https://gre
 mapkey('oc', 'grep.app', function() {
     Front.openOmnibar({type: "SearchEngine", extra: "c"});
 });
-addSearchAliasX('w', 'wikipedia en', 'https://en.wikipedia.org/wiki/', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
+addSearchAlias('w', 'wikipedia en', 'https://en.wikipedia.org/wiki/', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
     return JSON.parse(response.text)[1];
 });
-addSearchAliasX('f', 'wikipedia cn', 'https://zh.wikipedia.org/wiki/', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
+addSearchAlias('f', 'wikipedia cn', 'https://zh.wikipedia.org/wiki/', 's', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&formatversion=2&namespace=0&limit=40&search=', function(response) {
     return JSON.parse(response.text)[1];
 });
 mapkey('ow', 'wikipedia en', function() {

@@ -107,11 +107,11 @@ prevent switching to the new buffer once created."
 
   (defun x/ts--repl-setup ()
     "Setup ts-repl."
-    (let ((map typescript-mode-hook))
-      (define-key (kbd "C-x C-e") #'ts-send-last-sexp)
-      (define-key (kbd "C-c C-b") #'ts-send-buffer)
-      (define-key (kbd "C-c C-z") #'run-ts)
-      (define-key (kbd "C-c C-k") #'x/web-kill-ts-repl)))
+    (let ((map typescript-mode-map))
+      (define-key map (kbd "C-x C-e") #'ts-send-last-sexp)
+      (define-key map (kbd "C-c C-b") #'ts-send-buffer)
+      (define-key map (kbd "C-c C-z") #'run-ts)
+      (define-key map (kbd "C-c C-k") #'x/web-kill-ts-repl)))
 
   (add-hook 'typescript-mode-hook #'x/ts--repl-setup))
 

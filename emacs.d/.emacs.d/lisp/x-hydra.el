@@ -57,6 +57,7 @@ Buffer\n"
     (bookmark-set)))
 
 (defalias 'x/consult-dir #'consult-bookmark)
+(require 'consult)
 (consult-customize x/consult-dir :initial "dir: ")
 
 (defhydra x/hydra-deal-special-position (:exit t :columns 4 :idle 0.3)
