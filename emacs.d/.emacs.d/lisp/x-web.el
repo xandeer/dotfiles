@@ -12,8 +12,9 @@
 (defun x/tide-setup ()
   "Setup for `typescript-mode'."
   ;; Check for forbiding org-babel
-  (when (or (s-ends-with? ".ts" (buffer-name))
-            (s-ends-with? ".js" (buffer-name)))
+  (when (string-match-p
+         (regexp-opt '(".json" ".js" ".ts"))
+         (buffer-file-name))
     (tide-setup)
     (tide-hl-identifier-mode)
 
@@ -35,6 +36,7 @@
 
 (add-hook 'typescript-mode-hook #'x/tide-setup)
 (add-hook 'js2-mode-hook #'x/tide-setup)
+(add-hook 'json-mode-hook #'x/tide-setup)
 
 ;;; yarn
 (autoload 'yarn-install "yarn" nil t)

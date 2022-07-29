@@ -32,7 +32,6 @@
                         (font-spec
                          :name "Weibei SC"
                          :weight 'bold
-                         ;; :slant 'normal
                          :size 16)
                         frame
                         'prepend))

@@ -19,17 +19,13 @@ Elisp\n"
 
 (define-key emacs-lisp-mode-map (kbd "H-k") #'x-hydra-elisp-helpful/body)
 
-(defun x--end-of-defun ()
-  (interactive)
-  (forward-char)
-  (end-of-defun)
-  (backward-char))
+;; disable flycheck on elisp mode
+(setq flycheck-disabled-checkers '(emacs-lisp))
 
-;;; disable flycheck on elisp mode
-(with-eval-after-load 'flycheck
-  (defun x--disable-flycheck ()
-    (flycheck-mode -1))
-  (add-hook 'emacs-lisp-mode-hook #'x--disable-flycheck))
+(defun x/elisp-setup ()
+  "Setup for elisp mode."
+  (add-to-list 'completion-at-point-functions #'cape-abbrev))
+(add-hook 'emacs-lisp-mode-hook #'x/elisp-setup)
 
 (setq-default enable-local-variables :safe)
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)

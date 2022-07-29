@@ -5,7 +5,7 @@
 ;;; corfu
 (require 'corfu)
 (setq corfu-auto t)
-(setq corfu-auto-prefix 3)
+(setq corfu-auto-prefix 2)
 (setq corfu-max-width 60)
 (setq corfu-quit-no-match t)
 (setq tab-always-indent 'complete)
