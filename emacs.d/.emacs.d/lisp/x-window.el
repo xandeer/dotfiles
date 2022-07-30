@@ -53,6 +53,10 @@
 (global-set-key [remap split-window-right] #'x/split-right-find-file)
 (global-set-key [remap split-window-below] #'x/split-below-find-file)
 (global-set-key (kbd "C-x x") #'ace-swap-window)
+(global-set-key (kbd "C-x M-o") (lambda ()
+                                  "Select the previous window."
+                                  (interactive)
+                                  (other-window -1)))
 
 ;; Display agenda buffers always at the left.
 ;; (add-to-list 'display-buffer-alist

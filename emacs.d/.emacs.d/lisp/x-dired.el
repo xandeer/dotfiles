@@ -15,6 +15,7 @@
   (setq dired-create-destination-dirs 'always)
   (setq dired-mouse-drag-files t)
 
+  (setq dirvish-attributes '(all-the-icons file-size collapse subtree-state vc-state git-msg))
   ;; (dirvish-override-dired-mode)
 
   ;; copy from doom
@@ -36,6 +37,7 @@
     (define-key map "@" #'x/change-hs-on-dired)
     (define-key map "^" #'x/cow-current)
     (define-key map ">" #'x/telega-send-to-chat)
+    (define-key map "i" #'wdired-change-to-wdired-mode)
     (define-key map "j" #'dired-next-line)
     (define-key map "k" #'dired-previous-line)
     (define-key map "l" #'dired-find-file)
