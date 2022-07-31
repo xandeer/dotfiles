@@ -8,7 +8,7 @@
 ;; save a list of open files in ~/.emacs.d/var/.emacs.desktop
 (setq desktop-path (list no-littering-var-directory)
       desktop-auto-save-timeout 600)
-(desktop-save-mode 1)
+;; (desktop-save-mode 1)
 
 (defun x/time-subtract-millis (b a)
   (* 1000.0 (float-time (time-subtract b a))))

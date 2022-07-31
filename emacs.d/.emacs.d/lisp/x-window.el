@@ -81,5 +81,15 @@
 (add-hook 'focus-in-hook           #'golden-ratio)
 (add-hook 'focus-out-hook          #'golden-ratio)
 
+;;; startup
+(defun x/window-startup ()
+  "Window startup."
+  (toggle-frame-maximized)
+  (switch-to-buffer "*scratch*")
+  (select-window (split-window-right))
+  (split-window-right))
+
+(x/append-init-hook #'x/window-startup)
+
 (provide 'x-window)
 ;;; x-window.el ends here
