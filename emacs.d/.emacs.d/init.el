@@ -147,8 +147,7 @@
   (run-with-idle-timer 1 nil init-fn))
 
 (x/append-init-hook
- '(toggle-frame-maximized
-   ebuku))
+ '(ebuku))
 
 (provide 'init)
 

@@ -239,15 +239,6 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
             (dired attach-dir)
           (message "File %S is now an attachment" basename))))))
 
-;;; org-bars
-;; (straight-register-package
-;;  '(org-bars
-;;    :host github
-;;    :repo "tonyaldon/org-bars"))
-;; (require-package 'org-bars t)
-;; (add-hook 'org-mode-hook #'org-bars-mode)
-
-
 ;;; utils
 (defun x/wiki-with-title ()
   "Goto wiki with the buffer's title."
@@ -293,7 +284,15 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 (with-eval-after-load 'org-modern
   (setq org-modern-star '("♥" "◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
-  (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono"))
+  (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
+
+  (defvar x/org-modern-date-large? nil)
+  (defun x/org-modern-switch-date-face ()
+    "Switch date face."
+    (interactive)
+    (let ((height (if x/org-modern-date-large? 'unspecified 1.1)))
+      (set-face-attribute 'org-modern-date-active nil :height height)
+      (setq x/org-modern-date-large? (not x/org-modern-date-large?)))))
 (global-org-modern-mode)
 
 ;;; verse block

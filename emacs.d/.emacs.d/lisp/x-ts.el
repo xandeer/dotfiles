@@ -103,17 +103,17 @@ prevent switching to the new buffer once created."
     (interactive)
     (let ((process (get-buffer-process ts-comint-buffer)))
       (when process
-        (kill-process process))))
+        (kill-process process)))))
 
-  (defun x/ts--repl-setup ()
-    "Setup ts-repl."
-    (let ((map typescript-mode-map))
-      (define-key map (kbd "C-x C-e") #'ts-send-last-sexp)
-      (define-key map (kbd "C-c C-b") #'ts-send-buffer)
-      (define-key map (kbd "C-c C-z") #'run-ts)
-      (define-key map (kbd "C-c C-k") #'x/web-kill-ts-repl)))
+(defun x/ts--repl-setup ()
+  "Setup ts-repl."
+  (let ((map typescript-mode-map))
+    (define-key map (kbd "C-x C-e") #'ts-send-last-sexp)
+    (define-key map (kbd "C-c C-b") #'ts-send-buffer)
+    (define-key map (kbd "C-c C-z") #'run-ts)
+    (define-key map (kbd "C-c C-k") #'x/web-kill-ts-repl)))
 
-  (add-hook 'typescript-mode-hook #'x/ts--repl-setup))
+(add-hook 'typescript-mode-hook #'x/ts--repl-setup)
 
 ;;; org babel
 (with-eval-after-load 'org
