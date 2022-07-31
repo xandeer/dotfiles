@@ -64,45 +64,89 @@
 (setq org-agenda-sticky t)
 (setq org-agenda-text-search-extra-files '(agenda-archives))
 
+(setq calendar-chinese-celestial-stem
+      ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
+(setq calendar-chinese-terrestrial-branch
+      ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
+;; location
+(setq calendar-longitude 113.9442)
+(setq calendar-latitude 22.5395)
+
+;; Copied from https://emacs-china.org/t/05-org-as/12092/4
+;; 日出而作, 日落而息
+(defun x/diary-sunrise ()
+  (let ((dss (diary-sunrise-sunset)))
+    (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+        (replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ",")
+      (buffer-substring (point-min) (match-beginning 0)))))
+
+(defun x/diary-sunset ()
+  (let ((dss (diary-sunrise-sunset))
+        start end)
+    (with-temp-buffer
+      (insert dss)
+      (goto-char (point-min))
+      (while (re-search-forward " ([^)]*)" nil t)
+        (replace-match "" nil nil))
+      (goto-char (point-min))
+      (search-forward ", ")
+      (setq start (match-end 0))
+      (search-forward " at")
+      (setq end (match-beginning 0))
+      (goto-char start)
+      (capitalize-word 1)
+      (buffer-substring start end))))
+
+(defun x/org-agenda-schedule (arg &optional time)
+  "Schedule the item at point.
+ARG is passed through to `x/org-schedule'."
+  (interactive "P")
+  (org-agenda-check-type t 'agenda 'todo 'tags 'search)
+  (org-agenda-check-no-diary)
+  (org-agenda-maybe-loop
+   #'org-agenda-schedule arg t nil
+   (let* ((marker (or (org-get-at-bol 'org-marker)
+		                  (org-agenda-error)))
+	        (type (marker-insertion-type marker))
+	        (buffer (marker-buffer marker))
+	        (pos (marker-position marker))
+	        ts)
+     (set-marker-insertion-type marker t)
+     (org-with-remote-undo buffer
+       (with-current-buffer buffer
+	       (widen)
+	       (goto-char pos)
+	       (setq ts (x/org-schedule)))
+       (org-agenda-show-new-time marker ts " S"))
+     (message "%s" ts))))
+
+(with-eval-after-load 'org-agenda
+  (x/define-keys org-agenda-mode-map
+                 '(("M-l" . x/agenda-toggle-clock-log)
+                   ("q" . x/switch-to-last-buffer)
+                   ("s" . x/org-agenda-schedule)
+                   ("k" . org-agenda-previous-item)
+                   ("p" . org-agenda-previous-item)
+                   ("n" . org-agenda-next-item)
+                   ("j" . org-agenda-next-item)
+                   ("T" . org-agenda-goto-today)
+                   ("i" . org-agenda-clock-in)
+                   ("o" . org-agenda-clock-goto)
+                   ("O" . org-agenda-clock-goto))))
+
 ;;; Custom agenda command definitions
 (setq org-agenda-custom-commands
       '(("n" "Notes" tags "NOTE"
          ((org-agenda-overriding-header "Notes")
           (org-tags-match-list-sublevels t)))
-        ("p" "Personal"
-         ((tags-todo "PERSONAL+CATEGORY=\"Learning\""
-                     ((org-agenda-overriding-header "Learning")))
-          (tags-todo "PERSONAL+CATEGORY=\"Tasks\""
-                     ((org-agenda-overriding-header "Tasks")))
-          (tags-todo "PERSONAL+CATEGORY=\"Review\""
-                     ((org-agenda-overriding-header "Review")))
-          (tags-todo "PERSONAL+CATEGORY=\"Ideas\""
-                     ((org-agenda-overriding-header "Ideas")))
-          (tags-todo "PERSONAL+CATEGORY=\"Habits\""
-                     ((org-agenda-overriding-header "Habits")))))
-        ("e" "Emacs"
-         ((tags-todo "EMACS+Sword"
-                     ((org-agenda-overriding-header "Sword")))
-          (tags-todo "EMACS+CATEGORY=\"One-off\""
-                     ((org-agenda-overriding-header "One Off")))
-          (tags-todo "EMACS+CATEGORY=\"Xwidget\""
-                     ((org-agenda-overriding-header "Xwidget")))
-          (tags-todo "EMACS+CATEGORY=\"Embark\""
-                     ((org-agenda-overriding-header "Embark")))))
         ("i" "Inbox"
          ((tags-todo "REFILE+CATEGORY=\"Inbox\""
                      ((org-agenda-overriding-header "Inbox")))))
-        ("w" "Work"
-         ((tags-todo "WORK+CATEGORY=\"Bug\""
-                     ((org-agenda-overriding-header "Bug")))
-          (tags-todo "WORK+CATEGORY=\"Feat\""
-                     ((org-agenda-overriding-header "Feature")))
-          (tags-todo "WORK+CATEGORY=\"Refactor\""
-                     ((org-agenda-overriding-header "Refactor")))
-          (tags-todo "WORK+CATEGORY=\"Other\""
-                     ((org-agenda-overriding-header "Other")))
-          (tags-todo "WORK+CATEGORY=\"Chore\""
-                     ((org-agenda-overriding-header "Chore")))))
         ("x" "Agenda"
          ((tags-todo "-WORK-CANCELLED/!NEXT"
                      ((org-agenda-overriding-header (concat "Project Next Tasks"
@@ -167,87 +211,50 @@
                  (org-tags-match-list-sublevels nil))))
          nil)))
 
-(setq calendar-chinese-celestial-stem
-      ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-(setq calendar-chinese-terrestrial-branch
-      ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
-;; location
-(setq calendar-longitude 113.9442)
-(setq calendar-latitude 22.5395)
+;;; agenda work
+(add-to-list 'org-agenda-custom-commands
+             '("w" "Work"
+               ((tags-todo "WORK+CATEGORY=\"Bug\""
+                           ((org-agenda-overriding-header "Bug")))
+                (tags-todo "WORK+CATEGORY=\"Feat\""
+                           ((org-agenda-overriding-header "Feature")))
+                (tags-todo "WORK+CATEGORY=\"Refactor\""
+                           ((org-agenda-overriding-header "Refactor")))
+                (tags-todo "WORK+CATEGORY=\"Other\""
+                           ((org-agenda-overriding-header "Other")))
+                (tags-todo "WORK+CATEGORY=\"Chore\""
+                           ((org-agenda-overriding-header "Chore"))))))
 
-;; Copied from https://emacs-china.org/t/05-org-as/12092/4
-;; 日出而作, 日落而息
-(defun x/diary-sunrise ()
-  (let ((dss (diary-sunrise-sunset)))
-    (with-temp-buffer
-      (insert dss)
-      (goto-char (point-min))
-      (while (re-search-forward " ([^)]*)" nil t)
-        (replace-match "" nil nil))
-      (goto-char (point-min))
-      (search-forward ",")
-      (buffer-substring (point-min) (match-beginning 0)))))
+;;; agenda emacs
+(add-to-list 'org-agenda-custom-commands
+             '("e" "Emacs"
+               ((tags-todo "EMACS+Sword"
+                           ((org-agenda-overriding-header "Sword")))
+                (tags-todo "EMACS+CATEGORY=\"One-off\""
+                           ((org-agenda-overriding-header "One Off")))
+                (tags-todo "EMACS+CATEGORY=\"Xwidget\""
+                           ((org-agenda-overriding-header "Xwidget")))
+                (tags-todo "EMACS+CATEGORY=\"Embark\""
+                           ((org-agenda-overriding-header "Embark"))))))
 
-(defun x/diary-sunset ()
-  (let ((dss (diary-sunrise-sunset))
-        start end)
-    (with-temp-buffer
-      (insert dss)
-      (goto-char (point-min))
-      (while (re-search-forward " ([^)]*)" nil t)
-        (replace-match "" nil nil))
-      (goto-char (point-min))
-      (search-forward ", ")
-      (setq start (match-end 0))
-      (search-forward " at")
-      (setq end (match-beginning 0))
-      (goto-char start)
-      (capitalize-word 1)
-      (buffer-substring start end))))
-
-(defun x/org-agenda-schedule (arg &optional time)
-  "Schedule the item at point.
-ARG is passed through to `x/org-schedule'."
-  (interactive "P")
-  (org-agenda-check-type t 'agenda 'todo 'tags 'search)
-  (org-agenda-check-no-diary)
-  (org-agenda-maybe-loop
-   #'org-agenda-schedule arg t nil
-   (let* ((marker (or (org-get-at-bol 'org-marker)
-		                  (org-agenda-error)))
-	        (type (marker-insertion-type marker))
-	        (buffer (marker-buffer marker))
-	        (pos (marker-position marker))
-	        ts)
-     (set-marker-insertion-type marker t)
-     (org-with-remote-undo buffer
-       (with-current-buffer buffer
-	       (widen)
-	       (goto-char pos)
-	       (setq ts (x/org-schedule)))
-       (org-agenda-show-new-time marker ts " S"))
-     (message "%s" ts))))
-
-(with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "M-l") #'x/agenda-toggle-clock-log)
-  (define-key org-agenda-mode-map (kbd "q") #'x/switch-to-last-buffer)
-  (define-key org-agenda-mode-map (kbd "s") #'x/org-agenda-schedule)
-  (define-key org-agenda-mode-map (kbd "k") #'org-agenda-previous-item)
-  (define-key org-agenda-mode-map (kbd "p") #'org-agenda-previous-item)
-  (define-key org-agenda-mode-map (kbd "n") #'org-agenda-next-item)
-  (define-key org-agenda-mode-map (kbd "j") #'org-agenda-next-item)
-  (define-key org-agenda-mode-map (kbd "T") #'org-agenda-goto-today)
-  (define-key org-agenda-mode-map (kbd "i") #'org-agenda-clock-in)
-  (define-key org-agenda-mode-map (kbd "o") #'org-agenda-clock-goto))
-
-;;; valign
-;; (require-package
-;;  '(valign
-;;    :host github
-;;    :repo "casouri/valign"))
-;; In documents with more than 10 tables, it will be very stuck.
-;; (add-hook 'org-agenda-mode-hook #'valign-mode)
-;; (remove-hook 'org-agenda-mode-hook #'valign-mode)
+;;; agenda personal
+(add-to-list 'org-agenda-custom-commands
+             '("p" "Personal"
+               ((tags-todo "PERSONAL+CATEGORY=\"Learning\""
+                           ((org-agenda-overriding-header "Learning")))
+                (tags-todo "PERSONAL+CATEGORY=\"Tasks\""
+                           ((org-agenda-overriding-header "Tasks")))
+                (tags-todo "PERSONAL+CATEGORY=\"Review\""
+                           ((org-agenda-overriding-header "Review")))
+                (tags-todo "PERSONAL+CATEGORY=\"Ideas\""
+                           ((org-agenda-overriding-header "Ideas")))
+                (tags-todo "PERSONAL+CATEGORY=\"Habits\""
+                           ((org-agenda-overriding-header "Habits"))))))
+;;; agenda book
+(add-to-list 'org-agenda-custom-commands
+             '("b" "Book"
+               ((tags-todo ":CATEGORY=\"玫瑰的名字\""
+                           ((org-agenda-overriding-header "玫瑰的名字"))))))
 
 (provide 'x-org-agenda)
 ;;; x-org-agenda.el ends here

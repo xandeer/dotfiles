@@ -298,5 +298,9 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 ;;; verse block
 (set-face-attribute 'org-verse nil :slant 'italic)
 
+;;; keybindings
+(x/define-keys org-mode-map
+               '(("H-S-<return>" . org-insert-todo-heading)))
+
 (provide 'x-org)
 ;;; x-org.el ends here

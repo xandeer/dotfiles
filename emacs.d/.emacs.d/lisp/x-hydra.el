@@ -72,6 +72,7 @@ Buffer\n"
 
   ("d" org-agenda-list "agenda daily")
   ("a" (org-agenda nil "x") "agenda all")
+  ("b" (org-agenda nil "b") "agenda book")
   ("e" (org-agenda nil "e") "agenda emacs")
   ("i" (org-agenda nil "i") "agenda inbox")
   ("t" (org-agenda nil "t") "agenda todo")

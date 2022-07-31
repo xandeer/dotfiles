@@ -253,5 +253,22 @@ Default use `point-min` or `point-max`."
   (add-hook (derived-mode-hook-name mode)
             (apply-partially 'x/set-major-mode-name name)))
 
+;;; keybindings
+(defun x/define-keys (map bindings)
+  "Define keys in MAP according to BINDINGS.
+
+Example:
+  (x/define-keys org-agenda-mode-map
+                 (quote ((\"k\" . org-agenda-previous-item)
+                         (\"p\" . org-agenda-previous-item)
+                         (\"n\" . org-agenda-next-item)
+                         (\"j\" . org-agenda-next-item)
+                         (\"T\" . org-agenda-goto-today)
+                         (\"i\" . org-agenda-clock-in)
+                         (\"o\" . org-agenda-clock-goto))))"
+  (mapc (lambda (binding)
+          (define-key map (kbd (car binding)) (cdr binding)))
+        bindings))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here
