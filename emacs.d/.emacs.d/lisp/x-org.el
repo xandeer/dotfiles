@@ -302,5 +302,27 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 (x/define-keys org-mode-map
                '(("H-S-<return>" . org-insert-todo-heading)))
 
+;;; embark
+(with-eval-after-load 'embark
+  (add-to-list 'marginalia-prompt-categories '("Go to heading" . consult-org-heading))
+  ;; doesn't work without the context
+  (embark-define-keymap embark-org-heading-map
+    "Keymap for embark org heading."
+    ("i" org-clock-in)
+    ("r" org-refile))
+  (add-to-list 'embark-keymap-alist '(consult-org-heading embark-org-heading-map))
+
+  (x/define-keys embark-heading-map
+                 '(("i" . org-clock-in)
+                   ;; something wrong with this
+                   ("r" . org-refile)
+                   ("j" . outline-next-visible-heading)
+                   ("k" . outline-previous-visible-heading)
+                   ("h" . outline-hide-subtree)
+                   ("w" . outline-move-subtree-up)
+                   ("s" . outline-move-subtree-down)
+                   ("D" . x/duplicate-line)
+                   ("c" . org-cut-subtree))))
+
 (provide 'x-org)
 ;;; x-org.el ends here
