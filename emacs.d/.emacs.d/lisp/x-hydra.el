@@ -26,6 +26,7 @@
   ;; ("e" (x/open "/Applications/Evernote.app") "open evernote")
   ("e" eshell "eshell")
   ("x" (x/open "https://xandeer.github.io/20210629191000-000_index.html") "open github.io")
+  ("H-x" x/launch-separate-emacs-under-x "launch another emacs")
   ("s" #'eva-query-sleep "eva query sleep"))
 
 (defhydra x/hydra-open-buffer (:exit t :columns 4 :idle 0.3)

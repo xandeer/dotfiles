@@ -168,13 +168,15 @@ Default use `point-min` or `point-max`."
   (interactive)
   (kill-new (buffer-file-name)))
 
-(defun x--launch-separate-emacs-under-x ()
+(defun x/launch-separate-emacs-under-x ()
+  "Launch a separate Emacs instance under X."
+  (interactive)
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
 (defun x/restart-emacs ()
   "Restart Emacs."
   (interactive)
-  (let ((kill-emacs-hook (append kill-emacs-hook (list #'x--launch-separate-emacs-under-x))))
+  (let ((kill-emacs-hook (append kill-emacs-hook (list #'x/launch-separate-emacs-under-x))))
     (save-buffers-kill-emacs)))
 
 (defun x/load-current ()
