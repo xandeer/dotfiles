@@ -41,7 +41,7 @@ zplug "plugins/cargo",                    from:oh-my-zsh, if:"(( $+commands[carg
 zplug "plugins/colored-man-pages",        from:oh-my-zsh
 zplug "plugins/colorize",                 from:oh-my-zsh
 zplug "plugins/command-not-found",        from:oh-my-zsh, if:"(( $+commands[cnf-lookup] ))"
-zplug "plugins/emacs",                    from:oh-my-zsh, if:"(( $+commands[emacsclient] ))"
+# zplug "plugins/emacs",                    from:oh-my-zsh, if:"(( $+commands[emacsclient] ))"
 zplug "plugins/git",                      from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/git-extras",               from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
