@@ -29,8 +29,7 @@
 (with-eval-after-load 'tide
   (x/define-keys tide-mode-map
                  '(("C-c C-f" . x/tide-format)
-                   ("C-c C-r" . tide-rename-identifier)
-                   ("C-c r" . tide-rename-identifier)
+                   ("C-c C-r" . tide-rename-symbol)
                    ("M-k" . tide-jump-back)
                    ("M-," . tide-references))))
 
@@ -67,7 +66,7 @@
       (progn
         (require 'yarn))))
 
-(defun x/web-mode ()
+(defun x/web-mode-on ()
   "Turn on `x/web-mode'."
   (interactive)
   (x/web-mode 1))
