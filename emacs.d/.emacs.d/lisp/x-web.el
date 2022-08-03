@@ -27,12 +27,12 @@
   (tide-organize-imports))
 
 (with-eval-after-load 'tide
-  (let ((map tide-mode-map))
-    (define-key map (kbd "C-c C-f") #'x/tide-format)
-    (define-key map (kbd "C-c r") #'tide-rename-symbol)
-    (define-key map (kbd "M-k") #'tide-jump-back)
-    (define-key map (kbd "M-,") #'tide-references)
-    (define-key map (kbd "H-r") #'yarn-run)))
+  (x/define-keys tide-mode-map
+                 '(("C-c C-f" . x/tide-format)
+                   ("C-c C-r" . tide-rename-identifier)
+                   ("C-c r" . tide-rename-identifier)
+                   ("M-k" . tide-jump-back)
+                   ("M-," . tide-references))))
 
 (add-hook 'typescript-mode-hook #'x/tide-setup)
 (add-hook 'js2-mode-hook #'x/tide-setup)
@@ -43,6 +43,46 @@
 (autoload 'yarn-test "yarn" nil t)
 (with-eval-after-load 'yarn
   (require 'cl))
+
+(defun x/web-locate-package-json (&optional _dir)
+  "Locate `package.json` file."
+  (let ((dir (or _dir default-directory)))
+    (locate-dominating-file dir "package.json")))
+
+(defvar x/web-mode-map
+  (let ((map (make-sparse-keymap)))
+    (x/define-keys
+     map
+     '(("C-c d" . x/docs-lookup)
+       ("C-c i" . yarn-install)
+       ("C-c r" . yarn-run)
+       ("C-c t" . yarn-test)))
+    map))
+
+(define-minor-mode x/web-mode
+  "Minor mode for web development."
+  :keymap x/web-mode-map
+  :group 'x/web
+  (if x/web-mode
+      (progn
+        (require 'yarn))))
+
+(defun x/web-mode ()
+  "Turn on `x/web-mode'."
+  (interactive)
+  (x/web-mode 1))
+
+(defun x/web-mode-off ()
+  "Turn off `x/web-mode'."
+  (interactive)
+  (x/web-mode -1))
+
+(defun x/web-mode-auto ()
+  "Turn on `x/web-mode' if the current file is a web file."
+  (when (x/web-locate-package-json)
+    (x/web-mode)))
+
+(add-hook 'find-file-hook #'x/web-mode-auto)
 
 (provide 'x-web)
 ;;; x-web.el ends here
