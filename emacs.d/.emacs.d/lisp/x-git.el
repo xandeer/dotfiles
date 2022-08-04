@@ -19,6 +19,7 @@
 
   (global-set-key (kbd "C-x g") #'magit-status)
   (global-set-key (kbd "C-x M-g") #'magit-dispatch)
+  (global-set-key (kbd "C-x s") #'magit-stage)
   (define-key magit-status-mode-map (kbd "q") #'kill-current-buffer)
   (define-key magit-status-mode-map (kbd "K") #'magit-discard)
 
@@ -87,6 +88,8 @@ Magit\n"
 
   ;; Update git-gutter on focus (in case I was using git externally)
   (add-hook 'focus-in-hook #'git-gutter:update-all-windows)
+  (add-function :after after-focus-change-function
+              #'git-gutter:update-all-windows)
 
   (with-eval-after-load 'flycheck
     ;; let diff have left fringe, flycheck can have right fringe

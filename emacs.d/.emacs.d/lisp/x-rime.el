@@ -64,5 +64,33 @@
 (add-hook 'text-mode-hook #'x/activate-default-input-method)
 (add-hook 'telega-chat-mode-hook #'x/activate-default-input-method)
 
+(defun x/highlight-cursor ()
+  (set-face-background
+   'cursor
+   (if (and (bound-and-true-p rime-mode)
+            (rime--should-enable-p)
+            (not (rime--should-inline-ascii-p)))
+       "#f48225"
+     "#51afef")))
+
+(defvar x/last-post-command-position 0
+  "Holds the cursor position from the last run of post-command-hooks.")
+
+(make-variable-buffer-local 'x/last-post-command-position)
+(defvar x/cursor-move-hook nil
+  "Holds the cursor move hook from the last run of `post-command-hook'.")
+
+(defun x/do-stuff-if-moved-post-command ()
+  (unless (equal (point) x/last-post-command-position)
+    (run-hooks 'x/cursor-move-hook))
+  (setq x/last-post-command-position (point)))
+
+;; (add-hook 'post-command-hook #'x/do-stuff-if-moved-post-command)
+;; (remove-hook 'post-command-hook #'x/do-stuff-if-moved-post-command)
+(add-hook 'post-command-hook #'x/highlight-cursor)
+;; (add-hook 'x/cursor-move-hook #'x/highlight-cursor)
+;; (add-function :after after-focus-change-function
+;;               #'x/highlight-cursor)
+
 (provide 'x-rime)
 ;;; x-rime.el ends here

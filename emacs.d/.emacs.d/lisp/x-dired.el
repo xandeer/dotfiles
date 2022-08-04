@@ -60,25 +60,29 @@
   (setq dired-filter-revert 'always)
   (setq dired-filter-group-saved-groups
         '(("default"
-           ("Git"
-            (directory . ".git")
-            (file . ".gitignore"))
            ("Directory"
             (directory))
            ("PDF"
-            (extension . "pdf"))
+            (extension "pdf"))
            ("LaTeX"
             (extension "tex" "bib"))
            ("Source"
-            (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
+            (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "ts"))
+           ("Config"
+            (regexp . "config\\|package.json\\|^\\..*rc"))
+           ("Style"
+            (extension "css"))
            ("Doc"
             (extension "md" "rst" "txt"))
            ("Org"
-            (extension . "org"))
+            (extension "org"))
            ("Archives"
             (extension "zip" "rar" "gz" "bz2" "tar"))
            ("Images"
-            (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
+            (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))
+           ("Symlinks" (symlink))
+           ("Git"
+            (regexp . "^\\.git"))))))
 
 (require 'dired-rainbow)
 (with-eval-after-load 'dired-rainbow
