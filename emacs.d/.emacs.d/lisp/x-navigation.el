@@ -17,27 +17,30 @@
 ;;
 ;;; Code:
 
-(let ((map (define-prefix-command 'x-navigation-map)))
-  (global-set-key (kbd "M-j") map)
+(define-prefix-command 'x/navigation-map)
 
-  (define-key map "a" #'beginning-of-buffer)
-  (define-key map "e" #'end-of-buffer)
-  (define-key map (kbd "M-a") #'beginning-of-buffer-other-window)
-  (define-key map (kbd "M-e") #'end-of-buffer-other-window)
-  (define-key map "h" #'consult-outline) ;; Alternative: consult-org-heading
-  (define-key map "i" #'consult-imenu)
-  (define-key map (kbd "M-i") #'consult-imenu-multi)
-  (define-key map "j" #'avy-goto-line-below)
-  (define-key map (kbd "M-j") #'x/ace-goto-char-timer)
-  (define-key map "k" #'avy-goto-line-above)
-  (define-key map "l" #'avy-goto-line)
-  (define-key map (kbd "M-l") #'consult-goto-line)
-  (define-key map "m" #'consult-mark)
-  (define-key map (kbd "M-m") #'consult-global-mark)
-  (define-key map "u" #'jump-to-register)
-  (define-key map (kbd "M-u") #'point-to-register)
-  (define-key map "v" #'scroll-other-window)
-  (define-key map (kbd "M-v") #'scroll-other-window-down))
+(x/define-keys
+ x/navigation-map
+ '(("a" . beginning-of-buffer)
+   ("e" . end-of-buffer)
+   ("M-a" . beginning-of-buffer-other-window)
+   ("M-e" . end-of-buffer-other-window)
+   ("h" . consult-outline) ;; Alternative: consult-org-heading
+   ("i" . consult-imenu)
+   ("M-i" . consult-imenu-multi)
+   ("j" . avy-goto-line-below)
+   ("M-j" . x/ace-goto-char-timer)
+   ("k" . avy-goto-line-above)
+   ("l" . avy-goto-line)
+   ("M-l" . consult-goto-line)
+   ("m" . consult-mark)
+   ("M-m" . consult-global-mark)
+   ("u" . jump-to-register)
+   ("M-u" . point-to-register)
+   ("v" . scroll-other-window)
+   ("M-v" . scroll-other-window-down)))
+
+(global-set-key (kbd "M-j") #'x/navigation-map)
 
 (provide 'x-navigation)
 ;;; x-navigation.el ends here
