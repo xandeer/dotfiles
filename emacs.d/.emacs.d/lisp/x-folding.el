@@ -38,7 +38,8 @@
    ("k" . hs-toggle-hiding)
    ("l" . hs-hide-level)))
 
-(global-set-key (kbd "M-h") #'x/folding-map)
+;; (global-set-key (kbd "M-h") #'x/folding-map)
+(define-key hs-minor-mode-map (kbd "M-h") #'x/folding-map)
 
 (provide 'x-folding)
 ;;; x-folding.el ends here
