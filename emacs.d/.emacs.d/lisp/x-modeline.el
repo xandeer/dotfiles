@@ -12,9 +12,7 @@
 (custom-set-faces
  '(mode-line ((t (:slant italic :height 0.9))))
  '(mode-line-active ((t (:slant italic :height 0.9))))
- '(mode-line-inactive ((t (:slant italic :height 0.9))))
- '(rime-indicator-face ((t (:slant italic :height 0.8))))
- '(rime-indicator-dim-face ((t (:slant italic :height 0.8)))))
+ '(mode-line-inactive ((t (:slant italic :height 0.9)))))
 
 (x/append-init-hook #'doom-modeline-mode)
 

@@ -6,6 +6,7 @@
 (autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
 (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
 
+(autoload #'magit-stage "magit" nil t)
 ;;; magit
 (with-eval-after-load 'magit
   (setq magit-diff-refine-hunk t)
@@ -19,7 +20,6 @@
 
   (global-set-key (kbd "C-x g") #'magit-status)
   (global-set-key (kbd "C-x M-g") #'magit-dispatch)
-  (global-set-key (kbd "C-x s") #'magit-stage)
   (define-key magit-status-mode-map (kbd "q") #'kill-current-buffer)
   (define-key magit-status-mode-map (kbd "K") #'magit-discard)
 
@@ -72,31 +72,45 @@ Magit\n"
 ;;; gutter
 (require 'git-gutter-fringe)
 (global-git-gutter-mode t)
-(with-eval-after-load 'git-gutter-fringe
-  ;; standardize default fringe width
-  (if (fboundp 'fringe-mode) (fringe-mode '4))
 
-  ;; places the git gutter outside the margins.
-  (setq-default fringes-outside-margins t)
-  ;; thin fringe bitmaps
-  (define-fringe-bitmap 'git-gutter-fr:added [224]
-    nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224]
-    nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
-    nil nil 'bottom)
+;; standardize default fringe width
+(fringe-mode '4)
+;; places the git gutter outside the margins.
+(setq-default fringes-outside-margins t)
+;; thin fringe bitmaps
+(define-fringe-bitmap 'git-gutter-fr:added [224]
+  nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:modified [224]
+  nil nil '(center repeated))
+(define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
+  nil nil 'bottom)
 
-  ;; Update git-gutter on focus (in case I was using git externally)
-  (add-hook 'focus-in-hook #'git-gutter:update-all-windows)
-  (add-function :after after-focus-change-function
+;; Update git-gutter on focus (in case I was using git externally)
+(add-hook 'focus-in-hook #'git-gutter:update-all-windows)
+(add-function :after after-focus-change-function
               #'git-gutter:update-all-windows)
 
-  (with-eval-after-load 'flycheck
-    ;; let diff have left fringe, flycheck can have right fringe
-    (setq flycheck-indication-mode 'right-fringe)
-    ;; A non-descript, left-pointing arrow
-    (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-      [16 48 112 240 112 48 16] nil nil 'center)))
+(defun x/stage-hunk ()
+  "Stage current hunk without ask."
+  (interactive)
+  (let ((git-gutter:ask-p nil))
+    (git-gutter:stage-hunk)))
+
+(x/define-keys
+ vc-prefix-map
+ '(("s" . x/stage-hunk)
+   ("S" . magit-stage)
+   ("r" . git-gutter:revert-hunk)
+   ("p" . git-gutter:popup-hunk)
+   ("j" . git-gutter:next-hunk)
+   ("k" . git-gutter:previous-hunk)))
+
+(with-eval-after-load 'flycheck
+  ;; let diff have left fringe, flycheck can have right fringe
+  (setq flycheck-indication-mode 'right-fringe)
+  ;; A non-descript, left-pointing arrow
+  (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+    [16 48 112 240 112 48 16] nil nil 'center))
 
 (provide 'x-git)
 ;;; x-git.el ends here

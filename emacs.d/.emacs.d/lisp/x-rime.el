@@ -64,14 +64,17 @@
 (add-hook 'text-mode-hook #'x/activate-default-input-method)
 (add-hook 'telega-chat-mode-hook #'x/activate-default-input-method)
 
-(defun x/highlight-cursor ()
-  (set-face-background
-   'cursor
-   (if (and (bound-and-true-p rime-mode)
-            (rime--should-enable-p)
-            (not (rime--should-inline-ascii-p)))
-       "#f48225"
-     "#51afef")))
+(defun x/switch-cursor-background ()
+  "Switch cursor background whether `rime-mode' active and not inline ascii mode."
+  (let ((indicator (rime-lighter)))
+    (set-face-background
+     'cursor
+     (if (and (not (string-empty-p indicator))
+              (equal (cadar (cddar (object-intervals indicator))) 'rime-indicator-face))
+         "#f48225"
+       "#51afef"))))
+
+(add-hook 'post-command-hook #'x/switch-cursor-background)
 
 (defvar x/last-post-command-position 0
   "Holds the cursor position from the last run of post-command-hooks.")
@@ -87,10 +90,7 @@
 
 ;; (add-hook 'post-command-hook #'x/do-stuff-if-moved-post-command)
 ;; (remove-hook 'post-command-hook #'x/do-stuff-if-moved-post-command)
-(add-hook 'post-command-hook #'x/highlight-cursor)
-;; (add-hook 'x/cursor-move-hook #'x/highlight-cursor)
-;; (add-function :after after-focus-change-function
-;;               #'x/highlight-cursor)
+;; (add-hook 'x/cursor-move-hook #'x/switch-cursor-background)
 
 (provide 'x-rime)
 ;;; x-rime.el ends here
