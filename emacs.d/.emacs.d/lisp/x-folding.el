@@ -24,7 +24,8 @@
           tide-mode-hook))
 
 (with-eval-after-load 'hideshow
-  (add-to-list 'hs-special-modes-alist '(kotlin-mode "{" "}" "/[*/]" nil nil)))
+  (add-to-list 'hs-special-modes-alist '(kotlin-mode "{" "}" "/[*/]" nil nil))
+  (define-key hs-minor-mode-map (kbd "M-h") #'x/folding-map))
 
 (define-prefix-command 'x/folding-map)
 
@@ -39,7 +40,6 @@
    ("l" . hs-hide-level)))
 
 ;; (global-set-key (kbd "M-h") #'x/folding-map)
-(define-key hs-minor-mode-map (kbd "M-h") #'x/folding-map)
 
 (provide 'x-folding)
 ;;; x-folding.el ends here

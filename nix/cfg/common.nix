@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./fonts.nix
-  ];
-
   nixpkgs = {
     config = import ./nixpkgs-config.nix;
     overlays = import ./nixpkgs-overlays.nix;
@@ -58,7 +54,7 @@
     # graphviz
     # plantuml
 
-    deno
+    # deno
     nodejs
     yarn
 

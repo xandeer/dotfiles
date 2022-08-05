@@ -13,10 +13,5 @@
             inotify-simple
             xlib;
     };
-
-    consola = pkgs.callPackage ./fonts/consola {};
-    doom-icons = pkgs.callPackage ./fonts/doom-icons {};
-    inconsolata = pkgs.callPackage ./fonts/inconsolata {};
-    xingkai = pkgs.callPackage ./fonts/xingkai {};
   };
 }
