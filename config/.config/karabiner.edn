@@ -1,15 +1,17 @@
 {:profiles
- {:Default
+ {:xandeer
   {:default true
-   :alone 120
-   :delay 80
-   :held 70
-   :sim 50}}
- :templates {:open-app  "osascript -e 'tell application \"%s\" to activate'"}
+   :alone 150                   ; hold for .. ms to register single tap
+   :delay 0                     ; time after witch the key press is delayred
+   :held 50                     ; not sure what it's for
+   :sim 50}} ; keys need to be pressed within this threshold to be considered simultaneous
+ :templates {:open-app "osascript -e 'tell application \"%s\" to activate'"}
  :simlayers {:space-mode {:key :spacebar}
+             :cl-mode {:key :caps_lock}
              :r-mode {:key :r}
-             :s-mode {:key :s :modi {:optional [:left_shift :right_shift]}}}
- ;; :layers {:s-layer {:key :s}}
+             :s-mode {:key :s :modi {:optional [:left_shift :right_shift]}}
+             :v-mode {:key :v}
+             :w-mode {:key :w}}
  :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
  :applications
  { ;; To obtain the app ID: `grep -A1 "CFBundleIdentifier" /Applications/The.app/Contents/Info.plist`
@@ -17,8 +19,7 @@
   :emacs ["org.gnu.Emacs"]
   :studio ["com.google.android.studio"]}
  :main
- [ ;; --- symbols and numbers ---
-  {:des "symbols and numbers"
+ [{:des "(s-[key]) symbols and numbers"
    :rules [[:condi :s-mode :built-in]
            [:h :hyphen]
            [:m :1]
@@ -31,17 +32,62 @@
            [:i :8]
            [:o :9]
            [:p :0]
+           [:a :!S3]
            [:c :open_bracket]
            [:v :close_bracket]
            [:y :equal_sign]
            [:n :backslash]
            [:d :!S9]
-           [:f :!S0]]}
+           [:f :!S0]
+           [:tab :!Etab]]}
 
-  ;; --- remaps ---
-  {:des "caps_lock"
-   :rules [:built-in
-           [:##caps_lock :left_control nil {:alone :caps_lock}]]}
+  {:des "swap : and ;"
+   :rules [[:#Psemicolon :!Ssemicolon]
+           [:!Ssemicolon :semicolon]]}
+
+  {:des "(v-[key]) h to backspace"
+   :rules [:v-mode
+           [:h :delete_or_backspace]]}
+
+  {:des "(caps_lock-[key]) hjkl to arrow"
+   :rules [[:condi :cl-mode :built-in]
+           ;; [:##caps_lock :left_control nil {:alone :caps_lock}]
+           [:j :down_arrow]
+           [:k :up_arrow]
+           [:h :left_arrow]
+           [:l :right_arrow]]}
+
+  ;; {:des "jsim"
+  ;;  :rules [[[:j :k] :escape]]}
+
+  {:des "(spacebar-[key]) manage windows with raycast"
+   :rules [:space-mode
+           [:h :!!h]
+           [:l :!!l]
+           [:j :!!j]
+           [:k :!!k]
+           [:m :!!m]
+           [:u :!!u]
+           [:i :!!i]
+           [:o :!!o]
+           :w-mode
+           [:j :!Etab]
+           [:k :!Ek]]}
+
+  {:des "(spacebar-[key]) launch apps"
+   :rules [:space-mode
+           [:a [:open-app "Android Studio"]]
+           [:c [:open-app "Google Chrome"]]
+           [:e [:open-app "Emacs"]]]}
+
+  {:des "(r-e) to tab"
+   :rules [[:condi :r-mode :built-in]
+           [:e :tab]]}
+
+  {:des "Emacs like"
+   :rules [[:condi :!emacs :!studio]
+           [:#EOb :!Oleft_arrow]
+           [:#EOf :!Oright_arrow]]}
 
   {:des "option to escape if alone"
    :rules [:built-in
@@ -71,33 +117,4 @@
   {:des "d/k to option if held"
    :rules [:built-in
            [:d :left_option nil {:alone :d}]
-           [:k :right_option nil {:alone :k}]]}
-
-  {:des "re to tab"
-   :rules [[:condi :r-mode :built-in]
-           [:e :tab]]}
-
-  ;; --- Emacs like ---
-  {:des "Emacs like"
-   :rules [[:condi :!emacs :!studio]
-           [:#EOb :!Oleft_arrow]
-           [:#EOf :!Oright_arrow]]}
-
-  ;; --- launchers ---
-  {:des "[launch] Chrome"
-   :rules [:space-mode
-           [:a [:open-app "Android Studio"]]
-           [:c [:open-app "Google Chrome"]]
-           [:e [:open-app "Emacs"]]]}
-
-  ;; --- window ---
-  {:des "window"
-   :rules [:space-mode
-           [:h :!!h]
-           [:l :!!l]
-           [:j :!!j]
-           [:k :!!k]
-           [:m :!!m]
-           [:u :!!u]
-           [:i :!!i]]}
-  ]}
+           [:k :right_option nil {:alone :k}]]}]}
