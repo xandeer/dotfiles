@@ -7,3 +7,9 @@
 completer.hist
 .nrepl-port
 repl-port
+
+# Node
+node_modules
+
+# Logs
+*.log
