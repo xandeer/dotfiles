@@ -1,0 +1,83 @@
+{:profiles
+ {:Default
+  {:default true
+   :alone 120
+   :delay 80
+   :held 70
+   :sim 50}}
+ :templates {:open-app  "osascript -e 'tell application \"%s\" to activate'"}
+ :simlayers {:space-mode {:key :spacebar}
+             :r-mode {:key :r}
+             :s-mode {:key :s}
+             }
+ ;; :layers {:s-layer {:key :s}}
+ :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
+ :applications
+ { ;; To obtain the app ID: `grep -A1 "CFBundleIdentifier" /Applications/The.app/Contents/Info.plist`
+  :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
+  :emacs ["org.gnu.Emacs"]
+  :studio ["com.google.android.studio"]}
+ :main
+ [ ;; --- remaps ---
+  {:des "caps_lock"
+   :rules [:built-in
+           [:##caps_lock :left_control nil {:alone :caps_lock}]]}
+
+  {:des "option to escape if alone"
+   :rules [:built-in
+           [:##left_option :left_option nil {:alone :escape}]
+           [:##right_option :right_option nil {:alone :escape}]]}
+
+  {:des "shift to delete if alone"
+   :rules [:built-in
+           [:##left_shift :left_shift nil {:alone :delete_or_backspace}]
+           [:##right_shift :right_shift nil {:alone :delete_or_backspace}]]}
+
+  {:des "command to enter if alone"
+   :rules [:built-in
+           [:##left_command :left_command nil {:alone :return_or_enter}]
+           [:##right_command :right_command nil {:alone :return_or_enter}]]}
+
+  {:des "f/j to control if held"
+   :rules [:built-in
+           [:f :left_control nil {:alone :f}]
+           [:j :right_control nil {:alone :j}]]}
+
+  {:des "g/h to control if held"
+   :rules [:built-in
+           [:g :left_shift nil {:alone :g}]
+           [:h :right_shift nil {:alone :h}]]}
+
+  {:des "re to tab"
+   :rules [[:condi :r-mode :built-in]
+           [:e :tab]]}
+
+  ;; --- symbols and numbers ---
+  {:des "symbols and numbers"
+   :rules [[:condi :s-mode :built-in]
+           [:h :hyphen]
+           [:m :1]
+           [:comma :2]
+           [:period :3]
+           [:j :4]
+           [:k :5]
+           [:l :6]
+           [:u :7]
+           [:i :8]
+           [:o :9]
+           [:p :0]
+           [:c :open_bracket]
+           [:v :closes_bracket]]}
+
+  ;; --- Emacs like ---
+  {:des "Emacs like"
+   :rules [[:condi :!emacs :!studio]
+           [:#EOb :!Oleft_arrow]
+           [:#EOf :!Oright_arrow]]}
+
+  ;; --- launchers ---
+  {:des "[launch] Chrome"
+   :rules [:space-mode
+           [:a [:open-app "Android Studio"]]
+           [:c [:open-app "Google Chrome"]]
+           [:e [:open-app "Emacs"]]]}]}

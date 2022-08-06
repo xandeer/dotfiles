@@ -1,0 +1,9 @@
+# Mac
+.DS_Store
+
+# Clojure
+.lein-repl-history
+.lein-failures
+completer.hist
+.nrepl-port
+repl-port

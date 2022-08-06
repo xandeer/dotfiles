@@ -1,6 +1,10 @@
 [init]
 	defaultBranch = main
 
+[core]
+	excludesFile = ~/.config/git/ignore-global
+	ignorecase = false
+
 [alias]
 	co = checkout
 	br = branch
@@ -19,12 +23,12 @@
 	rl = reflog
 
 [pager]
-	diff=diff-so-fancy | less --tabs=1,5 -RFX
-	show=diff-so-fancy | less --tabs=1,5 -RFX
+	diff = diff-so-fancy | less --tabs=1,5 -RFX
+	show = diff-so-fancy | less --tabs=1,5 -RFX
 
 [user]
-	email=kkxandeer@gmail.com
-	name=Kevin Du
+	email = kkxandeer@gmail.com
+	name = Kevin Du
 
 [http]
 [http "https://github.com"]
@@ -32,7 +36,7 @@
 	sslVerify = false
 
 [github]
-	user=xandeer
+	user = xandeer
 
 [includeIf "gitdir:~/projects/personal/"]
 	path = ~/projects/personal/.gitconfig
