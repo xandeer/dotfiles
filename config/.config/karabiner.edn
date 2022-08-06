@@ -8,8 +8,7 @@
  :templates {:open-app  "osascript -e 'tell application \"%s\" to activate'"}
  :simlayers {:space-mode {:key :spacebar}
              :r-mode {:key :r}
-             :s-mode {:key :s}
-             }
+             :s-mode {:key :s :modi {:optional [:left_shift :right_shift]}}}
  ;; :layers {:s-layer {:key :s}}
  :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
  :applications
@@ -18,7 +17,28 @@
   :emacs ["org.gnu.Emacs"]
   :studio ["com.google.android.studio"]}
  :main
- [ ;; --- remaps ---
+ [ ;; --- symbols and numbers ---
+  {:des "symbols and numbers"
+   :rules [[:condi :s-mode :built-in]
+           [:h :hyphen]
+           [:m :1]
+           [:comma :2]
+           [:period :3]
+           [:j :4]
+           [:k :5]
+           [:l :6]
+           [:u :7]
+           [:i :8]
+           [:o :9]
+           [:p :0]
+           [:c :open_bracket]
+           [:v :close_bracket]
+           [:y :equal_sign]
+           [:n :backslash]
+           [:d :!S9]
+           [:f :!S0]]}
+
+  ;; --- remaps ---
   {:des "caps_lock"
    :rules [:built-in
            [:##caps_lock :left_control nil {:alone :caps_lock}]]}
@@ -38,36 +58,24 @@
            [:##left_command :left_command nil {:alone :return_or_enter}]
            [:##right_command :right_command nil {:alone :return_or_enter}]]}
 
+  {:des "g/h to shift if held"
+   :rules [:built-in
+           [:g :left_shift nil {:alone :g}]
+           [:h :right_shift nil {:alone :h}]]}
+
   {:des "f/j to control if held"
    :rules [:built-in
            [:f :left_control nil {:alone :f}]
            [:j :right_control nil {:alone :j}]]}
 
-  {:des "g/h to control if held"
+  {:des "d/k to option if held"
    :rules [:built-in
-           [:g :left_shift nil {:alone :g}]
-           [:h :right_shift nil {:alone :h}]]}
+           [:d :left_option nil {:alone :d}]
+           [:k :right_option nil {:alone :k}]]}
 
   {:des "re to tab"
    :rules [[:condi :r-mode :built-in]
            [:e :tab]]}
-
-  ;; --- symbols and numbers ---
-  {:des "symbols and numbers"
-   :rules [[:condi :s-mode :built-in]
-           [:h :hyphen]
-           [:m :1]
-           [:comma :2]
-           [:period :3]
-           [:j :4]
-           [:k :5]
-           [:l :6]
-           [:u :7]
-           [:i :8]
-           [:o :9]
-           [:p :0]
-           [:c :open_bracket]
-           [:v :closes_bracket]]}
 
   ;; --- Emacs like ---
   {:des "Emacs like"
@@ -80,4 +88,16 @@
    :rules [:space-mode
            [:a [:open-app "Android Studio"]]
            [:c [:open-app "Google Chrome"]]
-           [:e [:open-app "Emacs"]]]}]}
+           [:e [:open-app "Emacs"]]]}
+
+  ;; --- window ---
+  {:des "window"
+   :rules [:space-mode
+           [:h :!!h]
+           [:l :!!l]
+           [:j :!!j]
+           [:k :!!k]
+           [:m :!!m]
+           [:u :!!u]
+           [:i :!!i]]}
+  ]}
