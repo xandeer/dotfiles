@@ -78,6 +78,7 @@
            [:a [:open-app "Android Studio"]]
            [:c [:open-app "Google Chrome"]]
            [:e [:open-app "Emacs"]]
+           [:k :!Of13]                  ; raycast kill process
            [:w :f16]
            [:r :!Sf16]
            [:s :!Tf16]]}
