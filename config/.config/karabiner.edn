@@ -62,6 +62,7 @@
 
   {:des "(w-[key]) manage windows with raycast and alttab"
    :rules [[:condi :built-in :w-mode]
+           [:grave_accent_and_tilde :!!grave_accent_and_tilde]
            [:e :!!e]
            [:r :!!r]
            [:h :!!h]
@@ -79,9 +80,15 @@
            [:c [:open-app "Google Chrome"]]
            [:e [:open-app "Emacs"]]
            [:k :!Of13]                  ; raycast kill process
-           [:w :f16]
-           [:r :!Sf16]
-           [:s :!Tf16]]}
+           [:w :f16]                    ; screenshots window
+           [:r :!CS4]                   ; screenshots rect
+           [:t :!CS5]                   ; record
+           [:s :!CS3]]}                 ; screenshots screen
+
+  {:des "screenshots"
+   :rules [[:!Sf16 :!CS4]               ; screenshots rect
+           [:!Of16 :!CS5]               ; record
+           [:!Tf16 :!CS3]]}             ; screenshots screen
 
   {:des "Chrome shortcuts"
    :rules [:chrome

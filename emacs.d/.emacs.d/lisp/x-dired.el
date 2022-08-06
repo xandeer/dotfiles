@@ -25,23 +25,51 @@
     (mapc #'kill-buffer (doom-buffers-in-mode 'dired-mode))
     (message "Killed all dired buffers"))
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "* n") #'dired-next-marked-file)
-    (define-key map (kbd "* p") #'dired-prev-marked-file)
-    (define-key map "q" #'+dired/quit-all)
-    (define-key map "d" #'dired-do-delete)
-    (define-key map "h" #'dired-up-directory)
-    (define-key map "u" #'dired-up-directory)
-    (define-key map "n" #'dired-unmark)
-    (define-key map "N" #'dired-unmark-all-marks)
-    (define-key map "@" #'x/change-hs-on-dired)
-    (define-key map "^" #'x/cow-current)
-    (define-key map ">" #'x/telega-send-to-chat)
-    (define-key map "i" #'wdired-change-to-wdired-mode)
-    (define-key map "j" #'dired-next-line)
-    (define-key map "k" #'dired-previous-line)
-    (define-key map "l" #'dired-find-file)
-    (define-key map "." #'dirvish)))
+  (defun x/dired-find-file ()
+    "Use `x/open-with' to open media files in dired."
+    (interactive)
+    (unless (or (eq major-mode 'dired-mode)
+                (eq major-mode 'dirvish-mode))
+      (user-error "Not in dired"))
+    (if (string-match-p
+         (regexp-opt '(".png" ".jpg" ".mov"))
+         (dired-get-filename))
+        (x/open-with)
+      (dired-find-file)))
+
+  (defun x/dired-find-file-other-window ()
+    "Use `x/open-with' to open video files in dired."
+    (interactive)
+    (unless (or (eq major-mode 'dired-mode)
+                (eq major-mode 'dirvish-mode))
+      (user-error "Not in dired"))
+    (if (string-match-p
+         (regexp-opt '(".mov"))
+         (dired-get-filename))
+        (x/open-with)
+      (dired-find-file-other-window)))
+
+  (define-key dired-mode-map [remap dired-find-file] #'x/dired-find-file)
+  (define-key dired-mode-map [remap dired-find-file-other-window] #'x/dired-find-file-other-window)
+
+  (x/define-keys
+   dired-mode-map
+   '(("* n" . dired-next-marked-file)
+     ("* p" . dired-prev-marked-file)
+     ("q" . +dired/quit-all)
+     ("d" . dired-do-delete)
+     ("h" . dired-up-directory)
+     ("u" . dired-up-directory)
+     ("n" . dired-unmark)
+     ("N" . dired-unmark-all-marks)
+     ("@" . x/change-hs-on-dired)
+     ("^" . x/cow-current)
+     (">" . x/telega-send-to-chat)
+     ("i" . wdired-change-to-wdired-mode)
+     ("j" . dired-next-line)
+     ("k" . dired-previous-line)
+     ("l" . dired-find-file)
+     ("." . dirvish))))
 
 (require 'dired-x)
 
@@ -78,6 +106,8 @@
             (extension "org"))
            ("Archives"
             (extension "zip" "rar" "gz" "bz2" "tar"))
+           ("Media"
+            (extension "mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
            ("Images"
             (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))
            ("Symlinks" (symlink))
