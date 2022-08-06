@@ -60,8 +60,10 @@
   ;; {:des "jsim"
   ;;  :rules [[[:j :k] :escape]]}
 
-  {:des "(spacebar-[key]) manage windows with raycast"
-   :rules [:space-mode
+  {:des "(w-[key]) manage windows with raycast and alttab"
+   :rules [[:condi :built-in :w-mode]
+           [:e :!!e]
+           [:r :!!r]
            [:h :!!h]
            [:l :!!l]
            [:j :!!j]
@@ -69,10 +71,7 @@
            [:m :!!m]
            [:u :!!u]
            [:i :!!i]
-           [:o :!!o]
-           :w-mode
-           [:j :!Etab]
-           [:k :!Ek]]}
+           [:o :!!o]]}
 
   {:des "(spacebar-[key]) launch apps"
    :rules [:space-mode
