@@ -77,7 +77,17 @@
    :rules [:space-mode
            [:a [:open-app "Android Studio"]]
            [:c [:open-app "Google Chrome"]]
-           [:e [:open-app "Emacs"]]]}
+           [:e [:open-app "Emacs"]]
+           [:w :f16]
+           [:r :!Sf16]
+           [:s :!Tf16]]}
+
+  {:des "Chrome shortcuts"
+   :rules [:chrome
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]
+           [:!Oj :!Copen_bracket]
+           [:!Ok :!Cclose_bracket]]}
 
   {:des "(r-e) to tab"
    :rules [[:condi :r-mode :built-in]
@@ -85,35 +95,35 @@
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]
-           [:#EOb :!Oleft_arrow]
-           [:#EOf :!Oright_arrow]]}
+           [:!Ob :!Oleft_arrow]
+           [:!Of :!Oright_arrow]]}
 
   {:des "option to escape if alone"
    :rules [:built-in
            [:##left_option :left_option nil {:alone :escape}]
-           [:##right_option :right_option nil {:alone :escape}]]}
+           [:##right_option :left_option nil {:alone :escape}]]}
 
   {:des "shift to delete if alone"
    :rules [:built-in
            [:##left_shift :left_shift nil {:alone :delete_or_backspace}]
-           [:##right_shift :right_shift nil {:alone :delete_or_backspace}]]}
+           [:##right_shift :left_shift nil {:alone :delete_or_backspace}]]}
 
   {:des "command to enter if alone"
    :rules [:built-in
            [:##left_command :left_command nil {:alone :return_or_enter}]
-           [:##right_command :right_command nil {:alone :return_or_enter}]]}
+           [:##right_command :left_command nil {:alone :return_or_enter}]]}
 
   {:des "g/h to shift if held"
    :rules [:built-in
            [:g :left_shift nil {:alone :g}]
-           [:h :right_shift nil {:alone :h}]]}
+           [:h :left_shift nil {:alone :h}]]}
 
   {:des "f/j to control if held"
    :rules [:built-in
            [:f :left_control nil {:alone :f}]
-           [:j :right_control nil {:alone :j}]]}
+           [:j :left_control nil {:alone :j}]]}
 
   {:des "d/k to option if held"
    :rules [:built-in
            [:d :left_option nil {:alone :d}]
-           [:k :right_option nil {:alone :k}]]}]}
+           [:k :left_option nil {:alone :k}]]}]}
