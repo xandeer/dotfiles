@@ -110,17 +110,16 @@
            [:c [:open-app "Google Chrome"]]
            [:e [:open-app "Emacs"]]
            [:k :!Of13]                  ; raycast kill process
-           [:w :f16]                    ; screenshots window
+           [:w :!CS5]                   ; start with record, shot window need a spacebar tap
            [:r :!CS4]                   ; screenshots rect
-           [:t :!CS5]                   ; record
            [:s :!CS3]]}                 ; screenshots screen
 
   {:des "f13: launch apps, f16: screenshots"
    :rules [[:f13 [:open-app "Android Studio"]]
            [:!Sf13 [:open-app "Emacs"]]
            [:!Tf13 [:open-app "Google Chrome"]]
+           [:f16 :!CS5]                 ; start with record, shot window need a spacebar tap
            [:!Sf16 :!CS4]               ; screenshots rect
-           [:!Of16 :!CS5]               ; record
            [:!Tf16 :!CS3]]}             ; screenshots screen
 
   {:des "Chrome shortcuts"
