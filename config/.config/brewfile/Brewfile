@@ -1,0 +1,190 @@
+
+# tap repositories and their packages
+
+tap homebrew/core
+brew aom
+brew autoconf
+brew awk
+brew bdw-gc
+brew brotli
+brew c-ares
+brew ca-certificates
+brew cairo
+brew cjson
+brew cmake
+brew cmocka
+brew coreutils
+brew dav1d
+brew docbook
+brew docbook-xsl
+brew dust
+brew exercism
+brew ffmpeg
+brew flac
+brew fontconfig
+brew freetype
+brew frei0r
+brew fribidi
+brew gdbm
+brew gdk-pixbuf
+brew gettext
+brew ghostscript
+brew giflib
+brew glib
+brew gmp
+brew gnu-getopt
+brew gnu-sed
+brew gnu-tar
+brew gnupg
+brew gnutls
+brew gobject-introspection
+brew graphite2
+brew guile
+brew harfbuzz
+brew icu4c
+brew imagemagick
+brew imath
+brew jansson
+brew jasper
+brew jbig2dec
+brew jpeg
+brew jpeg-xl
+brew kotlin
+brew lame
+brew leptonica
+brew libarchive
+brew libass
+brew libassuan
+brew libb2
+brew libbluray
+brew libde265
+brew libevent
+brew libffi
+brew libgcrypt
+brew libgpg-error
+brew libheif
+brew libidn
+brew libidn2
+brew libksba
+brew liblqr
+brew libnghttp2
+brew libogg
+brew libomp
+brew libpng
+brew libpthread-stubs
+brew libraw
+brew librist
+brew librsvg
+brew libsamplerate
+brew libsndfile
+brew libsodium
+brew libsoxr
+brew libtasn1
+brew libtiff
+brew libtool
+brew libunistring
+brew libusb
+brew libuv
+brew libvidstab
+brew libvmaf
+brew libvorbis
+brew libvpx
+brew libx11
+brew libxau
+brew libxcb
+brew libxdmcp
+brew libxext
+brew libxrender
+brew little-cms2
+brew lz4
+brew lzo
+brew m4
+brew make
+brew mas
+brew mbedtls
+brew mpdecimal
+brew nettle
+brew node@16
+brew npth
+brew onefetch
+brew opencore-amr
+brew openexr
+brew openjdk
+brew openjpeg
+brew openssl@1.1
+brew opus
+brew p11-kit
+brew pango
+brew pcre
+brew pinentry
+brew pixman
+brew pkg-config
+brew prettyping
+brew python@3.10
+brew python@3.9
+brew ranger
+brew rav1e
+brew readline
+brew rubberband
+brew sdcv
+brew sdl2
+brew shared-mime-info
+brew sip
+brew snappy
+brew speex
+brew sqlite
+brew srt
+brew tdlib
+brew tesseract
+brew texinfo
+brew theora
+brew trash
+brew unbound
+brew wakatime-cli
+brew watchexec
+brew webp
+brew x264
+brew x265
+brew xmlto
+brew xorgproto
+brew xvid
+brew xz
+brew zeromq
+brew zimg
+brew zstd
+
+tap homebrew/cask-versions
+cask clashx-pro
+
+tap homebrew/services
+
+tap homebrew/cask
+cask alt-tab
+cask karabiner-elements
+cask sip
+
+tap candid82/brew
+brew joker
+
+tap d12frosted/emacs-plus
+brew emacs-plus@29 --with-xwidgets --with-imagemagick
+
+tap git-chglog/git-chglog
+brew git-chglog
+
+tap laishulu/cask-fonts
+
+tap rcmdnk/file
+brew brew-file
+
+tap yqrashawn/goku
+brew goku
+
+# App Store applications
+# appstore 1055511498  Day One     (7.11)
+# appstore 682658836   GarageBand  (10.4.5)
+# appstore 408981434   iMovie      (10.3.1)
+# appstore 409183694   Keynote     (11.2)
+# appstore 409203825   Numbers     (11.2)
+# appstore 409201541   Pages       (11.2)
+# appstore 497799835   Xcode       (13.4.1)
