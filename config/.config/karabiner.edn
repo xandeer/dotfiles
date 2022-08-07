@@ -75,8 +75,9 @@
            [:n :!Sbackslash]]}
 
   {:des "(v-[key]) h to backspace"
-   :rules [:v-mode
-           [:h :delete_or_backspace]]}
+   :rules [[:condi :built-in :v-mode]
+           [:h :delete_or_backspace]
+           [:j :escape]]}
 
   {:des "(caps_lock-[key]) hjkl to arrow"
    :rules [[:condi :cl-mode :built-in]
@@ -114,8 +115,11 @@
            [:t :!CS5]                   ; record
            [:s :!CS3]]}                 ; screenshots screen
 
-  {:des "screenshots"
-   :rules [[:!Sf16 :!CS4]               ; screenshots rect
+  {:des "f13: launch apps, f16: screenshots"
+   :rules [[:f13 [:open-app "Android Studio"]]
+           [:!Sf13 [:open-app "Emacs"]]
+           [:!Tf13 [:open-app "Google Chrome"]]
+           [:!Sf16 :!CS4]               ; screenshots rect
            [:!Of16 :!CS5]               ; record
            [:!Tf16 :!CS3]]}             ; screenshots screen
 
@@ -125,10 +129,6 @@
            [:!Oh :!TStab]
            [:!Oj :!Copen_bracket]
            [:!Ok :!Cclose_bracket]]}
-
-  {:des "(r-e) to tab"
-   :rules [[:condi :r-mode :built-in]
-           [:e :tab]]}
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]

@@ -2545,6 +2545,12 @@
             "name" : "v-mode",
             "value" : 1,
             "type" : "variable_if"
+          }, {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
           } ],
           "type" : "basic"
         }, {
@@ -2578,7 +2584,72 @@
                 }
               } ]
             }
-          }
+          },
+          "conditions" : [ {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ]
+        }, {
+          "from" : {
+            "key_code" : "j"
+          },
+          "to" : [ {
+            "key_code" : "escape"
+          } ],
+          "conditions" : [ {
+            "name" : "v-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          }, {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "v-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "escape"
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "v"
+            }, {
+              "key_code" : "j"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "v-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          },
+          "conditions" : [ {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ]
         } ]
       }, {
         "description" : "(caps_lock-[key]) hjkl to arrow",
@@ -3850,8 +3921,38 @@
           }
         } ]
       }, {
-        "description" : "screenshots",
+        "description" : "f13: launch apps, f16: screenshots",
         "manipulators" : [ {
+          "from" : {
+            "key_code" : "f13"
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "f13",
+            "modifiers" : {
+              "mandatory" : [ "left_shift" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"Emacs\" to activate'"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "f13",
+            "modifiers" : {
+              "mandatory" : [ "left_control" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"Google Chrome\" to activate'"
+          } ],
+          "type" : "basic"
+        }, {
           "from" : {
             "key_code" : "f16",
             "modifiers" : {
@@ -3954,67 +4055,6 @@
             "bundle_identifiers" : [ "com.google.Chrome", "com.google.Chrome.beta" ]
           } ],
           "type" : "basic"
-        } ]
-      }, {
-        "description" : "(r-e) to tab",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "e"
-          },
-          "to" : [ {
-            "key_code" : "tab"
-          } ],
-          "conditions" : [ {
-            "name" : "r-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "identifiers" : [ {
-              "vendor_id" : 1452,
-              "product_id" : 641
-            } ],
-            "type" : "device_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "r-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "tab"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "r"
-            }, {
-              "key_code" : "e"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "r-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "identifiers" : [ {
-              "vendor_id" : 1452,
-              "product_id" : 641
-            } ],
-            "type" : "device_if"
-          } ]
         } ]
       }, {
         "description" : "Emacs like",
