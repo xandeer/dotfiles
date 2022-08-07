@@ -46,3 +46,11 @@ commit = echo "skip chemacs2"
 # checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
 # commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
 # commit = echo "skip github.io"
+
+[projects/xmind/doughnut]
+checkout = git clone 'git@gitlab.xmind.cn:xmind/doughnut.git' 'doughnut'
+commit = echo 'skip donut'
+
+[projects/xmind/viewer-kit]
+checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'
+commit = echo 'skip viewer-kit'
