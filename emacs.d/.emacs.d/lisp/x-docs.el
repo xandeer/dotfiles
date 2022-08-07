@@ -45,7 +45,7 @@
   (require 'dash-docs)
   (require 'consult-dash)
 
-  (setq dash-docs-docsets-path (expand-file-name "~/syncthing/personal/docsets"))
+  (setq dash-docs-docsets-path (expand-file-name "~/.cache/dash"))
   (setq dash-docs-browser-func 'xwidget-webkit-browse-url)
   (setq dash-docs-common-docsets nil)
   (setq dash-docs-enable-debugging nil)
