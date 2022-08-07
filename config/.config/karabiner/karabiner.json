@@ -1308,8 +1308,7 @@
             }
           },
           "to" : [ {
-            "key_code" : "semicolon",
-            "modifiers" : [ "left_shift" ]
+            "key_code" : "semicolon"
           } ],
           "conditions" : [ {
             "name" : "s-mode",
@@ -1334,8 +1333,7 @@
               "value" : 1
             }
           }, {
-            "key_code" : "semicolon",
-            "modifiers" : [ "left_shift" ]
+            "key_code" : "semicolon"
           } ],
           "from" : {
             "modifiers" : {

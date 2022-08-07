@@ -43,10 +43,10 @@
            [:y :equal_sign]
            [:h :hyphen]
            [:n :backslash]
-           [:semicolon :!Ssemicolon]
+           [:semicolon :#Psemicolon]
            [:slash :period]
            [:quote :!Squote]]}
-  
+
   {:des "swap : and ;"
    :rules [[:#Psemicolon :!Ssemicolon]
            [:!Ssemicolon :semicolon]]}
