@@ -111,18 +111,24 @@
            [:a [:open-app "Android Studio"]]
            [:c [:open-app "Google Chrome"]]
            [:e [:open-app "Emacs"]]
-           [:k :!Of13]                  ; raycast kill process
-           [:w :!CS5]                   ; start with record, shot window need a spacebar tap
-           [:r :!CS4]                   ; screenshots rect
-           [:s :!CS3]]}                 ; screenshots screen
+           [:b :!Cf18]                    ; raycast chrome bookmarks
+           [:g :!Cf17]                    ; raycast google search
+           [:i [:!Tf19 :return_or_enter]] ; raycast exec cli
+           [:j :!Sf20]                    ; raycast switch window
+           [:k :!Tf20]                    ; raycast kill process
+           [:t :!Cf16]                    ; raycast chrome tabs
+           [:w :!CS5]                     ; start with record, shot window need a spacebar tap
+           [:r :!CS4]                     ; screenshots rect
+           [:s :!CS3]]}                   ; screenshots screen
 
-  {:des "f13: launch apps, f16: screenshots"
-   :rules [[:f13 [:open-app "Android Studio"]]
-           [:!Sf13 [:open-app "Emacs"]]
-           [:!Tf13 [:open-app "Google Chrome"]]
-           [:f16 :!CS5]                 ; start with record, shot window need a spacebar tap
-           [:!Sf16 :!CS4]               ; screenshots rect
-           [:!Tf16 :!CS3]]}             ; screenshots screen
+  {:des "launch apps and screenshots"
+   :rules [[:f17 [:open-app "Android Studio"]]
+           [:!Tf16 [:open-app "Emacs"]]
+           [:!Tf18 [:open-app "Google Chrome"]]
+           [:!Tf19 [:!Tf19 :return_or_enter]]
+           [:!Sf16 :!CS5]               ; start with record, shot window need a spacebar tap
+           [:!Of16 :!CS4]               ; screenshots rect
+           [:!Sf17 :!CS3]]}             ; screenshots screen
 
   {:des "Chrome shortcuts"
    :rules [:chrome
