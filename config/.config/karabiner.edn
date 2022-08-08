@@ -51,9 +51,11 @@
    :rules [[:#Psemicolon :!Ssemicolon]
            [:!Ssemicolon :semicolon]]}
 
-  {:des "(l-[key]) k to escape"
-   :rules [:l-mode
-           [:k :escape]]}
+  {:des "bind command-l to lookup(command-ctrl-d)"
+   :rules [[:!Cl :!CTd]
+           [:left_command :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:d :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:l :!CTd ["multitouch_extension_finger_count_total" 1]]]}
 
   {:des "(a-[key]) symbols"
    :rules [[:condi :built-in :a-mode]
