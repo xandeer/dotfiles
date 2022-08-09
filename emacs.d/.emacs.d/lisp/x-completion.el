@@ -72,6 +72,7 @@
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
 
 ;;; copilot
+;; (setq copilot-node-executable (expand-file-name "~/.nvm/versions/node/v17.9.1/bin/node"))
 (add-hook 'prog-mode-hook #'copilot-mode)
 
 (defun x/tab ()
