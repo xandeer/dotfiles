@@ -48,8 +48,8 @@
            [:quote :!Squote]]}
 
   {:des "swap : and ;"
-   :rules [[:#Psemicolon :!Ssemicolon]
-           [:!Ssemicolon :semicolon]]}
+   :rules [[:!Ssemicolon :semicolon]
+           [:#Psemicolon :!Ssemicolon]]}
 
   {:des "bind command-l to lookup(command-ctrl-d)"
    :rules [[:!Cl :!CTd]
@@ -106,29 +106,18 @@
            [:i :!!i]
            [:o :!!o]]}
 
-  {:des "(spacebar-[key]) launch apps"
-   :rules [:space-mode
-           [:a [:open-app "Android Studio"]]
-           [:c [:open-app "Google Chrome"]]
-           [:e [:open-app "Emacs"]]
-           [:b :!Cf18]                    ; raycast chrome bookmarks
-           [:g :!Cf17]                    ; raycast google search
-           [:i [:!Tf19 :return_or_enter]] ; raycast exec cli
-           [:j :!Sf20]                    ; raycast switch window
-           [:k :!Tf20]                    ; raycast kill process
-           [:t :!Cf16]                    ; raycast chrome tabs
-           [:w :!CS5]                     ; start with record, shot window need a spacebar tap
-           [:r :!CS4]                     ; screenshots rect
-           [:s :!CS3]]}                   ; screenshots screen
+  {:des "misc"
+   :rules [[:!COSi [:!COSi :return_or_enter]]]}
 
-  {:des "launch apps and screenshots"
-   :rules [[:f17 [:open-app "Android Studio"]]
-           [:!Tf16 [:open-app "Emacs"]]
-           [:!Tf18 [:open-app "Google Chrome"]]
-           [:!Tf19 [:!Tf19 :return_or_enter]]
-           [:!Sf16 :!CS5]               ; start with record, shot window need a spacebar tap
-           [:!Of16 :!CS4]               ; screenshots rect
-           [:!Sf17 :!CS3]]}             ; screenshots screen
+  {:des "launch apps"
+   :rules [[:!COSa [:open-app "Android Studio"]]
+           [:!COSc [:open-app "Google Chrome"]]
+           [:!COSe [:open-app "Emacs"]]]}
+
+  {:des "screenshots"
+   :rules [[:!COSw :!CS5]
+           [:!COSr :!CS4]
+           [:!COSs :!CS3]]}
 
   {:des "Chrome shortcuts"
    :rules [:chrome
@@ -156,6 +145,10 @@
    :rules [:built-in
            [:##left_command :left_command nil {:alone :return_or_enter}]
            [:##right_command :left_command nil {:alone :return_or_enter}]]}
+
+  {:des "spacebar to COS if held"
+   :rules [:built-in
+           [:spacebar :!COleft_shift nil {:alone :spacebar}]]}
 
   {:des "g/h to shift if held"
    :rules [:built-in

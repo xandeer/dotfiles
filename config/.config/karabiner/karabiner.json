@@ -1501,23 +1501,23 @@
           "from" : {
             "key_code" : "semicolon",
             "modifiers" : {
-              "optional" : [ "caps_lock" ]
+              "mandatory" : [ "left_shift" ]
             }
           },
           "to" : [ {
-            "key_code" : "semicolon",
-            "modifiers" : [ "left_shift" ]
+            "key_code" : "semicolon"
           } ],
           "type" : "basic"
         }, {
           "from" : {
             "key_code" : "semicolon",
             "modifiers" : {
-              "mandatory" : [ "left_shift" ]
+              "optional" : [ "caps_lock" ]
             }
           },
           "to" : [ {
-            "key_code" : "semicolon"
+            "key_code" : "semicolon",
+            "modifiers" : [ "left_shift" ]
           } ],
           "type" : "basic"
         } ]
@@ -3559,575 +3559,30 @@
           } ]
         } ]
       }, {
-        "description" : "(spacebar-[key]) launch apps",
+        "description" : "misc",
         "manipulators" : [ {
           "from" : {
-            "key_code" : "a"
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
+            "key_code" : "i",
+            "modifiers" : {
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
-          }, {
-            "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "a"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "c"
           },
           "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Google Chrome\" to activate'"
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "shell_command" : "osascript -e 'tell application \"Google Chrome\" to activate'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "c"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "e"
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Emacs\" to activate'"
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "shell_command" : "osascript -e 'tell application \"Emacs\" to activate'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "e"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "b"
-          },
-          "to" : [ {
-            "key_code" : "f18",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f18",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "b"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "g"
-          },
-          "to" : [ {
-            "key_code" : "f17",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f17",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "g"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "i"
-          },
-          "to" : [ {
-            "key_code" : "f19",
-            "modifiers" : [ "left_control" ]
+            "key_code" : "i",
+            "modifiers" : [ "left_command", "left_option", "left_shift" ]
           }, {
             "key_code" : "return_or_enter"
           } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
           "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f19",
-            "modifiers" : [ "left_control" ]
-          }, {
-            "key_code" : "return_or_enter"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "i"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "j"
-          },
-          "to" : [ {
-            "key_code" : "f20",
-            "modifiers" : [ "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f20",
-            "modifiers" : [ "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "j"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "k"
-          },
-          "to" : [ {
-            "key_code" : "f20",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f20",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "k"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "t"
-          },
-          "to" : [ {
-            "key_code" : "f16",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "f16",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "t"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "w"
-          },
-          "to" : [ {
-            "key_code" : "5",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "5",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "w"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "r"
-          },
-          "to" : [ {
-            "key_code" : "4",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "4",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "r"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "s"
-          },
-          "to" : [ {
-            "key_code" : "3",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "space-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "space-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "3",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "s"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "space-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
         } ]
       }, {
-        "description" : "launch apps and screenshots",
+        "description" : "launch apps",
         "manipulators" : [ {
           "from" : {
-            "key_code" : "f17"
+            "key_code" : "a",
+            "modifiers" : {
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
+            }
           },
           "to" : [ {
             "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
@@ -4135,20 +3590,9 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "f16",
+            "key_code" : "c",
             "modifiers" : {
-              "mandatory" : [ "left_control" ]
-            }
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Emacs\" to activate'"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "f18",
-            "modifiers" : {
-              "mandatory" : [ "left_control" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {
@@ -4157,23 +3601,23 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "f19",
+            "key_code" : "e",
             "modifiers" : {
-              "mandatory" : [ "left_control" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {
-            "key_code" : "f19",
-            "modifiers" : [ "left_control" ]
-          }, {
-            "key_code" : "return_or_enter"
+            "shell_command" : "osascript -e 'tell application \"Emacs\" to activate'"
           } ],
           "type" : "basic"
-        }, {
+        } ]
+      }, {
+        "description" : "screenshots",
+        "manipulators" : [ {
           "from" : {
-            "key_code" : "f16",
+            "key_code" : "w",
             "modifiers" : {
-              "mandatory" : [ "left_shift" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {
@@ -4183,9 +3627,9 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "f16",
+            "key_code" : "r",
             "modifiers" : {
-              "mandatory" : [ "left_option" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {
@@ -4195,9 +3639,9 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "f17",
+            "key_code" : "s",
             "modifiers" : {
-              "mandatory" : [ "left_shift" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {
@@ -4439,6 +3883,28 @@
           },
           "to" : [ {
             "key_code" : "left_command"
+          } ],
+          "conditions" : [ {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "spacebar to COS if held",
+        "manipulators" : [ {
+          "to_if_alone" : [ {
+            "key_code" : "spacebar"
+          } ],
+          "from" : {
+            "key_code" : "spacebar"
+          },
+          "to" : [ {
+            "key_code" : "left_shift",
+            "modifiers" : [ "left_command", "left_option" ]
           } ],
           "conditions" : [ {
             "identifiers" : [ {
