@@ -162,6 +162,7 @@ tap homebrew/cask
 cask alt-tab
 cask karabiner-elements
 cask sip
+cask sioyek
 
 tap candid82/brew
 brew joker
