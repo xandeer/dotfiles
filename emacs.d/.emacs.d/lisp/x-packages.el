@@ -77,6 +77,7 @@ Usages:
     (auto-save . "manateelazycat/auto-save")
     color-identifiers-mode
     easy-kill
+    eldoc-box
     expand-region
     highlight-indent-guides
     htmlize

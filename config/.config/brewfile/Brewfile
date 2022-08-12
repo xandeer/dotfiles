@@ -173,8 +173,6 @@ brew emacs-plus@29 --with-xwidgets --with-imagemagick
 tap git-chglog/git-chglog
 brew git-chglog
 
-tap laishulu/cask-fonts
-
 tap rcmdnk/file
 brew brew-file
 
