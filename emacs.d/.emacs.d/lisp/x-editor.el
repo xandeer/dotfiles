@@ -10,6 +10,16 @@
 (add-hook 'deactivate-mark-hook #'hungry-delete-mode)
 (x/append-init-hook #'global-hungry-delete-mode)
 
+;; see: [[info:emacs#Visual Line Mode][emacs#Visual Line Mode]]
+;; (info-apropos "visual-line-mode")
+;; for cjk support
+(setq word-wrap-by-category t)
+(x/append-init-hook #'global-visual-line-mode)
+
+;; Something wrong with `golden-ration-mode'.
+;; (setq-default visual-fill-column-width 76)
+;; (x/append-init-hook #'global-visual-fill-column-mode)
+
 (global-set-key [remap kill-ring-save] #'easy-kill)
 (global-set-key [remap mark-sexp] #'easy-mark)
 

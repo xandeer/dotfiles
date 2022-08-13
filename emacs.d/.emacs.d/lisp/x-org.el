@@ -29,6 +29,7 @@
 (setq org-attach-store-link-p 'attached)
 (setq org-list-allow-alphabetical t)
 (setq org-edit-src-content-indentation 0)
+(setq org-indent-indentation-per-level 2)
 (setq org-catch-invisible-edits 'error)
 ;; Disable first level indentation in code block. https://emacs.stackexchange.com/a/18892/16450
 (setq org-src-preserve-indentation t)
@@ -40,14 +41,17 @@
 (setq org-blank-before-new-entry
       '((heading)
         (plain-list-item . auto)))
-(setq org-adapt-indentation nil)
 (setq org-confirm-babel-evaluate nil)
-(setq org-startup-indented nil)
+(setq org-startup-indented t)
+(setq org-indent-indentation-per-level 2)
+(setq org-adapt-indentation nil)
 (setq org-cycle-level-faces t)
 (setq org-fontify-done-headline t)
 (setq org-fontify-todo-headline t)
 (setq org-hide-emphasis-markers t)
 (setq org-ellipsis "…")
+(setq org-auto-align-tags nil)
+(setq org-tags-column 0)
 (setq org-pretty-entities t)
 (setq org-fontify-emphasized-text t)
 (setq org-fontify-whole-heading-line t)
@@ -149,7 +153,7 @@
     (replace-regexp ">\\([^ ]\\)" "> \\1"))
   ts)
 
-(add-hook 'org-mode-hook #'auto-fill-mode)
+;; (add-hook 'org-mode-hook #'auto-fill-mode)
 
 (with-eval-after-load 'org
   (setq org-emphasis-regexp-components ;; markup chinesee without space
