@@ -90,7 +90,7 @@ Buffer\n"
   ("n" consult-focus-lines "focus lines")
   ("o" consult-outline "consult outline")
 
-  ("c" x/convert-chinese-quotations "convert quotations")
+  ("c" x/convert-to-chinese-quotations "convert quotations")
   ("d" x/delete-current-buffer "delete current buffer")
   ("H-d" x/duplicate-line "duplicate line")
 

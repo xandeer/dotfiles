@@ -49,6 +49,31 @@ Default use `point-min` or `point-max`."
             (x/replace (car q) (cdr q)))
           quotas)))
 
+(defun x/convert-to-chinese-quotations ()
+  "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
+  (interactive)
+
+  (let ((quotas
+         '(("‘" . "『")
+           ("’" . "』")
+           ("“" . "「")
+           ("”" . "」")
+           (", " . "，")
+           ("; " . "；")
+           (". " . "。")
+           ("? " . "？")
+           (": " . "：")
+           ("（" . "(")
+           ("）" . ")")
+           ("・" . "·")
+           ("! " . "！")
+           (" )" . ")")
+           (" 」" . "」")
+           (" 』" . "』"))))
+    (mapc (lambda (q)
+            (x/replace (car q) (cdr q)))
+          quotas)))
+
 (defun x/delete-current-buffer ()
   "Delete the current buffer."
   (interactive)
