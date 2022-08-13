@@ -10,12 +10,6 @@
 (add-hook 'deactivate-mark-hook #'hungry-delete-mode)
 (x/append-init-hook #'global-hungry-delete-mode)
 
-;; see: [[info:emacs#Visual Line Mode][emacs#Visual Line Mode]]
-;; (info-apropos "visual-line-mode")
-;; for cjk support
-(setq word-wrap-by-category t)
-(x/append-init-hook #'global-visual-line-mode)
-
 ;; Something wrong with `golden-ration-mode'.
 ;; (setq-default visual-fill-column-width 76)
 ;; (x/append-init-hook #'global-visual-fill-column-mode)
@@ -43,12 +37,6 @@
 (global-set-key (kbd "M-q") 'unfill-toggle)
 
 
-(with-eval-after-load 'visual-fill-column
-  (defun maybe-adjust-visual-fill-column nil "Readjust visual fill column when the global font size is modified.\nThis is helpful for writeroom-mode, in particular."
-         (if visual-fill-column-mode
-             (add-hook 'after-setting-font-hook 'visual-fill-column--adjust-window nil t)
-           (remove-hook 'after-setting-font-hook 'visual-fill-column--adjust-window t))))
-
 (x/append-init-hook #'global-page-break-lines-mode)
 (setq page-break-lines-max-width 80)
 (with-eval-after-load 'page-break-lines

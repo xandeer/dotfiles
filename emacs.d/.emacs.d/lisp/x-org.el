@@ -328,5 +328,12 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
                    ("D" . x/duplicate-line)
                    ("c" . org-cut-subtree))))
 
+;;; visual line mode
+;; see: [[info:emacs#Visual Line Mode][emacs#Visual Line Mode]]
+;; (info-apropos "visual-line-mode")
+;; for cjk support
+(setq word-wrap-by-category t)
+(add-hook 'org-mode-hook #'visual-line-mode)
+
 (provide 'x-org)
 ;;; x-org.el ends here

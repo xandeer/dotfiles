@@ -1522,12 +1522,12 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "bind command-l to lookup(command-ctrl-d)",
+        "description" : "bind command-shift-option-l to lookup(command-ctrl-d)",
         "manipulators" : [ {
           "from" : {
             "key_code" : "l",
             "modifiers" : {
-              "mandatory" : [ "left_command" ]
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
             }
           },
           "to" : [ {

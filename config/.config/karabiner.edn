@@ -51,8 +51,8 @@
    :rules [[:!Ssemicolon :semicolon]
            [:#Psemicolon :!Ssemicolon]]}
 
-  {:des "bind command-l to lookup(command-ctrl-d)"
-   :rules [[:!Cl :!CTd]
+  {:des "bind command-shift-option-l to lookup(command-ctrl-d)"
+   :rules [[:!CSOl :!CTd]
            [:left_command :!CTd ["multitouch_extension_finger_count_total" 1]]
            [:d :!CTd ["multitouch_extension_finger_count_total" 1]]
            [:l :!CTd ["multitouch_extension_finger_count_total" 1]]]}
