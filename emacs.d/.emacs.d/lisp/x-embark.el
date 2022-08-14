@@ -32,16 +32,16 @@
 
 (defvar x/embark-become-general-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "f") #'consult-find)
-    (define-key map (kbd "g") #'consult-ripgrep)
+    (x/define-keys map '(("f" . consult-find)
+                         ("g" . consult-ripgrep)))
     map)
   "General custom cross-package `embark-become` keymap.")
 
 (defvar x/embark-become-line-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "l") #'consult-line)
-    (define-key map (kbd "i") #'consult-imenu)
-    (define-key map (kbd "s") #'consult-outline) ; as my default is 'M-s M-s'
+    (x/define-keys map '(("l" . consult-line)
+                         ("i" . consult-imenu)
+                         ("s" . consult-outline))) ; as my default is 'M-s M-s'
     map)
   "Line-specific custom cross-package `embark-become' keymap.")
 
@@ -50,9 +50,9 @@
 (defvar x/embark-become-file+buffer-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map embark-become-file+buffer-map)
-    (define-key map (kbd "r") 'consult-recent-file)
-    ;; (define-key map (kbd "B") 'project-switch-to-buffer)
-    (define-key map (kbd "F") 'projectile-find-file)
+    (x/define-keys map '(("r" . consult-recent-file)
+                         ;; ("B" . project-switch-to-buffer)
+                         ("F" . project-find-file)))
     map)
   "File+buffer custom cross-package `embark-become' keymap.")
 
@@ -90,10 +90,28 @@ those so-called 'extras'."
       (aw-switch-to-window (aw-select nil))
       (call-interactively embark--command)))
 
-  (define-key embark-buffer-map (kbd "o") #'x/wrap-embark-ace)
-  (define-key embark-bookmark-map (kbd "o") #'x/wrap-embark-ace)
-  (define-key embark-file-map (kbd "o") #'x/wrap-embark-ace)
-  (define-key embark-general-map (kbd "o") 'x/wrap-embark-ace))
+  (defun x/wrap-embark-window-previous ()
+    "Switch to the previous window before runing default command."
+    (interactive)
+    (with-demoted-errors "%s"
+      (other-window -1)
+      (call-interactively embark--command)))
+
+  (defun x/wrap-embark-window-next ()
+    "Switch to the next window before runing default command."
+    (interactive)
+    (with-demoted-errors "%s"
+      (other-window 1)
+      (call-interactively embark--command)))
+
+  (mapc (lambda (map)
+          (x/define-keys map '(("o" . x/wrap-embark-ace)
+                               ("C-u" . x/wrap-embark-window-previous)
+                               ("C-i" . x/wrap-embark-window-next))))
+        (list embark-general-map
+              embark-buffer-map
+              embark-file-map
+              embark-bookmark-map)))
 
 (defun x/wrap-embark-split-right ()
   "Split window right before running default command."
@@ -109,9 +127,10 @@ those so-called 'extras'."
     (select-window (split-window-below))
     (call-interactively embark--command)))
 
-(define-key embark-general-map (kbd "2") #'x/wrap-embark-split-below)
-(define-key embark-general-map (kbd "3") #'x/wrap-embark-split-right)
-(define-key embark-general-map (kbd ".") #'sdcv-search-pointer)
+(x/define-keys embark-general-map '(("2" . x/wrap-embark-split-below)
+                                    ("3" . x/wrap-embark-split-right)
+                                    ("l" . sdcv-search-pointer)))
+
 (define-key embark-symbol-map (kbd "h") #'helpful-at-point)
 
 ;; (global-set-key (kbd "H-i") 'embark-act)

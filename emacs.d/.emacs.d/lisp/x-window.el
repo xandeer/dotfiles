@@ -81,6 +81,17 @@
 (add-hook 'focus-in-hook           #'golden-ratio)
 (add-hook 'focus-out-hook          #'golden-ratio)
 
+(defvar x/window-maximized? nil)
+(defun x/toggle-window-maximize ()
+  "Disable `golden-ratio-mode', then `maximize-window' to maximize window.
+Otherwise, enable `golden-ratio-mode'."
+  (interactive)
+  (if x/window-maximized?
+      (golden-ratio-mode)
+    (golden-ratio-mode -1)
+    (maximize-window))
+  (setq x/window-maximized? (not x/window-maximized?)))
+
 ;;; startup
 (defun x/window-startup ()
   "Window startup."
