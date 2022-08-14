@@ -45,14 +45,14 @@
         ;; "*Org Agenda(a)*"
         ))
 
-(global-set-key (kbd "H-o") #'ace-window)
-(global-set-key (kbd "H-0") #'x/delete-window-or-frame)
-(global-set-key (kbd "H-1") #'delete-other-windows)
-(global-set-key (kbd "H-2") #'x/split-below-find-file)
-(global-set-key (kbd "H-3") #'x/split-right-find-file)
+(global-set-key (kbd "H-o")   #'ace-window)
+(global-set-key (kbd "H-1")   #'delete-other-windows)
+(global-set-key (kbd "H-0")   #'x/delete-window-or-frame)
+(global-set-key (kbd "H-2")   #'x/split-below-find-file)
+(global-set-key (kbd "H-3")   #'x/split-right-find-file)
+(global-set-key (kbd "C-x x") #'ace-swap-window)
 (global-set-key [remap split-window-right] #'x/split-right-find-file)
 (global-set-key [remap split-window-below] #'x/split-below-find-file)
-(global-set-key (kbd "C-x x") #'ace-swap-window)
 (global-set-key (kbd "C-x M-o") (lambda ()
                                   "Select the previous window."
                                   (interactive)

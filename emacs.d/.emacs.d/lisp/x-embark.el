@@ -105,7 +105,7 @@ those so-called 'extras'."
       (call-interactively embark--command)))
 
   (mapc (lambda (map)
-          (x/define-keys map '(("o" . x/wrap-embark-ace)
+          (x/define-keys map '(("o"   . x/wrap-embark-ace)
                                ("C-u" . x/wrap-embark-window-previous)
                                ("C-i" . x/wrap-embark-window-next))))
         (list embark-general-map
