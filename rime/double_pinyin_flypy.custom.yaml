@@ -4,6 +4,9 @@ patch:
     - name: simplification
       reset: 1                # 增加这一行：默认启用「繁→簡」转换。
       states: [ 漢字, 汉字 ]
+    - name: emoji_suggestion
+      reset: 1
+      states: [ "No", "Yes" ]
   translator/preedit_format:
   translator/dictionary: luna_pinyin.extended
   engine/translators:
@@ -11,8 +14,16 @@ patch:
     - reverse_lookup_translator
     - script_translator
     - table_translator
+  engine/filters:
+    - simplifier@emoji_suggestion
+    - simplifier
+    - uniquifier
   recognizer/patterns:
     punct: "^/([a-z]+|[0-9])$"
+  emoji_suggestion:
+    opencc_config: emoji.json
+    option_name: emoji_suggestion
+    # tips: all
   punctuator/import_preset: symbols
   punctuator/half_shape:
     "#": "#"
@@ -36,35 +47,7 @@ patch:
     "`":  "·"
     "+": "+"
     "-": "-"
-    "%": "%"
-    "@": "@"
-    "=": "="
-    "*": "*"
-    "|": "|"
-    "'": {pair: ["「", "」"]}
-    "\"": {pair: ["『", "』"]}
-  punctuator/full_shape:
-    "#": "#"
-    "$": "¥"
-    "<": "《"
-    ">": "》"
-    "~":  "～"
-    "(": "("
-    ")": ")"
-    "[": "["
-    "]": "]"
-    "{": "{"
-    "}": "}"
-    "!":  "！"
-    ",":  "，"
-    ".":  "。"
-    ":":  "："
-    ";":  "；"
-    "?":  "？"
-    "^":  "……"
-    "`":  "·"
-    "+": "+"
-    "-": "-"
+    "_" : "──"
     "%": "%"
     "@": "@"
     "=": "="
@@ -87,3 +70,5 @@ patch:
     "/py": [ā,á,ǎ,à,ō,ó,ǒ,ò,ē,é,ě,è,ī,í,ǐ,ì,ū,ú,ǔ,ù,ǖ,ǘ,ǚ,ǜ]
     "/ux": [∑,𝜋,≈,≠,≤,≥,√,∞,∅,∈,∉,∩,∪,∫,∬,∮,∛,]
     "/it": [𝛼,𝛽,𝛾,𝛿,𝜀,𝜋,𝜆]
+# Rx: BlindingDark/rime-lua-select-character:customize:schema=luna_pinyin
+#  __include: lua_select_character:/patch # 需要lua_selector打开本行注释
