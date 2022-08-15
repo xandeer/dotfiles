@@ -10,7 +10,7 @@
 
 (with-eval-after-load 'rime
   (setq rime-user-data-dir "~/.cache/rime")
-  (setq rime-librime-root "~/projects/personal/dotfiles/librime")
+  (setq rime-librime-root "~/syncthing/personal/configs/librime")
   (setq rime-emacs-module-header-root "/opt/homebrew/opt/emacs-plus@29/include/")
   (setq rime-show-candidate 'posframe)
   (setq rime-show-preedit t)
