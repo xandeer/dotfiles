@@ -134,6 +134,7 @@ brew snappy
 brew speex
 brew sqlite
 brew srt
+brew syncthing
 brew tdlib
 brew tesseract
 brew texinfo
@@ -161,6 +162,7 @@ tap homebrew/services
 tap homebrew/cask
 cask alt-tab
 cask karabiner-elements
+cask raycast
 cask sip
 cask sioyek
 

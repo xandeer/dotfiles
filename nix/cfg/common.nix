@@ -15,6 +15,7 @@
     gnumake
     mr
     stow
+    corkscrew
 
     unzip
     # tmux
