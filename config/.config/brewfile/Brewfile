@@ -135,7 +135,6 @@ brew snappy
 brew speex
 brew sqlite
 brew srt
-brew syncthing
 brew tdlib
 brew tesseract
 brew texinfo
@@ -166,6 +165,8 @@ cask karabiner-elements
 cask raycast
 cask sip
 cask sioyek
+cask squirrel
+cask syncthing
 
 tap candid82/brew
 brew joker
