@@ -67,7 +67,7 @@ Default use `point-min` or `point-max`."
            ("\\.$" . "。")
            ("? " . "？")
            ;; (": " . "：")
-           (" \\{50\\}:" . ":")
+           (" \\{2,\\}:" . " :")
            ("（" . "(")
            ("）" . ")")
            ("・" . "·")
@@ -118,20 +118,14 @@ Default use `point-min` or `point-max`."
 (global-set-key (kbd "H-e") 'x/kill-other-window-buffer)
 (global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
-(defun x--trash (path)
-  (shell-command (concat "trash " path)))
-
 (defun x/trash-temp ()
   "Move some temp files to trash."
   (interactive)
-  (dolist (path '("~/temp/screenshot/*.png"
-                  "~/temp/donut/*.apk"
-                  "~/temp/donut/*.zip"
-                  "~/temp/donut/*.aab"
-                  "~/syncthing/donut/apks/*"
-                  "~/syncthing/personal/temp/*"
-                  ))
-    (x--trash path)))
+  (dolist (path '("~/syncthing/donut/apk"
+                  "~/syncthing/personal/temp"))
+    (shell-command (concat "trash " path
+                           "; mkdir -p " path)
+                   "*x/trash-temp*")))
 
 ;; Move it to /Library/LaunchDaemons
 ;; (add-hook #'after-init-hook
