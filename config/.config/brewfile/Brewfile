@@ -122,7 +122,7 @@ brew pkg-config
 brew prettyping
 brew python@3.10
 brew python@3.9
-brew ranger
+# brew ranger
 brew rav1e
 brew readline
 brew rubberband
