@@ -9,8 +9,9 @@
 (require 'x-javascript)
 (require 'x-ts)
 
+;;; tide
 (defun x/tide-setup ()
-  "Setup for `typescript-mode'."
+  "Setup for `tide'."
   ;; Check for forbiding org-babel
   (when (string-match-p
          (regexp-opt '(".json" ".js" ".ts"))
@@ -33,9 +34,14 @@
                    ("M-k" . tide-jump-back)
                    ("M-," . tide-references))))
 
-(add-hook 'typescript-mode-hook #'x/tide-setup)
-(add-hook 'js2-mode-hook #'x/tide-setup)
-(add-hook 'json-mode-hook #'x/tide-setup)
+;; (add-hook 'typescript-mode-hook #'x/tide-setup)
+;; (add-hook 'js2-mode-hook #'x/tide-setup)
+;; (add-hook 'json-mode-hook #'x/tide-setup)
+
+;;; lsp
+(add-hook 'typescript-mode-hook #'lsp)
+(add-hook 'js2-mode-hook #'lsp)
+(add-hook 'json-mode-hook #'lsp)
 
 ;;; yarn
 (autoload 'yarn-install "yarn" nil t)

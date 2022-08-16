@@ -19,8 +19,11 @@
 (setq lsp-auto-guess-root t)
 (setq lsp-enable-snippet nil)
 
-(define-key lsp-mode-map (kbd "C-x C-r") #'lsp-rename)
-(define-key lsp-mode-map (kbd "C-x f") #'lsp-format-buffer)
+(x/define-keys lsp-mode-map '(("C-c C-f" . lsp-format-buffer)
+                              ("C-c C-r" . lsp-rename)
+                              ("M-," . lsp-find-references)
+                              ("C-," . xref-go-back)
+                              ("C-." . xref-go-forward)))
 
 ;;; modes enabled lsp
 (add-hook 'kotlin-mode-hook #'lsp)

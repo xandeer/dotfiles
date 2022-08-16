@@ -56,8 +56,9 @@
     # graphviz
     # plantuml
 
-    ## javascript
-    # deno
+    ## javascript & typescript
+    # need for ts-ls: typescript lsp
+    deno
     nodejs
     yarn
 
