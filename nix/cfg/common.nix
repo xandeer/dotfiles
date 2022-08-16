@@ -49,12 +49,14 @@
     pass
     hledger
 
-    # font-awesome
-    # material-icons
+    ## fonts
+    lmodern
+    emacs-all-the-icons-fonts
 
     # graphviz
     # plantuml
 
+    ## javascript
     # deno
     nodejs
     yarn
