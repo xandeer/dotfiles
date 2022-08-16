@@ -262,10 +262,23 @@ Default use `point-min` or `point-max`."
            (buffer-file-name))))
 
 ;;; dots
+(defun x/makefile-executor-execute (filename)
+  "Execute a Makefile target from FILENAME.
+
+FILENAME defaults to current buffer."
+  (let ((target (makefile-executor-select-target filename)))
+    (makefile-executor-store-cache filename target)
+    (compile (format "make -f %s -C %s %s"
+                     (shell-quote-argument filename)
+                     (shell-quote-argument (file-name-directory filename))
+                     target))))
+
+(autoload 'makefile-executor-select-target "makefile-executor")
+
 (defun x/dots ()
   "Run make with dotfiles/Makefile."
   (interactive)
-  (makefile-executor-execute-target (expand-file-name "~/projects/personal/dotfiles/Makefile")))
+  (x/makefile-executor-execute (expand-file-name "~/projects/personal/dotfiles/Makefile")))
 
 ;;; string
 ;; copy from https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
