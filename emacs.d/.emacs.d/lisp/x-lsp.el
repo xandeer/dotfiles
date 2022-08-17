@@ -26,7 +26,7 @@
                               ("C-." . xref-go-forward)))
 
 ;;; modes enabled lsp
-(add-hook 'kotlin-mode-hook #'lsp)
+;; (add-hook 'kotlin-mode-hook #'lsp)
 
 ;;; lsp-ui
 (require 'lsp-ui)

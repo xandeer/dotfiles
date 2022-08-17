@@ -72,9 +72,9 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool true
 
-# Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 12
+# Decrease number to set a blazingly fast keyboard repeat rate
+defaults write NSGlobalDomain KeyRepeat -int 12
+defaults write NSGlobalDomain InitialKeyRepeat -int 32
 
 # Set language and text formats
 # Note: if you’re in the US, replace `EUR` with `USD`, `Centimeters` with
@@ -176,7 +176,7 @@ defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
 # Show the ~/Library folder
-chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library
+chflags nohidden ~/Library # && xattr -d com.apple.FinderInfo ~/Library
 
 # Enable spring loading for directories
 # defaults write NSGlobalDomain com.apple.springing.enabled -bool true

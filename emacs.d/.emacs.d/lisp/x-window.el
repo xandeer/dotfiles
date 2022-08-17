@@ -33,6 +33,7 @@
 (require 'ace-window)
 
 (setq aw-dispatch-always nil)
+(setq aw-scope 'frame)
 (setq aw-keys '(?j ?k ?l ?i ?h ?f ?d ?a))
 ;; (setq aw-ignore-current t)
 (setq aw-ignored-buffers

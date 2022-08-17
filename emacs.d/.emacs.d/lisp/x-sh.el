@@ -2,6 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; term
+(defun x/term ()
+  "Open a term with zsh."
+  (interactive)
+  (term "/bin/zsh"))
+
 ;;; eshell
 (with-eval-after-load 'org
   (setq eshell-aliases-file (x/expand-note "etc/eshell.alias"))
