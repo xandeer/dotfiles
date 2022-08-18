@@ -35,7 +35,7 @@
 
 (require 'savehist)
 (x/append-init-hook #'savehist-mode)
-(setq history-length 1000)
+(setq history-length 100)
 
 (x/append-init-hook #'session-initialize)
 (setq session-save-file (no-littering-expand-var-file-name "session"))
