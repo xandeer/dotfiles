@@ -168,6 +168,7 @@ cask sioyek
 cask showyedge
 cask squirrel
 cask syncthing
+cask zotero
 
 tap candid82/brew
 brew joker
