@@ -254,7 +254,9 @@ ARG is passed through to `x/org-schedule'."
 (add-to-list 'org-agenda-custom-commands
              '("b" "Book"
                ((tags-todo ":CATEGORY=\"玫瑰的名字\""
-                           ((org-agenda-overriding-header "玫瑰的名字"))))))
+                           ((org-agenda-overriding-header "玫瑰的名字")))
+                (tags-todo ":CATEGORY=\"Effective Kotlin\""
+                           ((org-agenda-overriding-header "Effective Kotlin"))))))
 
 (provide 'x-org-agenda)
 ;;; x-org-agenda.el ends here
