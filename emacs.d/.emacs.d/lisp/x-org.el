@@ -107,7 +107,7 @@
         ;; ("q" . org-agenda-list)
 
         ("Misc")
-        ("q" . x/fill-subtree)
+        ("q" . x/unfill-subtree)
         ("o" . org-open-at-point)
         ("?" . org-speed-command-help)))
 
@@ -117,6 +117,12 @@
   (save-excursion
     (org-mark-subtree)
     (unfill-toggle)))
+
+(defun x/unfill-subtree ()
+  "Unfill current subtree."
+  (interactive)
+  (org-mark-subtree)
+  (call-interactively #'unfill-region))
 
 (defun x/wrap-block (beg end type)
   "Wrap block with TYPE between BEG and END."

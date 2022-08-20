@@ -19,13 +19,15 @@
  frame-resize-pixelwise t)
 
 (add-to-list 'default-frame-alist '(internal-border-width . 2))
-(add-to-list 'default-frame-alist '(top . 50))
+(add-to-list 'default-frame-alist '(top . 5))
 (add-to-list 'default-frame-alist '(left . 0.5))
 (add-to-list 'default-frame-alist '(width . 0.33))
 (add-to-list 'default-frame-alist '(height . 0.66))
 (add-to-list 'default-frame-alist '(alpha . (85 . 78)))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(undecorated . t))
+
+(setq package-enable-at-startup nil)
 
 (provide 'early-init)
 ;;; early-init.el ends here
