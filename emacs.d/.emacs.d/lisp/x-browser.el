@@ -2,6 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; link hint
+(defun x/link-hint-open-in-current-window ()
+  "Call `link-hint-open-link' in the current window."
+  (interactive)
+  (let ((avy-all-windows nil))
+    (link-hint-open-link)))
+
+;;; bookmark
 (defvar x/bookmarks bookmark-alist)
 
 (defvar x/buku-bookmarks nil)

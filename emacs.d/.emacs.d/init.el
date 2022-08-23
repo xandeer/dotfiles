@@ -84,7 +84,7 @@
 (require 'x-anzu)
 (require 'x-avy)
 (require 'x-browser)
-
+(require 'x-book)
 (require 'x-calendar)
 ;; (require 'x-company)
 (require 'x-completion)

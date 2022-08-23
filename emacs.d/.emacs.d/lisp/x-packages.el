@@ -207,6 +207,7 @@ Usages:
     makefile-executor
     marginalia
     meow
+    (nov . ("https://depp.brause.cc/nov.el.git" :host nil))
     password-store
     (pinyinlib . "xlshiz/pinyinlib.el")
     projectile

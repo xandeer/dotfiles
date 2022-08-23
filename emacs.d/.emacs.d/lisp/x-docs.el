@@ -24,9 +24,8 @@
 
   (defun x/devdocs-mode-setup ()
     "Setup `devdocs-mode'."
-    (setq-local avy-all-windows nil)
     (let ((map devdocs-mode-map))
-      (define-key map "f" #'link-hint-open-link)))
+      (define-key map "f" #'x/link-hint-open-in-current-window)))
 
   (add-hook 'devdocs-mode-hook #'x/devdocs-mode-setup)
 
