@@ -24,10 +24,12 @@
 
   (defun x/devdocs-mode-setup ()
     "Setup `devdocs-mode'."
-    (let ((map devdocs-mode-map))
-      (define-key map "f" #'x/link-hint-open-in-current-window)))
+    (x/define-keys devdocs-mode-map x/info-like-map))
 
-  (add-hook 'devdocs-mode-hook #'x/devdocs-mode-setup)
+  (with-eval-after-load 'devdocs
+    (x/devdocs-mode-setup))
+
+  ;; (add-hook 'devdocs-mode-hook #'x/devdocs-mode-setup)
 
   (defun x/devdocs-lookup ()
     "Lookup the symbol at point in devdocs."
