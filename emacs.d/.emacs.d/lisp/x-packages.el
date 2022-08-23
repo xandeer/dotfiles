@@ -214,6 +214,8 @@ Usages:
     posframe
     (rime . ("DogLooksGood/emacs-rime" :files ("Makefile" "*.el" "lib.c")))
     (sdcv . "manateelazycat/sdcv")
+    shrface
+    shr-tag-pre-highlight
     wakatime-mode
 
 ;;; shell

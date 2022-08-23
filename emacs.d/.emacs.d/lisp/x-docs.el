@@ -22,14 +22,9 @@
   (add-hook 'js2-mode-hook (x/devdocs-setup '("javascript" "rxjs")))
   (add-hook 'clojure-mode-hook (x/devdocs-setup '("clojure~1.11")))
 
-  (defun x/devdocs-mode-setup ()
-    "Setup `devdocs-mode'."
-    (x/define-keys devdocs-mode-map x/info-like-map))
-
   (with-eval-after-load 'devdocs
-    (x/devdocs-mode-setup))
-
-  ;; (add-hook 'devdocs-mode-hook #'x/devdocs-mode-setup)
+    (require 'shrface)
+    (add-hook 'devdocs-mode-hook #'shrface-mode))
 
   (defun x/devdocs-lookup ()
     "Lookup the symbol at point in devdocs."
@@ -37,7 +32,8 @@
     (let ((word (thing-at-point 'symbol)))
       (if word
           (devdocs-lookup nil word)
-        (devdocs-lookup))))
+        (devdocs-lookup)))
+    (select-window (get-buffer-window "*devdocs*")))
 
   (defalias 'x/docs-lookup #'x/devdocs-lookup))
 
