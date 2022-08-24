@@ -47,9 +47,9 @@
            [:slash :period]
            [:quote :!Squote]]}
 
-  {:des "swap : and ;"
-   :rules [[:!Ssemicolon :semicolon]
-           [:#Psemicolon :!Ssemicolon]]}
+  ;; {:des "swap : and ;"
+  ;;  :rules [[:!Ssemicolon :semicolon]
+  ;;          [:#Psemicolon :!Ssemicolon]]}
 
   {:des "bind command-shift-option-l to lookup(command-ctrl-d)"
    :rules [[:!CSOl :!CTd]

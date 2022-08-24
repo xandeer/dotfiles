@@ -1496,32 +1496,6 @@
           } ]
         } ]
       }, {
-        "description" : "swap : and ;",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "semicolon",
-            "modifiers" : {
-              "mandatory" : [ "left_shift" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "semicolon"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "semicolon",
-            "modifiers" : {
-              "optional" : [ "caps_lock" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "semicolon",
-            "modifiers" : [ "left_shift" ]
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
         "description" : "bind command-shift-option-l to lookup(command-ctrl-d)",
         "manipulators" : [ {
           "from" : {
