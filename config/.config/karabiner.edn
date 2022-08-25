@@ -43,7 +43,7 @@
            [:y :equal_sign]
            [:h :hyphen]
            [:n :backslash]
-           [:semicolon :#Psemicolon]
+           [:semicolon :!Ssemicolon]
            [:slash :period]
            [:quote :!Squote]]}
 

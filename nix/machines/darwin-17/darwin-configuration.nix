@@ -22,4 +22,6 @@
   # $ sysctl -n hw.ncpu
   nix.maxJobs = 4;
   nix.buildCores = 4;
+
+  nixpkgs.config.allowBroken = true;
 }

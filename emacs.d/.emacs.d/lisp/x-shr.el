@@ -14,6 +14,8 @@
                       ("d" . scroll-up)
                       ("e" . scroll-down)
                       ("f" . x/link-hint-open-in-current-window)
+                      ("i" . consult-imenu)
+                      ("s" . consult-line)
                       ("l" . sdcv-search-pointer)))
 
 (with-eval-after-load 'shr

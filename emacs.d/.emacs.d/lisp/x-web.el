@@ -31,15 +31,20 @@
   (x/define-keys tide-mode-map
                  '(("C-c C-f" . x/tide-format)
                    ("C-c C-r" . tide-rename-symbol)
-                   ("M-k" . tide-jump-back)
-                   ("M-," . tide-references))))
+                   ("M-." . lsp-ui-peek-find-definitions)
+                   ("M-," . lsp-ui-peek-find-references))))
 
-;; (add-hook 'typescript-mode-hook #'x/tide-setup)
+(add-hook 'typescript-mode-hook #'x/tide-setup)
 ;; (add-hook 'js2-mode-hook #'x/tide-setup)
 ;; (add-hook 'json-mode-hook #'x/tide-setup)
 
 ;;; lsp
-(add-hook 'typescript-mode-hook #'lsp)
+(defun x/typescript-lsp-setup ()
+  "Setup `lsp' for `typescript-mode'.
+Use `lsp''s definitions/references jump."
+  (setq-local lsp-completion-enable nil)
+  (lsp))
+(add-hook 'typescript-mode-hook #'x/typescript-lsp-setup)
 (add-hook 'js2-mode-hook #'lsp)
 (add-hook 'json-mode-hook #'lsp)
 

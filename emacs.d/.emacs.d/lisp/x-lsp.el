@@ -35,8 +35,9 @@
 (setq lsp-ui-peek-enable t)
 (setq lsp-ui-peek-always-show t)
 
-(define-key lsp-ui-mode-map (kbd "M-.") #'lsp-ui-peek-find-definitions)
-(define-key lsp-ui-mode-map (kbd "M-,") #'lsp-ui-peek-find-references)
+(x/define-keys lsp-ui-mode-map
+               '(("M-." . lsp-ui-peek-find-definitions)
+                 ("M-," . lsp-ui-peek-find-references)))
 
 ;;; corfu
 ;; https://www.reddit.com/r/emacs/comments/ql8cyp/corfu_orderless_and_lsp/

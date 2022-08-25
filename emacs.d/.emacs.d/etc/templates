@@ -104,3 +104,8 @@ web-mode
       "  </div>" n
       "</body>" n
       "</html>")
+
+;;; typescript
+typescript-mode
+
+(lambda "(" p ") => " r)

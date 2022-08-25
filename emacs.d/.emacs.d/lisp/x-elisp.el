@@ -8,6 +8,10 @@
 (global-set-key (kbd "C-h F") #'helpful-function)
 (global-set-key (kbd "C-h C") #'helpful-command)
 
+(with-eval-after-load 'helpful
+  (x/define-keys helpful-mode-map
+                 '(("f" . x/link-hint-open-in-current-window))))
+
 (defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
 	"
 Elisp\n"

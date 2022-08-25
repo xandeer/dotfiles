@@ -76,5 +76,6 @@
     python
 
     buku
+    ispell
   ];
 }

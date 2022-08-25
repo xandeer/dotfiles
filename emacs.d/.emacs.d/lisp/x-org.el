@@ -185,19 +185,46 @@
       (setq-local paragraph-separate paragraph-ending)))
   (advice-add 'org-setup-filling :after #'x--reset-filling)
 
+  ;; babel
   (add-to-list 'org-babel-load-languages '(shell      . t))
   (add-to-list 'org-babel-load-languages '(clojure    . t))
   (add-to-list 'org-babel-load-languages '(plantuml   . t))
   (add-to-list 'org-babel-load-languages '(restclient . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
-  (define-key org-mode-map (kbd "M-p") #'org-previous-visible-heading)
-  (define-key org-mode-map (kbd "M-n") #'org-next-visible-heading)
-  ;; (define-key org-mode-map (kbd "M-o") #'org-toggle-narrow-to-subtree)
-  (define-key org-mode-map (kbd "C-,") #'imenu)
-  ;; (define-key org-mode-map (kbd "M-,") #'org-mark-ring-goto)
-  ;; (define-key org-mode-map (kbd "M-k") #'org-mark-ring-goto)
-  (define-key org-mode-map (kbd "C-c x C-r") #'org-table-recalculate)
+  ;; https://tecosaur.github.io/emacs-config/config.html#lsp-support-src
+  (cl-defmacro lsp-org-babel-enable (lang)
+    "Support LANG in org source code block."
+    (setq centaur-lsp 'lsp-mode)
+    (cl-check-type lang stringp)
+    (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+           (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+      `(progn
+         (defun ,intern-pre (info)
+           (let ((file-name (->> info caddr (alist-get :file))))
+             (unless file-name
+               (setq file-name (make-temp-file "babel-lsp-")))
+             (setq buffer-file-name file-name)
+             (lsp-deferred)))
+         (put ',intern-pre 'function-documentation
+              (format "Enable lsp-mode in the buffer of org source block (%s)."
+                      (upcase ,lang)))
+         (if (fboundp ',edit-pre)
+             (advice-add ',edit-pre :after ',intern-pre)
+           (progn
+             (defun ,edit-pre (info)
+               (,intern-pre info))
+             (put ',edit-pre 'function-documentation
+                  (format "Prepare local buffer environment for org source block (%s)."
+                          (upcase ,lang))))))))
+  (defvar org-babel-lang-list
+    '("ts" "typescript" "bash" "sh" "kotlin"))
+  (dolist (lang org-babel-lang-list)
+    (eval `(lsp-org-babel-enable ,lang)))
+
+  (x/define-keys org-mode-map
+                 '(("M-p" . org-previous-visible-heading)
+                   ("M-n" . org-next-visible-heading)))
 
   (define-key org-mode-map [remap org-schedule] #'x/org-schedule)
 
@@ -311,6 +338,9 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 ;;; keybindings
 (x/define-keys org-mode-map
                '(("H-S-<return>" . org-insert-todo-heading)))
+
+(x/define-keys org-src-mode-map
+               '(("C-c C-c" . org-edit-src-exit)))
 
 ;;; embark
 (with-eval-after-load 'embark
