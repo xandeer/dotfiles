@@ -5,76 +5,77 @@
    :delay 0                     ; time after witch the key press is delayred
    :held 50                     ; not sure what it's for
    :sim 50}} ; keys need to be pressed within this threshold to be considered simultaneous
- :templates {:open-app "osascript -e 'tell application \"%s\" to activate'"}
- :simlayers {:space-mode {:key :spacebar}
-             :a-mode {:key :a}
-             :cl-mode {:key :caps_lock}
-             :l-mode {:key :l}
-             :r-mode {:key :r}
-             :s-mode {:key :s :modi {:optional [:left_shift :right_shift]}}
-             :v-mode {:key :v}
-             :w-mode {:key :w}}
+ :templates {:open "osascript -e 'tell application \"%s\" to activate'"}
+ :simlayers {;; :space-mode  {:key :spacebar}
+             :a-mode      {:key :a}
+             :cl-mode     {:key :caps_lock}
+             :l-mode      {:key :l}
+             :r-mode      {:key :r}
+             :s-mode      {:key :s :modi {:optional [:left_shift :right_shift]}}
+             :v-mode      {:key :v}
+             ;; :w-mode      {:key :w}
+             }
  :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
  :applications
  { ;; To obtain the app ID: `grep -A1 "CFBundleIdentifier" /Applications/The.app/Contents/Info.plist`
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
-  :emacs ["org.gnu.Emacs"]
+  :emacs  ["org.gnu.Emacs"]
   :studio ["com.google.android.studio"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
    :rules [[:condi :s-mode :built-in]
-           [:m :1]
-           [:comma :2]
-           [:period :3]
-           [:j :4]
-           [:k :5]
-           [:l :6]
-           [:u :7]
-           [:i :8]
-           [:o :9]
-           [:p :0]
-           [:e :tab]
-           [:a :!S3]
-           [:d :!S9]
-           [:c :!S0]
-           [:f :open_bracket]
-           [:v :close_bracket]
-           [:b :grave_accent_and_tilde]
-           [:y :equal_sign]
-           [:h :hyphen]
-           [:n :backslash]
-           [:semicolon :!Ssemicolon]
-           [:slash :period]
-           [:quote :!Squote]]}
+           [:m          :1]
+           [:comma      :2]
+           [:period     :3]
+           [:j          :4]
+           [:k          :5]
+           [:l          :6]
+           [:u          :7]
+           [:i          :8]
+           [:o          :9]
+           [:p          :0]
+           [:e          :tab]
+           [:a          :!S3]
+           [:d          :!S9]
+           [:c          :!S0]
+           [:f          :open_bracket]
+           [:v          :close_bracket]
+           [:b          :grave_accent_and_tilde]
+           [:y          :equal_sign]
+           [:h          :hyphen]
+           [:n          :backslash]
+           [:semicolon  :!Ssemicolon]
+           [:slash      :period]
+           [:quote      :!Squote]]}
 
   ;; {:des "swap : and ;"
   ;;  :rules [[:!Ssemicolon :semicolon]
   ;;          [:#Psemicolon :!Ssemicolon]]}
 
   {:des "bind command-shift-option-l to lookup(command-ctrl-d)"
-   :rules [[:!CSOl :!CTd]
-           [:left_command :!CTd ["multitouch_extension_finger_count_total" 1]]
-           [:d :!CTd ["multitouch_extension_finger_count_total" 1]]
-           [:l :!CTd ["multitouch_extension_finger_count_total" 1]]]}
+   :rules [[:!CSOl         :!CTd]
+           [:left_command  :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:d             :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:l             :!CTd ["multitouch_extension_finger_count_total" 1]]]}
 
   {:des "(a-[key]) symbols"
    :rules [[:condi :built-in :a-mode]
-           [:m :!S1]
-           [:comma :!S2]
-           [:period :!S3]
-           [:j :!S4]
-           [:k :!S5]
-           [:l :!S6]
-           [:u :!S7]
-           [:i :!S8]
-           [:o :!S9]
-           [:p :!S0]
-           [:f :!Sopen_bracket]
-           [:v :!Sclose_bracket]
-           [:b :!Sgrave_accent_and_tilde]
-           [:h :!Shyphen]
-           [:y :!Sequal_sign]
-           [:n :!Sbackslash]]}
+           [:m       :!S1]
+           [:comma   :!S2]
+           [:period  :!S3]
+           [:j       :!S4]
+           [:k       :!S5]
+           [:l       :!S6]
+           [:u       :!S7]
+           [:i       :!S8]
+           [:o       :!S9]
+           [:p       :!S0]
+           [:f       :!Sopen_bracket]
+           [:v       :!Sclose_bracket]
+           [:b       :!Sgrave_accent_and_tilde]
+           [:h       :!Shyphen]
+           [:y       :!Sequal_sign]
+           [:n       :!Sbackslash]]}
 
   {:des "(v-[key]) h to backspace"
    :rules [[:condi :built-in :v-mode]
@@ -92,27 +93,27 @@
   ;; {:des "jsim"
   ;;  :rules [[[:j :k] :escape]]}
 
-  {:des "(w-[key]) manage windows with raycast and alttab"
-   :rules [[:condi :built-in :w-mode]
-           [:grave_accent_and_tilde :!!grave_accent_and_tilde]
-           [:e :!!e]
-           [:r :!!r]
-           [:h :!!h]
-           [:l :!!l]
-           [:j :!!j]
-           [:k :!!k]
-           [:m :!!m]
-           [:u :!!u]
-           [:i :!!i]
-           [:o :!!o]]}
+  ;; {:des "(w-[key]) manage windows with raycast and alttab"
+  ;;  :rules [[:condi :built-in :w-mode]
+  ;;          [:grave_accent_and_tilde :!!grave_accent_and_tilde]
+  ;;          [:e :!!e]
+  ;;          [:r :!!r]
+  ;;          [:h :!!h]
+  ;;          [:l :!!l]
+  ;;          [:j :!!j]
+  ;;          [:k :!!k]
+  ;;          [:m :!!m]
+  ;;          [:u :!!u]
+  ;;          [:i :!!i]
+  ;;          [:o :!!o]]}
 
   {:des "misc"
    :rules [[:!COSi [:!COSi :return_or_enter]]]}
 
   {:des "launch apps"
-   :rules [[:!COSa [:open-app "Android Studio"]]
-           [:!COSc [:open-app "Google Chrome"]]
-           [:!COSe [:open-app "Emacs"]]]}
+   :rules [[:!COSa [:open "Android Studio"]]
+           [:!COSc [:open "Google Chrome"]]
+           [:!COSe [:open "Emacs"]]]}
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
@@ -149,6 +150,10 @@
   {:des "spacebar to COS if held"
    :rules [:built-in
            [:spacebar :!COleft_shift nil {:alone :spacebar}]]}
+
+  {:des "spacebar to COTS if held"
+   :rules [:built-in
+           [:w :!COTleft_shift nil {:alone :w}]]}
 
   {:des "g/h to shift if held"
    :rules [:built-in

@@ -144,8 +144,6 @@
    ((t
      (:height 0.1)))))
 
-(add-hook 'prog-mode-hook #'subword-mode)
-
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-separator " • ")
 (setq uniquify-after-kill-buffer-p t)

@@ -129,9 +129,12 @@ those so-called 'extras'."
 
 (x/define-keys embark-general-map '(("2" . x/wrap-embark-split-below)
                                     ("3" . x/wrap-embark-split-right)
-                                    ("l" . sdcv-search-pointer)))
+                                    ("." . sdcv-search-pointer+)))
 
-(define-key embark-symbol-map (kbd "h") #'helpful-at-point)
+(x/define-keys embark-symbol-map '(("." . sdcv-search-pointer+)
+                                   ("h" . helpful-at-point)))
+(x/define-keys embark-command-map '(("." . sdcv-search-pointer+)
+                                   ("h" . helpful-at-point)))
 
 ;; (global-set-key (kbd "H-i") 'embark-act)
 (with-eval-after-load 'vertico

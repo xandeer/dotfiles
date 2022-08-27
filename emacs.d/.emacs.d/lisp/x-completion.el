@@ -10,12 +10,16 @@
 (setq corfu-quit-no-match t)
 (setq tab-always-indent 'complete)
 
-(define-key corfu-map " " #'corfu-insert-separator)
-(define-key corfu-map [tab] #'x/tab)
-(define-key corfu-map [(shift tab)] #'corfu-previous)
-(define-key corfu-map [return] #'corfu-insert)
-(define-key corfu-map [escape] #'corfu-quit)
-
+(x/define-keys corfu-map
+               '(("M-s" . corfu-insert-separator)
+                 ("<tab>" . x/tab)
+                 ("<return>" . corfu-insert)
+                 ("<escape>" . corfu-quit)))
+;; (define-key corfu-map " " #'corfu-insert-separator)
+;; (define-key corfu-map [tab] #'x/tab)
+;; (define-key corfu-map [(shift tab)] #'corfu-previous)
+;; (define-key corfu-map [return] #'corfu-insert)
+;; (define-key corfu-map [escape] #'corfu-quit)
 (global-corfu-mode)
 
 ;;; icon
@@ -29,9 +33,10 @@
 
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
 
-(define-key corfu-map (kbd "M-p") #'corfu-doc-scroll-down)
-(define-key corfu-map (kbd "M-n") #'corfu-doc-scroll-up)
-(define-key corfu-map (kbd "M-d") #'corfu-doc-toggle)
+(x/define-keys corfu-map
+               '(("M-d" . corfu-doc-toggle)
+                 ("M-n" . corfu-doc-scroll-up)
+                 ("M-p" . corfu-doc-scroll-down)))
 
 ;;; cape
 (setq cape-dabbrev-min-length 2)

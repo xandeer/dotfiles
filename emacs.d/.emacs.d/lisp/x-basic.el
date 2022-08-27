@@ -39,18 +39,21 @@
 ;;; Some basic minor modes.
 (defun x/enable-basic-modes ()
   "Enable some basic modes after init."
+  (global-so-long-mode)
+  (global-subword-mode)
+  (repeat-mode)
   (minibuffer-depth-indicate-mode)
   (global-auto-revert-mode)
   (delete-selection-mode)
   (which-function-mode))
 (x/append-init-hook #'x/enable-basic-modes)
 
-;;; Icons
-(require-package 'all-the-icons)
-(setq inhibit-compacting-font-caches t)
+(autoload 'filesets-open "filesets" nil t)
+(autoload 'filesets-add-buffer "filesets" nil t)
+(add-hook 'kill-emacs-hook #'filesets-save-config)
 
-;;; TODO: for what?
-(straight-use-package 'explain-pause-mode)
+;;; Icons
+(setq inhibit-compacting-font-caches t)
 
 ;;; Bookmark
 (require 'bookmark)

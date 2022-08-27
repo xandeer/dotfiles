@@ -63,9 +63,12 @@ Usages:
 (defvar x/packages
   '(
 ;;; basic
+    all-the-icons
     anzu
     avy
     (consult . "minad/consult")
+    ;; todo: for what?
+    explain-pause-mode
     gcmh
     (hydra . "abo-abo/hydra")
     no-littering
@@ -126,6 +129,7 @@ Usages:
     ob-restclient
     (org-modern . "minad/org-modern")
     org-roam
+    org-transclusion
     consult-org-roam
     ;; used for roam
     emacsql-sqlite-builtin
