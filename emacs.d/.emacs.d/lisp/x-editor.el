@@ -45,6 +45,7 @@
     (diminish 'page-break-lines-mode)))
 
 (x/append-init-hook #'global-hl-line-mode)
+(set-face-background 'hl-line "#2a2e48")
 
 
 (add-hook 'prog-mode-hook #'color-identifiers-mode)

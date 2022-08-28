@@ -1,4 +1,4 @@
-;;; x-ts.el --- typescript -*- lexical-binding: t -*-
+;;; x-typescript.el --- typescript -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -122,5 +122,5 @@ prevent switching to the new buffer once created."
   (add-to-list 'org-babel-load-languages '(typescript . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
 
-(provide 'x-ts)
-;;; x-ts.el ends here
+(provide 'x-typescript)
+;;; x-typescript.el ends here

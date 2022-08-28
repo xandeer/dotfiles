@@ -73,7 +73,7 @@
       (setq end (point))
       (if nil                           ; light theme
           (add-face-text-property start end '(:background "#D8DEE9" :extend t))
-        (add-face-text-property start end '(:background "#292b2e" :extend t)))
+        (add-face-text-property start end '(:background "#191b1e" :extend t)))
       (shr-ensure-newline)
       (insert "\n"))))
 

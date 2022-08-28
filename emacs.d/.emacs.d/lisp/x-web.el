@@ -7,7 +7,7 @@
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
 (require 'x-javascript)
-(require 'x-ts)
+(require 'x-typescript)
 
 ;;; tide
 (defun x/tide-setup ()
