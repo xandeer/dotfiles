@@ -29,7 +29,9 @@
 (add-hook 'org-capture-prepare-finalize-hook #'auto-save-enable)
 (x/append-init-hook #'auto-save-enable)
 
-(add-hook 'eldoc-mode-hook 'eldoc-box-hover-at-point-mode)
+(add-hook 'eldoc-mode-hook #'eldoc-box-hover-at-point-mode)
+(with-eval-after-load 'eldoc-box
+  (set-face-background 'eldoc-box-border "gray10"))
 
 (setq expand-region-subword-enabled t)
 (global-set-key (kbd "C-;") #'er/expand-region)
