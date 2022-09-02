@@ -99,6 +99,7 @@ brew little-cms2
 brew lz4
 brew lzo
 brew m4
+brew magic-wormhole
 brew make
 brew mas
 brew mbedtls
