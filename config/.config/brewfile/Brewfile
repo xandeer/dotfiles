@@ -48,6 +48,7 @@ brew jansson
 brew jasper
 brew jbig2dec
 brew jpeg
+brew jpeg-turbo
 brew jpeg-xl
 brew kotlin
 brew lame
@@ -123,7 +124,6 @@ brew pkg-config
 brew prettyping
 brew python@3.10
 brew python@3.9
-# brew ranger
 brew rav1e
 brew readline
 brew rubberband
@@ -131,11 +131,11 @@ brew sdcv
 brew sdl2
 brew shared-mime-info
 brew sip
+brew six
 brew snappy
 brew speex
 brew sqlite
 brew srt
-brew tdlib
 brew tesseract
 brew texinfo
 brew theora
@@ -164,9 +164,9 @@ cask alt-tab
 cask docker
 cask karabiner-elements
 cask raycast
-cask sip
-cask sioyek
 cask showyedge
+cask sioyek
+cask sip
 cask squirrel
 cask syncthing
 cask zotero
