@@ -36,6 +36,8 @@
 	# Commit all changes
 	ca = !git add -A && git commit -av
 
+	co = checkout
+
 	# Switch to a branch, creating it if necessary
 	go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
@@ -50,7 +52,7 @@
 	# Amend the currently staged files to the latest commit
 	amend = commit --amend --reuse-message=HEAD
 
-		# Interactive rebase with the given number of latest commits
+	# Interactive rebase with the given number of latest commits
 	reb = "!r() { git rebase -i HEAD~$1; }; r"
 
 	# Remove the old tag with this name and tag the latest commit with it.
