@@ -8,7 +8,8 @@
 (setq telega-chat-scroll-conservatively 101)
 (setq telega-sticker-set-download t)
 (setq telega-cache-dir (expand-file-name "~/syncthing/personal/telega"))
-(setq telega-completing-read-function 'completing-read)
+(setq telega-completing-read-function #'completing-read)
+(setq telega-chat-input-markups '(nil "org" "markdown2"))
 (setq telega-proxies
       (list '(:server "127.0.0.1" :port 8010 :enable t
                       :type (:@type "proxyTypeHttp"))))
