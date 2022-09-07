@@ -10,9 +10,9 @@
   (autoload #'column-number-mode "doom-modeline" nil t))
 
 (custom-set-faces
- '(mode-line ((t (:slant italic :height 0.9))))
- '(mode-line-active ((t (:slant italic :height 0.9))))
- '(mode-line-inactive ((t (:slant italic :height 0.9)))))
+ '(mode-line ((t (:slant italic))))
+ '(mode-line-active ((t (:slant italic))))
+ '(mode-line-inactive ((t (:slant italic)))))
 
 (x/append-init-hook #'doom-modeline-mode)
 

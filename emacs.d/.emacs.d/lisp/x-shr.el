@@ -92,5 +92,8 @@
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
+;; (x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
+;; (require 'nov-xwidget)
+
 (provide 'x-shr)
 ;;; x-shr.el ends here

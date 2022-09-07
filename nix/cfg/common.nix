@@ -17,6 +17,7 @@
     stow
     corkscrew
 
+    unrar
     unzip
     # tmux
     # tmuxPlugins.continuum
