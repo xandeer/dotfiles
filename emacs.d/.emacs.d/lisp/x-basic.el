@@ -48,9 +48,9 @@
   (which-function-mode))
 (x/append-init-hook #'x/enable-basic-modes)
 
-(autoload 'filesets-open "filesets" nil t)
-(autoload 'filesets-add-buffer "filesets" nil t)
-(add-hook 'kill-emacs-hook #'filesets-save-config)
+;; (autoload 'filesets-open "filesets" nil t)
+;; (autoload 'filesets-add-buffer "filesets" nil t)
+;; (add-hook 'kill-emacs-hook #'filesets-save-config)
 
 ;;; Icons
 (setq inhibit-compacting-font-caches t)

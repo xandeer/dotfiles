@@ -15,7 +15,8 @@
 ;; (defengine translate-en "https://translate.google.com/?sl=auto&tl=en&text=%s" :keybinding "b")
 (defengine wiki-en "https://en.wikipedia.org/wiki/%s" :keybinding "w")
 (defengine wiki-cn "https://zh.wikipedia.org/wiki/%s" :keybinding "f")
-(defengine libgen "https://libgen.is/search.php?req=%s&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def" :keybinding "b")
+;; (defengine libgen "https://libgen.is/search.php?req=%s&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def" :keybinding "b")
+(defengine zlib "https://zh.b-ok.asia/s/%s?extensions[]=epub" :keybinding "b")
 
 (provide 'x-search-engine)
 ;;; x-search-engine.el ends here

@@ -90,10 +90,16 @@
   (add-hook 'nov-mode-hook #'shrface-mode)
   (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
-;; (x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
-;; (require 'nov-xwidget)
+  (with-eval-after-load 'nov-xwidget
+    (x/define-keys nov-mode-map '(("V" . nov-xwidget-view)))))
+
+(x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
+(require 'nov-xwidget)
+(x/define-keys nov-xwidget-webkit-mode-map
+               '(("n" . nov-xwidget-next-document)
+                 ("p" . nov-xwidget-previous-document)))
 
 (provide 'x-shr)
 ;;; x-shr.el ends here
