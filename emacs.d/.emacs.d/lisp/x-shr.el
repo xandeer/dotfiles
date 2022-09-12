@@ -9,10 +9,35 @@
   (let ((avy-all-windows nil))
     (link-hint-open-link)))
 
+(defvar-local x/shr-next-document-fn nil
+  "Function to call when `shr-next-document' is called.")
+
+(defvar-local x/shr-previous-document-fn nil
+  "Function to call when `shr-previous-document' is called.")
+
+(defun x/shr-scroll-up ()
+  "Scroll up or goto next document."
+  (interactive)
+  (condition-case nil
+      (scroll-up)
+    (end-of-buffer
+     (when x/shr-next-document-fn
+       (funcall x/shr-next-document-fn)))))
+
+(defun x/shr-scroll-down ()
+  "Scroll down or goto previous document."
+  (interactive)
+  (condition-case nil
+      (scroll-down)
+    (beginning-of-buffer
+     (when x/shr-previous-document-fn
+       (funcall x/shr-previous-document-fn)
+       (end-of-buffer)))))
+
 ;;; shr
 (defconst x/shr-map '(("b" . Info-history-back)
-                      ("d" . scroll-up)
-                      ("e" . scroll-down)
+                      ("d" . x/shr-scroll-up)
+                      ("e" . x/shr-scroll-down)
                       ("f" . x/link-hint-open-in-current-window)
                       ("i" . consult-imenu)
                       ("s" . consult-line)
@@ -91,6 +116,12 @@
   (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
+  (defun x/nov-setup ()
+    (setq-local x/shr-next-document-fn #'nov-next-document)
+    (setq-local x/shr-previous-document-fn #'nov-previous-document))
+
+  (add-hook 'nov-mode-hook #'x/nov-setup)
 
   (with-eval-after-load 'nov-xwidget
     (x/define-keys nov-mode-map '(("V" . nov-xwidget-view)))))

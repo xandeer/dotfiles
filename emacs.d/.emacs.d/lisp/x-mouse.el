@@ -8,6 +8,8 @@
   cursor-in-non-selected-windows t)
 (blink-cursor-mode 1)
 
+(require 'pixel-scroll)
+(pixel-scroll-mode 1)
 (setq hscroll-margin                  3
       scroll-margin                   3
       hscroll-step                    3
