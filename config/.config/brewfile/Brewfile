@@ -48,7 +48,6 @@ brew jansson
 brew jasper
 brew jbig2dec
 brew jpeg
-brew jpeg-turbo
 brew jpeg-xl
 brew kotlin
 brew lame
@@ -100,7 +99,6 @@ brew little-cms2
 brew lz4
 brew lzo
 brew m4
-brew magic-wormhole
 brew make
 brew mas
 brew mbedtls
@@ -131,7 +129,6 @@ brew sdcv
 brew sdl2
 brew shared-mime-info
 brew sip
-brew six
 brew snappy
 brew speex
 brew sqlite
@@ -141,6 +138,7 @@ brew texinfo
 brew theora
 brew trash
 brew unbound
+brew vale
 brew wakatime-cli
 brew watchexec
 brew webp
