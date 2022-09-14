@@ -25,6 +25,7 @@
 (setq org-image-actual-width '(200))
 (setq org-fontify-quote-and-verse-blocks t)
 (setq org-return-follows-link t)
+(setq org-imenu-depth 3)
 (setq org-attach-id-dir (x/expand-note "attach/"))
 (setq org-attach-store-link-p 'attached)
 (setq org-list-allow-alphabetical t)
