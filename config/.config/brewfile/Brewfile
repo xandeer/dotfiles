@@ -175,6 +175,9 @@ brew joker
 tap d12frosted/emacs-plus
 brew emacs-plus@29 --with-xwidgets --with-imagemagick
 
+tap ekzhang/bore
+brew bore
+
 tap git-chglog/git-chglog
 brew git-chglog
 

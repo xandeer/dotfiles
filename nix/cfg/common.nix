@@ -78,5 +78,6 @@
 
     buku
     ispell
+    caddy
   ];
 }
