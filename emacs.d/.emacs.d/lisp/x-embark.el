@@ -52,7 +52,7 @@
     (set-keymap-parent map embark-become-file+buffer-map)
     (x/define-keys map '(("r" . consult-recent-file)
                          ;; ("B" . project-switch-to-buffer)
-                         ("F" . project-find-file)))
+                         ("F" . projectile-find-file)))
     map)
   "File+buffer custom cross-package `embark-become' keymap.")
 

@@ -4,6 +4,7 @@
 
 (require 'projectile)
 
+;;; config
 (setq projectile-indexing-method      'hybrid)
 (setq projectile-require-project-root 'prompt)
 (setq projectile-project-root-files-top-down-recurring
@@ -11,18 +12,29 @@
                 ".cquery")
               projectile-project-root-files-top-down-recurring))
 
+(x/append-init-hook #'projectile-mode)
+
+;;; keybindings
+(define-prefix-command 'x/projectile-map)
+(global-set-key (kbd "C-c p") #'x/projectile-map)
 (global-set-key (kbd "H-p") #'projectile-find-file)
-(global-set-key (kbd "C-c p f") #'projectile-find-file)
-(global-set-key (kbd "C-c f f") #'projectile-find-file)
-(global-set-key (kbd "C-c p p") #'projectile-switch-project)
+
+(with-eval-after-load 'project
+  (global-set-key (kbd "C-c p") #'x/projectile-map))
+
+(x/define-keys
+ x/projectile-map
+ '(("b" . projectile-switch-to-buffer)
+   ("d" . projectile-find-dir)
+   ("f" . projectile-find-file)
+   ("p" . projectile-switch-project)
+   ("r" . projectile-recentf)))
 
 (with-eval-after-load 'consult
   (defun x/search-in-project ()
     (interactive)
     (consult-ripgrep (projectile-project-root)))
-  (global-set-key (kbd "C-c p s") #'x/search-in-project))
-
-(x/append-init-hook #'projectile-mode)
+  (define-key x/projectile-map "s" #'x/search-in-project))
 
 (provide 'x-projectile)
 ;;; x-projectile.el ends here
