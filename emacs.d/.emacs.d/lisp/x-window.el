@@ -51,13 +51,16 @@
 (global-set-key (kbd "H-0")   #'x/delete-window-or-frame)
 (global-set-key (kbd "H-2")   #'x/split-below-find-file)
 (global-set-key (kbd "H-3")   #'x/split-right-find-file)
-(global-set-key (kbd "C-x x") #'ace-swap-window)
+(global-set-key (kbd "H-w")   #'kill-current-buffer)
+(global-set-key [remap delete-window] #'x/delete-window-or-frame)
 (global-set-key [remap split-window-right] #'x/split-right-find-file)
 (global-set-key [remap split-window-below] #'x/split-below-find-file)
-(global-set-key (kbd "C-x M-o") (lambda ()
-                                  "Select the previous window."
-                                  (interactive)
-                                  (other-window -1)))
+(x/define-keys ctl-x-map '(("C-o" . (lambda ()
+                                      "Select the previous window."
+                                      (interactive)
+                                      (setq repeat-map 'other-window-repeat-map)
+                                      (other-window -1)))
+                           ("x" . ace-swap-window)))
 
 ;; Display agenda buffers always at the left.
 ;; (add-to-list 'display-buffer-alist
@@ -102,6 +105,15 @@ Otherwise, enable `golden-ratio-mode'."
   (split-window-right))
 
 (x/append-init-hook #'x/window-startup)
+
+;;; frame
+;; (x/define-keys ctl-x-map '(("C-o" . other-frame)))
+(defun x/other-frame-when-just-one-window (count &optional _ _)
+  "Switch to other COUNT frame when there is just one window."
+  (when (one-window-p) (other-frame count)))
+(advice-add 'other-window :before #'x/other-frame-when-just-one-window)
+(x/define-keys ctl-x-5-map '(("3" . make-frame)
+                             ("9" . other-frame)))
 
 (provide 'x-window)
 ;;; x-window.el ends here

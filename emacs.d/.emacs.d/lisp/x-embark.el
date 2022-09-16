@@ -127,8 +127,16 @@ those so-called 'extras'."
     (select-window (split-window-below))
     (call-interactively embark--command)))
 
+(defun x/wrap-embark-new-frame ()
+  "Make a new frame before running default command."
+  (interactive)
+  (with-demoted-errors "%s"
+    (make-frame)
+    (call-interactively embark--command)))
+
 (x/define-keys embark-general-map '(("2" . x/wrap-embark-split-below)
                                     ("3" . x/wrap-embark-split-right)
+                                    ("5" . x/wrap-embark-new-frame)
                                     ("." . sdcv-search-pointer+)))
 
 (x/define-keys embark-symbol-map '(("." . sdcv-search-pointer+)

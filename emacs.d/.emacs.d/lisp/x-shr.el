@@ -51,6 +51,8 @@
   (setq shrface-hrefshversatile t)
 
   (set-face-attribute 'variable-pitch nil :font (format "%s:pixelsize=%d" "Bookerly" 15))
+  (set-face-foreground 'shrface-verbatim "#f00056")
+  (set-face-attribute 'shrface-code nil :inherit 'org-verbatim)
 
   (add-hook 'shrface-mode-hook (lambda ()
                                  (org-indent-mode -1)))
@@ -122,6 +124,8 @@
     (setq-local x/shr-previous-document-fn #'nov-previous-document))
 
   (add-hook 'nov-mode-hook #'x/nov-setup)
+  (x/define-keys nov-mode-map x/shr-map)
+  (x/define-keys nov-mode-map '(("q" . kill-current-buffer)))
 
   (with-eval-after-load 'nov-xwidget
     (x/define-keys nov-mode-map '(("V" . nov-xwidget-view)))))
