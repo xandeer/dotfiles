@@ -11,8 +11,9 @@
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
-   '("d" . scroll-up-command)
-   '("e" . scroll-down-command)))
+   ;; '("d" . scroll-up-command)
+   ;; '("e" . scroll-down-command)
+   ))
 
 (defun x--meow-define-leader-keys ()
   (meow-leader-define-key

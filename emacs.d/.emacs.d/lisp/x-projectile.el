@@ -2,8 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'projectile)
-
 ;;; config
 (setq projectile-indexing-method      'hybrid)
 (setq projectile-require-project-root 'prompt)
@@ -16,8 +14,10 @@
 
 ;;; keybindings
 (define-prefix-command 'x/projectile-map)
-(global-set-key (kbd "C-c p") #'x/projectile-map)
-(global-set-key (kbd "H-p") #'projectile-find-file)
+(x/define-keys global-map
+            '(("C-c p" x/projectile-map)
+              ("C-x C-b" projectile-switch-to-buffer)
+              ("H-p" projectile-find-file)))
 
 (with-eval-after-load 'project
   (global-set-key (kbd "C-c p") #'x/projectile-map))

@@ -44,40 +44,17 @@
   ;; (global-set-key (kbd "C-c h") 'consult-history)
   ;; (global-set-key (kbd "C-c m") 'consult-mode-command)
   ;; (global-set-key (kbd "C-c k") 'consult-kmacro)
-  ;; C-x bindings (ctl-x-map)
-  (global-set-key (kbd "C-x M-:") 'consult-complex-command)     ;; orig. repeat-complex-command
-  (global-set-key (kbd "C-x b") 'consult-buffer)                ;; orig. switch-to-buffer
-  (global-set-key (kbd "C-x C-b") 'consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-  (global-set-key (kbd "C-x 5 b") 'consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-  ;; Custom M-# bindings for fast register access
-  (global-set-key (kbd "M-#") 'consult-register-load)
-  (global-set-key (kbd "M-'") 'consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-  (global-set-key (kbd "C-M-#") 'consult-register)
+  (x/define-keys ctl-x-map
+                 '(([remap switch-to-buffer] consult-buffer)))
+  (x/define-keys ctl-x-5-map
+                 '(("b" consult-buffer-other-frame)))
   ;; Other custom bindings
-  (global-set-key (kbd "M-y") 'consult-yank-pop)                ;; orig. yank-pop
-  (global-set-key (kbd "<help> a") 'consult-apropos)            ;; orig. apropos-command
-  ;; M-g bindings (goto-map)
-  ;; (global-set-key (kbd "M-g e") 'consult-compile-error)
-  ;; (global-set-key (kbd "M-g f") 'consult-flymake)               ;; Alternative: consult-flycheck
-  ;; M-s bindings (search-map)
-  (global-set-key (kbd "M-s f") 'consult-find)
-  (global-set-key (kbd "M-s F") 'consult-locate)
-  (global-set-key (kbd "M-s g") 'consult-grep)
-  (global-set-key (kbd "M-s G") 'consult-git-grep)
-  (global-set-key (kbd "M-s s") (lambda () (interactive) (consult-ripgrep default-directory)))
-  (global-set-key (kbd "M-s l") 'consult-line)
-  (global-set-key (kbd "C-s") 'consult-line)
-  (global-set-key (kbd "M-s L") 'consult-line-multi)
-  (global-set-key (kbd "M-s m") 'consult-multi-occur)
-  (global-set-key (kbd "M-s k") 'consult-keep-lines)
-  (global-set-key (kbd "M-s u") 'consult-focus-lines)
-  ;; Isearch integration
-  (global-set-key (kbd "M-s e") 'consult-isearch-history)
-  ;; isearch-mode-map
-  (define-key isearch-mode-map (kbd "M-e") 'consult-isearch-history)         ;; orig. isearch-edit-string
-  (define-key isearch-mode-map (kbd "M-s e") 'consult-isearch-history)       ;; orig. isearch-edit-string
-  (define-key isearch-mode-map (kbd "M-s l") 'consult-line)                  ;; needed by consult-line to detect isearch
-  (define-key isearch-mode-map (kbd "M-s L") 'consult-line-multi)           ;; needed by consult-line to detect isearch
+  (x/define-keys global-map
+                 '(("M-y" consult-yank-pop)
+                   ("<help> a" consult-apropos)
+                   ("C-s" consult-line)))
+
+  (global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
   )
 
 (provide 'x-consult)
