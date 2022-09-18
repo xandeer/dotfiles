@@ -154,16 +154,20 @@
 (setq uniquify-ignore-buffers-re "^\\*")
 
 ;;; recenter
-
-(defhydra x-hydra-recenter (:exit t)
-  ""
-  ("l" recenter-top-bottom "center")
-  ("C-l" recenter-top-bottom "center")
-  ("j" (recenter-top-bottom 1) "top")
-  ("C-j" (recenter-top-bottom 1) "top")
-  ("k" (recenter-top-bottom -1) "bottom")
-  ("C-k" (recenter-top-bottom -1) "bottom"))
-(global-set-key (kbd "C-l") #'x-hydra-recenter/body)
+(defvar x/recenter-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (x/define-keys map
+                   '(("l" recenter-top-bottom)
+                     ("j" (lambda ()
+                            (interactive)
+                            (setq repeat-map 'x/recenter-repeat-map)
+                            (recenter-top-bottom 1)))
+                     ("k" (lambda ()
+                            (interactive)
+                            (setq repeat-map 'x/recenter-repeat-map)
+                            (recenter-top-bottom -1)))))
+    map))
+(put 'recenter-top-bottom 'repeat-map 'x/recenter-repeat-map)
 
 (provide 'x-editor)
 ;;; x-editor.el ends here

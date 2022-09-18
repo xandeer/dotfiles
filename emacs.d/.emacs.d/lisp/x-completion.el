@@ -12,10 +12,10 @@
 (set-face-background 'corfu-current "gray12")
 
 (x/define-keys corfu-map
-               '(("M-s" . corfu-insert-separator)
-                 ("<tab>" . x/tab)
-                 ("<return>" . corfu-insert)
-                 ("<escape>" . corfu-quit)))
+               '(("M-s"       corfu-insert-separator)
+                 ("<tab>"     x/tab)
+                 ("<return>"  corfu-insert)
+                 ("<escape>"  corfu-quit)))
 ;; (define-key corfu-map " " #'corfu-insert-separator)
 ;; (define-key corfu-map [tab] #'x/tab)
 ;; (define-key corfu-map [(shift tab)] #'corfu-previous)
@@ -35,9 +35,9 @@
 (add-hook 'corfu-mode-hook #'corfu-doc-mode)
 
 (x/define-keys corfu-map
-               '(("M-d" . corfu-doc-toggle)
-                 ("M-n" . corfu-doc-scroll-up)
-                 ("M-p" . corfu-doc-scroll-down)))
+               '(("M-d" corfu-doc-toggle)
+                 ("M-n" corfu-doc-scroll-up)
+                 ("M-p" corfu-doc-scroll-down)))
 
 ;;; cape
 (setq cape-dabbrev-min-length 2)

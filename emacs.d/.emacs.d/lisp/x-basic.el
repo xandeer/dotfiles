@@ -69,5 +69,16 @@
 
 ;; (global-set-key (kbd "M-j") #'x/line-move-visual)
 
+;;; Scroll
+(defvar x/scroll-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (x/define-keys map
+                   '(("j" scroll-up-command)
+                     ("k" scroll-down-command)))
+    map))
+;; does't work
+(put 'scroll-up-command 'repeat-map 'x/scroll-repeat-map)
+(put 'scroll-down-command 'repeat-map 'x/scroll-repeat-map)
+
 (provide 'x-basic)
 ;;; x-basic.el ends here

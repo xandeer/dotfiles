@@ -127,17 +127,17 @@ ARG is passed through to `x/org-schedule'."
 
 (with-eval-after-load 'org-agenda
   (x/define-keys org-agenda-mode-map
-                 '(("M-l" . x/agenda-toggle-clock-log)
-                   ("q" . x/switch-to-last-buffer)
-                   ("s" . x/org-agenda-schedule)
-                   ("k" . org-agenda-previous-item)
-                   ("p" . org-agenda-previous-item)
-                   ("n" . org-agenda-next-item)
-                   ("j" . org-agenda-next-item)
-                   ("T" . org-agenda-goto-today)
-                   ("i" . org-agenda-clock-in)
-                   ("o" . org-agenda-clock-goto)
-                   ("O" . org-agenda-clock-goto))))
+                 '(("M-l" x/agenda-toggle-clock-log)
+                   ("q" previous-buffer)
+                   ("s" x/org-agenda-schedule)
+                   ("k" org-agenda-previous-item)
+                   ("p" org-agenda-previous-item)
+                   ("n" org-agenda-next-item)
+                   ("j" org-agenda-next-item)
+                   ("T" org-agenda-goto-today)
+                   ("i" org-agenda-clock-in)
+                   ("o" org-agenda-clock-goto)
+                   ("O" org-agenda-clock-goto))))
 
 ;;; Custom agenda command definitions
 (setq org-agenda-custom-commands

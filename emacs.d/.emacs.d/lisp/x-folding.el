@@ -31,13 +31,12 @@
 
 (x/define-keys
  x/folding-map
- '(("h" . hs-show-block)
-   ("M-h" . hs-hide-block)
-   ("j" . hs-hide-all)
-   ("M-j" . hs-show-all)
-   ;; doesn't work as expected
-   ("k" . hs-toggle-hiding)
-   ("l" . hs-hide-level)))
+ '(("h"    hs-show-block)
+   ("M-h"  hs-hide-block)
+   ("j"    hs-hide-all)
+   ("M-j"  hs-show-all)
+   ("k"    hs-toggle-hiding) ; doesn't work as expected
+   ("l"    hs-hide-level)))
 
 ;; (global-set-key (kbd "M-h") #'x/folding-map)
 

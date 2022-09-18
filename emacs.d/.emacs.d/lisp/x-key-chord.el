@@ -9,7 +9,7 @@
 
 (key-chord-define-global "jj" 'x/ace-goto-char-timer)
 (key-chord-define-global "jh" 'consult-outline)
-(key-chord-define-global "kk" 'x/switch-to-last-buffer)
+;; (key-chord-define-global "kk" 'x/switch-to-last-buffer)
 (key-chord-define-global "hh" 'org-agenda-list)
 (key-chord-define-global "ii" 'toggle-input-method)
 (key-chord-define-global "jl" 'link-hint-open-link)

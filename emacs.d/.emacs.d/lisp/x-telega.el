@@ -89,19 +89,22 @@
   (add-hook 'telega-chat-mode-hook #'x/telega--chat-mode-setup)
 
   (x/define-keys telega-chat-mode-map
-                 '(("C-c C-f" . x/telega-chatbuf-attach-file)))
+                 '(("C-c C-f" x/telega-chatbuf-attach-file)))
 
   (x/define-keys telega-chat-button-map
-                 '(("f" . x/telega-chat-with))))
+                 '(("d" scroll-up-command)
+                   ("e" scroll-down-command)
+                   ("f" x/telega-chat-with))))
 
 (with-eval-after-load 'telega-msg
   (x/define-keys telega-msg-button-map
-                 '(("d" . scroll-up-command)
-                   ("e" . scroll-down-command)
-                   ("f" . x/link-hint-open-in-current-window)
-                   ("D" . telega-msg-delete-marked-or-at-point)
-                   ("E" . telega-msg-edit)
-                   ("F" . telega-msg-forward-marked-or-at-point))))
+                 '(("d" scroll-up-command)
+                   ("e" scroll-down-command)
+                   ("f" x/link-hint-open-in-current-window)
+                   ("D" telega-msg-delete-marked-or-at-point)
+                   ("E" telega-msg-edit)
+                   ("F" telega-msg-forward-marked-or-at-point)
+                   ("q" quit-window))))
 
 (provide 'x-telega)
 ;;; x-telega.el ends here

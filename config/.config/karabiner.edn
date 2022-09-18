@@ -151,7 +151,7 @@
    :rules [:built-in
            [:spacebar :!COleft_shift nil {:alone :spacebar}]]}
 
-  {:des "spacebar to COTS if held"
+  {:des "w to COTS if held"
    :rules [:built-in
            [:w :!COTleft_shift nil {:alone :w}]]}
 
@@ -160,12 +160,14 @@
            [:g :left_shift nil {:alone :g}]
            [:h :left_shift nil {:alone :h}]]}
 
-  {:des "f/j to control if held"
+  {:des "c/f/j to control if held"
    :rules [:built-in
+           [:c :left_control nil {:alone :c}]
            [:f :left_control nil {:alone :f}]
            [:j :left_control nil {:alone :j}]]}
 
-  {:des "d/k to option if held"
+  {:des "d/k/x to option if held"
    :rules [:built-in
            [:d :left_option nil {:alone :d}]
-           [:k :left_option nil {:alone :k}]]}]}
+           [:k :left_option nil {:alone :k}]
+           [:x :left_option nil {:alone :x}]]}]}

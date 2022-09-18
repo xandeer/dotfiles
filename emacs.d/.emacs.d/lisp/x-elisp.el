@@ -8,10 +8,6 @@
 (global-set-key (kbd "C-h F") #'helpful-function)
 (global-set-key (kbd "C-h C") #'helpful-command)
 
-(with-eval-after-load 'helpful
-  (x/define-keys helpful-mode-map
-                 '(("f" . x/link-hint-open-in-current-window))))
-
 (defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
 	"
 Elisp\n"
@@ -37,8 +33,6 @@ Elisp\n"
 
 ;; (require-package 'elisp-demos)
 ;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-
-(define-key emacs-lisp-mode-map (kbd "M-.") #'elisp-def)
 
 (provide 'x-elisp)
 ;;; x-elisp.el ends here

@@ -19,7 +19,7 @@
   "Scroll up or goto next document."
   (interactive)
   (condition-case nil
-      (scroll-up)
+      (scroll-up-command)
     (end-of-buffer
      (when x/shr-next-document-fn
        (funcall x/shr-next-document-fn)))))
@@ -28,22 +28,23 @@
   "Scroll down or goto previous document."
   (interactive)
   (condition-case nil
-      (scroll-down)
+      (scroll-down-command)
     (beginning-of-buffer
      (when x/shr-previous-document-fn
        (funcall x/shr-previous-document-fn)
        (end-of-buffer)))))
 
 ;;; shr
-(defconst x/shr-map '(("b" . Info-history-back)
-                      ("d" . x/shr-scroll-up)
-                      ("e" . x/shr-scroll-down)
-                      ("f" . x/link-hint-open-in-current-window)
-                      ("i" . consult-imenu)
-                      ("s" . consult-line)
-                      ("l" . sdcv-search-pointer)))
+(defconst x/shr-map '(("b" Info-history-back)
+                      ("d" x/shr-scroll-up)
+                      ("e" x/shr-scroll-down)
+                      ("f" x/link-hint-open-in-current-window)
+                      ("i" consult-imenu)
+                      ("s" consult-line)
+                      ("l" sdcv-search-pointer)))
 
 (with-eval-after-load 'shr
+  (set-face-foreground 'shr-code "#7bc275")
   (x/define-keys shr-map x/shr-map))
 
 ;;; shrface
@@ -52,16 +53,15 @@
 
   (set-face-attribute 'variable-pitch nil :font (format "%s:pixelsize=%d" "Bookerly" 15))
   (set-face-foreground 'shrface-verbatim "#f00056")
-  (set-face-attribute 'shrface-code nil :inherit 'org-verbatim)
 
   (add-hook 'shrface-mode-hook (lambda ()
                                  (org-indent-mode -1)))
 
   (x/define-keys shrface-mode-map x/shr-map)
-  (x/define-keys shrface-mode-map '(("M-n"     . shrface-next-headline)
-                                    ("M-p"     . shrface-previous-headline)
-                                    ("TAB"     . shrface-outline-cycle)
-                                    ("S-<tab>" . shrface-outline-cycle-buffer)))
+  (x/define-keys shrface-mode-map '(("M-n"     shrface-next-headline)
+                                    ("M-p"     shrface-previous-headline)
+                                    ("TAB"     shrface-outline-cycle)
+                                    ("S-<tab>" shrface-outline-cycle-buffer)))
 
   ;; shr-tag-pre-highlight
   (require 'shr-tag-pre-highlight)
@@ -111,10 +111,15 @@
 (with-eval-after-load 'info
   (x/define-keys Info-mode-map x/shr-map))
 
+;;; helpful
+(with-eval-after-load 'helpful
+  (x/define-keys helpful-mode-map x/shr-map))
+
 ;;; nov
 (with-eval-after-load 'nov
   (require 'shrface)
   (add-hook 'nov-mode-hook #'shrface-mode)
+  (setq nov-save-place-file nil)
   (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -125,16 +130,16 @@
 
   (add-hook 'nov-mode-hook #'x/nov-setup)
   (x/define-keys nov-mode-map x/shr-map)
-  (x/define-keys nov-mode-map '(("q" . kill-current-buffer)))
+  (x/define-keys nov-mode-map '(("q" kill-current-buffer)))
 
   (with-eval-after-load 'nov-xwidget
-    (x/define-keys nov-mode-map '(("V" . nov-xwidget-view)))))
+    (x/define-keys nov-mode-map '(("V" nov-xwidget-view)))))
 
 (x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
 (require 'nov-xwidget)
 (x/define-keys nov-xwidget-webkit-mode-map
-               '(("n" . nov-xwidget-next-document)
-                 ("p" . nov-xwidget-previous-document)))
+               '(("n" nov-xwidget-next-document)
+                 ("p" nov-xwidget-previous-document)))
 
 (provide 'x-shr)
 ;;; x-shr.el ends here

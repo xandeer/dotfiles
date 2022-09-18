@@ -29,10 +29,10 @@
 
 (with-eval-after-load 'tide
   (x/define-keys tide-mode-map
-                 '(("C-c C-f" . x/tide-format)
-                   ("C-c C-r" . tide-rename-symbol)
-                   ("M-." . lsp-ui-peek-find-definitions)
-                   ("M-," . lsp-ui-peek-find-references))))
+                 '(("C-c C-f" x/tide-format)
+                   ("C-c C-r" tide-rename-symbol)
+                   ("M-." lsp-ui-peek-find-definitions)
+                   ("M-," lsp-ui-peek-find-references))))
 
 (add-hook 'typescript-mode-hook #'x/tide-setup)
 ;; (add-hook 'js2-mode-hook #'x/tide-setup)
@@ -63,10 +63,10 @@ Use `lsp''s definitions/references jump."
   (let ((map (make-sparse-keymap)))
     (x/define-keys
      map
-     '(("C-c d" . x/docs-lookup)
-       ("C-c i" . yarn-install)
-       ("C-c r" . yarn-run)
-       ("C-c t" . yarn-test)))
+     '(("C-c d" x/docs-lookup)
+       ("C-c i" yarn-install)
+       ("C-c r" yarn-run)
+       ("C-c t" yarn-test)))
     map))
 
 (define-minor-mode x/web-mode

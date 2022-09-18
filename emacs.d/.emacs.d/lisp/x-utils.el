@@ -298,15 +298,21 @@ FILENAME defaults to current buffer."
 
 Example:
   (x/define-keys org-agenda-mode-map
-                 (quote ((\"k\" . org-agenda-previous-item)
-                         (\"p\" . org-agenda-previous-item)
-                         (\"n\" . org-agenda-next-item)
-                         (\"j\" . org-agenda-next-item)
-                         (\"T\" . org-agenda-goto-today)
-                         (\"i\" . org-agenda-clock-in)
-                         (\"o\" . org-agenda-clock-goto))))"
+                 (quote ((\"k\" org-agenda-previous-item)
+                         (\"p\" org-agenda-previous-item)
+                         (\"n\" org-agenda-next-item)
+                         (\"j\" org-agenda-next-item)
+                         (\"T\" org-agenda-goto-today)
+                         (\"i\" org-agenda-clock-in)
+                         (\"o\" org-agenda-clock-goto)
+                         ([remap org-schedule] x/org-schedule)))"
   (mapc (lambda (binding)
-          (define-key map (kbd (car binding)) (cdr binding)))
+          (let* ((key (car binding))
+                 (key (if (stringp key)
+                                     (kbd key)
+                                   key))
+                 (command (cadr binding)))
+            (define-key map key command)))
         bindings))
 
 (provide 'x-utils)

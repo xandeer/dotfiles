@@ -18,10 +18,12 @@
   ;; (add-hook 'magit-post-refresh-hook #'no-trailing-whitespace)
   (abridge-diff-mode)
 
-  (global-set-key (kbd "C-x g") #'magit-status)
-  (global-set-key (kbd "C-x M-g") #'magit-dispatch)
-  (define-key magit-status-mode-map (kbd "q") #'kill-current-buffer)
-  (define-key magit-status-mode-map (kbd "K") #'magit-discard)
+  (x/define-keys ctl-x-map
+                 '(("g" magit-status)
+                   ("M-g" magit-dispatch)) )
+  (x/define-keys magit-status-mode-map
+                 '(("q" kill-current-buffer)
+                   ("K" magit-discard)))
 
   (defun x/git-create-tag-and-update-chglog ()
     (interactive)
@@ -98,12 +100,12 @@ Magit\n"
 
 (x/define-keys
  vc-prefix-map
- '(("s" . x/stage-hunk)
-   ("S" . magit-stage)
-   ("r" . git-gutter:revert-hunk)
-   ("p" . git-gutter:popup-hunk)
-   ("j" . git-gutter:next-hunk)
-   ("k" . git-gutter:previous-hunk)))
+ '(("s" x/stage-hunk)
+   ("S" magit-stage)
+   ("r" git-gutter:revert-hunk)
+   ("p" git-gutter:popup-hunk)
+   ("j" git-gutter:next-hunk)
+   ("k" git-gutter:previous-hunk)))
 
 (with-eval-after-load 'flycheck
   ;; let diff have left fringe, flycheck can have right fringe

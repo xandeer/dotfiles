@@ -48,9 +48,6 @@ Buffer\n"
   ("H-s" x/open-telega-root "telega root")
   (">" x/telega-send-to-chat "send file to telega"))
 
-(global-set-key (kbd "H-x") 'x/hydra-x/body)
-(global-set-key (kbd "H-f") #'x/hydra-open-buffer/body)
-
 (defun x--bookmark-set ()
   (interactive)
   (if (equal major-mode 'org-mode)
@@ -83,8 +80,6 @@ Buffer\n"
   ("H-h" x/consult-dir "bookmark dir")
   ("H-i" consult-org-agenda "consult agenda"))
 
-(global-set-key (kbd "H-j") #'x/hydra-deal-special-position/body)
-
 (defhydra x/hydra-global-actions (:exit t :columns 4 :idle 0.3)
   ""
   ("n" consult-focus-lines "focus lines")
@@ -101,10 +96,6 @@ Buffer\n"
   ("H-l" bh/clock-in-organization-task-as-default "in organization")
   ("l" org-clock-out "out"))
 
-(global-set-key (kbd "H-d") #'x/hydra-global-actions/body)
-(global-set-key (kbd "M-k") #'x/switch-to-last-buffer)
-(global-set-key (kbd "H-c") #'org-capture)
-
 (defhydra x/hydra-search (:exit t :columns 4 :idle 0.3)
   ""
   ("s" (consult-ripgrep default-directory) "rg current directory")
@@ -120,7 +111,13 @@ Buffer\n"
   ("H-l" sdcv-search-input "lookup input")
   ("k" gts-do-translate "translate"))
 
-(global-set-key (kbd "H-s") #'x/hydra-search/body)
+(x/define-keys global-map
+               '(("H-c" org-capture)
+                 ("H-d" x/hydra-global-actions/body)
+                 ("H-f" x/hydra-open-buffer/body)
+                 ("H-j" x/hydra-deal-special-position/body)
+                 ("H-s" x/hydra-search/body)
+                 ("H-x" x/hydra-x/body)))
 
 (provide 'x-hydra)
 ;;; x-hydra.el ends here

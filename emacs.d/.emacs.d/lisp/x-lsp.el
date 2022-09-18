@@ -19,11 +19,11 @@
 (setq lsp-auto-guess-root t)
 (setq lsp-enable-snippet nil)
 
-(x/define-keys lsp-mode-map '(("C-c C-f" . lsp-format-buffer)
-                              ("C-c C-r" . lsp-rename)
-                              ("M-," . lsp-find-references)
-                              ("C-," . xref-go-back)
-                              ("C-." . xref-go-forward)))
+(x/define-keys lsp-mode-map '(("C-c C-f" lsp-format-buffer)
+                              ("C-c C-r" lsp-rename)
+                              ("M-," lsp-find-references)
+                              ("C-," xref-go-back)
+                              ("C-." xref-go-forward)))
 
 ;;; modes enabled lsp
 ;; (add-hook 'kotlin-mode-hook #'lsp)
@@ -36,8 +36,11 @@
 (setq lsp-ui-peek-always-show t)
 
 (x/define-keys lsp-ui-mode-map
-               '(("M-." . lsp-ui-peek-find-definitions)
-                 ("M-," . lsp-ui-peek-find-references)))
+               '(("M-." lsp-ui-peek-find-definitions)
+                 ("M-," lsp-ui-peek-find-references)))
+
+(put 'lsp-ui-peek--goto-xref 'repeat-map 'x/xref-repeat-map)
+(put 'lsp-goto-type-definition 'repeat-map 'x/xref-repeat-map)
 
 ;;; corfu
 ;; https://www.reddit.com/r/emacs/comments/ql8cyp/corfu_orderless_and_lsp/

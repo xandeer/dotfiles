@@ -32,16 +32,16 @@
 
 (defvar x/embark-become-general-map
   (let ((map (make-sparse-keymap)))
-    (x/define-keys map '(("f" . consult-find)
-                         ("g" . consult-ripgrep)))
+    (x/define-keys map '(("f" consult-find)
+                         ("g" consult-ripgrep)))
     map)
   "General custom cross-package `embark-become` keymap.")
 
 (defvar x/embark-become-line-map
   (let ((map (make-sparse-keymap)))
-    (x/define-keys map '(("l" . consult-line)
-                         ("i" . consult-imenu)
-                         ("s" . consult-outline))) ; as my default is 'M-s M-s'
+    (x/define-keys map '(("l" consult-line)
+                         ("i" consult-imenu)
+                         ("s" consult-outline))) ; as my default is 'M-s M-s'
     map)
   "Line-specific custom cross-package `embark-become' keymap.")
 
@@ -50,9 +50,9 @@
 (defvar x/embark-become-file+buffer-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map embark-become-file+buffer-map)
-    (x/define-keys map '(("r" . consult-recent-file)
-                         ;; ("B" . project-switch-to-buffer)
-                         ("F" . projectile-find-file)))
+    (x/define-keys map '(("r" consult-recent-file)
+                         ;; ("B" project-switch-to-buffer)
+                         ("F" projectile-find-file)))
     map)
   "File+buffer custom cross-package `embark-become' keymap.")
 
@@ -105,9 +105,9 @@ those so-called 'extras'."
       (call-interactively embark--command)))
 
   (mapc (lambda (map)
-          (x/define-keys map '(("o"   . x/wrap-embark-ace)
-                               ("C-u" . x/wrap-embark-window-previous)
-                               ("C-i" . x/wrap-embark-window-next))))
+          (x/define-keys map '(("o"   x/wrap-embark-ace)
+                               ("C-u" x/wrap-embark-window-previous)
+                               ("C-i" x/wrap-embark-window-next))))
         (list embark-general-map
               embark-buffer-map
               embark-file-map
@@ -134,15 +134,15 @@ those so-called 'extras'."
     (make-frame)
     (call-interactively embark--command)))
 
-(x/define-keys embark-general-map '(("2" . x/wrap-embark-split-below)
-                                    ("3" . x/wrap-embark-split-right)
-                                    ("5" . x/wrap-embark-new-frame)
-                                    ("." . sdcv-search-pointer+)))
+(x/define-keys embark-general-map '(("2" x/wrap-embark-split-below)
+                                    ("3" x/wrap-embark-split-right)
+                                    ("5" x/wrap-embark-new-frame)
+                                    ("." sdcv-search-pointer+)))
 
-(x/define-keys embark-symbol-map '(("." . sdcv-search-pointer+)
-                                   ("h" . helpful-at-point)))
-(x/define-keys embark-command-map '(("." . sdcv-search-pointer+)
-                                   ("h" . helpful-at-point)))
+(x/define-keys embark-symbol-map '(("." sdcv-search-pointer+)
+                                   ("h" helpful-at-point)))
+(x/define-keys embark-command-map '(("." sdcv-search-pointer+)
+                                    ("h" helpful-at-point)))
 
 ;; (global-set-key (kbd "H-i") 'embark-act)
 (with-eval-after-load 'vertico

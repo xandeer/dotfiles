@@ -223,13 +223,8 @@
   (dolist (lang org-babel-lang-list)
     (eval `(lsp-org-babel-enable ,lang)))
 
-  (x/define-keys org-mode-map
-                 '(("M-p" . org-previous-visible-heading)
-                   ("M-n" . org-next-visible-heading)))
-
-  (define-key org-mode-map [remap org-schedule] #'x/org-schedule)
-
-  (global-set-key (kbd "C-c l") #'org-store-link))
+  ;; follow link in the current window
+  (add-to-list 'org-link-frame-setup '(file . find-file)))
 
 (with-eval-after-load 'org
   (require 'org-attach))
@@ -338,10 +333,15 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
 
 ;;; keybindings
 (x/define-keys org-mode-map
-               '(("H-S-<return>" . org-insert-todo-heading)))
+               '(("M-n" org-next-visible-heading)
+                 ("M-p" org-previous-visible-heading)
+                 ("H-S-<return>" org-insert-todo-heading)
+                 ([remap org-schedule] x/org-schedule)))
+
+(global-set-key (kbd "C-c l") #'org-store-link)
 
 (x/define-keys org-src-mode-map
-               '(("C-c C-c" . org-edit-src-exit)))
+               '(("C-c C-c" org-edit-src-exit)))
 
 ;;; embark
 (with-eval-after-load 'embark
@@ -354,16 +354,16 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (add-to-list 'embark-keymap-alist '(consult-org-heading embark-org-heading-map))
 
   (x/define-keys embark-heading-map
-                 '(("i" . org-clock-in)
+                 '(("i" org-clock-in)
                    ;; something wrong with this
-                   ("r" . org-refile)
-                   ("j" . outline-next-visible-heading)
-                   ("k" . outline-previous-visible-heading)
-                   ("h" . outline-hide-subtree)
-                   ("w" . outline-move-subtree-up)
-                   ("s" . outline-move-subtree-down)
-                   ("D" . x/duplicate-line)
-                   ("c" . org-cut-subtree))))
+                   ("r" org-refile)
+                   ("j" outline-next-visible-heading)
+                   ("k" outline-previous-visible-heading)
+                   ("h" outline-hide-subtree)
+                   ("w" outline-move-subtree-up)
+                   ("s" outline-move-subtree-down)
+                   ("D" x/duplicate-line)
+                   ("c" org-cut-subtree))))
 
 ;;; visual line mode
 ;; see: [[info:emacs#Visual Line Mode][emacs#Visual Line Mode]]

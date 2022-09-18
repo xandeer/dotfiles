@@ -13,19 +13,26 @@ If point was already at that position, move point to beginning of line."
     (back-to-indentation)
     (and (= oldpos (point))
          (beginning-of-line))))
-(global-set-key [remap move-beginning-of-line] 'x/smart-beginning-of-line)
-(global-set-key [remap newline] 'newline-and-indent)
 
-(global-set-key (kbd "H-z") 'undo)
-;; (global-set-key (kbd "H-n") 'make-frame)
+(x/define-keys global-map
+               '(([remap move-beginning-of-line] x/smart-beginning-of-line)
+                 ([remap newline] newline-and-indent)
+                 ("M-k" previous-buffer)
+                 ("M-[" previous-buffer)
+                 ("M-]" next-buffer)
+                 ("M-;" comment-line)
+                 ("H-z" undo)))
+(defvar x/walk-buffers-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (x/define-keys map
+                   '(("j" next-buffer)
+                     ("k" previous-buffer)))
+    map))
+(put 'previous-buffer 'repeat-map 'x/walk-buffers-repeat-map)
+(put 'next-buffer 'repeat-map 'x/walk-buffers-repeat-map)
 
-(defun x/switch-to-last-buffer ()
-  (interactive)
-  (switch-to-buffer (other-buffer)))
-
-(global-set-key (kbd "M-[") 'x/switch-to-last-buffer)
-(global-set-key (kbd "M-;") 'comment-line)
-(global-set-key (kbd "C-x k") 'kill-current-buffer) ; override kill-buffer
+(x/define-keys ctl-x-map
+               '(("k" kill-current-buffer)))
 
 (setq which-key-allow-imprecise-window-fit nil)
 (x/append-init-hook #'which-key-mode)

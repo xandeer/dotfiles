@@ -20,15 +20,20 @@
     (interactive)
     (insert "]"))
 
+  (x/define-keys lispy-mode-map
+                 '(("M-j" x/navigation-map)
+                   ("M-k" previous-buffer)
+                   ("C-a" x/smart-beginning-of-line)
+                   ("M-n" lispy-forward)
+                   ("M-p" lispy-backward)
+                   ("M-e" lispy-eval-and-comment)
+                   ("M-," xref-find-references)
+                   ("C-." xref-go-forward)
+                   ("C-," xref-go-back)))
+
+  (put 'lispy-goto-symbol 'repeat-map 'x/xref-repeat-map)
+
   (let ((map lispy-mode-map))
-    (define-key map (kbd "M-j") 'x/navigation-map)
-    (define-key map (kbd "M-k") 'x/switch-to-last-buffer)
-    (define-key map (kbd "C-a") 'x/smart-beginning-of-line)
-
-    (define-key map (kbd "M-p") 'lispy-backward)
-    (define-key map (kbd "M-n") 'lispy-forward)
-    (define-key map (kbd "M-e") 'lispy-eval-and-comment)
-
     (lispy-define-key map (kbd "[") 'x--lispy-insert-square-left)
     (lispy-define-key map (kbd "]") 'x--lispy-insert-square-right)
 

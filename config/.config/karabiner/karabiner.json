@@ -3229,7 +3229,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "spacebar to COTS if held",
+        "description" : "w to COTS if held",
         "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "w"
@@ -3290,8 +3290,26 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "f/j to control if held",
+        "description" : "c/f/j to control if held",
         "manipulators" : [ {
+          "to_if_alone" : [ {
+            "key_code" : "c"
+          } ],
+          "from" : {
+            "key_code" : "c"
+          },
+          "to" : [ {
+            "key_code" : "left_control"
+          } ],
+          "conditions" : [ {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ],
+          "type" : "basic"
+        }, {
           "to_if_alone" : [ {
             "key_code" : "f"
           } ],
@@ -3329,7 +3347,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "d/k to option if held",
+        "description" : "d/k/x to option if held",
         "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "d"
@@ -3354,6 +3372,24 @@
           } ],
           "from" : {
             "key_code" : "k"
+          },
+          "to" : [ {
+            "key_code" : "left_option"
+          } ],
+          "conditions" : [ {
+            "identifiers" : [ {
+              "vendor_id" : 1452,
+              "product_id" : 641
+            } ],
+            "type" : "device_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "to_if_alone" : [ {
+            "key_code" : "x"
+          } ],
+          "from" : {
+            "key_code" : "x"
           },
           "to" : [ {
             "key_code" : "left_option"

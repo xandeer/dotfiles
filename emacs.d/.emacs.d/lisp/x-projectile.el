@@ -24,11 +24,11 @@
 
 (x/define-keys
  x/projectile-map
- '(("b" . projectile-switch-to-buffer)
-   ("d" . projectile-find-dir)
-   ("f" . projectile-find-file)
-   ("p" . projectile-switch-project)
-   ("r" . projectile-recentf)))
+ '(("b" projectile-switch-to-buffer)
+   ("d" projectile-find-dir)
+   ("f" projectile-find-file)
+   ("p" projectile-switch-project)
+   ("r" projectile-recentf)))
 
 (with-eval-after-load 'consult
   (defun x/search-in-project ()
