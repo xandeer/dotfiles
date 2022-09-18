@@ -39,9 +39,6 @@
                '(("M-." lsp-ui-peek-find-definitions)
                  ("M-," lsp-ui-peek-find-references)))
 
-(put 'lsp-ui-peek--goto-xref 'repeat-map 'x/xref-repeat-map)
-(put 'lsp-goto-type-definition 'repeat-map 'x/xref-repeat-map)
-
 ;;; corfu
 ;; https://www.reddit.com/r/emacs/comments/ql8cyp/corfu_orderless_and_lsp/
 (setq lsp-completion-provider :none)

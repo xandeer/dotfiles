@@ -153,21 +153,5 @@
 (setq uniquify-after-kill-buffer-p t)
 (setq uniquify-ignore-buffers-re "^\\*")
 
-;;; recenter
-(defvar x/recenter-repeat-map
-  (let ((map (make-sparse-keymap)))
-    (x/define-keys map
-                   '(("l" recenter-top-bottom)
-                     ("j" (lambda ()
-                            (interactive)
-                            (setq repeat-map 'x/recenter-repeat-map)
-                            (recenter-top-bottom 1)))
-                     ("k" (lambda ()
-                            (interactive)
-                            (setq repeat-map 'x/recenter-repeat-map)
-                            (recenter-top-bottom -1)))))
-    map))
-(put 'recenter-top-bottom 'repeat-map 'x/recenter-repeat-map)
-
 (provide 'x-editor)
 ;;; x-editor.el ends here

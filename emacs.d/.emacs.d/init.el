@@ -105,6 +105,7 @@
 (require 'x-pass)
 (require 'x-pinyin)
 (require 'x-projectile)
+(require 'x-repeat)
 (require 'x-rime)
 (require 'x-search-engine)
 (require 'x-sh)
@@ -113,7 +114,6 @@
 (require 'x-telega)
 (require 'x-vertico)
 ;; (require 'x-point-mode)
-(require 'x-xref)
 (require 'x-xwidget)
 
 ;;; chores

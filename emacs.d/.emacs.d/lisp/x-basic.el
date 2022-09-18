@@ -41,7 +41,6 @@
   "Enable some basic modes after init."
   (global-so-long-mode)
   (global-subword-mode)
-  (repeat-mode)
   (minibuffer-depth-indicate-mode)
   (global-auto-revert-mode)
   (delete-selection-mode)
@@ -68,17 +67,6 @@
   (line-move-visual num))
 
 ;; (global-set-key (kbd "M-j") #'x/line-move-visual)
-
-;;; Scroll
-(defvar x/scroll-repeat-map
-  (let ((map (make-sparse-keymap)))
-    (x/define-keys map
-                   '(("j" scroll-up-command)
-                     ("k" scroll-down-command)))
-    map))
-;; does't work
-(put 'scroll-up-command 'repeat-map 'x/scroll-repeat-map)
-(put 'scroll-down-command 'repeat-map 'x/scroll-repeat-map)
 
 (provide 'x-basic)
 ;;; x-basic.el ends here

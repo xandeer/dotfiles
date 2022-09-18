@@ -115,5 +115,16 @@ Otherwise, enable `golden-ratio-mode'."
 (x/define-keys ctl-x-5-map '(("3" make-frame)
                              ("9" other-frame)))
 
+;;; popper
+;; (x/package-use 'popper)
+;; (with-eval-after-load 'popper
+;;   (setq popper-reference-buffers
+;;         '("\\*Messages\\*"
+;;           "\\*Async Shell Command\\*"
+;;           help-mode
+;;           helpful-mode
+;;           compilation-mode)))
+;; (x/append-init-hook #'popper-mode)
+
 (provide 'x-window)
 ;;; x-window.el ends here

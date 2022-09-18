@@ -22,14 +22,6 @@ If point was already at that position, move point to beginning of line."
                  ("M-]" next-buffer)
                  ("M-;" comment-line)
                  ("H-z" undo)))
-(defvar x/walk-buffers-repeat-map
-  (let ((map (make-sparse-keymap)))
-    (x/define-keys map
-                   '(("j" next-buffer)
-                     ("k" previous-buffer)))
-    map))
-(put 'previous-buffer 'repeat-map 'x/walk-buffers-repeat-map)
-(put 'next-buffer 'repeat-map 'x/walk-buffers-repeat-map)
 
 (x/define-keys ctl-x-map
                '(("k" kill-current-buffer)))
