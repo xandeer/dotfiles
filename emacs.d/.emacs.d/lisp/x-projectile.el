@@ -5,10 +5,11 @@
 ;;; config
 (setq projectile-indexing-method      'hybrid)
 (setq projectile-require-project-root 'prompt)
-(setq projectile-project-root-files-top-down-recurring
-      (append '("compile_commands.json"
-                ".cquery")
-              projectile-project-root-files-top-down-recurring))
+(with-eval-after-load 'projectile
+  (setq projectile-project-root-files-top-down-recurring
+        (append '("compile_commands.json"
+                  ".cquery")
+                projectile-project-root-files-top-down-recurring)))
 
 (x/append-init-hook #'projectile-mode)
 
