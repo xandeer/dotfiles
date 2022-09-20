@@ -65,8 +65,8 @@ If point was already at that position, move point to beginning of line."
     (diminish 'page-break-lines-mode)))
 
 (x/append-init-hook #'global-hl-line-mode)
-(with-eval-after-load 'hl-line
-  (set-face-background 'hl-line "#2a2e48"))
+;; (with-eval-after-load 'hl-line
+;;   (set-face-background 'hl-line "#2a2e48"))
 
 
 (add-hook 'prog-mode-hook #'color-identifiers-mode)

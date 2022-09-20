@@ -49,7 +49,8 @@
 (setq custom-theme-directory (expand-file-name "theme" vanilla-path))
 (add-hook 'after-init-hook (lambda ()
                              (require 'doom-themes)
-                             (load-theme 'x-vibrant t)))
+                             ;; (load-theme 'x-vibrant t)
+                             (load-theme x/theme t)))
 
 (with-eval-after-load 'doom-theme
   (with-eval-after-load 'org-mode

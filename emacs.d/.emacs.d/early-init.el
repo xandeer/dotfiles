@@ -23,7 +23,7 @@
 (add-to-list 'default-frame-alist '(left . 0.5))
 (add-to-list 'default-frame-alist '(width . 0.33))
 (add-to-list 'default-frame-alist '(height . 0.66))
-(add-to-list 'default-frame-alist '(alpha . (85 . 78)))
+;; (add-to-list 'default-frame-alist '(alpha . (85 . 78)))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(undecorated . t))
 
