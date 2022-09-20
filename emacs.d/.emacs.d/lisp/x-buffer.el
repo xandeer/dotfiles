@@ -8,7 +8,7 @@
   (if (proper-list-p exp) exp (list exp)))
 
 (defun doom-buffers-in-mode (modes &optional buffer-list derived-p)
-  "Return a list of buffers whose `major-mode' is `eq' to MODE(S).
+  "Return a list of buffers whose `major-mode' is `eq' to MODES.
 
 If DERIVED-P, test with `derived-mode-p', otherwise use `eq'."
   (let ((modes (doom-enlist modes)))
@@ -20,6 +20,16 @@ If DERIVED-P, test with `derived-mode-p', otherwise use `eq'."
                         (lambda (buf)
                           (memq (buffer-local-value 'major-mode buf) modes)))
                       (or buffer-list (buffer-list)))))
+
+(x/define-keys global-map
+               '(("M-k" previous-buffer)
+                 ("M-[" previous-buffer)
+                 ("M-]" next-buffer)))
+
+(x/define-keys ctl-x-map
+               '(("k" previous-buffer)
+                 ;; ("k" kill-current-buffer)
+                 ))
 
 (provide 'x-buffer)
 ;;; x-buffer.el ends here

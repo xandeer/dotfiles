@@ -46,7 +46,7 @@
 ;; set "PATH" and `exec-path`
 (require 'x-exec-path)
 ;; which-key, keyfreq, osx-modifiers
-(require 'x-keybindings)
+(require 'x-key-helper)
 (require 'x-navigation)
 
 (require 'x-basic)
@@ -85,7 +85,6 @@
 (require 'x-avy)
 (require 'x-browser)
 (require 'x-calendar)
-;; (require 'x-company)
 (require 'x-completion)
 (require 'x-consult)
 (require 'x-dictionary)
@@ -95,9 +94,7 @@
 (require 'x-flycheck)
 (require 'x-folding)
 (require 'x-hippie-expand)
-;; (require 'x-ivy)
 (require 'x-jieba)
-;; (require 'x-key-chord)
 (require 'x-lispy)
 (require 'x-lsp)
 (require 'x-git)

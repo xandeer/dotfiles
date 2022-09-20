@@ -2,6 +2,24 @@
 ;;; Commentary:
 ;;; Code:
 
+;; https://stackoverflow.com/questions/145291/smart-home-in-emacs/145359
+(defun x/smart-beginning-of-line ()
+  "Move point to first non-whitespace character or `beginning-of-line`.
+
+Move point to the first non-whitespace character on this line.
+If point was already at that position, move point to beginning of line."
+  (interactive "^") ; Use (interactive) in Emacs 22 or older
+  (let ((oldpos (point)))
+    (back-to-indentation)
+    (and (= oldpos (point))
+         (beginning-of-line))))
+
+(x/define-keys global-map
+               '(([remap move-beginning-of-line] x/smart-beginning-of-line)
+                 ([remap newline] newline-and-indent)
+                 ("M-;" comment-line)
+                 ("H-z" undo)))
+
 (setq mmm-global-mode 'buffers-with-submode-classes)
 (setq mmm-submode-decoration-level 2)
 
