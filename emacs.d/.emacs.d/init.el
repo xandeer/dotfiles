@@ -12,8 +12,11 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;; (setq debug-on-error t)
 (setq-default lexical-binding t)
-;; (defvar x/theme 'adwaita)
 (defvar x/theme 'doom-one-light)
+
+(defun x/theme-light-p ()
+  "Whether the theme is light."
+  (eq 'light (frame-parameter nil 'background-mode)))
 
 (defvar x/doom? (boundp 'doom-version)
   "Whether use doom-emacs or not.")

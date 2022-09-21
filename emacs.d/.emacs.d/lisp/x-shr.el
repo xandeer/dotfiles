@@ -88,7 +88,7 @@
       (shr-ensure-newline)
       (setq start (point))
       (insert
-       (propertize (concat  "#+begin_src " lang) 'face nil 'display '(space :width (1)))
+       (propertize (concat "#+begin_src " lang) 'face nil 'display '(space :width (1)))
        "\n"
        (or (and (fboundp mode)
                 (with-demoted-errors "Error while fontifying: %S"
@@ -98,7 +98,7 @@
        (propertize "#+end_src" 'face nil 'display '(space :width (1))))
       (shr-ensure-newline)
       (setq end (point))
-      (if nil                           ; light theme
+      (if (x/theme-light-p)             ; light theme
           (add-face-text-property start end '(:background "#D8DEE9" :extend t))
         (add-face-text-property start end '(:background "#191b1e" :extend t)))
       (shr-ensure-newline)
