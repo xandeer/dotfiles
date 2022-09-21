@@ -46,21 +46,28 @@
         ;; "*Org Agenda(a)*"
         ))
 
-(global-set-key (kbd "H-o")   #'ace-window)
-(global-set-key (kbd "H-1")   #'delete-other-windows)
-(global-set-key (kbd "H-0")   #'x/delete-window-or-frame)
-(global-set-key (kbd "H-2")   #'x/split-below-find-file)
-(global-set-key (kbd "H-3")   #'x/split-right-find-file)
-(global-set-key (kbd "H-w")   #'kill-current-buffer)
-(global-set-key [remap delete-window] #'x/delete-window-or-frame)
-(global-set-key [remap split-window-right] #'x/split-right-find-file)
-(global-set-key [remap split-window-below] #'x/split-below-find-file)
-(x/define-keys ctl-x-map '(("C-o" (lambda ()
-                                      "Select the previous window."
-                                      (interactive)
-                                      (setq repeat-map 'other-window-repeat-map)
-                                      (other-window -1)))
-                           ("x" ace-swap-window)))
+(x/define-keys global-map
+               '(("H-o" ace-window)
+                 ("H-0" x/delete-window-or-frame)
+                 ("H-1" delete-other-windows)
+                 ("H-2" x/split-below-find-file)
+                 ("H-3" x/split-right-find-file)
+                 ("H-w" kill-current-buffer)
+                 ([remap delete-window] x/delete-window-or-frame)
+                 ([remap split-window-below] x/split-below-find-file)
+                 ([remap split-window-right] x/split-right-find-file)))
+
+(defun x/previous-window ()
+  "Select the previous window."
+  (interactive)
+  (setq repeat-map 'other-window-repeat-map)
+  (other-window -1))
+(x/define-keys ctl-x-map '(("x" ace-swap-window)
+                           ("C-o" x/previous-window)))
+
+(x/define-keys other-window-repeat-map
+               '(("u" x/previous-window)
+                 ("i" x/previous-window)))
 
 ;; Display agenda buffers always at the left.
 ;; (add-to-list 'display-buffer-alist

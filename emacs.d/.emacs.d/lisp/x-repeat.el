@@ -35,7 +35,9 @@
 (x/define-keys x/recenter-repeat-map
      '(("l" recenter-top-bottom)
        ("j" x/recenter-top)
-       ("k" x/recenter-bottom)))
+       ("C-j" x/recenter-top)
+       ("k" x/recenter-bottom)
+       ("C-k" x/recenter-bottom)))
 (repeatize 'x/recenter-repeat-map)
 
 ;;; walk buffers
