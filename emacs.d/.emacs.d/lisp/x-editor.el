@@ -2,13 +2,35 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; case
+(define-prefix-command 'x/case-map)
+(x/define-keys x/case-map
+               '(("u" upcase-region)
+                 ("l" downcase-region)
+                 ("c" upcase-initials-region)))
+(x/define-keys ctl-x-map
+               '(("c" x/case-map)))
+
+;;; transpose
+(define-prefix-command 'x/transpose-map)
+(x/define-keys x/transpose-map
+               '(("w" transpose-words)
+                 ("l" transpose-lines)
+                 ("s" transpose-sexps)
+                 ("p" transpose-paragraphs)
+                 ("t" transpose-sentences)
+                 ("C-t" transpose-chars)))
+
+(x/define-keys global-map
+               '(("C-t" x/transpose-map)))
+
 ;; https://stackoverflow.com/questions/145291/smart-home-in-emacs/145359
 (defun x/smart-beginning-of-line ()
   "Move point to first non-whitespace character or `beginning-of-line`.
 
 Move point to the first non-whitespace character on this line.
 If point was already at that position, move point to beginning of line."
-  (interactive "^") ; Use (interactive) in Emacs 22 or older
+  (interactive "^")                 ; Use (interactive) in Emacs 22 or older
   (let ((oldpos (point)))
     (back-to-indentation)
     (and (= oldpos (point))
