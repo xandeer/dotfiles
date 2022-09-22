@@ -34,7 +34,8 @@
                                     ((= exit-status 105) (error "WakaTime Error (%s) Unknown wakatime-cli error. Please check your ~/.wakatime.log file and open a new issue at https://github.com/wakatime/wakatime-mode" exit-status))
                                     ((= exit-status 106) (error "WakaTime Error (%s) Malformed heartbeat error. Please check your ~/.wakatime.log file and open a new issue at https://github.com/wakatime/wakatime-mode" exit-status))
                                     ((or (= exit-status 1)
-                                         (= exit-status 112)) (message "WakaTime Error (%s) Cli" exit-status))
+                                         (= exit-status 112)) ;; (warn "WakaTime Error (%s) Cli" exit-status)
+                                     )
                                     (t (error "WakaTime Error (%s) Make sure this command runs in a Terminal: %s" exit-status (wakatime-client-command nil)))))))))
     (set-process-query-on-exit-flag process nil)))
 

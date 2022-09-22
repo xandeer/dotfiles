@@ -76,6 +76,19 @@
     (x/start-process
      (concat "adb connect " ip))))
 
+(defvar x/open-localhost-history nil
+  "The history list for open localhost functions.")
+
+(defun x/open-localhost ()
+  "Open localhost."
+  (interactive)
+  (let ((ip (completing-read "Open: "
+                             x/open-localhost-history
+                             nil nil
+                             (x/ifconfig)
+                             'x/open-localhost-history)))
+    (x/open (concat "http://" ip))))
+
 (autoload 'osx-lib-get-from-clipboard "osx-lib")
 (defun x/sh-run-clipboard ()
   "Call `x/start-process' with the clipboard content."

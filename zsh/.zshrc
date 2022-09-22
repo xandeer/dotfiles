@@ -17,8 +17,8 @@ zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "hchbaw/zce.zsh", from:github, use:zce.zsh
 
 # Miscellaneous commands
-zplug "k4rthik/git-cal", as:command
-zplug "peco/peco", as:command, from:gh-r, use:"*${(L)$(uname -s)}*amd64*"
+# zplug "k4rthik/git-cal", as:command
+# zplug "peco/peco", as:command, from:gh-r, use:"*${(L)$(uname -s)}*amd64*"
 
 # Supports oh-my-zsh plugins and the like
 zplug "lib/completion",                   from:oh-my-zsh
@@ -26,14 +26,14 @@ zplug "lib/directories",                  from:oh-my-zsh
 zplug "lib/functions",                    from:oh-my-zsh
 zplug "lib/git",                          from:oh-my-zsh
 zplug "lib/history",                      from:oh-my-zsh
-zplug "lib/theme-and-appearance",         from:oh-my-zsh
+# zplug "lib/theme-and-appearance",         from:oh-my-zsh
 zplug "plugins/common-aliases",           from:oh-my-zsh
 zplug "plugins/zsh_reload",               from:oh-my-zsh
 
 if [[ $OSTYPE = (darwin)* ]]; then
     zplug "lib/clipboard",                from:oh-my-zsh
     zplug "plugins/osx",                  from:oh-my-zsh
-    zplug "plugins/brew",                 from:oh-my-zsh, if:"(( $+commands[brew] ))"
+    # zplug "plugins/brew",                 from:oh-my-zsh, if:"(( $+commands[brew] ))"
 fi
 
 zplug "plugins/adb",                      from:oh-my-zsh, if:"(( $+commands[adb] ))"
@@ -44,7 +44,7 @@ zplug "plugins/command-not-found",        from:oh-my-zsh, if:"(( $+commands[cnf-
 # zplug "plugins/emacs",                    from:oh-my-zsh, if:"(( $+commands[emacsclient] ))"
 zplug "plugins/git",                      from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/git-extras",               from:oh-my-zsh, if:"(( $+commands[git] ))"
-zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
+# zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/gitignore",                from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/golang",                   from:oh-my-zsh, if:"(( $+commands[go] ))"
 # zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[gradle] ))"
@@ -72,12 +72,10 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:3
 
 # Adds aliases to open your current repo & branch on github.
-zplug "peterhurford/git-it-on.zsh"
+# zplug "peterhurford/git-it-on.zsh"
 
 # A collection of scripts that might be useful to sysadmins.
-zplug "skx/sysadmin-util"
-
-[ -d "$HOME/bin" ] && export PATH="$HOME/bin:$PATH"
+# zplug "skx/sysadmin-util"
 
 zplug "~/.config/zsh", from:local, defer:3
 
@@ -208,12 +206,12 @@ fi
 zplug load
 echo "Zsh plugins loaded."
 
-# [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
-if [ -e /Users/kevin/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kevin/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+nix_init=$HOME/.nix-profile/etc/profile.d/nix.sh
+if [ -e $nix_init ]; then . $nix_init; fi # added by Nix installer
 export NIX_PATH="darwin-config=$HOME/.nixpkgs/darwin-configuration.nix:/nix/var/nix/profiles/per-user/root/channels:$HOME/.nix-defexpr/channels"
 
 # export PATH=/opt/homebrew/bin:$HOME/.nix-profile/bin:$PATH
-
+eval "$(/opt/homebrew/bin/brew shellenv)"
 if [ -f $(brew --prefix)/etc/brew-wrap ];then
   source $(brew --prefix)/etc/brew-wrap
 fi

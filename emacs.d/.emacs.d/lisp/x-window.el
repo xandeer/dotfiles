@@ -40,12 +40,9 @@
       '("*Calc Trail*"
         " *LV*"
         ;; "*Org Agenda(a)*"
-        ;; "*Org Agenda(w)*"
-        ;; "*Org Agenda(e)*"
-        ;; "*Org Agenda(t)*"
-        ;; "*Org Agenda(a)*"
         ))
 
+;;; bindings
 (x/define-keys global-map
                '(("H-o" ace-window)
                  ("H-0" x/delete-window-or-frame)
@@ -62,8 +59,7 @@
   (interactive)
   (setq repeat-map 'other-window-repeat-map)
   (other-window -1))
-(x/define-keys ctl-x-map '(("x" ace-swap-window)
-                           ("C-o" x/previous-window)))
+(x/define-keys ctl-x-map '(("x" ace-swap-window)))
 
 (x/define-keys other-window-repeat-map
                '(("u" x/previous-window)
@@ -114,7 +110,7 @@ Otherwise, enable `golden-ratio-mode'."
 (x/append-init-hook #'x/window-startup)
 
 ;;; frame
-;; (x/define-keys ctl-x-map '(("C-o" . other-frame)))
+(x/define-keys ctl-x-map '(("C-o" other-frame)))
 (defun x/other-frame-when-just-one-window (count &optional _ _)
   "Switch to other COUNT frame when there is just one window."
   (when (one-window-p) (other-frame count)))

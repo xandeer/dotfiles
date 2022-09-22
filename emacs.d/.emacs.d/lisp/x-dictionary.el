@@ -42,7 +42,8 @@
 (setq gts-default-translator
       (gts-translator
        :picker (gts-prompt-picker)
-       :engines (list (gts-google-engine) (gts-google-rpc-engine))
+       ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
+       :engines `(,(gts-google-engine))
        :render (gts-buffer-render)))
 
 (provide 'x-dictionary)

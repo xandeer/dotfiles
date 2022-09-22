@@ -41,7 +41,8 @@
                       ("f" x/link-hint-open-in-current-window)
                       ("i" consult-imenu)
                       ("s" consult-line)
-                      ("l" sdcv-search-pointer)))
+                      ("l" sdcv-search-pointer)
+                      ("q" previous-buffer)))
 
 (with-eval-after-load 'shr
   (set-face-foreground 'shr-code "#7bc275")
@@ -130,7 +131,6 @@
 
   (add-hook 'nov-mode-hook #'x/nov-setup)
   (x/define-keys nov-mode-map x/shr-map)
-  (x/define-keys nov-mode-map '(("q" kill-current-buffer)))
 
   (with-eval-after-load 'nov-xwidget
     (x/define-keys nov-mode-map '(("V" nov-xwidget-view)))))
