@@ -318,6 +318,10 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (setq org-modern-star '("♥" "◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
+  (when (x/theme-light-p)
+    (set-face-attribute 'org-modern-tag nil
+                        :foreground "white"
+                        :distant-foreground "black"))
 
   (defvar x/org-modern-date-large? nil)
   (defun x/org-modern-switch-date-face ()

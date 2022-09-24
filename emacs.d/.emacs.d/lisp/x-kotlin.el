@@ -62,7 +62,9 @@ Kotlin\n"
   (define-key kotlin-mode-map (kbd "H-k") #'x/hydra-kotlin/body)
 
   (defun x/kotlin--setup ()
-    (setq-local projectile-project-root-functions (cons 'x/kotlin-locate-gradlew-file projectile-project-root-functions)))
+    ;; org src block
+    (unless (eq major-mode 'org-mode)
+      (setq-local projectile-project-root-functions (cons 'x/kotlin-locate-gradlew-file projectile-project-root-functions))))
 
   (add-hook 'kotlin-mode-hook #'x/kotlin--setup)
   (add-hook 'markdown-mode-hook #'x/kotlin--setup))
