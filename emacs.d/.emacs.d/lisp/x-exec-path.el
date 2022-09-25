@@ -25,9 +25,7 @@
 ;;   (setq exec-path (-distinct exec-path)))
 
 (defun x/prepend-homebrew-path (cmd)
-  cmd
-  ;; (concat "PATH=$HOME/bin:/opt/homebrew/bin:$PATH; " cmd)
-  )
+  (concat "PATH=/opt/homebrew/bin:$PATH; " cmd))
 
 (defvar x/process-prefix "x/exec-"
   "Prefix of the subprocess.")
