@@ -107,6 +107,9 @@
 
 ;;; eww
 (add-hook 'eww-after-render-hook #'shrface-mode)
+(with-eval-after-load 'eww
+  (x/define-keys eww-mode-map x/shr-map))
+(remove-hook 'eww-after-render-hook #'shrface-mode)
 
 ;;; info
 (with-eval-after-load 'info
