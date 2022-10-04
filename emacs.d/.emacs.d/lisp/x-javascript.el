@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(add-to-list 'auto-mode-alist '("\\.c?js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.c?jsx?\\'" . js2-mode))
 
 (setq js-chain-indent t)
 (setq js2-basic-offset 2)
