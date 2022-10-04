@@ -37,6 +37,7 @@
 ;;; shr
 (defconst x/shr-map '(("b" Info-history-back)
                       ("d" x/shr-scroll-up)
+                      ("j" x/shr-scroll-up)
                       ("e" x/shr-scroll-down)
                       ("f" x/link-hint-open-in-current-window)
                       ("i" consult-imenu)
