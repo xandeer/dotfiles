@@ -29,6 +29,16 @@
   (interactive)
   (x/roam-or-projectile-find-file (split-window-right)))
 
+(defun x/flip-window ()
+  "Flip window."
+  (interactive)
+  (let ((window (get-mru-window 'visible t t)))
+    (if window
+        (progn
+          (select-frame-set-input-focus (window-frame window))
+          (select-window window))
+      (mode-line-other-buffer))))
+
 ;;; ace window
 (require 'ace-window)
 
@@ -59,7 +69,8 @@
   (interactive)
   (setq repeat-map 'other-window-repeat-map)
   (other-window -1))
-(x/define-keys ctl-x-map '(("x" ace-swap-window)))
+(x/define-keys ctl-x-map '(("x" ace-swap-window)
+                           ("C-o" x/flip-window)))
 
 (x/define-keys other-window-repeat-map
                '(("u" x/previous-window)
@@ -110,7 +121,7 @@ Otherwise, enable `golden-ratio-mode'."
 (x/append-init-hook #'x/window-startup)
 
 ;;; frame
-(x/define-keys ctl-x-map '(("C-o" other-frame)))
+(x/define-keys ctl-x-map '(("M-o" other-frame)))
 (defun x/other-frame-when-just-one-window (count &optional _ _)
   "Switch to other COUNT frame when there is just one window."
   (when (one-window-p) (other-frame count)))

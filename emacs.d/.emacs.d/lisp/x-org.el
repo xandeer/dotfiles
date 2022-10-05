@@ -169,11 +169,13 @@
               " \t\r\n,\"'"
               "."
               1))
+  (defface x/org-bold
+    '((t (:inherit bold :foreground "#f00056")))
+    "Bold face.")
+
   (add-to-list 'org-emphasis-alist
                ;; set emphasis face
-               '("*"
-                 ;; :weight bold
-                 (:foreground "#f00056")))
+               '("*" x/org-bold))
   ;; set emphasis support 16 lines
   (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
   (org-set-emph-re 'org-emphasis-regexp-components

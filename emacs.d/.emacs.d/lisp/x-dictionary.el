@@ -42,9 +42,46 @@
 (setq gts-default-translator
       (gts-translator
        :picker (gts-prompt-picker)
-       :engines (list (gts-google-engine) (gts-google-rpc-engine))
+       ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
        ;; :engines `(,(gts-google-engine))
+       :engines `(,(gts-bing-engine))
        :render (gts-buffer-render)))
+
+;;; xwidget
+(defvar x/translate-history nil
+  "History of translate.")
+
+(defvar x/translate-to-zh-url
+  ;; "https://translate.google.com/?sl=auto&tl=zh-CN&op=translate&text=%s"
+  "https://www.deepl.com/translator#en/zh/%s"
+  )
+
+(defvar x/translate-to-en-url
+  "https://translate.google.com/?sl=auto&tl=en&op=translate&text=%s"
+  ;; "https://www.deepl.com/translator#zh/en/%s"
+  )
+
+(defun x/translate-to-zh ()
+  "Translate TEXT to zh."
+  (interactive)
+  (let ((text (completing-read "2zh: "
+                               x/translate-history
+                               nil nil (thing-at-point 'word)
+                               'x/translate-history)))
+    (xwidget-webkit-browse-url
+     (format x/translate-to-zh-url
+             (url-hexify-string text)))))
+
+(defun x/translate-to-en ()
+  "Translate TEXT to en."
+  (interactive)
+  (let ((text (completing-read "2en: "
+                               x/translate-history
+                               nil nil (thing-at-point 'word)
+                               'x/translate-history)))
+    (xwidget-webkit-browse-url
+     (format x/translate-to-en-url
+             (url-hexify-string text)))))
 
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here
