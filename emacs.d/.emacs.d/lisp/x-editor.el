@@ -54,8 +54,9 @@ If point was already at that position, move point to beginning of line."
 ;; (setq-default visual-fill-column-width 76)
 ;; (x/append-init-hook #'global-visual-fill-column-mode)
 
-(global-set-key [remap kill-ring-save] #'easy-kill)
-(global-set-key [remap mark-sexp] #'easy-mark)
+(x/define-keys global-map
+               '(([remap kill-ring-save] easy-kill)
+                 ([remap mark-sexp] easy-mark)))
 
 (unless
     (fboundp 'auto-compression-mode)
@@ -65,6 +66,7 @@ If point was already at that position, move point to beginning of line."
 (require 'auto-save)
 (setq auto-save-silent t)
 (setq auto-save-delete-trailing-whitespace t)
+(setq auto-save-idle 0.5)
 (add-hook 'org-capture-mode-hook #'auto-save-disable)
 (add-hook 'org-capture-prepare-finalize-hook #'auto-save-enable)
 (x/append-init-hook #'auto-save-enable)
@@ -74,9 +76,9 @@ If point was already at that position, move point to beginning of line."
   (set-face-background 'eldoc-box-border "gray10"))
 
 (setq expand-region-subword-enabled t)
-(global-set-key (kbd "C-;") #'er/expand-region)
-
-(global-set-key (kbd "M-q") 'unfill-toggle)
+(x/define-keys global-map
+               '(("C-;" er/expand-region)
+                 ("M-q" unfill-region)))
 
 
 (x/append-init-hook #'global-page-break-lines-mode)

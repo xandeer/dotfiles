@@ -39,12 +39,14 @@
 (autoload #'gts-translator "go-translate" nil t)
 
 (setq gts-translate-list '(("zh" "en")))
+
 (setq gts-default-translator
       (gts-translator
        :picker (gts-prompt-picker)
        ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
        ;; :engines `(,(gts-google-engine))
-       :engines `(,(gts-bing-engine))
+       ;; :engines `(,(gts-bing-engine))
+       :engines `(,(gts-deepl-engine :auth-key x/deepl-key :pro nil))
        :render (gts-buffer-render)))
 
 ;;; xwidget

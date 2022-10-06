@@ -24,7 +24,19 @@
 (defvar x/vertico-posframe? t
   "Whether use vertico-posframe or not.")
 
+(defvar x/deepl-key "YOUR-DEEPL-KEY"
+  "Deepl key.")
+
 (setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
+
+(defun x--load-file-under-vanilla (file)
+  "Load FILE under `vanilla-path'."
+  (let ((path (expand-file-name file vanilla-path)))
+    (if (file-exists-p path)
+        (load-file path)
+      (message "File %s not found." path))))
+
+(x--load-file-under-vanilla "private.el")
 
 (add-to-list 'load-path (expand-file-name "lisp" vanilla-path))
 
@@ -127,9 +139,7 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(let ((local-file (expand-file-name "local.el" vanilla-path)))
-  (when (file-exists-p local-file)
-    (load-file local-file)))
+(x--load-file-under-vanilla "local.el")
 
 ;;; after loaded
 (defun x/load-init-session ()

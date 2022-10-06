@@ -315,7 +315,7 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
   (interactive)
   (org-set-tags-command '(16)))
 
-;;; org modern
+;;; org modern and faces
 (with-eval-after-load 'org-modern
   (setq org-modern-star '("♥" "◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
@@ -332,9 +332,15 @@ METHOD may be `cp', `mv', `ln', `lns' or `url' default taken from
     (let ((height (if x/org-modern-date-large? 'unspecified 1.1)))
       (set-face-attribute 'org-modern-date-active nil :height height)
       (setq x/org-modern-date-large? (not x/org-modern-date-large?)))))
+
 (global-org-modern-mode)
 
-;;; verse block
+;; it will be changed by doom-theme, so we need to set it again
+(run-with-idle-timer 0.1 nil
+                     (lambda ()
+                       (when (x/theme-light-p)
+                         (set-face-foreground 'org-block-begin-line "gray60"))))
+
 (set-face-attribute 'org-verse nil :slant 'italic)
 
 ;;; keybindings
