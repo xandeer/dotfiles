@@ -62,6 +62,9 @@
                                   'x/sh-async-command-history)))
     (x/start-process command t)))
 
+(x/define-keys global-map
+               '(("H-r" x/sh-exec-async)))
+
 (defvar x/sh-adb-history nil
   "The history list for adb connect functions.")
 

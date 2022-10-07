@@ -212,6 +212,7 @@ Usages:
     marginalia
     meow
     (nov . ("https://depp.brause.cc/nov.el.git" :host nil))
+    org-anki
     password-store
     (pinyinlib . "xlshiz/pinyinlib.el")
     projectile
