@@ -2,7 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-;; require: anki-connect
+;;; require
+;; anki-connect: 2055492159
+;; inspector: 31746032
 (setq org-anki-default-deck "Default")
 
 (defun x/anki-cloze (beg end)

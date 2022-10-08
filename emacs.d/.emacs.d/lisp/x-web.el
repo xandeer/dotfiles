@@ -13,9 +13,10 @@
 (defun x/tide-setup ()
   "Setup for `tide'."
   ;; Check for forbiding org-babel
-  (when (string-match-p
-         (regexp-opt '(".json" ".js" ".jsx" ".ts" ".tsx?"))
-         (buffer-file-name))
+  (when (and (buffer-file-name)
+             (string-match-p
+              (regexp-opt '(".json" ".js" ".jsx" ".ts" ".tsx"))
+              (buffer-file-name)))
     (tide-setup)
     (tide-hl-identifier-mode)
 

@@ -98,6 +98,7 @@
 (require 'x-web)
 
 ;;; tools
+(require 'x-anki)
 (require 'x-anzu)
 (require 'x-avy)
 (require 'x-browser)
