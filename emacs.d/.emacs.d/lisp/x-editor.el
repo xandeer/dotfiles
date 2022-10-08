@@ -58,6 +58,12 @@ If point was already at that position, move point to beginning of line."
                '(([remap kill-ring-save] easy-kill)
                  ([remap mark-sexp] easy-mark)))
 
+(setq whitespace-style '(newline newline-mark))
+(run-with-idle-timer 1 nil
+                     (lambda ()
+                       (global-whitespace-mode 1)
+                       (set-face-foreground 'whitespace-newline "gray85")))
+
 (unless
     (fboundp 'auto-compression-mode)
   (autoload #'auto-compression-mode "jka-cmpr" nil t))

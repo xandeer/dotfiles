@@ -5,6 +5,7 @@
 ;;; corfu
 (require 'corfu)
 (setq corfu-auto t)
+(setq corfu-auto-delay 0.1)
 (setq corfu-auto-prefix 2)
 (setq corfu-max-width 60)
 (setq corfu-quit-no-match t)
