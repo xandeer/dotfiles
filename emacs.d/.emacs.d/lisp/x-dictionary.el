@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; sdcv
 (autoload #'sdcv-search-pointer "sdcv" nil t)
 (autoload #'sdcv-search-input "sdcv" nil t)
 
@@ -85,15 +86,8 @@
      (format x/translate-to-en-url
              (url-hexify-string text)))))
 
-;;; insert translated name
-(x/package-use 'websocket)
-(x/package-use '(deno-bridge . "manateelazycat/deno-bridge"))
-(x/package-use '(insert-translated-name . ("manateelazycat/insert-translated-name" :files ("*.el" "*.ts"))))
-(require 'insert-translated-name)
-;; (dolist (hook (list
-;;                'atomic-chrome-edit-mode-hook))
-;;   (add-hook hook '(lambda () (insert-translated-name-use-original-translation))))
-(add-to-list 'insert-translated-name-origin-style-mode-list 'org-mode)
+;;; insert-translated-text
+(autoload #'x/insert-translated-text "x-insert-translated-text" "Automatic insertion of translated content using DeepL." t)
 
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here
