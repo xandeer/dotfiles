@@ -71,6 +71,8 @@
     openjdk17
     kotlin-language-server
 
+    leiningen
+
     # https://cloud.r-project.org/bin/macosx/
     # R
 
