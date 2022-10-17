@@ -82,7 +82,7 @@ RU: Russian"
 
   ;; Print play hint.
   (unless (minibuffer-window-active-p (get-buffer-window))
-    (message "Type and press \"%s\" to translate." x/insert-translated-text-end-symbol)))
+    (message "Type and press \"%s\" to translate to %s." x/insert-translated-text-end-symbol x/insert-translated-text-target-lang)))
 
 (defun x/insert-translated-text-inactivate ()
   (interactive)

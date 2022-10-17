@@ -89,5 +89,10 @@
 ;;; insert-translated-text
 (autoload #'x/insert-translated-text "x-insert-translated-text" "Automatic insertion of translated content using DeepL." t)
 
+;; (x/package-use 'websocket)
+;; (x/package-use '(deno-bridge . "manateelazycat/deno-bridge"))
+;; (x/package-use '(insert-translated-name . ("manateelazycat/insert-translated-name" :files ("*.el" "*.ts"))))
+;; (require 'insert-translated-name)
+
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here
