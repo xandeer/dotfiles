@@ -84,7 +84,11 @@ If point was already at that position, move point to beginning of line."
 (setq expand-region-subword-enabled t)
 (x/define-keys global-map
                '(("C-;" er/expand-region)
-                 ("M-q" unfill-region)))
+                 ("M-q" unfill-region)
+                 ("H-q" (lambda ()
+                          (interactive)
+                          (mark-whole-buffer)
+                          (call-interactively #'unfill-region)))))
 
 
 (x/append-init-hook #'global-page-break-lines-mode)
