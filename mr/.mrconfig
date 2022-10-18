@@ -11,24 +11,27 @@ checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
 
+[projects/personal/gadget]
+checkout = git clone 'git@github.com:xandeer/gadget.git' 'gadget'
+
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
 
-[Exercism/clojure]
-checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
-commit = echo "skip exercism/clojure"
+# [Exercism/clojure]
+# checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
+# commit = echo "skip exercism/clojure"
 
-[Exercism/elixir]
-checkout = git clone 'git@github.com:xandeer/elixir-exercism.git' 'elixir'
-commit = echo "skip exercism/elixir"
+# [Exercism/elixir]
+# checkout = git clone 'git@github.com:xandeer/elixir-exercism.git' 'elixir'
+# commit = echo "skip exercism/elixir"
 
-[Exercism/kotlin]
-checkout = git clone 'git@github.com:xandeer/kotlin-exercism.git' 'kotlin'
-commit = echo "skip exercism/kotlin"
+# [Exercism/kotlin]
+# checkout = git clone 'git@github.com:xandeer/kotlin-exercism.git' 'kotlin'
+# commit = echo "skip exercism/kotlin"
 
-[Exercism/typescript]
-checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
-commit = echo "skip exercism/typescript"
+# [Exercism/typescript]
+# checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
+# commit = echo "skip exercism/typescript"
 
 [projects/others/zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
