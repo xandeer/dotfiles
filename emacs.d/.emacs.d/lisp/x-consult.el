@@ -23,39 +23,39 @@
 (setq xref-show-xrefs-function #'consult-xref
       xref-show-definitions-function #'consult-xref)
 
-(with-eval-after-load 'consult
-  (setq consult-async-min-input 1)
-  (setq consult-ripgrep-args "rg --null --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
+(setq consult-async-min-input 1)
+(setq consult-ripgrep-args "rg --null --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
    --smart-case --no-heading --line-number .")
 
-  (autoload 'projectile-project-root "projectile")
-  (setq consult-project-root-function #'projectile-project-root)
+(autoload 'projectile-project-root "projectile")
+(setq consult-project-root-function #'projectile-project-root)
 
-  (with-eval-after-load 'orderless
-    ;; https://github.com/minad/consult/wiki#use-orderless-as-pattern-compiler-for-consult-grepripgrepfind
-    (defun consult--orderless-regexp-compiler (input type ignore-case)
-      (setq input (orderless-pattern-compiler input))
-      (cons
-       (mapcar (lambda (r) (consult--convert-regexp r type)) input)
-       (lambda (str) (orderless--highlight input str))))
+(with-eval-after-load 'orderless
+  ;; https://github.com/minad/consult/wiki#use-orderless-as-pattern-compiler-for-consult-grepripgrepfind
+  (defun consult--orderless-regexp-compiler (input type ignore-case)
+    (setq input (orderless-pattern-compiler input))
+    (cons
+     (mapcar (lambda (r) (consult--convert-regexp r type)) input)
+     (lambda (str) (orderless--highlight input str))))
 
-    (setq consult--regexp-compiler #'consult--orderless-regexp-compiler))
+  (setq consult--regexp-compiler #'consult--orderless-regexp-compiler))
 
-  ;; (global-set-key (kbd "C-c h") 'consult-history)
-  ;; (global-set-key (kbd "C-c m") 'consult-mode-command)
-  ;; (global-set-key (kbd "C-c k") 'consult-kmacro)
-  (x/define-keys ctl-x-map
-                 '(([remap switch-to-buffer] consult-buffer)))
-  (x/define-keys ctl-x-5-map
-                 '(("b" consult-buffer-other-frame)))
-  ;; Other custom bindings
-  (x/define-keys global-map
-                 '(("M-y" consult-yank-pop)
-                   ("<help> a" consult-apropos)
-                   ("C-s" consult-line)))
+;; (global-set-key (kbd "C-c h") 'consult-history)
+;; (global-set-key (kbd "C-c m") 'consult-mode-command)
+;; (global-set-key (kbd "C-c k") 'consult-kmacro)
+(x/define-keys ctl-x-map
+               '(([remap switch-to-buffer] consult-buffer)))
+(x/define-keys ctl-x-5-map
+               '(("b" consult-buffer-other-frame)))
+;; Other custom bindings
+(x/define-keys global-map
+               '(("M-y" consult-yank-pop)
+                 ("<help> a" consult-apropos)
+                 ("C-s" consult-line)))
 
-  (global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
-  )
+(consult-customize consult-line :initial (thing-at-point 'symbol))
+
+(global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
 
 (provide 'x-consult)
 ;;; x-consult.el ends here

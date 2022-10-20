@@ -16,35 +16,47 @@
 (add-hook 'after-make-frame-functions #'ns-auto-titlebar-set-frame)
 (advice-add 'frame-set-background-mode :after 'ns-auto-titlebar-set-frame)
 
-(defun x/fonts--setup (frame)
-  "Xandeer set font for `FRAME'."
-  (when (display-graphic-p)
-    (set-face-attribute
-     'default nil
-     :font (font-spec
-            :name "Latin Modern Mono Light"
-            :weight 'normal
-            :size 16))
+(defcustom x/defalut-font "Latin Modern Mono"
+  "Default font."
+  :type 'string)
 
-    (dolist (charset '(kana han cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-                        charset
-                        (font-spec
-                         :name "Weibei SC"
-                         :weight 'bold
-                         :size 16)
-                        frame
-                        'prepend))
+(defcustom x/cjk-font "Weibei SC"
+  "Default cjk font."
+  :type 'string)
 
-    ;; For NS/Cocoa
-    (set-fontset-font
-     t 'symbol (font-spec :family "Apple Color Emoji") frame
-     'append)))
+(defcustom x/font-size 16
+  "Default font size."
+  :type 'number)
 
-(defun x/set-font (&rest _)
-  "Xandeer set font."
-  (interactive)
-  (x/fonts--setup nil))
+(when (eq system-type 'darwin)
+  (setq ns-pop-up-frames nil
+        frame-resize-pixelwise t)
+
+  (setq unicode-font "PingFang SC"
+        emoji-font "Apple Color Emoji"
+        symbol-font "Apple Symbols"))
+
+(defun x/setup-fonts ()
+  (set-face-attribute
+   'default nil
+   :font
+   (font-spec :family x/defalut-font
+              :size x/font-size))
+
+  (dolist (charset '(kana han cjk-misc bopomofo))
+    (set-fontset-font t charset unicode-font)
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec
+                       :name x/cjk-font
+                       :weight 'bold
+                       :size x/font-size)
+                      (selected-frame)
+                      'prepend))
+  (add-to-list 'face-font-rescale-alist `(,unicode-font
+                                          . 0.5))
+
+  (set-fontset-font t 'emoji emoji-font nil 'prepend)
+  (set-fontset-font t 'symbol symbol-font nil 'prepend))
 
 (setq custom-theme-directory (expand-file-name "theme" vanilla-path))
 (add-hook 'after-init-hook (lambda ()
@@ -56,9 +68,9 @@
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
 
-(add-hook 'after-init-hook #'x/set-font)
-(add-hook 'after-make-frame-functions   #'x/set-font)
-(add-hook 'server-after-make-frame-hook #'x/set-font)
+(add-hook 'after-init-hook #'x/setup-fonts)
+(add-hook 'after-make-frame-functions   #'x/setup-fonts)
+(add-hook 'server-after-make-frame-hook #'x/setup-fonts)
 
 (add-hook 'after-init-hook #'default-text-scale-mode)
 

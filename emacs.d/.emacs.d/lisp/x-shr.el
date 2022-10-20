@@ -81,7 +81,7 @@
                    ;; (indent-rigidly (point-min) (point-max) 2)
                    (buffer-string)))
            (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
-                     "typescript"       ; detection always wrong
+                     "kotlin"       ; detection always wrong
                      (let ((sym (language-detection-string code)))
                        (and sym (symbol-name sym)))))
            (mode (and lang
