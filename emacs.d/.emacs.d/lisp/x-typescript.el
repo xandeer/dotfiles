@@ -27,11 +27,18 @@
       (x/start-process (format "tsc -t es2022 -m amd --moduleResolution node --outFile %s %s" output input))
       (find-file output)))
 
+  (defun x/ts-restart-tide-and-lsp ()
+    "Restart tide and lsp."
+    (interactive)
+    (tide-restart-server)
+    (lsp-restart-workspace))
+
   (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
     "
 Typescript\n"
     ("d" x/docs-lookup "docs lookup at point")
     ("r" x/exercism-open-readme-other-window "open readme in other window")
+    ("H-r" x/ts-restart-tide-and-lsp "restart tide and lsp")
     ("i" x/web-unskip-test "unskip test")
     ("t" yarn-test "yarn test")
     ("H-t" x/ts-to-js "ts to js")

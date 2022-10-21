@@ -6,4 +6,4 @@ echo
 
 # java -jar ~/bin/hs.jar $*
 
-dufs --allow-upload --hidden .DS_Store,.git -p 80 $*
+dufs --allow-upload --hidden .DS_Store,.git -p 80 "$*"

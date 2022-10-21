@@ -16,7 +16,7 @@
 (add-hook 'after-make-frame-functions #'ns-auto-titlebar-set-frame)
 (advice-add 'frame-set-background-mode :after 'ns-auto-titlebar-set-frame)
 
-(defcustom x/defalut-font "Latin Modern Mono"
+(defcustom x/defalut-font "Latin Modern Mono 16"
   "Default font."
   :type 'string)
 
@@ -24,39 +24,13 @@
   "Default cjk font."
   :type 'string)
 
-(defcustom x/font-size 16
-  "Default font size."
-  :type 'number)
-
-(when (eq system-type 'darwin)
-  (setq ns-pop-up-frames nil
-        frame-resize-pixelwise t)
-
-  (setq unicode-font "PingFang SC"
-        emoji-font "Apple Color Emoji"
-        symbol-font "Apple Symbols"))
-
 (defun x/setup-fonts ()
-  (set-face-attribute
-   'default nil
-   :font
-   (font-spec :family x/defalut-font
-              :size x/font-size))
+  (set-face-attribute 'default nil :font x/defalut-font)
 
-  (dolist (charset '(kana han cjk-misc bopomofo))
-    (set-fontset-font t charset unicode-font)
-    (set-fontset-font (frame-parameter nil 'font) charset
-                      (font-spec
-                       :name x/cjk-font
-                       :weight 'bold
-                       :size x/font-size)
-                      (selected-frame)
-                      'prepend))
-  (add-to-list 'face-font-rescale-alist `(,unicode-font
-                                          . 0.5))
-
-  (set-fontset-font t 'emoji emoji-font nil 'prepend)
-  (set-fontset-font t 'symbol symbol-font nil 'prepend))
+  (dolist (charset '(han kana cjk-misc))
+    (set-fontset-font t charset x/cjk-font))
+  ;; (add-to-list 'face-font-rescale-alist `(,unicode-font . 0.5))
+  )
 
 (setq custom-theme-directory (expand-file-name "theme" vanilla-path))
 (add-hook 'after-init-hook (lambda ()
@@ -69,8 +43,8 @@
     (doom-themes-org-config)))
 
 (add-hook 'after-init-hook #'x/setup-fonts)
-(add-hook 'after-make-frame-functions   #'x/setup-fonts)
-(add-hook 'server-after-make-frame-hook #'x/setup-fonts)
+;; (add-hook 'after-make-frame-functions   #'x/setup-fonts)
+;; (add-hook 'server-after-make-frame-hook #'x/setup-fonts)
 
 (add-hook 'after-init-hook #'default-text-scale-mode)
 
