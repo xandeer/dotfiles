@@ -21,6 +21,7 @@ brew dust
 brew exercism
 brew ffmpeg
 brew flac
+brew flyctl
 brew fontconfig
 brew freetype
 brew frei0r
@@ -48,6 +49,7 @@ brew jansson
 brew jasper
 brew jbig2dec
 brew jpeg
+brew jpeg-turbo
 brew jpeg-xl
 brew kotlin
 brew lame
@@ -99,6 +101,7 @@ brew little-cms2
 brew lz4
 brew lzo
 brew m4
+brew magic-wormhole
 brew make
 brew mas
 brew mbedtls
@@ -129,6 +132,7 @@ brew sdcv
 brew sdl2
 brew shared-mime-info
 brew sip
+brew six
 brew snappy
 brew speex
 brew sqlite
@@ -159,7 +163,6 @@ tap homebrew/services
 
 tap homebrew/cask
 cask alt-tab
-cask anki
 cask docker
 cask karabiner-elements
 cask raycast
@@ -189,10 +192,8 @@ tap yqrashawn/goku
 brew goku
 
 # App Store applications
-# appstore 1055511498  Day One     (7.11)
 # appstore 682658836   GarageBand  (10.4.5)
 # appstore 408981434   iMovie      (10.3.1)
 # appstore 409183694   Keynote     (11.2)
 # appstore 409203825   Numbers     (11.2)
 # appstore 409201541   Pages       (11.2)
-# appstore 497799835   Xcode       (13.4.1)
