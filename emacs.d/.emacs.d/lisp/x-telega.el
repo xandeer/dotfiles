@@ -13,8 +13,10 @@
 (setq telega-proxies
       (list '(:server "127.0.0.1" :port 8010 :enable t
                       :type (:@type "proxyTypeSocks5"))))
-;; Solve the avatar cut-off problem
-(setf (alist-get 2 telega-avatar-factors-alist ) '(0.4 . 0.1))
+
+(with-eval-after-load 'telega-customize
+  ;; Solve the avatar cut-off problem
+  (setf (alist-get 2 telega-avatar-factors-alist) '(0.4 . 0.1)))
 
 (defun x/telega-chatbuf-attach-file (filename &optional preview-p)
   "Attach FILE as document to the current input."
