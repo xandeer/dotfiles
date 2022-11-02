@@ -10,9 +10,9 @@
 (setq telega-cache-dir (expand-file-name "~/syncthing/personal/telega"))
 (setq telega-completing-read-function #'completing-read)
 (setq telega-chat-input-markups '(nil "org" "markdown2"))
-(setq telega-proxies
-      (list '(:server "127.0.0.1" :port 8010 :enable t
-                      :type (:@type "proxyTypeSocks5"))))
+;; (setq telega-proxies
+;;       (list '(:server "127.0.0.1" :port 8010 :enable t
+;;                       :type (:@type "proxyTypeSocks5"))))
 
 (with-eval-after-load 'telega-customize
   ;; Solve the avatar cut-off problem
