@@ -42,6 +42,7 @@ brew gobject-introspection
 brew graphite2
 brew guile
 brew harfbuzz
+brew highway
 brew icu4c
 brew imagemagick
 brew imath
@@ -105,6 +106,7 @@ brew magic-wormhole
 brew make
 brew mas
 brew mbedtls
+brew minimal-racket
 brew mpdecimal
 brew nettle
 brew node@16
@@ -119,6 +121,7 @@ brew opus
 brew p11-kit
 brew pango
 brew pcre
+brew pcre2
 brew pinentry
 brew pixman
 brew pkg-config
