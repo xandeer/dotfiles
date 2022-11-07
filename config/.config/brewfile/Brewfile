@@ -42,7 +42,6 @@ brew gobject-introspection
 brew graphite2
 brew guile
 brew harfbuzz
-brew highway
 brew icu4c
 brew imagemagick
 brew imath

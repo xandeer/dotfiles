@@ -4,9 +4,10 @@
 
 (x/package-use 'racket-mode)
 
-(x/define-keys
- racket-mode-map
- '(("TAB" x/tab)))
+(with-eval-after-load 'racket-mode
+  (x/define-keys
+   racket-mode-map
+   '(("TAB" x/tab))))
 
 (provide 'x-racket)
 ;;; x-racket.el ends here
