@@ -2,9 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-(add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-(add-hook 'clojurescript-mode-hook (lambda () (lispy-mode 1)))
-(add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+(defconst x--lispy-modes '(emacs-lisp-mode
+                           clojure-mode
+                           clojurescript-mode
+                           racket-mode))
+(dolist (mode x--lispy-modes)
+    (add-hook (intern (concat (symbol-name mode) "-hook"))
+              (lambda () (lispy-mode 1))))
 
 (setq lispy-completion-method 'default)
 (setq lispy-visit-method 'projectile)
