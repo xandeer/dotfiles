@@ -3,7 +3,7 @@
 ;;; Code:
 
 (let ((original-path (getenv "PATH")))
-  (unless (string-match-p ".yarn" original-path)
+  (unless (string-match-p "sdk" original-path)
     (mapc (lambda (dir)
             (setenv "PATH" (concat (expand-file-name dir) ":" (getenv "PATH")))
             (add-to-list 'exec-path (expand-file-name dir)))

@@ -169,6 +169,11 @@
   (interactive)
   (x--remove-links (point-min) (point-max)))
 
+(defun x--trim-inline-tags ()
+  "Keep only two spaces before tags."
+  (interactive)
+  (x/replace " \\{2,\\}:" " :"))
+
 (autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
 (defhydra x-hydra-roam-org (:exit t :columns 4 :idle 0.3)
@@ -176,6 +181,7 @@
 Roam\n"
   ("r" org-roam-buffer-toggle "roam buffer")
   ("a" org-roam-alias-add "roam add alias")
+  ("c" x--trim-inline-tags "trim inline tags")
   (";" org-roam-tag-add "roam add tag")
   ("H-;" org-roam-tag-remove "roam remove tag")
   ("." org-roam-dailies-goto-today "dailies goto today" :exit nil)
@@ -212,7 +218,6 @@ Roam\n"
                                   (org-cycle)))
     map))
 
-;;;###autoload
 (define-minor-mode x/tbl-mode
   "Minor mode for table."
   :keymap x/tbl-mode-map
