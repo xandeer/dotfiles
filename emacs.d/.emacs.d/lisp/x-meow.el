@@ -3,6 +3,7 @@
 ;;; Code:
 
 (defun x--meow-setqs ()
+  (setq meow-expand-hint-remove-delay 3)
   (setq meow-cursor-type-insert '(bar . 3))
   (setq meow-motion-remap-prefix "s-")
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))

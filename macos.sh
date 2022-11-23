@@ -273,3 +273,9 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 ###############################################################################
 # Enable the Develop menu and the Web Inspector in Safari
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
+
+###############################################################################
+# Spotlight                                                                   #
+###############################################################################
+# disable spotlight indexing
+sudo mdutil -a -i off
