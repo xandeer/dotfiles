@@ -43,6 +43,7 @@ use_preset_vocabulary: true
 import_tables:
   - local
   - xandeer
+  - dan
   - luna_pinyin
   - flypy_double
   - luna_pinyin.xiandaihanyu

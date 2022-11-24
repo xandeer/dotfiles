@@ -1,0 +1,12 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# flypy - 小鹤双拼加形自定义
+
+---
+name : dan
+version :  "2022.11.24"
+sort : original
+use_preset_vocabulary :  false
+...
+主	vudw
