@@ -17,6 +17,9 @@ checkout = git clone 'git@github.com:xandeer/pentip.git' 'pentip'
 [projects/personal/gadget]
 checkout = git clone 'git@github.com:xandeer/gadget.git' 'gadget'
 
+[projects/personal/danmusic]
+checkout = git clone 'git@github.com:xandeer/danmusic.git' 'danmusic'
+
 [projects/personal/hs]
 checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
 
