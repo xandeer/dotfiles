@@ -27,11 +27,13 @@
 (setq org-return-follows-link t)
 (setq org-imenu-depth 3)
 (setq org-list-allow-alphabetical t)
-(setq org-edit-src-content-indentation 0)
+(setq org-edit-src-content-indentation 0
+      ;; Disable first level indentation in code block. https://emacs.stackexchange.com/a/18892/16450
+      org-src-preserve-indentation t
+      org-src-window-setup 'current-window
+      org-src-strip-leading-and-trailing-blank-lines t)
 (setq org-indent-indentation-per-level 2)
 (setq org-catch-invisible-edits 'error)
-;; Disable first level indentation in code block. https://emacs.stackexchange.com/a/18892/16450
-(setq org-src-preserve-indentation t)
 (setq org-startup-with-inline-images t)
 (setq org-cycle-separator-lines 0)
 (setq org-special-ctrl-a/e t)
