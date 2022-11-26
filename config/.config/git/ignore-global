@@ -16,3 +16,4 @@ node_modules
 
 # jetbrain
 .idea/inspectionProfiles/
+.idea/androidTestResultsUserPreferences.xml
