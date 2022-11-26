@@ -51,14 +51,15 @@
 (defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
   "
 Magit\n"
-  ("n" (magit-status org-directory) "notes")
-  ("w" (magit-status x/work-directory) "work")
-  ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
-  ("l" (magit-status (expand-file-name "~/projects/personal/android-lab/")) "android-lab")
   ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure")
+  ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
+  ("e" (magit-status (expand-file-name "~/Exercism/elixir/")) "exercism/elixir")
   ("k" (magit-status (expand-file-name "~/Exercism/kotlin/")) "exercism/kotlin")
+  ("l" (magit-status (expand-file-name "~/projects/personal/android-lab/")) "android-lab")
+  ("m" (magit-status (expand-file-name "~/projects/personal/danmusic/")) "danmusic")
+  ("n" (magit-status org-directory) "notes")
   ("t" (magit-status (expand-file-name "~/Exercism/typescript/")) "exercism/typescript")
-  ("e" (magit-status (expand-file-name "~/Exercism/elixir/")) "exercism/elixir"))
+  ("w" (magit-status x/work-directory) "work"))
 
 (global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
 
