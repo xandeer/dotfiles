@@ -1,15 +1,18 @@
 [DEFAULT]
-jobs = 8
-commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+jobs = 18
+commit = echo 'skip'
 
 [.password-store]
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/dotfiles]
 checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/notes]
 checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
 [projects/personal/pentip]
 checkout = git clone 'git@github.com:xandeer/pentip.git' 'pentip'
@@ -25,41 +28,31 @@ checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
 
 # [Exercism/clojure]
 # checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
-# commit = echo "skip exercism/clojure"
 
 # [Exercism/elixir]
 # checkout = git clone 'git@github.com:xandeer/elixir-exercism.git' 'elixir'
-# commit = echo "skip exercism/elixir"
 
 # [Exercism/kotlin]
 # checkout = git clone 'git@github.com:xandeer/kotlin-exercism.git' 'kotlin'
-# commit = echo "skip exercism/kotlin"
 
 # [Exercism/typescript]
 # checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
-# commit = echo "skip exercism/typescript"
 
 [projects/others/zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
-commit = echo "skip zplug"
 
 [projects/others/doom]
 checkout = git clone 'git@github.com:doomemacs/doomemacs.git' 'doom'
-commit = echo "skip doom"
 
 [.emacs.d]
 checkout = git clone 'git@github.com:plexus/chemacs2.git' '.emacs.d'
-commit = echo "skip chemacs2"
 
 # [projects/personal/xandeer.github.io]
 # checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
 # commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
-# commit = echo "skip github.io"
 
 [projects/xmind/doughnut]
 checkout = git clone 'git@gitlab.xmind.cn:xmind/doughnut.git' 'doughnut'
-commit = echo 'skip donut'
 
 [projects/xmind/viewer-kit]
 checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'
-commit = echo 'skip viewer-kit'
