@@ -115,5 +115,28 @@ Magit\n"
   (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
     [16 48 112 240 112 48 16] nil nil 'center))
 
+;;; utils
+(defun x--git-clone (project directory)
+  "Clone a git PROJECT into a given DIRECTORY."
+  (x/start-process (format "git -C %s clone %s " directory project) t))
+
+(defcustom x/personal-projects-directory (expand-file-name "~/projects/personal")
+  "The directory where I keep my personal projects."
+  :type 'directory)
+
+(defcustom x/others-projects-directory (expand-file-name "~/projects/others")
+  "The directory where I keep others projects."
+  :type 'directory)
+
+(defun x/git-clone-personal (project)
+  "Clone a git PROJECT into `x/personal-projects-directory'."
+  (interactive "sProject: ")
+  (x--git-clone project x/personal-projects-directory))
+
+(defun x/git-clone-others (project)
+  "Clone a git PROJECT into `x/others-projects-directory'."
+  (interactive "sProject: ")
+  (x--git-clone project x/others-projects-directory))
+
 (provide 'x-git)
 ;;; x-git.el ends here
