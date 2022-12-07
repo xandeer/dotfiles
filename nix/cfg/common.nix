@@ -69,6 +69,7 @@
     gradle
     jre
     openjdk17
+    # graalvm17-ce
     kotlin-language-server
 
     leiningen
