@@ -4,6 +4,7 @@
 [core]
 	excludesFile = ~/.config/git/ignore-global
 	ignorecase = false
+	editor = emacsclient
 
 	# Treat spaces before tabs and all kinds of trailing whitespace as an error
 	# [default] trailing-space: looks for spaces at the end of a line
