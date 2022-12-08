@@ -67,7 +67,7 @@ org-mode
 (quote "#+begin_quote" n> r> n> "#+end_quote")
 (example "#+begin_example" n> r> n> "#+end_example")
 (center "#+begin_center" n> r> n> "#+end_center")
-(comment "#+begin_comment" n> r> n> "#+end_comment")
+(comments "#+begin_comments" n> r> n> "#+end_comments")
 (verse "#+begin_verse" n> r> n> "#+end_verse")
 (src "#+begin_src " p n> r> n> "#+end_src")
 (elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
