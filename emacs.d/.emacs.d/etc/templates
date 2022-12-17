@@ -88,6 +88,7 @@ org-mode
 (author "- author :: " r n)
 (from "- from :: " r n)
 (link "- link :: " r n)
+(ahw "#+attr_html: :width ")
 
 ;;; html
 web-mode

@@ -109,6 +109,7 @@
 (require 'x-consult)
 (require 'x-dictionary)
 (require 'x-dired)
+(require 'x-draw)
 (require 'x-embark)
 (require 'x-eva)
 (require 'x-flycheck)

@@ -7,7 +7,9 @@
     (mapc (lambda (dir)
             (setenv "PATH" (concat (expand-file-name dir) ":" (getenv "PATH")))
             (add-to-list 'exec-path (expand-file-name dir)))
-          '("~/.yarn/bin" "~/Library/Android/sdk/platform-tools"))))
+          '("~/.yarn/bin"
+            "~/Library/Android/sdk/platform-tools"
+            "/usr/local/bin"))))
 
 ;; (setq exec-path
 ;;       (mapcar
