@@ -77,7 +77,8 @@
     # https://cloud.r-project.org/bin/macosx/
     # R
 
-    python
+    # python39
+    # openai
 
     buku
     ispell

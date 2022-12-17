@@ -42,12 +42,14 @@ brew gobject-introspection
 brew graphite2
 brew guile
 brew harfbuzz
+brew highway
 brew icu4c
 brew imagemagick
 brew imath
 brew jansson
 brew jasper
 brew jbig2dec
+brew joker
 brew jpeg
 brew jpeg-turbo
 brew jpeg-xl
@@ -84,6 +86,7 @@ brew libsoxr
 brew libtasn1
 brew libtiff
 brew libtool
+brew libunibreak
 brew libunistring
 brew libusb
 brew libuv
@@ -107,6 +110,7 @@ brew mas
 brew mbedtls
 brew minimal-racket
 brew mpdecimal
+brew mpg123
 brew nettle
 brew node@16
 brew npth
@@ -126,6 +130,7 @@ brew pixman
 brew pkg-config
 brew prettyping
 brew python@3.10
+brew python@3.11
 brew python@3.9
 brew rav1e
 brew readline
@@ -176,7 +181,6 @@ cask syncthing
 cask zotero
 
 tap candid82/brew
-brew joker
 
 tap d12frosted/emacs-plus
 brew emacs-plus@29 --with-xwidgets --with-imagemagick

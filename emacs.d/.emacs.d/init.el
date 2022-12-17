@@ -104,6 +104,7 @@
 (require 'x-avy)
 (require 'x-browser)
 (require 'x-calendar)
+(require 'x-chatgpt)
 (require 'x-completion)
 (require 'x-consult)
 (require 'x-dictionary)
