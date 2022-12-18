@@ -112,8 +112,10 @@ brew minimal-racket
 brew mpdecimal
 brew mpg123
 brew nettle
+brew node
 brew node@16
 brew npth
+brew nvm
 brew onefetch
 brew opencore-amr
 brew openexr
@@ -198,8 +200,10 @@ tap yqrashawn/goku
 brew goku
 
 # App Store applications
-# appstore 682658836   GarageBand  (10.4.5)
-# appstore 408981434   iMovie      (10.3.1)
-# appstore 409183694   Keynote     (11.2)
-# appstore 409203825   Numbers     (11.2)
-# appstore 409201541   Pages       (11.2)
+appstore 1055511498  Day One     (7.11)
+appstore 682658836   GarageBand  (10.4.5)
+appstore 408981434   iMovie      (10.3.1)
+appstore 409183694   Keynote     (11.2)
+appstore 409203825   Numbers     (11.2)
+appstore 409201541   Pages       (11.2)
+appstore 497799835   Xcode       (13.4.1)

@@ -8,7 +8,7 @@
 (setq d2-output-format ".png")
 (setq d2-flags "-t 5 -l elk")
 
-;; (setq d2-location "/usr/local/bin/d2")
+(setq d2-location (expand-file-name "d2" "~/bin"))
 
 (provide 'x-draw)
 ;;; x-draw.el ends here

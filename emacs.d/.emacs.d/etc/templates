@@ -80,6 +80,8 @@ org-mode
         :post (org-edit-src-code))
 (clojure "#+begin_src clojure" n> r> n "#+end_src"
          :post (org-edit-src-code))
+(d2lang "#+begin_src d2 :file d2/" p ".png" n> r> n "#+end_src"
+         :post (org-edit-src-code))
 (day (format-time-string "%d(%a)" (current-time)))
 (weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) r
         n "**** Review" n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:"
@@ -88,7 +90,7 @@ org-mode
 (author "- author :: " r n)
 (from "- from :: " r n)
 (link "- link :: " r n)
-(ahw "#+attr_html: :width ")
+(ahw "#+attr_html: :width 500")
 
 ;;; html
 web-mode
