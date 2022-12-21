@@ -71,6 +71,8 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:3
 
+zplug "Aloxaf/fzf-tab", from:github, if:"(( $+commands[fzf] ))"
+
 # Adds aliases to open your current repo & branch on github.
 # zplug "peterhurford/git-it-on.zsh"
 
