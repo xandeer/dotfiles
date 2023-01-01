@@ -35,7 +35,7 @@
          )))
 
 (with-eval-after-load 'org-roam
-  (org-roam-db-autosync-enable)
+
   ;; (consult-org-roam-mode 1)
 
   (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
@@ -110,8 +110,8 @@
 (setq x/org-today-tag "@home:")
 (defun x--insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
-  (interactive "nYear[< 3: 2x, else: 1x]: ")
-  (setq year (+ year (if (< year 3) 20 10)))
+  (interactive "nYear[< 4: 2x, else: 1x]: ")
+  (setq year (+ year (if (< year 4) 20 10)))
   (goto-char (point-min))
   (let ((today (x--journal-date year)))
     (if (x--is-current-year? year) (progn
