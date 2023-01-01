@@ -27,6 +27,7 @@
 ;; (set-frame-parameter nil 'alpha 90)
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'default-frame-alist '(background . "#f6f1d9"))
 ;; doesn't work on mac
 ;; (set-frame-parameter nil 'alpha-background 50)
 

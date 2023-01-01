@@ -276,8 +276,8 @@
   (setq org-modern-star '("♥" "◉" "◈" "◇"))
   (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
-  (set-face-attribute 'org-modern-time-active nil :background "gray92")
-  (set-face-attribute 'org-modern-date-active nil :background "gray94")
+  ;; (set-face-attribute 'org-modern-time-active nil :background "gray92")
+  (set-face-attribute 'org-modern-date-active nil :background "#c88562" :foreground "white")
   (when (x/theme-light-p)
     (set-face-attribute 'org-modern-tag nil
                         :foreground "white"

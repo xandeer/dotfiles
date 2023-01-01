@@ -62,7 +62,7 @@ If point was already at that position, move point to beginning of line."
 (run-with-idle-timer 1 nil
                      (lambda ()
                        (global-whitespace-mode 1)
-                       (set-face-foreground 'whitespace-newline "gray85")
+                       (set-face-foreground 'whitespace-newline "gray75")
                        (set-face-attribute 'whitespace-newline nil :height 0.7)))
 
 (unless
