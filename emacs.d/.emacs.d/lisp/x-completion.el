@@ -18,7 +18,6 @@
                  ("<return>"  corfu-insert)
                  ("<escape>"  corfu-quit)))
 ;; (define-key corfu-map " " #'corfu-insert-separator)
-;; (define-key corfu-map [tab] #'x/tab)
 ;; (define-key corfu-map [(shift tab)] #'corfu-previous)
 ;; (define-key corfu-map [return] #'corfu-insert)
 ;; (define-key corfu-map [escape] #'corfu-quit)
@@ -79,7 +78,6 @@
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
 
 ;;; copilot
-;; (setq copilot-node-executable (expand-file-name "~/.nvm/versions/node/v17.9.1/bin/node"))
 (add-hook 'prog-mode-hook #'copilot-mode)
 
 (defun x/tab ()

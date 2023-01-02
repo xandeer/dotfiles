@@ -70,6 +70,7 @@ org-mode
 (comments "#+begin_comments" n> r> n> "#+end_comments")
 (verse "#+begin_verse" n> r> n> "#+end_verse")
 (src "#+begin_src " p n> r> n> "#+end_src")
+(restclient "#+begin_src restclient" n> r> n> "#+end_src")
 (elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
        :post (org-edit-src-code))
 (sh "#+begin_src sh" n> r> n "#+end_src"

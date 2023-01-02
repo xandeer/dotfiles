@@ -114,6 +114,8 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 (setq highlight-indent-guides-responsive nil)
 (setq highlight-indent-guides-delay 0.5)
+(setq highlight-indent-guides-auto-odd-face-perc 3)
+(setq highlight-indent-guides-auto-even-face-perc 6)
 
 (x/append-init-hook #'rainbow-mode)
 (add-hook 'text-mode-hook #'rainbow-mode)
@@ -125,9 +127,6 @@ If point was already at that position, move point to beginning of line."
   (when (fboundp 'diminish)
     (diminish 'rainbow-mode)))
 
-;; (x/append-init-hook #'rainbow-identifiers-mode)
-;; (add-hook 'text-mode-hook #'rainbow-identifiers-mode)
-;; (add-hook 'org-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'css-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'html-mode-hook #'rainbow-identifiers-mode)
 (add-hook 'prog-mode-hook #'rainbow-identifiers-mode)
