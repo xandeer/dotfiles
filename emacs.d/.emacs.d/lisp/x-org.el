@@ -278,6 +278,8 @@
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
   ;; (set-face-attribute 'org-modern-time-active nil :background "gray92")
   (set-face-attribute 'org-modern-date-active nil :background "#c88562" :foreground "white" :distant-foreground "black")
+  (set-face-attribute 'org-modern-date-inactive nil :background "#e0ce87" :foreground "white" :distant-foreground "black")
+  (set-face-attribute 'org-modern-done nil :background "#ede5c3" :foreground "white" :distant-foreground "black")
   (when (x/theme-light-p)
     (set-face-attribute 'org-modern-tag nil
                         :foreground "white"
