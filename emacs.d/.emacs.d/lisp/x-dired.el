@@ -33,7 +33,7 @@
                 (eq major-mode 'dirvish-mode))
       (user-error "Not in dired"))
     (if (string-match-p
-         (regexp-opt '(".png" ".jpg" ".mov" ".pdf"))
+         (regexp-opt '(".png" ".jpg" ".mov" ".pdf" ".numbers"))
          (dired-get-filename))
         (x/open-with)
       (dired-find-file)))

@@ -52,7 +52,9 @@
     (set-keymap-parent map embark-become-file+buffer-map)
     (x/define-keys map '(("r" consult-recent-file)
                          ;; ("B" project-switch-to-buffer)
-                         ("F" projectile-find-file)))
+                         ("F" projectile-find-file)
+                         ("O" x/find-file-external)
+                         ("P" x/projectile-find-file-external)))
     map)
   "File+buffer custom cross-package `embark-become' keymap.")
 
@@ -75,6 +77,7 @@ those so-called 'extras'."
       (setq embark-become-keymaps
             (dolist (map maps)
               (delete map embark-become-keymaps))))))
+(x/embark-keymaps 1)
 
 (autoload 'embark-act "embark")
 (autoload 'embark-act-noexit "embark")

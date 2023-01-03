@@ -9,7 +9,23 @@
   (setq projectile-project-root-files-top-down-recurring
         (append '("compile_commands.json"
                   ".cquery")
-                projectile-project-root-files-top-down-recurring)))
+                projectile-project-root-files-top-down-recurring))
+
+  (defun x/projectile-find-file-external ()
+    "Open a project file with the external program."
+    (interactive)
+    (let* ((project-root (projectile-acquire-root))
+           (file (projectile-completing-read "Find file external: "
+                                             (projectile-project-files project-root))))
+      (when file
+        (x/open (expand-file-name file project-root))))))
+
+(defun x/find-file-external (filename &optional wildcards)
+  "Open a file with the external program."
+  (interactive
+   (find-file-read-args "Find file external: "
+                        (confirm-nonexistent-file-or-buffer)))
+  (x/open (expand-file-name filename)))
 
 (x/append-init-hook #'projectile-mode)
 

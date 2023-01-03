@@ -41,6 +41,7 @@ Buffer\n"
   ("w" (projectile-find-file-in-directory x/work-directory) "projectile work")
   ("f" find-file "find file")
   ("H-f" projectile-find-file "project find file")
+  ("e" x/projectile-find-file-external "open file with external app")
   ("l" consult-recent-file "recent files")
   ("s" x/telega-chat-with "telega chat with")
   ("H-s" x/open-telega-root "telega root")
