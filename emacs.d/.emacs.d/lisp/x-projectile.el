@@ -43,6 +43,7 @@
  x/projectile-map
  '(("b" projectile-switch-to-buffer)
    ("d" projectile-find-dir)
+   ("e" x/projectile-find-file-external)
    ("f" projectile-find-file)
    ("p" projectile-switch-project)
    ("r" projectile-recentf)))
