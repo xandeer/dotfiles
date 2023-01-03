@@ -140,7 +140,7 @@ brew rubberband
 brew sdcv
 brew sdl2
 brew shared-mime-info
-brew sip
+# brew sip
 brew six
 brew snappy
 brew speex
@@ -177,7 +177,7 @@ cask karabiner-elements
 cask raycast
 cask showyedge
 cask sioyek
-cask sip
+# cask sip
 cask squirrel
 cask syncthing
 cask zotero
@@ -200,10 +200,10 @@ tap yqrashawn/goku
 brew goku
 
 # App Store applications
-appstore 1055511498  Day One     (7.11)
-appstore 682658836   GarageBand  (10.4.5)
-appstore 408981434   iMovie      (10.3.1)
-appstore 409183694   Keynote     (11.2)
-appstore 409203825   Numbers     (11.2)
-appstore 409201541   Pages       (11.2)
-appstore 497799835   Xcode       (13.4.1)
+# appstore 1055511498  Day One     (7.11)
+# appstore 682658836   GarageBand  (10.4.5)
+# appstore 408981434   iMovie      (10.3.1)
+# appstore 409183694   Keynote     (11.2)
+# appstore 409203825   Numbers     (11.2)
+# appstore 409201541   Pages       (11.2)
+# appstore 497799835   Xcode       (13.4.1)
