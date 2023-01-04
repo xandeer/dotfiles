@@ -83,6 +83,7 @@ brew libsamplerate
 brew libsndfile
 brew libsodium
 brew libsoxr
+brew libssh2
 brew libtasn1
 brew libtiff
 brew libtool
@@ -137,10 +138,10 @@ brew python@3.9
 brew rav1e
 brew readline
 brew rubberband
+brew rust
 brew sdcv
 brew sdl2
 brew shared-mime-info
-# brew sip
 brew six
 brew snappy
 brew speex
@@ -177,7 +178,6 @@ cask karabiner-elements
 cask raycast
 cask showyedge
 cask sioyek
-# cask sip
 cask squirrel
 cask syncthing
 cask zotero
@@ -196,14 +196,18 @@ brew git-chglog
 tap rcmdnk/file
 brew brew-file
 
+tap smudge/smudge
+brew nightlight
+
 tap yqrashawn/goku
 brew goku
 
 # App Store applications
+# appstore 1287239339  ColorSlurp  (3.8.0)
 # appstore 1055511498  Day One     (7.11)
 # appstore 682658836   GarageBand  (10.4.5)
 # appstore 408981434   iMovie      (10.3.1)
 # appstore 409183694   Keynote     (11.2)
-# appstore 409203825   Numbers     (11.2)
+# appstore 409203825   Numbers     (12.2.1)
 # appstore 409201541   Pages       (11.2)
 # appstore 497799835   Xcode       (13.4.1)

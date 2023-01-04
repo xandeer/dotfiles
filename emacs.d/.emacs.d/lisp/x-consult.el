@@ -40,6 +40,11 @@
 
   (setq consult--regexp-compiler #'consult--orderless-regexp-compiler))
 
+(defun x/consult-line-dwim ()
+  "Call `consult-line' with `(thing-at-point 'symbol)' as initial param."
+  (interactive)
+  (consult-line (thing-at-point 'symbol)))
+
 ;; (global-set-key (kbd "C-c h") 'consult-history)
 ;; (global-set-key (kbd "C-c m") 'consult-mode-command)
 ;; (global-set-key (kbd "C-c k") 'consult-kmacro)
@@ -51,9 +56,8 @@
 (x/define-keys global-map
                '(("M-y" consult-yank-pop)
                  ("<help> a" consult-apropos)
-                 ("C-s" consult-line)))
-
-(consult-customize consult-line :initial (thing-at-point 'symbol))
+                 ("C-s" consult-line)
+                 ("M-s s" x/consult-line-dwim)))
 
 (global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
 

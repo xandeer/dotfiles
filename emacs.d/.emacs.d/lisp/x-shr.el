@@ -101,7 +101,7 @@
       (shr-ensure-newline)
       (setq end (point))
       (if (x/theme-light-p)             ; light theme
-          (add-face-text-property start end '(:background "#D8DEE9" :extend t))
+          (add-face-text-property start end '(:background "#ede5c3" :extend t))
         (add-face-text-property start end '(:background "#191b1e" :extend t)))
       (shr-ensure-newline)
       (insert "\n"))))
