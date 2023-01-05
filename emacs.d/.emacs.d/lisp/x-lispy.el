@@ -31,6 +31,7 @@
                    ("M-n" lispy-forward)
                    ("M-p" lispy-backward)
                    ("M-e" lispy-eval-and-comment)
+                   ("M-o" x/new-line-after)
                    ("M-," xref-find-references)
                    ("C-." xref-go-forward)
                    ("C-," xref-go-back)))

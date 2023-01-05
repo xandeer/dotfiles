@@ -221,6 +221,21 @@ Default use `point-min` or `point-max`."
           (smartparens-mode
            (sp-narrow-to-sexp arg)))))
 
+(defun x/new-line-before ()
+  "Insert a new line before the current line."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(defun x/new-line-after ()
+  "Insert a new line after the current line."
+  (interactive)
+  (end-of-line)
+  (newline)
+  (indent-according-to-mode))
+
 ;;; exercism
 (defun x/exercism-submit ()
   "Submit the current buffer to Exercism."

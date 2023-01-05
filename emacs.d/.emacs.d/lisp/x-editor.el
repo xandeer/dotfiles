@@ -10,7 +10,10 @@
                  ("c" upcase-initials-region)))
 (x/define-keys ctl-x-map
                '(("c" x/case-map)))
-
+;;; new line
+(x/define-keys global-map
+               '(("C-o" x/new-line-before)
+                 ("M-o" x/new-line-after)))
 ;;; transpose
 (define-prefix-command 'x/transpose-map)
 (x/define-keys x/transpose-map
