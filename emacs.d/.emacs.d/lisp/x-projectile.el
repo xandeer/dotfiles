@@ -46,7 +46,8 @@
    ("e" x/projectile-find-file-external)
    ("f" projectile-find-file)
    ("p" projectile-switch-project)
-   ("r" projectile-recentf)))
+   ("r" projectile-recentf)
+   ("s" projectile-run-eshell)))
 
 (with-eval-after-load 'consult
   (defun x/search-in-project ()
