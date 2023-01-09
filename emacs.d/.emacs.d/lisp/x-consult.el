@@ -56,10 +56,17 @@
 (x/define-keys global-map
                '(("M-y" consult-yank-pop)
                  ("<help> a" consult-apropos)
-                 ("C-s" consult-line)
-                 ("M-s s" x/consult-line-dwim)))
+                 ("C-s" consult-line)))
 
 (global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
+
+;;; M-s map
+(define-prefix-command 'x/meta-s-map)
+(global-set-key (kbd "M-s") #'x/meta-s-map)
+(x/define-keys
+ x/meta-s-map
+ '(("l" consult-focus-lines)
+   ("s" x/consult-line-dwim)))
 
 (provide 'x-consult)
 ;;; x-consult.el ends here
