@@ -192,6 +192,8 @@ Roam\n"
   ("f" x/fill-subtree "fill subtree")
   ("i" org-id-get-create "create id")
   ("n" org-toggle-narrow-to-subtree "narrow")
+  ("y" org-anki-sync-entry "anki sync entry")
+  ("Y" org-anki-sync-all "anki sync all")
   ("0" (x--insert-journal-in-year 0) "insert journal in 2020")
   ("1" (x--insert-journal-in-year 1) "insert journal in 2021")
   ("2" (x--insert-journal-in-year 2) "insert journal in 2022")
