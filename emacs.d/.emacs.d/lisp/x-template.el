@@ -16,7 +16,7 @@
 
 ;; `expand-abbrev` is bound to "C-x '".
 ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-(global-tempel-abbrev-mode)
+;; (global-tempel-abbrev-mode)
 
 ;;; key bindings
 (define-key tempel-map (kbd "TAB") #'tempel-next)
@@ -60,6 +60,7 @@ Elisp Templates
   ("l" (tempel-insert 'lambda) "lambda")
   ("f" (tempel-insert 'fun) "defun")
   ("c" (tempel-insert 'command) "command")
+  ("M-t" tempel-insert "tempel insert")
   ("M-l" (tempel-insert 'let) "let")
   ("v" (tempel-insert 'var) "defvar")
   ("M-c" (tempel-insert 'const) "defconst")
