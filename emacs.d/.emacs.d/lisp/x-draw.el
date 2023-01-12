@@ -6,7 +6,15 @@
 (x/package-use '(d2-mode . "andorsk/d2-mode"))
 (require 'd2-mode)
 (setq d2-output-format ".png")
-(setq d2-flags "-t 5 -l elk")
+
+(defvar x/d2-layout "tala"
+  "D2 layout engine.
+There're three engines available:
+  - dagre(default)
+  - elk
+  - tala")
+;; (setq d2-flags "-t 5 -l elk")
+(setq d2-flags (concat  "-t 5 -l " x/d2-layout))
 
 (setq d2-location (expand-file-name "d2" "~/bin"))
 

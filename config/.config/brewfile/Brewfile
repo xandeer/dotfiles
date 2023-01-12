@@ -14,6 +14,7 @@ brew cjson
 brew cmake
 brew cmocka
 brew coreutils
+brew d2
 brew dav1d
 brew docbook
 brew docbook-xsl
@@ -199,15 +200,8 @@ brew brew-file
 tap smudge/smudge
 brew nightlight
 
+tap terrastruct/tap
+brew tala
+
 tap yqrashawn/goku
 brew goku
-
-# App Store applications
-# appstore 1287239339  ColorSlurp  (3.8.0)
-# appstore 1055511498  Day One     (7.11)
-# appstore 682658836   GarageBand  (10.4.5)
-# appstore 408981434   iMovie      (10.3.1)
-# appstore 409183694   Keynote     (11.2)
-# appstore 409203825   Numbers     (12.2.1)
-# appstore 409201541   Pages       (11.2)
-# appstore 497799835   Xcode       (13.4.1)

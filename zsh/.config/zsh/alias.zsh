@@ -80,3 +80,10 @@ alias tma='tmux attach'
 alias tmn='tmux new -s $(basename $(pwd))'
 alias tmr='tmux new -s ranger'
 alias tmu='tmux list-sessions'
+
+# brew
+alias bf='brew-file --no_appstore'
+alias bi='brew-file --no_appstore install'
+alias bic='brew-file --no_appstore --cask install'
+alias bu='brew uninstall'
+alias buc='brew uninstall --cask'
