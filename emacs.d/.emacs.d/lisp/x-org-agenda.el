@@ -220,6 +220,8 @@ ARG is passed through to `x/org-schedule'."
                            ((org-agenda-overriding-header "Feature")))
                 (tags-todo "WORK+CATEGORY=\"Refactor\""
                            ((org-agenda-overriding-header "Refactor")))
+                (tags-todo "WORK+CATEGORY=\"Review\""
+                           ((org-agenda-overriding-header "Review")))
                 (tags-todo "WORK+CATEGORY=\"Other\""
                            ((org-agenda-overriding-header "Other")))
                 (tags-todo "WORK+CATEGORY=\"Chore\""
