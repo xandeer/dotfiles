@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; replace
 (defun x/replace (old new &optional beg end)
   "Replace the string OLD with string NEW.
 BEG means begin point, END meas end point.
@@ -78,6 +79,13 @@ Default use `point-min` or `point-max`."
     (mapc (lambda (q)
             (x/replace (car q) (cdr q)))
           quotas)))
+
+(defun x/rm-zlib-suffix ()
+  "Remove zlib suffix in the current Dired buffer."
+  (interactive)
+  (wdired-change-to-wdired-mode)
+  (replace-string " (z-lib.org)" "")
+  (wdired-finish-edit))
 
 (defun x/delete-current-buffer ()
   "Delete the current buffer."
