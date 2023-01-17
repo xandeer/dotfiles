@@ -70,11 +70,12 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool true
+# Disable press-and-hold for keys in favor of key repeat
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Decrease number to set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 12
-defaults write NSGlobalDomain InitialKeyRepeat -int 32
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 12
 
 # Set language and text formats
 # Note: if you’re in the US, replace `EUR` with `USD`, `Centimeters` with
@@ -279,3 +280,5 @@ defaults write com.apple.Safari IncludeDevelopMenu -bool true
 ###############################################################################
 # disable spotlight indexing
 sudo mdutil -a -i off
+
+echo "Done. Note that some of these changes require a logout/restart to take effect."
