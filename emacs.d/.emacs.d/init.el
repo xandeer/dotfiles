@@ -50,6 +50,8 @@
               (setq gcmh-low-cons-threshold #x800000)
               (setq gcmh-high-cons-threshold #x880000)))
 
+(require 'x-core)
+
 ;;; Bootstrap
 ;; straight
 (require 'x-bootstrap)
