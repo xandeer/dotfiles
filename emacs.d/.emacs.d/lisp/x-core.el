@@ -2,9 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(defalias 'first #'car)
-(defalias 'rest #'cdr)
-
+;;; Boolean
 (defun nil? (o)
   "Whether `O' is `NIL'?"
   (eq o nil))
@@ -13,16 +11,32 @@
 
 (defun true? (q)
   "Whether `Q' is not `NIL'?"
-  (not (nil? q)))
+  (not (false? q)))
 
-(ert-deftest x/core-test-zero? ()
+;;; Number
+(ert-deftest x/core-zero? ()
   (should (zero? 0))
   (should-not (zero? 1)))
 (defun zero? (n)
   "Whether `N' equals `0'?"
   (= n 0))
 
-(ert-deftest x/core-test-empty? ()
+(defalias 'inc #'1+)
+(defalias 'dec #'1-)
+
+(defun pos? (n)
+  "Whether `N' is a positive number?"
+  (> n 0))
+
+(defun neg? (n)
+  "Whether `N' is a negative number?"
+  (< n 0))
+
+;;; List
+(defalias 'first #'car)
+(defalias 'rest #'cdr)
+
+(ert-deftest x/core-empty? ()
   (should (empty? '()))
   (should-not (empty? '(a b c)))
   (should-error (empty? 'a)))
@@ -30,7 +44,7 @@
   "Whether `LST' is empty?"
   (zero? (length lst)))
 
-(ert-deftest x/core-test-in? ()
+(ert-deftest x/core-in? ()
   (should (in? 'a '(a)))
   (should-not (in? 'a '())))
 (defalias 'in? #'member)
