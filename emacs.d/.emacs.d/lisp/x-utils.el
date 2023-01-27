@@ -90,6 +90,18 @@ Default use `point-min` or `point-max`."
   (replace-string " (z-lib.org)" "")
   (wdired-finish-edit))
 
+(defun x/flush-double-newlines ()
+  "Replace double newlines with one."
+  (interactive)
+  (save-excursion
+    (replace-regexp "\n\n\n" "\n\n")))
+
+(defun x/readwise-comment-notes ()
+  "Convert Notes to comments."
+  (interactive)
+  (save-excursion
+    (replace-regexp "\n^\*\*Note:\*\* \\(.*\\)$" "#+begin_comments\n\\1\n#+end_comments")))
+
 (defun x/delete-current-buffer ()
   "Delete the current buffer."
   (interactive)
