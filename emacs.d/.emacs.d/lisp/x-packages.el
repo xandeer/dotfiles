@@ -62,6 +62,8 @@ Usages:
 ;;; others
 (defvar x/packages
   '(
+;;; core
+    (short-lambda . "abo-abo/short-lambda")
 ;;; basic
     all-the-icons
     anzu

@@ -2,6 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
+(require 'short-lambda)
+
+;;; Core core
+(defalias 'first #'car)
+(defalias 'rest #'cdr)
+(defalias 'delete-duplicates #'cl-delete-duplicates)
+(defalias 'fn #'short-lambda)
+
 ;;; Boolean
 (defun nil? (o)
   "Whether `O' is `NIL'?"
@@ -33,9 +41,6 @@
   (< n 0))
 
 ;;; List
-(defalias 'first #'car)
-(defalias 'rest #'cdr)
-
 (ert-deftest x/core-empty? ()
   (should (empty? '()))
   (should-not (empty? '(a b c)))
