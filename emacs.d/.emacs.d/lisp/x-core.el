@@ -22,12 +22,7 @@
   (not (false? q)))
 
 ;;; Number
-(ert-deftest x/core-zero? ()
-  (should (zero? 0))
-  (should-not (zero? 1)))
-(defun zero? (n)
-  "Whether `N' equals `0'?"
-  (= n 0))
+(defalias 'zero? #'zerop)
 
 (defalias 'inc #'1+)
 (defalias 'dec #'1-)
