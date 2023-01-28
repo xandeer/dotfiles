@@ -39,6 +39,7 @@
 (x--load-file-under-vanilla "private.el")
 
 (add-to-list 'load-path (expand-file-name "lisp" vanilla-path))
+(add-to-list 'load-path (expand-file-name "other" vanilla-path))
 
 ;;; Adjust garbage collection thresholds during startup, and thereafter
 (setq gc-cons-threshold most-positive-fixnum)

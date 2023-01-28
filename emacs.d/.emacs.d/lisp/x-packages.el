@@ -63,7 +63,8 @@ Usages:
 (defvar x/packages
   '(
 ;;; core
-    (short-lambda . "abo-abo/short-lambda")
+    ;; copied a counterpart in other folder
+    ;; (short-lambda . "abo-abo/short-lambda")
 ;;; basic
     all-the-icons
     anzu
