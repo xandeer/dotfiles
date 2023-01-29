@@ -25,12 +25,13 @@
 
 (with-eval-after-load 'hideshow
   (add-to-list 'hs-special-modes-alist '(kotlin-mode "{" "}" "/[*/]" nil nil))
-  (define-key hs-minor-mode-map (kbd "M-h") #'x/folding-map))
+  (define-key hs-minor-mode-map (kbd "M-h") #'x/meta-h-map))
 
-(define-prefix-command 'x/folding-map)
+(unless (boundp 'x/meta-h-map)
+  (define-prefix-command 'x/meta-h-map))
 
 (x/define-keys
- x/folding-map
+ x/meta-h-map
  '(("h"    hs-show-block)
    ("M-h"  hs-hide-block)
    ("j"    hs-hide-all)

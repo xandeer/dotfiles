@@ -10,6 +10,17 @@
                  ("c" upcase-initials-region)))
 (x/define-keys ctl-x-map
                '(("c" x/case-map)))
+
+(unless (boundp 'x/meta-h-map)
+  (define-prefix-command 'x/meta-h-map))
+(x/define-keys
+ x/meta-h-map
+ '(("M-u" (lambda () (interactive) (funcall-interactively #'upcase-word -1)))
+   ("M-l" (lambda () (interactive) (funcall-interactively #'downcase-word -1)))
+   ("M-c" (lambda () (interactive) (funcall-interactively #'capitalize-word -1)))))
+(x/define-keys global-map
+               '(("M-h" x/meta-h-map)))
+
 ;;; new line
 (x/define-keys global-map
                '(("C-o" x/new-line-before)
