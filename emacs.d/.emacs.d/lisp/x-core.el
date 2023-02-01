@@ -10,6 +10,16 @@
 (defalias 'delete-duplicates #'cl-delete-duplicates)
 (defalias 'fn #'short-lambda)
 
+;;; tests
+(with-eval-after-load 'ert
+  (defun statified? (exp pred?)
+    "Return t if `EXP' is statified by `PRED?'."
+    (should (funcall pred? exp)))
+
+  (defun statified-not? (exp pred?)
+    "Return t if `EXP' is not statified by `PRED?'."
+    (should-not (funcall pred? exp))))
+
 ;;; Boolean
 (defun nil? (o)
   "Whether `O' is `NIL'?"
