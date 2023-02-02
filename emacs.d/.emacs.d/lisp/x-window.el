@@ -70,6 +70,7 @@
   (setq repeat-map 'other-window-repeat-map)
   (other-window -1))
 (x/define-keys ctl-x-map '(("x" ace-swap-window)
+                           ("C-i" x/toggle-window-maximize)
                            ("C-o" x/flip-window)))
 
 (x/define-keys other-window-repeat-map
@@ -104,11 +105,13 @@
   "Disable `golden-ratio-mode', then `maximize-window' to maximize window.
 Otherwise, enable `golden-ratio-mode'."
   (interactive)
+  (golden-ratio-mode 'toggle)
+  (setq x/window-maximized? (not x/window-maximized?))
   (if x/window-maximized?
-      (golden-ratio-mode)
-    (golden-ratio-mode -1)
-    (maximize-window))
-  (setq x/window-maximized? (not x/window-maximized?)))
+      (maximize-window)
+    ;; trigger golden-ratio
+    (x/flip-window)
+    (x/flip-window)))
 
 ;;; startup
 (defun x/window-startup ()
