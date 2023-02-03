@@ -9,6 +9,7 @@
  :simlayers {;; :space-mode  {:key :spacebar}
              :a-mode      {:key :a}
              :cl-mode     {:key :caps_lock}
+             :e-mode      {:key :e}
              :l-mode      {:key :l}
              :r-mode      {:key :r}
              :s-mode      {:key :s :modi {:optional [:left_shift :right_shift]}}
@@ -77,6 +78,20 @@
            [:y       :!Sequal_sign]
            [:n       :!Sbackslash]]}
 
+  {:des "(e-[key]) mouse"
+   :rules [[:condi :built-in :e-mode]
+           [:u :button1]
+           [:spacebar :button1]
+           [:i :button2]
+           [:h {:mkey {:x -736 :speed 1.5}}]
+           [:l {:mkey {:x 736 :speed 1.5}}]
+           [:j {:mkey {:y 736 :speed 1.5}}]
+           [:k {:mkey {:y -736 :speed 1.5}}]
+           [:n {:mkey {:hwheel 33 :speed 1.2}}]
+           [:period {:mkey {:hwheel -33 :speed 1.2}}]
+           [:m {:mkey {:vwheel 33 :speed 1.2}}]
+           [:comma {:mkey {:vwheel -33 :speed 1.2}}]]}
+
   {:des "(v-[key]) h to backspace"
    :rules [[:condi :built-in :v-mode]
            [:h :delete_or_backspace]
@@ -124,6 +139,7 @@
    :rules [:chrome
            [:!Ol :!Ttab]
            [:!Oh :!TStab]
+           [:!Ox :!COSf1]
            [:!Oj :!Copen_bracket]
            [:!Ok :!Cclose_bracket]]}
 

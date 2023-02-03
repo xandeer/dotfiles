@@ -17,11 +17,11 @@
 ;;
 ;;; Code:
 
-(mapcar (lambda (hook) (add-hook hook #'hs-minor-mode))
-        '(emacs-lisp-mode-hook
-          kotlin-mode-hook
-          cider-mode-hook
-          typescript-mode-hook))
+(mapc (fn (add-hook % #'hs-minor-mode))
+      '(emacs-lisp-mode-hook
+        kotlin-mode-hook
+        cider-mode-hook
+        typescript-mode-hook))
 
 (with-eval-after-load 'hideshow
   (add-to-list 'hs-special-modes-alist '(kotlin-mode "{" "}" "/[*/]" nil nil))
@@ -32,12 +32,13 @@
 
 (x/define-keys
  x/meta-h-map
- '(("h"    hs-show-block)
-   ("M-h"  hs-hide-block)
-   ("j"    hs-hide-all)
-   ("M-j"  hs-show-all)
-   ("k"    hs-toggle-hiding) ; doesn't work as expected
-   ("l"    hs-hide-level)))
+ '(("h" hs-show-block)
+   ("M-h" hs-hide-block)
+   ("j" hs-hide-all)
+   ("M-j" hs-show-all)
+   ;; doesn't work as expected
+   ;; ("k"    hs-toggle-hiding)
+   ("l" hs-hide-level)))
 
 ;; (global-set-key (kbd "M-h") #'x/folding-map)
 

@@ -80,5 +80,28 @@
 
 (x/append-init-hook #'ace-pinyin-global-mode)
 
+(defun x/zap-to-char (arg char &optional interactive)
+  "Kill up to and including ARGth occurrence of CHAR.
+When run interactively, the argument INTERACTIVE is non-nil.
+Case is ignored if `case-fold-search' is non-nil in the current buffer.
+Goes backward if ARG is negative; error if CHAR not found.
+See also `zap-up-to-char'.
+If called interactively, do a case sensitive search if CHAR
+is an upper-case character."
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     (read-char-from-minibuffer "Zap to char: "
+                                                nil 'read-char-history)
+                     t))
+  ;; Avoid "obsolete" warnings for translation-table-for-input.
+  (with-no-warnings
+    (if (char-table-p translation-table-for-input)
+        (setq char (or (aref translation-table-for-input char) char))))
+  (let ((case-fold-search (if (and interactive (char-uppercase-p char))
+                              nil
+                            case-fold-search)))
+    (kill-region (point)
+                 ;; (search-forward (char-to-string char) nil nil arg)
+                 (search-forward-regexp (pinyinlib-build-regexp-char char) nil nil arg))))
+
 (provide 'x-pinyin)
 ;;; x-pinyin.el ends here
