@@ -114,3 +114,5 @@ web-mode
 typescript-mode
 
 (lambda "(" p ") => " r)
+(ts-ignore "// eslint-disable-next-line @typescript-eslint/ban-ts-comment" n
+           "// @ts-ignore")
