@@ -18,9 +18,10 @@
              }
  :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
  :applications
- { ;; To obtain the app ID: `grep -A1 "CFBundleIdentifier" /Applications/The.app/Contents/Info.plist`
+ { ;; To obtain the app ID: `osascript -e 'id of app "Finder"'`
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
   :emacs  ["org.gnu.Emacs"]
+  :finder ["com.apple.finder"]
   :studio ["com.google.android.studio"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
@@ -142,6 +143,10 @@
            [:!Ox :!COSf1]
            [:!Oj :!Copen_bracket]
            [:!Ok :!Cclose_bracket]]}
+
+  {:des "Finder shortcuts"
+   :rules [:finder
+           [:!Ox :!COSf1]]}
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]

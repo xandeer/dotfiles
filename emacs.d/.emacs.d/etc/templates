@@ -3,9 +3,6 @@
 ;;; fundamental
 fundamental-mode ;; Available everywhere
 
-(time (format-time-string "<%Y-%m-%d %a %R>" (current-time)))
-(today (format-time-string "%Y-%m-%d"))
-
 ;;; prog
 prog-mode
 
@@ -50,6 +47,9 @@ eshell-mode
 
 ;;; text
 text-mode
+
+(time (format-time-string "<%Y-%m-%d %a %R>" (current-time)))
+(today (format-time-string "%Y-%m-%d"))
 
 (cut "--8<---------------cut here---------------start------------->8---" n r n
      "--8<---------------cut here---------------end--------------->8---" n)
@@ -116,3 +116,7 @@ typescript-mode
 (lambda "(" p ") => " r)
 (ts-ignore "// eslint-disable-next-line @typescript-eslint/ban-ts-comment" n
            "// @ts-ignore")
+(log "console.log(" p ")")
+(warn "console.warn(" p ")")
+(error "console.error(" p ")")
+(function "function " p "(" p ") " p "{" n r n "}")

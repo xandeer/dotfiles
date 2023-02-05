@@ -3604,6 +3604,25 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "Finder shortcuts",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "x",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "f1",
+            "modifiers" : [ "left_command", "left_option", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.finder" ]
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "Emacs like",
         "manipulators" : [ {
           "from" : {

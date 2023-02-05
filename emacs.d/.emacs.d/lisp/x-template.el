@@ -14,6 +14,7 @@
 ;; (add-hook 'prog-mode-hook #'x-template--setup-capf)
 ;; (add-hook 'text-mode-hook #'x-template--setup-capf)
 
+(add-hook 'typescript-mode-hook #'tempel-abbrev-mode)
 ;; `expand-abbrev` is bound to "C-x '".
 ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
 ;; (global-tempel-abbrev-mode)
