@@ -83,7 +83,7 @@ not present in STRUCTURE, i.e:
                                     a)))
                               args
                               :initial-value "%"))
-                  (max-int-arg (string-to-int (substring max-arg 1)))
+                  (max-int-arg (string-to-number (substring max-arg 1)))
                   (num-args (mapcar (lambda (x) (intern (format "%%%d" x)))
                                     (number-sequence 1 max-int-arg))))
              (if (memq '%& args)
