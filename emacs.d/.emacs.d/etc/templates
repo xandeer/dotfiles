@@ -116,7 +116,7 @@ typescript-mode
 (lambda "(" p ") => " r)
 (ts-ignore "// eslint-disable-next-line @typescript-eslint/ban-ts-comment" n
            "// @ts-ignore")
-(log "console.log(" p ")")
+(log "console.log(" r ")")
 (warn "console.warn(" r ")")
-(error "console.error(" p ")")
+(error "console.error(" r ")")
 (function "function " p "(" p ") " p "{" n r n "}")
