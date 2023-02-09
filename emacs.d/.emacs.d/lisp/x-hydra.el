@@ -101,6 +101,7 @@ Buffer\n"
   ("H-s" consult-ripgrep "rg project")
   ("e" find-library "find library")
   ("p" projectile-switch-project "switch project")
+  ("b" engine/search-zlib "zlib")
   ("u" engine/search-github "github")
   ("g" engine/search-google "google")
   ("c" engine/search-grep-app "grep.app")
