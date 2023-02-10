@@ -6,26 +6,6 @@ commit = echo 'skip'
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
 commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
-[projects/personal/dotfiles]
-checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
-commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
-
-[projects/personal/notes]
-checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
-commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
-
-[projects/personal/pentip]
-checkout = git clone 'git@github.com:xandeer/pentip.git' 'pentip'
-
-[projects/personal/gadget]
-checkout = git clone 'git@github.com:xandeer/gadget.git' 'gadget'
-
-[projects/personal/heart-music]
-checkout = git clone 'git@github.com:xandeer/heart-music.git' 'heart-music'
-
-[projects/personal/hs]
-checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
-
 # [Exercism/clojure]
 # checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
 
@@ -38,21 +18,11 @@ checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
 # [Exercism/typescript]
 # checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
 
-[projects/others/zplug]
-checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
-
-[projects/others/doom]
-checkout = git clone 'git@github.com:doomemacs/doomemacs.git' 'doom'
-
 [.emacs.d]
 checkout = git clone 'git@github.com:plexus/chemacs2.git' '.emacs.d'
-
-# [projects/personal/xandeer.github.io]
-# checkout = git clone 'git@github.com:xandeer/xandeer.github.io.git' 'xandeer.github.io'
-# commit = git add --all && git commit -m "$(date +'manual: [%F %a %T]')" && git push
 
 [projects/xmind/doughnut]
 checkout = git clone 'git@gitlab.xmind.cn:xmind/doughnut.git' 'doughnut'
 
-[projects/xmind/viewer-kit]
-checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'
+# [projects/xmind/viewer-kit]
+# checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'

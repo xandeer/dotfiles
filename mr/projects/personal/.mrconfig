@@ -1,0 +1,19 @@
+[dotfiles]
+checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+
+[notes]
+checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+
+[pentip]
+checkout = git clone 'git@github.com:xandeer/pentip.git' 'pentip'
+
+[gadget]
+checkout = git clone 'git@github.com:xandeer/gadget.git' 'gadget'
+
+[heart-music]
+checkout = git clone 'git@github.com:xandeer/heart-music.git' 'heart-music'
+
+[hs]
+checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'

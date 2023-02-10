@@ -4,7 +4,9 @@
 
 (defhydra x/hydra-x (:exit t :columns 4 :idle 0.3)
   ""
-  ("u" (x/start-process "mr -d ~ update") "mr update")
+  ("u" (lambda ()
+         (interactive)
+         (x/start-process "mr -d ~ update")) "mr update")
   ("r"
    (lambda nil
      (interactive)
