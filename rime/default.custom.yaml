@@ -1,5 +1,6 @@
 patch:
   schema_list:
+    - schema: xklbdz
     - schema: double_pinyin_flypy
   ascii_composer/switch_key:
     Shift_R: commit_code
