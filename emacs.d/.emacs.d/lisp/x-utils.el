@@ -96,11 +96,12 @@ Default use `point-min` or `point-max`."
   (save-excursion
     (replace-regexp "\n\n\n" "\n\n")))
 
-(defun x/readwise-comment-notes ()
-  "Convert Notes to comments."
+(defun x/escape-readwise ()
+  "Convert Notes to comments, and flush double newlines."
   (interactive)
   (save-excursion
-    (replace-regexp "\n^\*\*Note:\*\* \\(.*\\)$" "#+begin_comments\n\\1\n#+end_comments")))
+    (replace-regexp "\n[*]\\{2\\}Note:[*]\\{2\\} \\(.*\\)$" "#+begin_comments\n\\1\n#+end_comments"))
+  (x/flush-double-newlines))
 
 (defun x/delete-current-buffer ()
   "Delete the current buffer."

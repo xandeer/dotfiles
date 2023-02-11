@@ -174,6 +174,15 @@
   (interactive)
   (x/replace " \\{2,\\}:" " :"))
 
+(defun x/vocabulary-items ()
+  "Make every line to an org item in the current subtree, and sync it to anki."
+  (interactive)
+  (org-mark-subtree)
+  (next-line)
+  (beginning-of-line)
+  (replace-regexp "^\\(.+\\)$" "- \\1")
+  (org-anki-sync-entry))
+
 (autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
 (defhydra x-hydra-roam-org (:exit t :columns 4 :idle 0.3)
@@ -194,6 +203,7 @@ Roam\n"
   ("n" org-toggle-narrow-to-subtree "narrow")
   ("y" org-anki-sync-entry "anki sync entry")
   ("Y" org-anki-sync-all "anki sync all")
+  ("v" x/vocabulary-items "ankify vocabulary")
   ("0" (x--insert-journal-in-year 0) "insert journal in 2020")
   ("1" (x--insert-journal-in-year 1) "insert journal in 2021")
   ("2" (x--insert-journal-in-year 2) "insert journal in 2022")
