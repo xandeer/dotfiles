@@ -1,5 +1,6 @@
 # 任何一项配置出错，就会导致部署失败。emacs-rime 部署失败时，不会有提示。
 patch:
+  schema/name: 小鹤
   switches:                   # 注意缩进
     - name: simplification
       reset: 1                # 增加这一行：默认启用「繁→簡」转换。

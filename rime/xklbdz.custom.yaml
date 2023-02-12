@@ -1,5 +1,18 @@
 # 任何一项配置出错，就会导致部署失败。emacs-rime 部署失败时，不会有提示。
 patch:
+  schema:
+    schema_id: xklbdz
+    name: 星空两笔
+    dependencies:
+      - flypy_double
+  reverse_lookup:
+    dictionary: flypy_double
+    tips: 小鹤
+    prefix: "i"
+    comment_format:
+      - xform/^/〔/
+      - xform/$/〕/
+  menu/page_size: 9
   punctuator/half_shape:
     "#": "#"
     "$": "¥"
