@@ -7,8 +7,8 @@
   "Replace the string OLD with string NEW.
 BEG means begin point, END meas end point.
 Default use `point-min` or `point-max`."
-  (unless beg (setq beg (point-min)))
-  (unless end (setq end (point-max)))
+  (setq beg (or beg (point-min)))
+  (setq end (or end (point-max)))
 
   (if (> beg end)
       (let (mid) (setq mid end end beg beg mid)))
