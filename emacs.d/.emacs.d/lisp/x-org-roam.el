@@ -201,6 +201,7 @@ Roam\n"
   ("f" x/fill-subtree "fill subtree")
   ("i" org-id-get-create "create id")
   ("n" org-toggle-narrow-to-subtree "narrow")
+  ("s" org-roam-db-sync "roam db sync")
   ("y" org-anki-sync-entry "anki sync entry")
   ("Y" org-anki-sync-all "anki sync all")
   ("v" x/vocabulary-items "ankify vocabulary")
