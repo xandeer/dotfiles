@@ -4,10 +4,10 @@ patch:
     schema_id: xklbdz
     name: 星空两笔
     dependencies:
-      - flypy_double
+      - pinyin_simp
   reverse_lookup:
-    dictionary: flypy_double
-    tips: 小鹤
+    dictionary: pinyin_simp
+    tips: 拼音
     prefix: "i"
     comment_format:
       - xform/^/〔/
