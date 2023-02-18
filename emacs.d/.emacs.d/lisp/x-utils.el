@@ -188,6 +188,7 @@ Default use `point-min` or `point-max`."
              (car (network-interface-info "en1")))
             t)))
 
+;;; file
 ;; https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
 (defun x/rename ()
   "Renames both current buffer and file it's visiting to a new name."
@@ -215,6 +216,10 @@ Default use `point-min` or `point-max`."
   "Copy the current buffer's file path to the kill ring."
   (interactive)
   (kill-new (buffer-file-name)))
+
+(defun x/string-append-time-suffix (string)
+  "Append a time suffix to STRING."
+  (concat string (format-time-string "%F-%H-%M-%S%3N")))
 
 (defun x/launch-separate-emacs-under-x ()
   "Launch a separate Emacs instance under X."

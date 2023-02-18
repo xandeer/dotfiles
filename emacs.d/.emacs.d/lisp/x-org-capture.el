@@ -81,6 +81,17 @@
                  "* TODO %?"
                  :empty-lines-before 1))
 
+  (let ((sketches '("el" "kt" "org" "ts")))
+    (dolist (sketch sketches)
+      (add-to-list 'org-capture-templates
+                   `(,(s-left 1 sketch) ,(concat sketch " sketch") plain
+                     (function (lambda () (-> (concat org-directory "sketch/")
+                                              x/string-append-time-suffix
+                                              (concat "." ,sketch)
+                                              find-file)))
+                     "%?"
+                     :jump-to-captured t))))
+
   (add-to-list 'org-capture-templates
                '("F" "Monthly Financial" plain
                  (file "hledger-financial.org")
