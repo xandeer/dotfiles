@@ -1,0 +1,12 @@
+#Rime dictionary
+#encoding:  utf-8
+#
+#星空两笔(打单版[修复])
+---
+name: xklbdz.fix
+version: "Q1"
+sort: original
+...
+万	wpa
+兀	wpaa
+万	mpaa

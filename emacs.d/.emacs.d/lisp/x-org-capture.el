@@ -84,7 +84,7 @@
   (let ((sketches '("el" "kt" "org" "ts")))
     (dolist (sketch sketches)
       (add-to-list 'org-capture-templates
-                   `(,(s-left 1 sketch) ,(concat sketch " sketch") plain
+                   `(,(substring sketch 0 1) ,(concat sketch " sketch") plain
                      (function (lambda () (-> (concat org-directory "sketch/")
                                               x/string-append-time-suffix
                                               (concat "." ,sketch)
