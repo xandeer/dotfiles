@@ -24,6 +24,11 @@
 (setq display-line-numbers-type nil)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; prepend , in it
+;; (setq sentence-end-base "[.?!…‽][]\"'”’)}»›,]*")
+;; ，；
+(setq sentence-end-without-space "，；。．？！")
+
 ;;; Indentations
 (setq-default tab-width 2)
 (setq standard-indent 2)

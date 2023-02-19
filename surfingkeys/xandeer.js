@@ -64,6 +64,10 @@ mapkey('ol', 'Open localhost', () => {
   Front.openOmnibar({ type: 'UserURLs', extra: urls });
 });
 
+mapkey('on', 'Open in new window', () => {
+  window.open(window.location.href, '', 'top=0');
+});
+
 // Unmap
 /// Proxy Stuff
 unmap(';pa');
