@@ -13,6 +13,9 @@ patch:
       - xform/^/〔/
       - xform/$/〕/
   menu/page_size: 9
+  key_binder/bindings:
+    - {accept: comma, send: comma, when: paging}
+    - {accept: period, send: period, when: has_menu}
   punctuator/half_shape:
     "#": "#"
     "$": "¥"
