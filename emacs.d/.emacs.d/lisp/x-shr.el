@@ -127,7 +127,7 @@
   (setq nov-save-place-file nil)
   (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
   (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
   (defun x/nov-setup ()
     (setq-local x/shr-next-document-fn #'nov-next-document)
