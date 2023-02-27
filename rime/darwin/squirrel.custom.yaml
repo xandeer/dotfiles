@@ -11,7 +11,7 @@ patch:
     mritd_dark:
       name: 漠然／mritd dark
       author: mritd <mritd1234@gmail.com>
-      horizontal: true                          # 水平排列
+      horizontal: false                          # 水平排列
       inline_preedit: true                      # 单行显示，false双行显示
       candidate_format: "%c\u2005%@"            # 用 1/6 em 空格 U+2005 来控制编号 %c 和候选词 %@ 前后的空间。
       corner_radius: 5                          # 候选条圆角
@@ -19,7 +19,7 @@ patch:
       border_height: 6                          # 窗口边界高度，大于圆角半径才生效
       border_width: 6                           # 窗口边界宽度，大于圆角半径才生效
       border_color_width: 0
-      #font_face: "PingFangSC"                   # 候选词字体
+      font_face: "Weibei SC"                    # 候选词字体
       font_point: 16                            # 候选字词大小
       label_font_point: 14                      # 候选编号大小
 
@@ -36,9 +36,6 @@ patch:
       comment_text_color: 0xdedddd              # 拼音等提示文字颜色
 
   app_options:
-    "com.runningwithcrayons.Alfred-3":
-      ascii_mode: true
-      no_inline: true
     com.apple.Terminal:
       ascii_mode: true
       no_inline: true
@@ -54,13 +51,13 @@ patch:
     org.gnu.Emacs:
       ascii_mode: true
       no_inline: true
-    org.gnu.Emacs.26.2:
-      ascii_mode: true
-      no_inline: true
     com.eusoft.eudic:
       ascii_mode: true
     com.google.android.studio:
       ascii_mode: true
       no_inline: true
-    # com.raycast.macos:
-      # ascii_mode: true
+    com.google.android.studio-EAP:
+      ascii_mode: true
+      no_inline: true
+    com.raycast.macos:
+      ascii_mode: true

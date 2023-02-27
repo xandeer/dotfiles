@@ -22,7 +22,7 @@
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
   :emacs  ["org.gnu.Emacs"]
   :finder ["com.apple.finder"]
-  :studio ["com.google.android.studio"]}
+  :studio ["com.google.android.studio", "com.google.android.studio-EAP"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
    :rules [[:condi :s-mode :built-in]

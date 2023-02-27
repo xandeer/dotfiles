@@ -3637,7 +3637,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]
@@ -3656,7 +3656,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]
