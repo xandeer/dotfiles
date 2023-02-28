@@ -17,3 +17,4 @@ node_modules
 # jetbrain
 .idea/inspectionProfiles/
 .idea/androidTestResultsUserPreferences.xml
+.idea/kotlinc.xml
