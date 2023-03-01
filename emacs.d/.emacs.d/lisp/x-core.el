@@ -12,6 +12,7 @@
 
 ;;; tests
 (with-eval-after-load 'ert
+  ;; https://docs.racket-lang.org/test-engine/index.html#%28form._%28%28lib._test-engine%2Fracket-tests..rkt%29._check-satisfied%29%29
   (defun statified? (exp pred?)
     "Return t if `EXP' is statified by `PRED?'."
     (should (funcall pred? exp)))
