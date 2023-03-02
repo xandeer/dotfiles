@@ -129,7 +129,8 @@
   {:des "launch apps"
    :rules [[:!COSa [:open "Android Studio"]]
            [:!COSc [:open "Google Chrome"]]
-           [:!COSe [:open "Emacs"]]]}
+           ;; [:!COSe [:open "Emacs"]]
+           ]}
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
