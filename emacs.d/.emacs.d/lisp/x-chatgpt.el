@@ -1,156 +1,126 @@
 ;;; x-chatgpt.el --- chatgpt -*- lexical-binding: t -*-
 ;;; Commentary:
+
+;; Before using this package, you need to install the revChatGPT
+;; and set the API key with the `auth-source' package.
+;; You can use pip to install the revChatGPT:
+;;
+;; pip3 install --upgrade revChatGPT
+;;
+;; And you can find more details in the `doctor-chatgpt-api-token'.
+;; After that, you can use `doctor-chatgpt' to ask ChatGPT.
+
+;;; Links:
+
+;; https://emacs-china.org/t/chatgpt-emacs-doctor/23773
+;; https://github.com/acheong08/ChatGPT
+
 ;;; Code:
 
-;;; requires
-;; https://github.com/mmabrouk/chatgpt-wrapper
-;; pip install git+https://github.com/mmabrouk/chatgpt-wrapper
-;; playwright install firefox
-
-(defconst x--chatgpt-buffer-name "*ChatGPT*")
-
-(defun x/chat-gpt ()
-  "Wrapper for chatgpt-wrapper."
-  (interactive)
-  (when (equal (shell-command-to-string "pip list | grep chatGPT") "")
-    (shell-command "pip install git+https://github.com/mmabrouk/chatgpt-wrapper")
-    (message "chatgpt-wrapper installed through pip.")
-    (chatgpt-login))
-  (async-shell-command "chatgpt install" x--chatgpt-buffer-name)
-  ;; (do-applescript "tell application id \"org.gnu.Emacs\" to activate")
-  )
-
-(defun x/chat-gpt-restart ()
-  "Restart chatgpt."
-  (interactive)
-  (let ((kill-buffer-query-functions nil))
-    (kill-buffer x--chatgpt-buffer-name))
-  (x/chat-gpt))
-
-;;; gpt doctor
-(defvar doctor-chatgpt-process nil)
-(defvar doctor-chatgpt-replying nil)
-(defvar doctor-chatgpt-ready nil)
-(defvar doctor-chatgpt-recv-list nil)
-(defvar doctor-chatgpt-send-list nil)
-
-(defun doctor-chatgpt-filter (process output)
-  "Filter for chatgpt process."
-  (let ((buffer (process-buffer process)))
-    (cond
-     ((string-match "Logging in\.\.\." output)
-      (setq doctor-chatgpt-ready t))
-     ((not doctor-chatgpt-ready))
-     ((equal output "Chatbot: \n")
-      (setq doctor-chatgpt-replying t)
-      (with-current-buffer "*doctor*" (read-only-mode 1)))
-     (t
-      (when-let* ((el (string-match "\n+You:\n+$" output)))
-        (setq doctor-chatgpt-replying nil)
-        (setq output (substring output 0 el)))
-      (when (> (length output) 1) (push output doctor-chatgpt-recv-list))
-      (with-current-buffer "*doctor*"
-        (read-only-mode -1)
-        (goto-char (point-max))
-        (insert (if (eq (length doctor-chatgpt-recv-list) 1)
-                    (string-replace output (string-trim (nth 0 doctor-chatgpt-recv-list)) "")
-                  output))
-        (if doctor-chatgpt-replying
-            (read-only-mode 1)
-          (if doctor-chatgpt-recv-list (insert "\n\n"))))))))
-
-(defun doctor-chatgpt-start-process ()
-  "Start a chat with ChatGPT."
-  (when (and (processp doctor-chatgpt-process) (process-live-p doctor-chatgpt-process))
-    (kill-process doctor-chatgpt-process))
-  (setq doctor-chatgpt-recv-list nil)
-  (setq doctor-chatgpt-send-list nil)
-
-  (setq doctor-chatgpt-process
-        (start-process "*doctor-chatgpt*" "*doctor-chatgpt*"
-                       "python" "-m" "revChatGPT.V1"))
-  (setq doctor-chatgpt-ready nil)
-  (set-process-filter doctor-chatgpt-process 'doctor-chatgpt-filter))
-
-(defun doctor-chatgpt-read-print ()
-  "Top level loop."
-  (interactive nil doctor-mode)
-  (setq doctor-sent (save-excursion
-                      (backward-sentence 1)
-                      (buffer-substring-no-properties (point) (point-max))))
-  (insert "\n")
-  (push doctor-sent doctor-chatgpt-send-list)
-  (setq doctor-chatgpt-replying t)
-  (process-send-string doctor-chatgpt-process (concat doctor-sent "\n")))
-
-(advice-add 'doctor :before #'doctor-chatgpt-start-process)
-(advice-add 'doctor-read-print :override #'doctor-chatgpt-read-print)
-
-;;; doctor with markdown
-;; https://emacs-china.org/t/chatgpt-emacs-doctor/23773
-;; require:
-;; https://github.com/acheong08/ChatGPT
-;; pip3 install revChatGPT
+(require 'markdown-mode)
 
 (defvar doctor-chatgpt-buffer-name "*doctor-chatgpt*")
 (defvar doctor-chatgpt-process-buffer-name "*doctor-chatgpt-process*")
 (defvar doctor-chatgpt-process nil)
 (defvar doctor-chatgpt-replying nil)
-(defvar doctor-chatgpt-ready nil)
 (defvar doctor-chatgpt-recv-list nil)
 (defvar doctor-chatgpt-send-list nil)
 
-(defun doctor-chatgpt-filter (process output)
-  "Filter for chatgpt process."
-  ;; (message "doctor-chatgpt-filter: %s" output)
-  (let ((buffer (process-buffer process)))
-    (cond
-     ((string-match "Logging in\.\.\." output)
-      (setq doctor-chatgpt-ready t))
-     ((not doctor-chatgpt-ready))
-     ((equal output "Chatbot: \n")
-      (setq doctor-chatgpt-replying t)
-      (with-current-buffer doctor-chatgpt-buffer-name (read-only-mode 1)))
-     (t
-      (when-let* ((el (string-match "\n+You:\n+$" output)))
-        (setq doctor-chatgpt-replying nil)
-        (setq output (substring output 0 el)))
-      (when (> (length output) 1) (push output doctor-chatgpt-recv-list))
-      (with-current-buffer doctor-chatgpt-buffer-name
-        (read-only-mode -1)
-        (goto-char (point-max))
-        ;; HACK: don't know why it will repeat the first send, so remove it
-        (insert
-         (if (eq (length doctor-chatgpt-recv-list) 1)
-             (string-replace (string-trim (nth 0 doctor-chatgpt-send-list)) "" output)
-           output))
-        (if doctor-chatgpt-replying
-            (read-only-mode 1)
-          (if doctor-chatgpt-recv-list (insert "\n\n"))))))))
+(defcustom doctor-chatgpt-revchatgpt-version "v3"
+  "Choose the version of revChatGPT.
+See https://github.com/acheong08/ChatGPT#installation"
+  :type 'string
+  :options '("v1" "v3")
+  :group 'doctor-chatgpt)
 
-(defun doctor-chatgpt-start-process ()
+;; (setq doctor-chatgpt-revchatgpt-version "v1")
+
+(defun doctor-chatgpt-revchatgpt-program ()
+  "Return the start script of the revChatGPT program."
+  (cond
+   ((string= doctor-chatgpt-revchatgpt-version "v1")
+    '("python" "-m" "revChatGPT.V1"))
+   ((string= doctor-chatgpt-revchatgpt-version "v3")
+    `("python" "-m" "revChatGPT.V3" "--api_key"
+      ,(doctor-chatgpt-api-token)))))
+
+(defun doctor-chatgpt-revchatgpt-user-prompt ()
+  "Return the user prompt."
+  (cond
+   ((string= doctor-chatgpt-revchatgpt-version "v1")
+    "\n+You:\n+$")
+   ((string= doctor-chatgpt-revchatgpt-version "v3")
+    "\n+User: \n+$")))
+
+(defun doctor-chatgpt-revchatgpt-chatgpt-prompt ()
+  "Return the ChatGPT prompt."
+  (cond
+   ((string= doctor-chatgpt-revchatgpt-version "v1")
+    "Chatbot: \n+$")
+   ((string= doctor-chatgpt-revchatgpt-version "v3")
+    "ChatGPT: \n+$")))
+
+(defun doctor-chatgpt-api-token ()
+  "Get the API token from the authinfo.
+See https://platform.openai.com/account/api-keys"
+  (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
+
+(defun doctor-chatgpt--insert-line (char)
+  "Insert a line with CHAR."
+  (insert "\n\n")
+  (insert
+   (propertize
+    (make-string 60 char)
+    'font-lock-face 'font-lock-comment-face))
+  (insert "\n\n"))
+
+(defun doctor-chatgpt--process-filter (_ output)
+  "Filter for chatgpt process.
+OUTPUT is the string output we need to handle."
+  (cond
+   ((string-match-p (doctor-chatgpt-revchatgpt-chatgpt-prompt) output)
+    (setq doctor-chatgpt-replying t))
+   ((string-match-p (doctor-chatgpt-revchatgpt-user-prompt) output)
+    (with-current-buffer doctor-chatgpt-buffer-name
+      (let ((inhibit-read-only t))
+        (goto-char (point-max))
+        ;; maybe still have answer output before "User: "
+        (when-let* ((_ doctor-chatgpt-replying)
+                    (index (string-match (doctor-chatgpt-revchatgpt-user-prompt) output)))
+          (insert (substring output 0 index)))
+        (doctor-chatgpt--insert-line ?\─)
+        )
+      (setq doctor-chatgpt-replying nil)
+      (read-only-mode 0)))
+   (t
+    (when doctor-chatgpt-replying       ; ignore other output
+      (when (> (length output) 1) (push output doctor-chatgpt-recv-list))
+      ;; insert answer output to the doctor buffer
+      (with-current-buffer doctor-chatgpt-buffer-name
+        (let ((inhibit-read-only t))
+          (goto-char (point-max))
+          (insert output)))))))
+
+(defun doctor-chatgpt--start-process ()
   "Start a chat with ChatGPT."
-  (when (and (processp doctor-chatgpt-process)
-             (process-live-p doctor-chatgpt-process))
-    (kill-process doctor-chatgpt-process))
+  (doctor-chatgpt--kill-process)
   (setq doctor-chatgpt-recv-list nil)
   (setq doctor-chatgpt-send-list nil)
-
   (setq doctor-chatgpt-process
-        (start-process
-         doctor-chatgpt-process-buffer-name
-         doctor-chatgpt-process-buffer-name
-         "python" "-m" "revChatGPT.V1"))
-  (setq doctor-chatgpt-ready nil)
-  (set-process-sentinel doctor-chatgpt-process #'doctor-chatgpt-process-sentinel)
-  (set-process-filter doctor-chatgpt-process #'doctor-chatgpt-filter))
+        (let ((process-environment (copy-sequence process-environment)))
+          (setenv "NO_COLOR" "true")
+          (apply #'start-process
+                 `(,doctor-chatgpt-process-buffer-name
+                   ,doctor-chatgpt-process-buffer-name
+                   ,@(doctor-chatgpt-revchatgpt-program)))))
+  (set-process-sentinel doctor-chatgpt-process #'doctor-chatgpt--process-sentinel)
+  (set-process-filter doctor-chatgpt-process #'doctor-chatgpt--process-filter))
 
-(defun doctor-chatgpt-process-sentinel (process event)
+(defun doctor-chatgpt--process-sentinel (process event)
   "Sentinel for chatgpt process.
 PROCESS is the process that changed.
 EVENT is a string describing the change."
-  (setq doctor-chatgpt-ready nil)
-  (message "%s end with the event '%s'" process event))
+  (message "%s end with the event %s" process event))
 
 (defun doctor-chatgpt-ret-or-read (arg)
   "Insert a newline if preceding character is not a newline.
@@ -171,11 +141,39 @@ ARG will be passed to `newline'."
            (buffer-substring-no-properties (point) (point-max)))))
     (insert "\n")
     (push doctor-sent doctor-chatgpt-send-list)
-    (setq doctor-chatgpt-replying t)
-    (process-send-string doctor-chatgpt-process (concat doctor-sent "\n"))))
+    (with-current-buffer doctor-chatgpt-buffer-name (read-only-mode 1))
+    (process-send-string doctor-chatgpt-process doctor-sent)
+    (process-send-string doctor-chatgpt-process (kbd "ESC"))
+    (process-send-string doctor-chatgpt-process (kbd "RET"))))
+
+(defun doctor-chatgpt-restart ()
+  "Restart process manually when there is something wrong."
+  (interactive)
+  (with-current-buffer doctor-chatgpt-buffer-name
+    (let ((inhibit-read-only t))
+      (goto-char (point-max))
+      (insert "\n\n")
+      (doctor-chatgpt--insert-line ?\═)
+      (insert "Restarting process..."))
+    (read-only-mode 0)
+    (doctor-chatgpt--start-process)))
+
+(defun doctor-chatgpt-exit ()
+  "Kill the `doctor-chatgpt-process' with buffers.
+`doctor-chatgpt-process-buffer-name' and
+`doctor-chatgpt-buffer-name'."
+  (interactive)
+  (kill-buffer doctor-chatgpt-buffer-name)
+  (let ((kill-buffer-query-functions nil))
+    (kill-buffer doctor-chatgpt-process-buffer-name)))
+
+(defun doctor-chatgpt--kill-process ()
+  "Kill the `doctor-chatgpt-process'."
+  (when (and (processp doctor-chatgpt-process)
+             (process-live-p doctor-chatgpt-process))
+    (kill-process doctor-chatgpt-process)))
 
 (defvar-keymap doctor-chatgpt-mode-map
-  "C-j" #'doctor-chatgpt-read-print
   "RET" #'doctor-chatgpt-ret-or-read)
 
 (define-derived-mode doctor-chatgpt-mode markdown-mode "Doctor ChatGPT"
@@ -186,13 +184,12 @@ reads the sentence before point, and prints the ChatGPT's answer."
   :interactive nil
   (setq-local word-wrap-by-category t)
   (visual-line-mode)
-  (insert "Hi. I am the ChatGPT. Please ask me anything, each time you are finished talking, type RET twice.")
-  (insert "\n\n"))
+  (insert "Hi. I am the ChatGPT. Please ask me anything, each time you are finished talking, type RET twice."))
 
 (defun doctor-chatgpt ()
   "Switch to `doctor-chatgpt-buffer' and start talking with ChatGPT."
   (interactive)
-  (doctor-chatgpt-start-process)
+  (doctor-chatgpt--start-process)
   (switch-to-buffer doctor-chatgpt-buffer-name)
   (doctor-chatgpt-mode))
 
