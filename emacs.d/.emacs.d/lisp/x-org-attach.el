@@ -16,7 +16,7 @@
     (save-excursion
       (goto-line 1)
       (org-entry-put (point) "DIR"
-                     (concat (unless (eq default-directory org-directory)
+                     (concat (unless (equal default-directory (expand-file-name org-directory))
                                "../")
                              ".attach/"
                              (org-attach-id-uuid-folder-format (org-id-get))))))
