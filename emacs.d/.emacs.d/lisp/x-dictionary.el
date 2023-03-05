@@ -41,13 +41,17 @@
 
 (setq gts-translate-list '(("zh" "en")))
 
+(defun x/deepl-key ()
+  "Get the api token from th authinfo."
+  (auth-source-pick-first-password :host "deepl.com" :user "deepl"))
+
 (setq gts-default-translator
       (gts-translator
        :picker (gts-prompt-picker)
        ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
        ;; :engines `(,(gts-google-engine))
        ;; :engines `(,(gts-bing-engine))
-       :engines `(,(gts-deepl-engine :auth-key x/deepl-key :pro nil))
+       :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
        :render (gts-buffer-render)))
 
 ;;; xwidget

@@ -152,7 +152,13 @@
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]
            [:!Ob :!Oleft_arrow]
+           [:!Od [:!Oright_arrow :!Odelete_or_backspace]]
+           [:!Tf :right_arrow]
            [:!Of :!Oright_arrow]]}
+
+  {:des "Use Opt-i to switch input method out of emacs"
+   :rules [[:condi :!emacs]
+           [:!Oi :!Cspacebar]]}
 
   {:des "option to escape if alone"
    :rules [:built-in

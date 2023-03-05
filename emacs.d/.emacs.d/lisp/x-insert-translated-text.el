@@ -8,11 +8,6 @@
 (require 'request)
 (require 'json)
 
-(defcustom x/insert-translated-text-deepl-key nil
-  "Auth key of DeepL api."
-  :type 'string
-  :group 'x/insert-translated-text)
-
 (defcustom x/insert-translated-text-deepl-pro? nil
   "Is your DeepL key a pro version?"
   :type 'boolean)
@@ -50,7 +45,7 @@ RU: Russian"
 (defun x/insert-translated-text ()
   "Automatic insertion of translated content using DeepL."
   (interactive)
-  (unless x/insert-translated-text-deepl-key
+  (unless (x/deepl-key)
     (user-error "You need to provide an auth-key"))
   (x--insert-translated-text-activate))
 
@@ -153,7 +148,7 @@ RU: Russian"
             (unless x/insert-translated-text-deepl-pro? "-free")
             ".deepl.com/v2/translate")
     :type "POST"
-    :data `(("auth_key" . ,x/insert-translated-text-deepl-key)
+    :data `(("auth_key" . ,(x/deepl-key))
             ("text" . ,text)
             ("target_lang" . ,x/insert-translated-text-target-lang))
     :parser 'json-read
