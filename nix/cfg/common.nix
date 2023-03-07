@@ -72,6 +72,9 @@
     # graalvm17-ce
     kotlin-language-server
 
+    # clojure interpreter
+    babashka
+
     leiningen
 
     # https://cloud.r-project.org/bin/macosx/

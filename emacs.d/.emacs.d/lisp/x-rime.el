@@ -20,7 +20,7 @@
   (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
 
   ;; face
-  (set-face-attribute 'rime-default-face nil :foreground "#363737" :background "#e5dfb0")
+  ;; (set-face-attribute 'rime-default-face nil :foreground "#363737" :background "#e5dfb0")
 
   (defun x/rime--telega-msg-p ()
     (and (fboundp 'telega-msg-at) (telega-msg-at)))

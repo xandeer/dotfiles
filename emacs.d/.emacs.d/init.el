@@ -12,7 +12,8 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;; (setq debug-on-error t)
 (setq-default lexical-binding t)
-(defvar x/theme 'x-one-light)
+;; (defvar x/theme 'x-one-light)
+(defvar x/theme 'doom-one-light)
 
 (defun x/theme-light-p ()
   "Whether the theme is light."
@@ -23,9 +24,6 @@
 
 (defvar x/vertico-posframe? t
   "Whether use vertico-posframe or not.")
-
-(defvar x/deepl-key "YOUR-DEEPL-KEY"
-  "Deepl key.")
 
 (setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
 

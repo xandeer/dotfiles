@@ -102,7 +102,7 @@
                    ("f" x/telega-chat-with))))
 
 (with-eval-after-load 'telega-msg
-  (set-face-background 'telega-msg-heading "#ede5c3")
+  ;; (set-face-background 'telega-msg-heading "#ede5c3")
   (x/define-keys telega-msg-button-map
                  '(("d" scroll-up-command)
                    ("e" scroll-down-command)

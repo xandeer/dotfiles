@@ -10,7 +10,7 @@
 (setq corfu-max-width 60)
 (setq corfu-quit-no-match t)
 (setq tab-always-indent 'complete)
-(set-face-background 'corfu-current "#e5dfb0")
+;; (set-face-background 'corfu-current "#e5dfb0")
 
 (x/define-keys corfu-map
                '(("M-s"       corfu-insert-separator)
