@@ -53,6 +53,16 @@
   (define-key dired-mode-map [remap dired-find-file] #'x/dired-find-file)
   (define-key dired-mode-map [remap dired-find-file-other-window] #'x/dired-find-file-other-window)
 
+  (defun x/dired-copy-files-to-downloads ()
+    "Copy marked files to Downloads folder."
+    (interactive)
+    (let ((downloads-dir (expand-file-name "~/Downloads"))
+          (files (dired-get-marked-files)))
+      (mapc (fn (copy-file
+                 %
+                 (expand-file-name (file-name-nondirectory %)
+                                   downloads-dir))) files)))
+
   (x/define-keys
    dired-mode-map
    '(("* n" dired-next-marked-file)

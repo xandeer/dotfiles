@@ -19,9 +19,29 @@
   ;; Solve the avatar cut-off problem
   (setf (alist-get 2 telega-avatar-factors-alist) '(0.4 . 0.1)))
 
+(read-file-name "Dir: ")
+
+(defvar x/telega-chatbuf-attach-dirs
+  '("Downloads/"
+    "temp/"
+    "syncthing/"
+    "syncthing/donut/apk/"
+    "syncthing/personal/temp/"))
+
+(defun x/telega-chatbuf-attach-select-dir ()
+  (expand-file-name (completing-read "Dir: "
+                                     x/telega-chatbuf-attach-dirs
+                                     nil nil nil
+                                     'x/telega-chatbuf-attach-dirs)
+                    "~"))
+
 (defun x/telega-chatbuf-attach-file (filename &optional preview-p)
   "Attach FILE as document to the current input."
-  (interactive (list (read-file-name "Attach file: " (expand-file-name "~/syncthing/") nil nil nil (lambda (n) (not (string-equal n ".DS_Store"))))))
+  (interactive (list
+                (read-file-name "Attach file: "
+                                (x/telega-chatbuf-attach-select-dir)
+                                nil nil nil
+                                (fn (not (string-equal % ".DS_Store"))))))
   (require 'telega)
   (if (telega-server-live-p)
       (let ((file-mime (or (mailcap-extension-to-mime
