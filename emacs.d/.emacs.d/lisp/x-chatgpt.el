@@ -44,6 +44,7 @@ See https://github.com/acheong08/ChatGPT#installation"
    ((string= doctor-chatgpt-revchatgpt-version "v3")
     `("python" "-m" "revChatGPT.V3" "--api_key"
       ,(doctor-chatgpt-api-token)))))
+(s-join " " (doctor-chatgpt-revchatgpt-program))"python -m revChatGPT.V3 --api_key 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"
 
 (defun doctor-chatgpt-revchatgpt-user-prompt ()
   "Return the user prompt."
