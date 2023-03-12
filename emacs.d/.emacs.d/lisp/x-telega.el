@@ -19,8 +19,6 @@
   ;; Solve the avatar cut-off problem
   (setf (alist-get 2 telega-avatar-factors-alist) '(0.4 . 0.1)))
 
-(read-file-name "Dir: ")
-
 (defvar x/telega-chatbuf-attach-dirs
   '("Downloads/"
     "temp/"

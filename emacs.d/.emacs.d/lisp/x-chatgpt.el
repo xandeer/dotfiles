@@ -14,6 +14,7 @@
 
 ;; https://emacs-china.org/t/chatgpt-emacs-doctor/23773
 ;; https://github.com/acheong08/ChatGPT
+;; https://chat.openai.com/api/auth/session
 
 ;;; Code:
 
@@ -157,6 +158,15 @@ ARG will be passed to `newline'."
       (insert "Restarting process..."))
     (read-only-mode 0)
     (doctor-chatgpt--start-process)))
+
+(defun doctor-chatgpt-restart-other-version ()
+  "Restart process manually when there is something wrong."
+  (interactive)
+  (setq doctor-chatgpt-revchatgpt-version
+        (if (string= doctor-chatgpt-revchatgpt-version "v1") "v3"
+          "v1"))
+  (message "Restart doctor-chatgpt with version: %s" doctor-chatgpt-revchatgpt-version)
+  (doctor-chatgpt-restart))
 
 (defun doctor-chatgpt-exit ()
   "Kill the `doctor-chatgpt-process' with buffers.
