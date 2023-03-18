@@ -130,5 +130,20 @@
                    ("F" telega-msg-forward-marked-or-at-point)
                    ("q" quit-window))))
 
+;;; completing
+(add-hook 'telega-chat-mode-hook 'z/telega-company)
+
+(defun z/telega-company ()
+  (set (make-local-variable 'company-backends)
+       (append (list telega-emoji-company-backend
+                     'telega-company-username
+                     'telega-company-hashtag
+                     'telega-company-markdown-precode)
+               (when (telega-chat-bot-p telega-chatbuf--chat)
+                 '(telega-company-botcmd))))
+  (company-mode 1)
+  (setq-local lsp-bridge-mode -1)
+  (setq-local corfu-mode -1))
+
 (provide 'x-telega)
 ;;; x-telega.el ends here

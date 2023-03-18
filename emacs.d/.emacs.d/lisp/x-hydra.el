@@ -111,7 +111,9 @@ Buffer\n"
   ("z" engine/search-wiki-cn "wiki cn")
   ("l" sdcv-search-pointer "lookup point")
   ("H-l" sdcv-search-input "lookup input")
-  ("k" gts-do-translate "translate"))
+  ("k" gts-do-translate "translate")
+  ("i" azure-tts-play-region-english "tts en")
+  ("H-i" azure-tts-play-region-chinese "tts zh"))
 
 (x/define-keys global-map
                '(("H-c" org-capture)
