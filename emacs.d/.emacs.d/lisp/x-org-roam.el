@@ -132,7 +132,7 @@
              (path (org-element-property :path link))
              (desc (and (org-element-property :contents-begin link)
                         (org-element-property :contents-end link)
-                        (buffer-substring-no-properties
+                        (filter-buffer-substring
                          (org-element-property :contents-begin link)
                          (org-element-property :contents-end link)))))
         (goto-char (org-element-property :begin link))
@@ -148,11 +148,16 @@
       (x--clear-file-link-at-point))))
 
 (defun x--remove-links (beg end)
-  "Remove links between BEG and END."
+  "Remove Org-mode links between BEG and END in the current buffer.
+If BEG and END are not provided, the function operates on the entire buffer."
   (interactive "r")
+  ;; Set BEG and END to the buffer boundaries if they are not provided
   (unless beg (setq beg (point-min)))
   (unless end (setq end (point-max)))
-  (x/replace "\\[\\[.*?\\]\\[\\(.*?\\)\\]\\]" "\\1" beg end))
+  ;; Define the regular expression for Org-mode links using the rx macro
+  (let ((org-link (rx (seq "[[" (*? anything) "][" (group (+? anything)) "]]"))))
+    ;; Replace Org-mode links with their description using the x/replace function
+    (x/replace org-link "\\1" beg end)))
 
 (defun x--remove-links-forward ()
   "Remove links after current point."

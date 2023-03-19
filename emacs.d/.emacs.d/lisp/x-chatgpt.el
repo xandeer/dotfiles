@@ -36,13 +36,19 @@ See https://github.com/acheong08/ChatGPT#installation"
 
 ;; (setq doctor-chatgpt-revchatgpt-version "v1")
 
+(defcustom doctor-chatgpt-model "gpt-3.5-turbo"
+  "Choose the model of revChatGPT.
+Just gpt-3.5-turbo work now."
+  :type 'string
+  :options '("gpt-3.5-turbo" "gpt-4" "gpt-4-32k"))
+
 (defun doctor-chatgpt-revchatgpt-program ()
   "Return the start script of the revChatGPT program."
   (cond
    ((string= doctor-chatgpt-revchatgpt-version "v1")
     '("python" "-m" "revChatGPT.V1"))
    ((string= doctor-chatgpt-revchatgpt-version "v3")
-    `("python" "-m" "revChatGPT.V3" "--api_key"
+    `("python" "-m"  "revChatGPT.V3" "--model" ,doctor-chatgpt-model "--api_key"
       ,(doctor-chatgpt-api-token)))))
 
 (defun doctor-chatgpt-revchatgpt-user-prompt ()

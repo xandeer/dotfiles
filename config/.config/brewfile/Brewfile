@@ -114,7 +114,6 @@ brew minimal-racket
 brew mpdecimal
 brew mpg123
 brew nettle
-brew node
 brew node@16
 brew npth
 brew nvm

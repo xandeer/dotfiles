@@ -96,6 +96,7 @@ Usages:
     rainbow-identifiers
     rainbow-mode
     smartparens
+    titlecase
     unfill
     visual-fill-column
 
@@ -189,6 +190,7 @@ Usages:
     forge
     git-blamed
     (git-gutter-fringe . "emacsorphanage/git-gutter-fringe")
+    git-link
     git-messenger
     git-modes
     (git-timemachine . ("https://codeberg.org/pidu/git-timemachine.git" :host nil))

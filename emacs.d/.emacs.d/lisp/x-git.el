@@ -48,25 +48,44 @@
       ("k"  "delete"  magit-tag-delete)
       ("p"  "prune"   magit-tag-prune)]]))
 
+(defun x-magit--open (path)
+  "Open the Magit status buffer for the Git repository at PATH.
+The function expands the given PATH to an absolute path."
+  (magit-status (expand-file-name path)))
+
 (defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
   "
 Magit\n"
-  ("c" (magit-status (expand-file-name "~/Exercism/clojure/")) "exercism/clojure")
-  ("d" (magit-status (expand-file-name "~/projects/personal/dotfiles")) "dotfiles")
-  ("e" (magit-status (expand-file-name "~/Exercism/elixir/")) "exercism/elixir")
-  ("h" (magit-status (expand-file-name "~/projects/personal/heart-music/")) "heart-music")
-  ("k" (magit-status (expand-file-name "~/Exercism/kotlin/")) "exercism/kotlin")
-  ("l" (magit-status (expand-file-name "~/projects/personal/android-lab/")) "android-lab")
-  ("n" (magit-status org-directory) "notes")
-  ("t" (magit-status (expand-file-name "~/Exercism/typescript/")) "exercism/typescript")
-  ("w" (magit-status x/work-directory) "work"))
+  ;; ("c" (x-magit--open "~/Exercism/clojure/") "exercism/clojure")
+  ("d" (x-magit--open "~/projects/personal/dotfiles") "dotfiles")
+  ;; ("e" (x-magit--open "~/Exercism/elixir/") "exercism/elixir")
+  ("h" (x-magit--open "~/projects/personal/heart-music/") "heart-music")
+  ;; ("k" (x-magit--open "~/Exercism/kotlin/") "exercism/kotlin")
+  ;; ("l" (x-magit--open "~/projects/personal/android-lab/") "android-lab")
+  ("n" (x-magit--open org-directory) "notes")
+  ;; ("t" (x-magit--open "~/Exercism/typescript/") "exercism/typescript")
+  ("w" (x-magit--open x/work-directory) "work"))
 
 (global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
+
+;;; vc key bindings
+(x/define-keys
+ vc-prefix-map
+ '(("s" x/stage-hunk)
+   ("S" magit-stage)
+   ("C-l" git-link)
+   ("r" git-gutter:revert-hunk)
+   ("p" git-gutter:popup-hunk)
+   ("j" git-gutter:next-hunk)
+   ("k" git-gutter:previous-hunk)))
 
 ;;; git-messenger
 (with-eval-after-load 'git-messenger
   (setq git-messenger:show-detail t)
   (define-key vc-prefix-map (kbd "p") #'git-messenger:popup-message))
+
+;;; git link
+(setq git-link-open-in-browser t)
 
 ;;; forge
 (with-eval-after-load 'magit
@@ -98,15 +117,6 @@ Magit\n"
   (interactive)
   (let ((git-gutter:ask-p nil))
     (git-gutter:stage-hunk)))
-
-(x/define-keys
- vc-prefix-map
- '(("s" x/stage-hunk)
-   ("S" magit-stage)
-   ("r" git-gutter:revert-hunk)
-   ("p" git-gutter:popup-hunk)
-   ("j" git-gutter:next-hunk)
-   ("k" git-gutter:previous-hunk)))
 
 (with-eval-after-load 'flycheck
   ;; let diff have left fringe, flycheck can have right fringe

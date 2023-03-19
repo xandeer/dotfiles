@@ -22,6 +22,7 @@
 
 (require 'subr-x)
 (require 'auth-source)
+(require 'rx)
 
 ;;; Customization
 
@@ -204,11 +205,28 @@ If VOICE-NAME, RATE and PITCH are not given, use the default values.
              (round (* 20 (log (car current-prefix-arg) 4)))
            0)))
     (azure-tts-play
-     (buffer-substring-no-properties start end)
+     (azure-tts--get-plain-text start end)
      (or voice-name azure-tts-en-voice-name)
      (- (or rate azure-tts-default-rate)
         rate-decrease)
      (or pitch azure-tts-default-pitch))))
+
+(defun azure-tts--get-plain-text (start end)
+  "Extract plain text from the current buffer between START and END.
+Remove Org-mode links, asterisks, and dynamic block markers from the text."
+  (interactive "r")
+  ;; Define the regular expressions for Org-mode links, asterisks,
+  ;; and dynamic block markers
+  (let* ((org-link (rx (seq "[[" (*? anything) "][" (group (+? anything)) "]]")))
+         (asterisk (rx (any "*")))
+         (org-dblock (rx (seq "#+" (group (| "BEGIN" "begin" "END" "end")) (0+ nonl)))))
+    ;; Use filter-buffer-substring to get the text between START and END
+    ;; Replace Org-mode links with their description using replace-regexp-in-string
+    ;; Remove dynamic block markers and asterisks using replace-regexp-in-string
+    (->> (filter-buffer-substring start end)
+         (replace-regexp-in-string org-link "\\1")
+         (replace-regexp-in-string org-dblock "")
+         (replace-regexp-in-string asterisk ""))))
 
 (defun azure-tts-play-region-chinese (start end &optional rate pitch)
   "Play the region from START to END in Chinese with the given RATE and PITCH.

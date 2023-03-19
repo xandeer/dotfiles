@@ -5,24 +5,58 @@
 ;;; case
 (define-prefix-command 'x/case-map)
 (x/define-keys x/case-map
-               '(("u" upcase-region)
+               `(("u" upcase-region)
                  ("l" downcase-region)
-                 ("c" upcase-initials-region)))
+                 ("c" upcase-initials-region)
+                 ("t" titlecase-line)
+                 ("M-u" ,(x/defun-backward upcase-word))
+                 ("M-l" ,(x/defun-backward downcase-word))
+                 ("M-c" ,(x/defun-backward capitalize-word))))
+
 (x/define-keys ctl-x-map
                '(("c" x/case-map)
                  ("." repeat)))
 
+(defmacro x/defun-backward (fn)
+  "Create a new interactive function that call FN with a negative prefix argument.
+The new function's name is derived from FN by appending \"-backward\" and
+adding the \"x/\" prefix.
+
+Example usage:
+  (x/defun-backward upcase-word)
+
+This will create a new function `x/upcase-word-backward` that calls  `upcase-word` with a negative prefix argument."
+  ;; Create a new function name by appending "-backward" to the input function name
+  ;; and adding the "x/" prefix.
+  (let ((backward-fn (intern (concat "x/" (symbol-name fn) "-backward"))))
+    ;; Define a new function with the new function name.
+    `(defun ,backward-fn ()
+       (interactive)
+       (funcall-interactively #',fn -1))))
+
 (unless (boundp 'x/meta-h-map)
   (define-prefix-command 'x/meta-h-map))
+
 (x/define-keys
  x/meta-h-map
- '(("M-u" (lambda () (interactive) (funcall-interactively #'upcase-word -1)))
-   ("M-l" (lambda () (interactive) (funcall-interactively #'downcase-word -1)))
-   ("M-c" (lambda () (interactive) (funcall-interactively #'capitalize-word -1)))
+ `(("M-u" ,(x/defun-backward upcase-word))
+   ("M-l" ,(x/defun-backward downcase-word))
+   ("M-c" ,(x/defun-backward capitalize-word))
    ("k" x/zap-to-char)
-   ("M-k" (lambda () (interactive) (let ((current-prefix-arg -1)) (call-interactively #'x/zap-to-char))))))
+   ("M-k" x/zap-to-char-backward)))
+
+(defun x/zap-to-char-backward ()
+  "Call `x/zap-to-char' with a negative prefix argument to zap backward."
+  (interactive)
+  (let ((current-prefix-arg -1))
+    (call-interactively #'x/zap-to-char)))
+
 (x/define-keys global-map
                '(("M-h" x/meta-h-map)))
+
+(with-eval-after-load 'org
+  (x/define-keys org-mode-map
+                 '(("M-h" x/meta-h-map))))
 
 ;;; new line
 (x/define-keys global-map

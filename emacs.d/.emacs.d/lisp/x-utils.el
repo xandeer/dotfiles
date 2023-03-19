@@ -4,25 +4,36 @@
 
 ;;; replace
 (defun x/replace (old new &optional beg end)
-  "Replace the string OLD with string NEW.
-BEG means begin point, END meas end point.
-Default use `point-min` or `point-max`."
+  "Replace occurrences of string OLD with string NEW in the current buffer.
+Operate between positions BEG and END.
+If BEG and END are not provided, the function operates on the entire buffer."
+  ;; Set BEG and END to the buffer boundaries if they are not provided
   (setq beg (or beg (point-min)))
   (setq end (or end (point-max)))
 
-  (if (> beg end)
-      (let (mid) (setq mid end end beg beg mid)))
+  ;; Ensure BEG is less than or equal to END
+  (when (> beg end)
+    (let (mid)
+      (setq mid end end beg beg mid)))
+  ;; Save the current position and restore it later
   (save-excursion
+    ;; Go to the END position
     (goto-char end)
+    ;; Insert the modified text
     (insert
+     ;; Create a temporary buffer to perform the replacement
      (let ((buf (current-buffer)))
        (with-temp-buffer
+         ;; Switch to the temporary buffer and copy the text from the original buffer
          (switch-to-buffer (current-buffer) nil t)
          (insert-buffer-substring buf beg end)
+         ;; Perform the replacement in the temporary buffer
          (goto-char (point-min))
          (while (re-search-forward old nil t)
            (replace-match new))
+         ;; Return the modified text from the temporary buffer
          (buffer-string))))
+    ;; Delete the original text between BEG and END
     (delete-region beg end)))
 
 (defun x/convert-chinese-quotations ()
