@@ -3,20 +3,6 @@
 ;;; Code:
 
 ;;; case
-(define-prefix-command 'x/case-map)
-(x/define-keys x/case-map
-               `(("u" upcase-region)
-                 ("l" downcase-region)
-                 ("c" upcase-initials-region)
-                 ("t" titlecase-line)
-                 ("M-u" ,(x/defun-backward upcase-word))
-                 ("M-l" ,(x/defun-backward downcase-word))
-                 ("M-c" ,(x/defun-backward capitalize-word))))
-
-(x/define-keys ctl-x-map
-               '(("c" x/case-map)
-                 ("." repeat)))
-
 (defmacro x/defun-backward (fn)
   "Create a new interactive function that call FN with a negative prefix argument.
 The new function's name is derived from FN by appending \"-backward\" and
@@ -33,6 +19,20 @@ This will create a new function `x/upcase-word-backward` that calls  `upcase-wor
     `(defun ,backward-fn ()
        (interactive)
        (funcall-interactively #',fn -1))))
+
+(define-prefix-command 'x/case-map)
+(x/define-keys x/case-map
+               `(("u" upcase-region)
+                 ("l" downcase-region)
+                 ("c" upcase-initials-region)
+                 ("t" titlecase-line)
+                 ("M-u" ,(x/defun-backward upcase-word))
+                 ("M-l" ,(x/defun-backward downcase-word))
+                 ("M-c" ,(x/defun-backward capitalize-word))))
+
+(x/define-keys ctl-x-map
+               '(("c" x/case-map)
+                 ("." repeat)))
 
 (unless (boundp 'x/meta-h-map)
   (define-prefix-command 'x/meta-h-map))
