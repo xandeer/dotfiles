@@ -47,7 +47,7 @@
     tldr
     tree
 
-    pass
+    (pass.withExtensions (exts: [ exts.pass-otp ]))
     hledger
 
     ## fonts

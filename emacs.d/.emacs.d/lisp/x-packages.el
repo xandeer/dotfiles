@@ -219,6 +219,7 @@ Usages:
     (nov . ("https://depp.brause.cc/nov.el.git" :host nil))
     org-anki
     password-store
+    password-store-otp
     (pinyinlib . "xlshiz/pinyinlib.el")
     projectile
     posframe
