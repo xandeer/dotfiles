@@ -20,6 +20,7 @@
  :applications
  { ;; To obtain the app ID: `osascript -e 'id of app "Finder"'`
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
+  :edge   ["com.microsoft.edgemac.Dev"]
   :emacs  ["org.gnu.Emacs"]
   :finder ["com.apple.finder"]
   :studio ["com.google.android.studio", "com.google.android.studio-EAP"]}
@@ -147,6 +148,14 @@
 
   {:des "Finder shortcuts"
    :rules [:finder
+           [:!Ox :!COSf1]]}
+
+  {:des "Edge"
+   :rules [:edge
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]
+           ;; read aloud
+           [:!Os :!CSu]
            [:!Ox :!COSf1]]}
 
   {:des "Emacs like"

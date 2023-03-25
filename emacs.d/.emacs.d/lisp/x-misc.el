@@ -13,7 +13,7 @@
   (let* ((app-directory "/Applications")
          (app-list (mapcar #'file-name-nondirectory (directory-files app-directory t ".app$")))
          (app-name (completing-read "Select an application: " app-list)))
-    (message (get-bundle-id app-name))))
+    (message (x/get-bundle-id app-name))))
 
 (defun x/insert-bundle-id ()
   "Insert the bundle id."
