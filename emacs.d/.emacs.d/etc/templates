@@ -64,6 +64,7 @@ text-mode
 ;;; org
 org-mode
 
+(ai "#+begin_ai" n> r> n> "#+end_ai")
 (quote "#+begin_quote" n> r> n> "#+end_quote")
 (example "#+begin_example" n> r> n> "#+end_example")
 (center "#+begin_center" n> r> n> "#+end_center")

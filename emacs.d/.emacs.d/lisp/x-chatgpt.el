@@ -209,5 +209,20 @@ reads the sentence before point, and prints the ChatGPT's answer."
   (switch-to-buffer doctor-chatgpt-buffer-name)
   (doctor-chatgpt-mode))
 
+;;; gptel
+(x/package-use '(gptel . "karthink/gptel"))
+(require 'gptel)
+(setq gptel-api-key (doctor-chatgpt-api-token))
+(setq gptel-default-mode 'org-mode)
+
+;;; chatgpt-shell
+(x/package-use '(chatgpt-shell . "xenodium/chatgpt-shell"))
+(require 'chatgpt-shell)
+(setq chatgpt-shell-openai-key (doctor-chatgpt-api-token))
+
+;;; org-ai
+;; (x/package-use '(org-ai . "rksm/org-ai"))
+;; (require 'org-ai)
+
 (provide 'x-chatgpt)
 ;;; x-chatgpt.el ends here

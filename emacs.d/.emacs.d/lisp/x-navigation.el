@@ -23,6 +23,7 @@
  x/navigation-map
  '(("a"    beginning-of-buffer)
    ("e"    end-of-buffer)
+   ("d"    dumb-jump-hydra/body)
    ("M-a"  beginning-of-buffer-other-window)
    ("M-e"  end-of-buffer-other-window)
    ("h"    consult-outline) ;; Alternative: consult-org-heading
@@ -41,6 +42,22 @@
    ("M-v"  scroll-other-window-down)))
 
 (global-set-key (kbd "M-j") #'x/navigation-map)
+
+;;; dumb-jump
+(x/package-use 'dumb-jump)
+
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+
+(defhydra dumb-jump-hydra (:color blue :columns 3)
+  "Dumb Jump"
+  ("j" dumb-jump-go "Go")
+  ("o" dumb-jump-go-other-window "Other window")
+  ("e" dumb-jump-go-prefer-external "Go external")
+  ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+  ("i" dumb-jump-go-prompt "Prompt")
+  ("l" dumb-jump-quick-look "Quick look")
+  ("b" dumb-jump-back "Back"))
 
 (provide 'x-navigation)
 ;;; x-navigation.el ends here
