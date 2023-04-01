@@ -3446,31 +3446,6 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "launch apps",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "a",
-            "modifiers" : {
-              "mandatory" : [ "left_command", "left_option", "left_shift" ]
-            }
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "c",
-            "modifiers" : {
-              "mandatory" : [ "left_command", "left_option", "left_shift" ]
-            }
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Google Chrome\" to activate'"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
         "description" : "screenshots",
         "manipulators" : [ {
           "from" : {

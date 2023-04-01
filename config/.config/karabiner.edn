@@ -127,11 +127,12 @@
   {:des "misc"
    :rules [[:!COSi [:!COSi :return_or_enter]]]}
 
-  {:des "launch apps"
-   :rules [[:!COSa [:open "Android Studio"]]
-           [:!COSc [:open "Google Chrome"]]
-           ;; [:!COSe [:open "Emacs"]]
-           ]}
+  ;; use raycast instead
+  ;; {:des "launch apps"
+  ;;  :rules [[:!COSa [:open "Android Studio"]]
+  ;;          [:!COSc [:open "Google Chrome"]]
+  ;;          ;; [:!COSe [:open "Emacs"]]
+  ;;          ]}
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
