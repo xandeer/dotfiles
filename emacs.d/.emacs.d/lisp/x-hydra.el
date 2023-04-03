@@ -116,7 +116,7 @@ Buffer\n"
   ("H-i" azure-tts-play-region-chinese "tts zh"))
 
 (x/define-keys global-map
-               '(("H-c" org-capture)
+               '(("H-." org-capture)
                  ("H-d" x/hydra-global-actions/body)
                  ("H-f" x/hydra-open-buffer/body)
                  ("H-j" x/hydra-deal-special-position/body)

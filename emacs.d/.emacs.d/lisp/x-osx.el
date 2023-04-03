@@ -8,6 +8,11 @@
 (setq mac-right-command-modifier 'hyper)
 (setq mac-function-modifier 'super)
 
+(x/define-keys
+ global-map
+ '(("H-c" kill-ring-save)
+   ("H-v" yank)))
+
 (setq locate-command "mdfind")
 
 (setq mac-redisplay-dont-reset-vscroll t

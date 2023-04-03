@@ -59,5 +59,5 @@ patch:
     com.google.android.studio-EAP:
       ascii_mode: true
       no_inline: true
-    com.raycast.macos:
-      ascii_mode: true
+    # com.raycast.macos:
+      # ascii_mode: true
