@@ -23,6 +23,7 @@
   :edge   ["com.microsoft.edgemac.Dev"]
   :emacs  ["org.gnu.Emacs"]
   :finder ["com.apple.finder"]
+  :raycast ["com.raycast.macos"]
   :studio ["com.google.android.studio", "com.google.android.studio-EAP"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
@@ -150,6 +151,11 @@
   {:des "Finder shortcuts"
    :rules [:finder
            [:!Ox :!COSf1]]}
+
+  ;; doesn't work
+  {:des "Raycast shortcuts"
+   :rules [:raycast
+           [:Tg :!Cw]]}
 
   {:des "Edge"
    :rules [:edge
