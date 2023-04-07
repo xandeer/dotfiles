@@ -107,7 +107,7 @@
 (defun x--is-current-year? (year)
   (= year (string-to-number (format-time-string "%y"))))
 
-(setq x/org-today-tag "@home:")
+(setq x/org-today-tag x/office)
 (defun x--insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
   (interactive "nYear[< 4: 2x, else: 1x]: ")
