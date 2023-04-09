@@ -168,8 +168,8 @@ sort: original
 蝂	beuiu
 贬	beuo
 嶓	beuoi
-部	bf
-变	bfa
+# 部	bf
+# 变	bfa
 辫	bfaa
 疤	bfai
 病	bfe
@@ -609,7 +609,7 @@ sort: original
 睬	ceuo
 蜍	ceuoe
 岑	ceuoo
-产	cf
+# 产	cf
 瘳	cfa
 床	cfe
 瓷	cfea
@@ -628,7 +628,7 @@ sort: original
 疢	cfou
 瘥	cfoue
 粢	cfouo
-次	cfu
+# 次	cfu
 充	cfua
 鹑	cfuae
 痴	cfue
@@ -2469,8 +2469,8 @@ sort: original
 今	jho
 间	ja
 阄	jau
-机	jb
-己	jba
+# 机	jb
+# 己	jba
 叚	jbae
 楗	jbaea
 椐	jbaee
@@ -2511,8 +2511,8 @@ sort: original
 弶	jboei
 杰	jboo
 榉	jbooe
-极	jbu
-枸	jbua
+# 极	jbu
+# 枸	jbua
 檞	jbuaa
 桷	jbuau
 犟	jbue
@@ -5358,9 +5358,9 @@ sort: original
 祠	sdaei
 邥	sdai
 诵	sdao
-社	sde
+# 社	sde
 试	sdea
-诗	sdei
+# 诗	sdei
 谌	sdeiu
 祏	sdeu
 襫	sdeue
@@ -5403,12 +5403,12 @@ sort: original
 蛇	seoo
 帨	seou
 蟮	seoui
-岁	seu
-蜀	seua
+# 岁	seu
+# 蜀	seua
 骰	seuaa
 兕	seuaaa
 赡	seuao
-睡	seue
+# 睡	seue
 嵊	seuei
 嵊	seueo
 螋	seui
@@ -6478,7 +6478,7 @@ sort: original
 侮	whu
 倭	whue
 仵	whuei
-万	wi
+# 万	wi
 暐	wia
 邷	wiai
 旺	wie
@@ -6487,7 +6487,7 @@ sort: original
 辋	wii
 辒	wiia
 瓦	wio
-晚	wiu
+# 晚	wiu
 旿	wiue
 味	wj
 翁	wja
@@ -8210,12 +8210,12 @@ sort: original
 辎	ziaai
 辗	ziae
 郅	ziai
-至	zie
+# 至	zie
 晊	ziea
 轾	zieae
 转	ziee
 臻	zieeu
-早	ziei
+# 早	ziei
 辄	zieia
 昃	zieu
 暂	zii
