@@ -58,11 +58,15 @@
 (require 'no-littering)
 (require 'x-init-utils)
 (require 'x-utils)
-;; osx
-(require 'x-osx)
-(require 'x-hydra)
+
 ;; set "PATH" and `exec-path`
 (require 'x-exec-path)
+
+;; osx
+(require 'x-osx)
+
+;;; key bindings
+(require 'x-transients)
 ;; which-key, keyfreq, osx-modifiers
 (require 'x-key-helper)
 (require 'x-navigation)

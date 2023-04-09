@@ -73,10 +73,11 @@ Usages:
     ;; todo: for what?
     explain-pause-mode
     gcmh
-    (hydra . "abo-abo/hydra")
+    ;; (hydra . "abo-abo/hydra")
     no-littering
     ;; pcache
     session
+    transient
     wgrep
 
 ;;; editor
@@ -88,7 +89,7 @@ Usages:
     highlight-indent-guides
     htmlize
     hungry-delete
-    indent-tools
+    ;; indent-tools
     mmm-mode
     page-break-lines
     quick-peek
@@ -143,6 +144,7 @@ Usages:
     devdocs
     consult-dash
     dash-docs
+    dumb-jump
     flycheck
 
     ;; clojure

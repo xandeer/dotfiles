@@ -25,7 +25,7 @@
     (insert "]"))
 
   (x/define-keys lispy-mode-map
-                 '(("M-j" x/navigation-map)
+                 '(("M-j" x/transient-navigate)
                    ("M-k" previous-buffer)
                    ("C-a" x/smart-beginning-of-line)
                    ("M-n" lispy-forward)

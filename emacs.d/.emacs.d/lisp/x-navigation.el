@@ -17,47 +17,48 @@
 ;;
 ;;; Code:
 
-(define-prefix-command 'x/navigation-map)
+(transient-define-prefix x/transient-navigate ()
+  "Navigate."
+  [["Mark & Register"
+    ("m"    "Mark" consult-mark)
+    ("M-m"  "Global mark" consult-global-mark)
+    ("u"    "Jump to register" jump-to-register)
+    ("M-u"  "Point to register" point-to-register)]
+   ["Line"
+    ("j"    "Goto line below" avy-goto-line-below)
+    ("k"    "Goto line above" avy-goto-line-above)
+    ("l"    "Goto line" avy-goto-line)
+    ("M-l"  "Goto line" consult-goto-line)]
+   ["Buffer"
+    ("a"    "Beginning of buffer" beginning-of-buffer)
+    ("e"    "End of buffer" end-of-buffer)
+    ("M-a"  "Beginning of buffer other window" beginning-of-buffer-other-window)
+    ("M-e"  "End of buffer other window" end-of-buffer-other-window)
+    ("v"    "Scroll other window" scroll-other-window)
+    ("M-v"  "Scroll other window down" scroll-other-window-down)]
+   ["Other"
+    ("d"    "Dumb jump" x/transient-dumb-jump)
+    ("h"    "Outline" consult-outline) ;; Alternative: consult-org-heading
+    ("i"    "Imenu" consult-imenu)
+    ("M-i"  "Imenu multi" consult-imenu-multi)
+    ("M-j"  "Goto char" x/ace-goto-char-timer)]])
 
-(x/define-keys
- x/navigation-map
- '(("a"    beginning-of-buffer)
-   ("e"    end-of-buffer)
-   ("d"    dumb-jump-hydra/body)
-   ("M-a"  beginning-of-buffer-other-window)
-   ("M-e"  end-of-buffer-other-window)
-   ("h"    consult-outline) ;; Alternative: consult-org-heading
-   ("i"    consult-imenu)
-   ("M-i"  consult-imenu-multi)
-   ("j"    avy-goto-line-below)
-   ("M-j"  x/ace-goto-char-timer)
-   ("k"    avy-goto-line-above)
-   ("l"    avy-goto-line)
-   ("M-l"  consult-goto-line)
-   ("m"    consult-mark)
-   ("M-m"  consult-global-mark)
-   ("u"    jump-to-register)
-   ("M-u"  point-to-register)
-   ("v"    scroll-other-window)
-   ("M-v"  scroll-other-window-down)))
-
-(global-set-key (kbd "M-j") #'x/navigation-map)
+(global-set-key (kbd "M-j") #'x/transient-navigate)
 
 ;;; dumb-jump
-(x/package-use 'dumb-jump)
-
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
-(defhydra dumb-jump-hydra (:color blue :columns 3)
-  "Dumb Jump"
-  ("j" dumb-jump-go "Go")
-  ("o" dumb-jump-go-other-window "Other window")
-  ("e" dumb-jump-go-prefer-external "Go external")
-  ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
-  ("i" dumb-jump-go-prompt "Prompt")
-  ("l" dumb-jump-quick-look "Quick look")
-  ("b" dumb-jump-back "Back"))
+(define-transient-command x/transient-dumb-jump ()
+  "Transient for Dumb Jump."
+  [["Dumb Jump"
+    ("j" "Go" dumb-jump-go)
+    ("o" "Other window" dumb-jump-go-other-window)
+    ("e" "Go external" dumb-jump-go-prefer-external)
+    ("x" "Go external other window" dumb-jump-go-prefer-external-other-window)
+    ("i" "Prompt" dumb-jump-go-prompt)
+    ("l" "Quick look" dumb-jump-quick-look)
+    ("b" "Back" dumb-jump-back)]])
 
 (provide 'x-navigation)
 ;;; x-navigation.el ends here

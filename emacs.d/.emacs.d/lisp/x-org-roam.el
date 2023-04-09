@@ -190,41 +190,42 @@ If BEG and END are not provided, the function operates on the entire buffer."
 
 (autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
-(defhydra x-hydra-roam-org (:exit t :columns 4 :idle 0.3)
-  "
-Roam\n"
-  ("r" org-roam-buffer-toggle "roam buffer")
-  ("a" org-roam-alias-add "roam add alias")
-  ("c" x--trim-inline-tags "trim inline tags")
-  (";" org-roam-tag-add "roam add tag")
-  ("H-;" org-roam-tag-remove "roam remove tag")
-  ("." org-roam-dailies-goto-today "dailies goto today" :exit nil)
-  ("k" org-roam-dailies-goto-previous-note "dailies previous" :exit nil)
-  ("j" org-roam-dailies-goto-next-note "dailies next" :exit nil)
-  ("l" x--remove-links "remove links")
-  ("m" x--migrate-journal "migrate journal" :exit nil)
-  ("f" x/fill-subtree "fill subtree")
-  ("i" org-id-get-create "create id")
-  ("n" org-toggle-narrow-to-subtree "narrow")
-  ("s" org-roam-db-sync "roam db sync")
-  ("y" org-anki-sync-entry "anki sync entry")
-  ("Y" org-anki-sync-all "anki sync all")
-  ("v" x/vocabulary-items "ankify vocabulary")
-  ("0" (x--insert-journal-in-year 0) "insert journal in 2020")
-  ("1" (x--insert-journal-in-year 1) "insert journal in 2021")
-  ("2" (x--insert-journal-in-year 2) "insert journal in 2022")
-  ("3" (x--insert-journal-in-year 3) "insert journal in 2013")
-  ("4" (x--insert-journal-in-year 4) "insert journal in 2014")
-  ("6" (x--insert-journal-in-year 6) "insert journal in 2016")
-  ("7" (x--insert-journal-in-year 7) "insert journal in 2017")
-  ("8" (x--insert-journal-in-year 8) "insert journal in 2018")
-  ("9" (x--insert-journal-in-year 9) "insert journal in 2019"))
-(define-key org-mode-map (kbd "H-k") #'x-hydra-roam-org/body)
+(require 'transient)
 
-(global-set-key (kbd "H-n") #'org-roam-node-find)
-(global-set-key (kbd "H-g") (lambda () (interactive) (org-roam-node-find t)))
+(define-transient-command x/transient-roam ()
+  "Transient for Org Roam."
+  [["Roam"
+    ("r" "Roam buffer" org-roam-buffer-toggle)
+    ("a" "Roam add alias" org-roam-alias-add)
+    ("c" "Trim inline tags" x--trim-inline-tags)
+    (";" "Roam add tag" org-roam-tag-add)
+    ("H-;" "Roam remove tag" org-roam-tag-remove)
+    ("s" "Roam DB sync" org-roam-db-sync)]
+   ["Dailies"
+    ("." "Dailies goto today" org-roam-dailies-goto-today :transient t)
+    ("j" "Dailies next" org-roam-dailies-goto-next-note :transient t)
+    ("k" "Dailies previous" org-roam-dailies-goto-previous-note :transient t)
+    ("3" "Insert journal in 2023" ,(x/interactive-wrapper (x--insert-journal-in-year 3)))
+    ("m" "Migrate journal" x--migrate-journal :transient t)]
+   ["Anki"
+    ("y" "Anki sync entry" org-anki-sync-entry)
+    ("Y" "Anki sync all" org-anki-sync-all)
+    ("v" "Ankify vocabulary" x/vocabulary-items)]
+   ["Misc"
+    ("l" "Remove links" x--remove-links)
+    ("f" "Fill subtree" x/fill-subtree)
+    ("i" "Create ID" org-id-get-create)
+    ("n" "Narrow" org-toggle-narrow-to-subtree)]])
 
-(define-key org-mode-map (kbd "H-i") #'org-roam-node-insert)
+(x/define-keys
+ org-mode-map
+ '(("H-i" org-roam-node-insert)
+   ("H-k" x/transient-roam)))
+
+(x/define-keys
+ global-map
+ `(("H-g" ,(x/interactive-wrapper (org-roam-node-find t)))
+   ("H-n" org-roam-node-find)))
 
 ;;; tbl mode
 (defvar x/tbl-mode-map

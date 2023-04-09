@@ -8,16 +8,16 @@
 (global-set-key (kbd "C-h F") #'helpful-function)
 (global-set-key (kbd "C-h C") #'helpful-command)
 
-(defhydra x-hydra-elisp-helpful (:exit t :columns 4 :idle 0.3)
-	"
-Elisp\n"
-  ("d" helpful-at-point "helpful at point")
-  ("f" find-function "find function")
-  ("v" find-variable "find variable")
-  ("l" find-library "find library")
-  ("r" x/load-current "reload current file"))
+(define-transient-command x/transient-elisp-helpful ()
+  "Transient for Elisp."
+  [["Elisp"
+    ("d" "Helpful at point" helpful-at-point)
+    ("f" "Find function" find-function)
+    ("v" "Find variable" find-variable)
+    ("l" "Find library" find-library)
+    ("r" "Reload current file" x/load-current)]])
 
-(define-key emacs-lisp-mode-map (kbd "H-k") #'x-hydra-elisp-helpful/body)
+(define-key emacs-lisp-mode-map (kbd "H-k") #'x/transient-elisp-helpful)
 
 ;; disable flycheck on elisp mode
 (setq flycheck-disabled-checkers '(emacs-lisp))

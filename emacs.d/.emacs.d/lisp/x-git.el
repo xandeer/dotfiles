@@ -51,22 +51,22 @@
 (defun x-magit--open (path)
   "Open the Magit status buffer for the Git repository at PATH.
 The function expands the given PATH to an absolute path."
-  (magit-status (expand-file-name path)))
+  (x/interactive-wrapper (magit-status (expand-file-name path))))
 
-(defhydra x-hydra-magit-status (:exit t :columns 4 :idle 0.3)
-  "
-Magit\n"
-  ;; ("c" (x-magit--open "~/Exercism/clojure/") "exercism/clojure")
-  ("d" (x-magit--open "~/projects/personal/dotfiles") "dotfiles")
-  ;; ("e" (x-magit--open "~/Exercism/elixir/") "exercism/elixir")
-  ("h" (x-magit--open "~/projects/personal/heart-music/") "heart-music")
-  ;; ("k" (x-magit--open "~/Exercism/kotlin/") "exercism/kotlin")
-  ;; ("l" (x-magit--open "~/projects/personal/android-lab/") "android-lab")
-  ("n" (x-magit--open org-directory) "notes")
-  ;; ("t" (x-magit--open "~/Exercism/typescript/") "exercism/typescript")
-  ("w" (x-magit--open x/work-directory) "work"))
+(define-transient-command x/transient-magit-status ()
+  "Transient for Magit status."
+  [["Magit"
+    ;; ("c" "Exercism/clojure" ,(x-magit--open "~/Exercism/clojure/"))
+    ("d" "Dotfiles" ,(x-magit--open "~/projects/personal/dotfiles"))
+    ;; ("e" "Exercism/elixir" ,(x-magit--open "~/Exercism/elixir/"))
+    ("h" "Heart-music" ,(x-magit--open "~/projects/personal/heart-music/"))
+    ;; ("k" "Exercism/kotlin" ,(x-magit--open "~/Exercism/kotlin/"))
+    ;; ("l" "Android-lab" ,(x-magit--open "~/projects/personal/android-lab/"))
+    ("n" "Notes" ,(x-magit--open org-directory))
+    ;; ("t" "Exercism/typescript" ,(x-magit--open "~/Exercism/typescript/"))
+    ("w" "Work" ,(x-magit--open x/work-directory))]])
 
-(global-set-key (kbd "H-m") #'x-hydra-magit-status/body)
+(global-set-key (kbd "H-m") #'x/transient-magit-status)
 
 ;;; vc key bindings
 (x/define-keys

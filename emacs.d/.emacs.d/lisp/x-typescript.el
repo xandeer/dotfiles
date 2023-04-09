@@ -33,19 +33,18 @@
     (tide-restart-server)
     (lsp-restart-workspace))
 
-  (defhydra x/hydra-typescript (:exit t :columns 4 :idle 0.3)
-    "
-Typescript\n"
-    ("d" x/docs-lookup "docs lookup at point")
-    ("r" x/exercism-open-readme-other-window "open readme in other window")
-    ("H-r" x/ts-restart-tide-and-lsp "restart tide and lsp")
-    ("i" x/web-unskip-test "unskip test")
-    ("t" yarn-test "yarn test")
-    ("H-t" x/ts-to-js "ts to js")
-    ("u" x/exercism-submit "submit to exercism"))
+  (define-transient-command x/transient-typescript ()
+    "Transient for TypeScript."
+    [["Typescript"
+      ("d" "Docs lookup at point" x/docs-lookup)
+      ("r" "Open readme in other window" x/exercism-open-readme-other-window)
+      ("H-r" "Restart tide and lsp" x/ts-restart-tide-and-lsp)
+      ("i" "Unskip test" x/web-unskip-test)
+      ("t" "Yarn test" yarn-test)
+      ("H-t" "TS to JS" x/ts-to-js)
+      ("u" "Submit to Exercism" x/exercism-submit)]])
 
-  (let ((map typescript-mode-map))
-    (define-key map (kbd "H-k") #'x/hydra-typescript/body)))
+  (define-key typescript-mode-map (kbd "H-k") #'x/transient-typescript))
 
 ;;; repl
 ;; yarn add global typescript ts-node

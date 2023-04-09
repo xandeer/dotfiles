@@ -44,22 +44,18 @@
                       ";gradle init --type kotlin-library --dsl kotlin"))
       (dired root)))
 
-  (defun x/kotlin-open-in-studio ()
-    "Open the current file in Android Studio."
-    (interactive)
-    (shell-command (concat "studio " buffer-file-name)))
+  (define-transient-command x/transient-kotlin ()
+    "Transient for Kotlin."
+    [["Kotlin"
+      ("d" "Docs lookup at point" x/docs-lookup)
+      ("r" "Open README in other window" x/exercism-open-readme-other-window)
+      ("i" "Clear useless comments" x/kotlin-exercism-clear)
+      ("t" "Run Gradle test" x/kotlin-gradle-test)
+      ("u" "Submit to Exercism" x/exercism-submit)
+      ("o" "Open in Android Studio" ,(x/interactive-wrapper (shell-command (concat "studio " buffer-file-name))))
+      ("n" "New Kotlin library project in ~/temp" x/kotlin-new-lib-project)]])
 
-  (defhydra x/hydra-kotlin (:exit t :columns 4 :idle 0.3)
-    "
-Kotlin\n"
-    ("d" x/docs-lookup "docs lookup at point")
-    ("r" x/exercism-open-readme-other-window "open readme in other window")
-    ("i" x/kotlin-exercism-clear "clear useless comments")
-    ("t" x/kotlin-gradle-test "run gradle test")
-    ("u" x/exercism-submit "submit to exercism")
-    ("o" x/kotlin-open-in-studio "open in Android Studio")
-    ("n" x/kotlin-new-lib-project "new kotlin library project in ~/temp"))
-  (define-key kotlin-mode-map (kbd "H-k") #'x/hydra-kotlin/body)
+  (define-key kotlin-mode-map (kbd "H-k") #'x/transient-kotlin)
 
   (defun x/kotlin--setup ()
     ;; org src block

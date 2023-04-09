@@ -29,56 +29,55 @@
 (global-set-key (kbd "M-C") #'tempel-complete)
 
 ;;; org
-(defhydra x/hydra-template-org
-  (:exit t :columns 4 :idle 0.3)
-  "
-Org Templates
-"
-  (";" (tempel-insert 'comment) "comment")
-  ("q" (tempel-insert 'quote) "quote")
-  ("v" (tempel-insert 'verse) "verse")
-  ("w" x/wrap-block "wrap block")
-  ("e" (tempel-insert 'elisp) "elisp")
-  ("s" (tempel-insert 'sh) "sh")
-  ("M-s" (tempel-insert 'src) "src")
-  ("M-t" tempel-insert "tempel insert")
-  ("k" (tempel-insert 'kotlin) "kotlin")
-  ("c" (tempel-insert 'clojure) "clojure")
-  ("r" (tempel-insert 'weekly) "weekly review")
-  ("m" (tempel-insert 'monthly) "monthly review")
-  ("t" (tempel-insert 'time) "timestamp")
-  ("d" (tempel-insert 'day) "day: 14(Fri)"))
+(define-transient-command x/transient-template-org ()
+  "Transient for Org Templates."
+  [["Src"
+    ("M-s" "Src" ,(x/interactive-wrapper (tempel-insert 'src)))
+    ("e" "Elisp" ,(x/interactive-wrapper (tempel-insert 'elisp)))
+    ("s" "Sh" ,(x/interactive-wrapper (tempel-insert 'sh)))
+    ("k" "Kotlin" ,(x/interactive-wrapper (tempel-insert 'kotlin)))
+    ("c" "Clojure" ,(x/interactive-wrapper (tempel-insert 'clojure)))]
+   ["Review"
+    ("r" "Weekly review" ,(x/interactive-wrapper (tempel-insert 'weekly)))
+    ("m" "Monthly review" ,(x/interactive-wrapper (tempel-insert 'monthly)))]
+   ["Block"
+    (";" "Comment" ,(x/interactive-wrapper (tempel-insert 'comments)))
+    ("q" "Quote" ,(x/interactive-wrapper (tempel-insert 'quote)))
+    ("v" "Verse" ,(x/interactive-wrapper (tempel-insert 'verse)))
+    ("w" "Wrap block" x/wrap-block)]
+   ["Other"
+    ("M-t" "Tempel insert" tempel-insert)
+    ("t" "Timestamp" ,(x/interactive-wrapper (tempel-insert 'time)))
+    ("d" "Day: 14(Fri)" ,(x/interactive-wrapper (tempel-insert 'day)))]])
 
-(define-key org-mode-map (kbd "M-t") #'x/hydra-template-org/body)
+(define-key org-mode-map (kbd "M-t") #'x/transient-template-org)
 
 ;;; elisp
-(defhydra x/hydra-template-elisp (:exit t :columns 4 :idle 0.3)
-  "
-Elisp Templates
-"
-  ("d" (tempel-insert 'file-template) "elisp header and footer")
-  ("h" (tempel-insert 'hydra) "defhydra")
-  ("l" (tempel-insert 'lambda) "lambda")
-  ("f" (tempel-insert 'fun) "defun")
-  ("c" (tempel-insert 'command) "command")
-  ("M-t" tempel-insert "tempel insert")
-  ("M-l" (tempel-insert 'let) "let")
-  ("v" (tempel-insert 'var) "defvar")
-  ("M-c" (tempel-insert 'const) "defconst")
-  ("S-c" (tempel-insert 'custom) "defcustom"))
+(define-transient-command x/transient-template-elisp ()
+  "Transient for Elisp Templates."
+  [["Elisp Templates"
+    ("d" "Elisp header and footer" ,(x/interactive-wrapper (tempel-insert 'file-template)))
+    ("l" "Lambda" ,(x/interactive-wrapper (tempel-insert 'lambda)))
+    ("f" "Defun" ,(x/interactive-wrapper (tempel-insert 'fun)))
+    ("c" "Command" ,(x/interactive-wrapper (tempel-insert 'command)))
+    ("M-t" "Tempel insert" tempel-insert)
+    ("M-l" "Let" ,(x/interactive-wrapper (tempel-insert 'let)))
+    ("v" "Defvar" ,(x/interactive-wrapper (tempel-insert 'var)))
+    ("M-c" "Defconst" ,(x/interactive-wrapper (tempel-insert 'const)))
+    ("S-c" "Defcustom" ,(x/interactive-wrapper (tempel-insert 'custom)))]])
 
-(define-key emacs-lisp-mode-map (kbd "M-t") #'x/hydra-template-elisp/body)
+(define-key emacs-lisp-mode-map (kbd "M-t") #'x/transient-template-elisp)
 
 ;;; global
-(defhydra x/hydra-template-global (:exit t :columns 4 :idle 0.3)
-  "
-Global Templates
-"
-  ("d" (tempel-insert 'chglog) "git changelog")
-  ("v" (tempel-insert 'version) "git app version")
-  ("t" (tempel-insert 'time) "timestamp")
-  ("M-t" tempel-insert "temple insert"))
-(global-set-key (kbd "M-t") #'x/hydra-template-global/body)
+(define-transient-command x/transient-template-global ()
+  "Transient for Global Templates."
+  [["Global Templates"
+    ("d" "Git changelog" ,(x/interactive-wrapper (tempel-insert 'chglog)))
+    ("v" "Git app version" ,(x/interactive-wrapper (tempel-insert 'version)))
+    ("t" "Timestamp" ,(x/interactive-wrapper (tempel-insert 'time)))
+    ("M-t" "Tempel insert" tempel-insert)]])
+
+(global-set-key (kbd "M-t") #'x/transient-template-global)
 
 ;;; file templates
 ;; Copied from doom

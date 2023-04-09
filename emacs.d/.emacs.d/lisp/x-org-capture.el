@@ -4,6 +4,7 @@
 
 (require 'org-capture)
 (global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "H-.") #'org-capture)
 
 (defvar x/expenses-history nil)
 
