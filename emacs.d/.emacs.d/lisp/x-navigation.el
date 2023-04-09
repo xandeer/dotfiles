@@ -27,8 +27,8 @@
    ["Line"
     ("j"    "Goto line below" avy-goto-line-below)
     ("k"    "Goto line above" avy-goto-line-above)
-    ("l"    "Goto line" avy-goto-line)
-    ("M-l"  "Goto line" consult-goto-line)]
+    ("l"    "Goto line(avy)" avy-goto-line)
+    ("M-l"  "Goto line(num)" consult-goto-line)]
    ["Buffer"
     ("a"    "Beginning of buffer" beginning-of-buffer)
     ("e"    "End of buffer" end-of-buffer)
@@ -49,7 +49,7 @@
 (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
-(define-transient-command x/transient-dumb-jump ()
+(transient-define-prefix x/transient-dumb-jump ()
   "Transient for Dumb Jump."
   [["Dumb Jump"
     ("j" "Go" dumb-jump-go)

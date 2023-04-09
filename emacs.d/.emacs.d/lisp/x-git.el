@@ -53,7 +53,7 @@
 The function expands the given PATH to an absolute path."
   (x/interactive-wrapper (magit-status (expand-file-name path))))
 
-(define-transient-command x/transient-magit-status ()
+(transient-define-prefix x/transient-magit-status ()
   "Transient for Magit status."
   [["Magit"
     ;; ("c" "Exercism/clojure" ,(x-magit--open "~/Exercism/clojure/"))

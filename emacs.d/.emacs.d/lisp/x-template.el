@@ -29,7 +29,7 @@
 (global-set-key (kbd "M-C") #'tempel-complete)
 
 ;;; org
-(define-transient-command x/transient-template-org ()
+(transient-define-prefix x/transient-template-org ()
   "Transient for Org Templates."
   [["Src"
     ("M-s" "Src" ,(x/interactive-wrapper (tempel-insert 'src)))
@@ -53,7 +53,7 @@
 (define-key org-mode-map (kbd "M-t") #'x/transient-template-org)
 
 ;;; elisp
-(define-transient-command x/transient-template-elisp ()
+(transient-define-prefix x/transient-template-elisp ()
   "Transient for Elisp Templates."
   [["Elisp Templates"
     ("d" "Elisp header and footer" ,(x/interactive-wrapper (tempel-insert 'file-template)))
@@ -69,7 +69,7 @@
 (define-key emacs-lisp-mode-map (kbd "M-t") #'x/transient-template-elisp)
 
 ;;; global
-(define-transient-command x/transient-template-global ()
+(transient-define-prefix x/transient-template-global ()
   "Transient for Global Templates."
   [["Global Templates"
     ("d" "Git changelog" ,(x/interactive-wrapper (tempel-insert 'chglog)))

@@ -33,7 +33,7 @@
     (tide-restart-server)
     (lsp-restart-workspace))
 
-  (define-transient-command x/transient-typescript ()
+  (transient-define-prefix x/transient-typescript ()
     "Transient for TypeScript."
     [["Typescript"
       ("d" "Docs lookup at point" x/docs-lookup)

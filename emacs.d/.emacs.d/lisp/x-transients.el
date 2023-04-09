@@ -11,7 +11,7 @@
      (interactive)
      ,form))
 
-(define-transient-command x/transient-x-group ()
+(transient-define-prefix x/transient-x-group ()
   "Transient for x group commands."
   [["mr"
     ("u" "mr update" ,(x/interactive-wrapper (x/start-process "mr -d ~ update")))
@@ -40,7 +40,7 @@
     ("s" "eva query sleep" eva-query-sleep)
     ("H-r" "restart" x/restart-emacs)]])
 
-(define-transient-command x/transient-buffer-group ()
+(transient-define-prefix x/transient-buffer-group ()
   "Transient for opening buffers."
   [["Projectile"
     ("p" "Switch project" projectile-switch-project)
@@ -66,7 +66,7 @@
 
 (defalias 'x/consult-dir #'consult-bookmark)
 (consult-customize x/consult-dir :initial "dir: ")
-(define-transient-command x/transient-position-group ()
+(transient-define-prefix x/transient-position-group ()
   "Transient for dealing with special positions."
   [["Agenda"
     ("a" "Agenda all" ,(x/interactive-wrapper (org-agenda nil "x")))
@@ -93,7 +93,7 @@
 
     ("H-h" "Bookmark dir" x/consult-dir)]])
 
-(define-transient-command x/transient-global-group ()
+(transient-define-prefix x/transient-global-group ()
   "Transient for global actions."
   [["Clock"
     ("i" "In last" org-clock-in-last)
@@ -110,7 +110,7 @@
     ("d" "Delete current buffer" x/delete-current-buffer)
     ("H-d" "Duplicate line" x/duplicate-line)]])
 
-(define-transient-command x/transient-search-group ()
+(transient-define-prefix x/transient-search-group ()
   "Transient for searching."
   [["Search engine"
     ("b" "Zlib" engine/search-zlib)

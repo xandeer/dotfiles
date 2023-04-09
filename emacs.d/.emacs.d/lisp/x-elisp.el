@@ -8,7 +8,7 @@
 (global-set-key (kbd "C-h F") #'helpful-function)
 (global-set-key (kbd "C-h C") #'helpful-command)
 
-(define-transient-command x/transient-elisp-helpful ()
+(transient-define-prefix x/transient-elisp-helpful ()
   "Transient for Elisp."
   [["Elisp"
     ("d" "Helpful at point" helpful-at-point)

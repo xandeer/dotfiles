@@ -192,7 +192,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
 (require 'transient)
 
-(define-transient-command x/transient-roam ()
+(transient-define-prefix x/transient-roam ()
   "Transient for Org Roam."
   [["Roam"
     ("r" "Roam buffer" org-roam-buffer-toggle)

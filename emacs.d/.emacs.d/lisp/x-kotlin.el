@@ -44,7 +44,7 @@
                       ";gradle init --type kotlin-library --dsl kotlin"))
       (dired root)))
 
-  (define-transient-command x/transient-kotlin ()
+  (transient-define-prefix x/transient-kotlin ()
     "Transient for Kotlin."
     [["Kotlin"
       ("d" "Docs lookup at point" x/docs-lookup)
