@@ -19,9 +19,10 @@ install:
 	for dir in $(DIRS); do \
 		mkdir -p $$dir; \
 		cp -n $(CURDIR)/$(LOCAL) $$dir/$(LOCAL).yaml; \
-		cp -a $(CURDIR)/lua $$dir; \
 		cp -a $(CURDIR)/rime.lua $$dir; \
 		cp -a $(CURDIR)/opencc $$dir; \
+		cp -a $(CURDIR)/cn_dicts $$dir; \
+		cp -a $(CURDIR)/en_dicts $$dir; \
 		cp -RL $(CURDIR)/*.yaml $$dir; \
 		cp -a $(CURDIR)/$(OS)/*.yaml $$dir; \
 	done

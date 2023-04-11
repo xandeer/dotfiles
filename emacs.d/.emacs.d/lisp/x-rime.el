@@ -17,7 +17,7 @@
   (setq rime-cursor "˰")
   (setq rime-posframe-style 'vertical)
   ;; (setq rime-inline-ascii-trigger 'shift-l)
-  (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
+  (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "M-a" "M-e" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`"))
 
   ;; face
   ;; (set-face-attribute 'rime-default-face nil :foreground "#363737" :background "#e5dfb0")

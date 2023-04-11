@@ -55,7 +55,4 @@ import_tables:
   - luna_pinyin.poetry
   - luna_pinyin.chat
   - luna_pinyin.place
-  - luna_pinyin.shopping
-  - luna_pinyin.website
-  - zhwiki
 ...
