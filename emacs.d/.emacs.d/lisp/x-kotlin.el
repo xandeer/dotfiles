@@ -52,7 +52,7 @@
       ("i" "Clear useless comments" x/kotlin-exercism-clear)
       ("t" "Run Gradle test" x/kotlin-gradle-test)
       ("u" "Submit to Exercism" x/exercism-submit)
-      ("o" "Open in Android Studio" ,(x/interactive-wrapper (shell-command (concat "studio " buffer-file-name))))
+      ("o" "Open in Android Studio" (lambda () (interactive) (shell-command (concat "studio " buffer-file-name))))
       ("n" "New Kotlin library project in ~/temp" x/kotlin-new-lib-project)]])
 
   (define-key kotlin-mode-map (kbd "H-k") #'x/transient-kotlin)

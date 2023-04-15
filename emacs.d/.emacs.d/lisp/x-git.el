@@ -1,4 +1,4 @@
-;;; x-git.el --- x-git -*- lexical-binding: t -*-
+﻿;;; x-git.el --- x-git -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -51,20 +51,21 @@
 (defun x-magit--open (path)
   "Open the Magit status buffer for the Git repository at PATH.
 The function expands the given PATH to an absolute path."
-  (x/interactive-wrapper (magit-status (expand-file-name path))))
+  (interactive)
+  (magit-status (expand-file-name path)))
 
 (transient-define-prefix x/transient-magit-status ()
   "Transient for Magit status."
   [["Magit"
-    ;; ("c" "Exercism/clojure" ,(x-magit--open "~/Exercism/clojure/"))
-    ("d" "Dotfiles" ,(x-magit--open "~/projects/personal/dotfiles"))
-    ;; ("e" "Exercism/elixir" ,(x-magit--open "~/Exercism/elixir/"))
-    ("h" "Heart-music" ,(x-magit--open "~/projects/personal/heart-music/"))
-    ;; ("k" "Exercism/kotlin" ,(x-magit--open "~/Exercism/kotlin/"))
-    ;; ("l" "Android-lab" ,(x-magit--open "~/projects/personal/android-lab/"))
-    ("n" "Notes" ,(x-magit--open org-directory))
-    ;; ("t" "Exercism/typescript" ,(x-magit--open "~/Exercism/typescript/"))
-    ("w" "Work" ,(x-magit--open x/work-directory))]])
+    ;; ("c" "Exercism/clojure" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/clojure/"))))
+    ("d" "Dotfiles" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/dotfiles"))))
+    ;; ("e" "Exercism/elixir" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/elixir/"))))
+    ("h" "Heart-music" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/heart-music/"))))
+    ;; ("k" "Exercism/kotlin" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/kotlin/"))))
+    ;; ("l" "Android-lab" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/android-lab/"))))
+    ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
+    ;; ("t" "Exercism/typescript" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/typescript/"))))
+    ("w" "Work" (lambda () (interactive) (magit-status (expand-file-name x/work-directory))))]])
 
 (global-set-key (kbd "H-m") #'x/transient-magit-status)
 
@@ -88,8 +89,8 @@ The function expands the given PATH to an absolute path."
 (setq git-link-open-in-browser t)
 
 ;;; forge
-(with-eval-after-load 'magit
-  (require 'forge))
+;; (with-eval-after-load 'magit
+;;   (require 'forge))
 
 ;;; gutter
 (require 'git-gutter-fringe)

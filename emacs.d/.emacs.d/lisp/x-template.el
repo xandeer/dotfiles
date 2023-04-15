@@ -32,23 +32,23 @@
 (transient-define-prefix x/transient-template-org ()
   "Transient for Org Templates."
   [["Src"
-    ("M-s" "Src" ,(x/interactive-wrapper (tempel-insert 'src)))
-    ("e" "Elisp" ,(x/interactive-wrapper (tempel-insert 'elisp)))
-    ("s" "Sh" ,(x/interactive-wrapper (tempel-insert 'sh)))
-    ("k" "Kotlin" ,(x/interactive-wrapper (tempel-insert 'kotlin)))
-    ("c" "Clojure" ,(x/interactive-wrapper (tempel-insert 'clojure)))]
+    ("M-s" "Src" (lambda () (interactive) (tempel-insert 'src)))
+    ("e" "Elisp" (lambda () (interactive) (tempel-insert 'elisp)))
+    ("s" "Sh" (lambda () (interactive) (tempel-insert 'sh)))
+    ("k" "Kotlin" (lambda () (interactive) (tempel-insert 'kotlin)))
+    ("c" "Clojure" (lambda () (interactive) (tempel-insert 'clojure)))]
    ["Review"
-    ("r" "Weekly review" ,(x/interactive-wrapper (tempel-insert 'weekly)))
-    ("m" "Monthly review" ,(x/interactive-wrapper (tempel-insert 'monthly)))]
+    ("r" "Weekly review" (lambda () (interactive) (tempel-insert 'weekly)))
+    ("m" "Monthly review" (lambda () (interactive) (tempel-insert 'monthly)))]
    ["Block"
-    (";" "Comment" ,(x/interactive-wrapper (tempel-insert 'comments)))
-    ("q" "Quote" ,(x/interactive-wrapper (tempel-insert 'quote)))
-    ("v" "Verse" ,(x/interactive-wrapper (tempel-insert 'verse)))
+    (";" "Comment" (lambda () (interactive) (tempel-insert 'comments)))
+    ("q" "Quote" (lambda () (interactive) (tempel-insert 'quote)))
+    ("v" "Verse" (lambda () (interactive) (tempel-insert 'verse)))
     ("w" "Wrap block" x/wrap-block)]
    ["Other"
     ("M-t" "Tempel insert" tempel-insert)
-    ("t" "Timestamp" ,(x/interactive-wrapper (tempel-insert 'time)))
-    ("d" "Day: 14(Fri)" ,(x/interactive-wrapper (tempel-insert 'day)))]])
+    ("t" "Timestamp" (lambda () (interactive) (tempel-insert 'time)))
+    ("d" "Day: 14(Fri)" (lambda () (interactive) (tempel-insert 'day)))]])
 
 (define-key org-mode-map (kbd "M-t") #'x/transient-template-org)
 
@@ -56,15 +56,15 @@
 (transient-define-prefix x/transient-template-elisp ()
   "Transient for Elisp Templates."
   [["Elisp Templates"
-    ("d" "Elisp header and footer" ,(x/interactive-wrapper (tempel-insert 'file-template)))
-    ("l" "Lambda" ,(x/interactive-wrapper (tempel-insert 'lambda)))
-    ("f" "Defun" ,(x/interactive-wrapper (tempel-insert 'fun)))
-    ("c" "Command" ,(x/interactive-wrapper (tempel-insert 'command)))
+    ("d" "Elisp header and footer" (lambda () (interactive) (tempel-insert 'file-template)))
+    ("l" "Lambda" (lambda () (interactive) (tempel-insert 'lambda)))
+    ("f" "Defun" (lambda () (interactive) (tempel-insert 'fun)))
+    ("c" "Command" (lambda () (interactive) (tempel-insert 'command)))
     ("M-t" "Tempel insert" tempel-insert)
-    ("M-l" "Let" ,(x/interactive-wrapper (tempel-insert 'let)))
-    ("v" "Defvar" ,(x/interactive-wrapper (tempel-insert 'var)))
-    ("M-c" "Defconst" ,(x/interactive-wrapper (tempel-insert 'const)))
-    ("S-c" "Defcustom" ,(x/interactive-wrapper (tempel-insert 'custom)))]])
+    ("M-l" "Let" (lambda () (interactive) (tempel-insert 'let)))
+    ("v" "Defvar" (lambda () (interactive) (tempel-insert 'var)))
+    ("M-c" "Defconst" (lambda () (interactive) (tempel-insert 'const)))
+    ("S-c" "Defcustom" (lambda () (interactive) (tempel-insert 'custom)))]])
 
 (define-key emacs-lisp-mode-map (kbd "M-t") #'x/transient-template-elisp)
 
@@ -72,9 +72,9 @@
 (transient-define-prefix x/transient-template-global ()
   "Transient for Global Templates."
   [["Global Templates"
-    ("d" "Git changelog" ,(x/interactive-wrapper (tempel-insert 'chglog)))
-    ("v" "Git app version" ,(x/interactive-wrapper (tempel-insert 'version)))
-    ("t" "Timestamp" ,(x/interactive-wrapper (tempel-insert 'time)))
+    ("d" "Git changelog" (lambda () (interactive) (tempel-insert 'chglog)))
+    ("v" "Git app version" (lambda () (interactive) (tempel-insert 'version)))
+    ("t" "Timestamp" (lambda () (interactive) (tempel-insert 'time)))
     ("M-t" "Tempel insert" tempel-insert)]])
 
 (global-set-key (kbd "M-t") #'x/transient-template-global)

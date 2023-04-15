@@ -205,7 +205,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("." "Dailies goto today" org-roam-dailies-goto-today :transient t)
     ("j" "Dailies next" org-roam-dailies-goto-next-note :transient t)
     ("k" "Dailies previous" org-roam-dailies-goto-previous-note :transient t)
-    ("3" "Insert journal in 2023" ,(x/interactive-wrapper (x--insert-journal-in-year 3)))
+    ("3" "Insert journal in 2023" (lambda () (interactive) (x--insert-journal-in-year 3) ))
     ("m" "Migrate journal" x--migrate-journal :transient t)]
    ["Anki"
     ("y" "Anki sync entry" org-anki-sync-entry)

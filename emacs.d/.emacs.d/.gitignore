@@ -1,5 +1,6 @@
 straight
 var
+tree-sitter
 
 local.el
 
