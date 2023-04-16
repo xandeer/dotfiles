@@ -125,9 +125,12 @@
     ("k" "Translate" gts-do-translate)
     ("i" "TTS EN" azure-tts-play-region-english)
     ("H-i" "TTS ZH" azure-tts-play-region-chinese)]
-   ["Consult rg"
-    ("s" "Rg current directory" (lambda () (interactive) (consult-ripgrep default-directory)))
-    ("H-s" "Rg project" consult-ripgrep)]])
+   ["Consult"
+    ("a" "agenda" consult-org-agenda)
+    ("d" "dir" consult-dir)
+    ("r" "roam search" consult-org-roam-search)
+    ("s" "rg current directory" (lambda () (interactive) (consult-ripgrep default-directory)))
+    ("H-s" "rg project" consult-ripgrep)]])
 
 (x/define-keys
  global-map

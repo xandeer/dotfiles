@@ -201,6 +201,9 @@ If BEG and END are not provided, the function operates on the entire buffer."
     (";" "Roam add tag" org-roam-tag-add)
     ("H-;" "Roam remove tag" org-roam-tag-remove)
     ("s" "Roam DB sync" org-roam-db-sync)]
+   ["Consult"
+    ("b" "backlinks" consult-org-roam-backlinks)
+    ("f" "forward links" consult-org-roam-forward-links)]
    ["Dailies"
     ("." "Dailies goto today" org-roam-dailies-goto-today :transient t)
     ("j" "Dailies next" org-roam-dailies-goto-next-note :transient t)
@@ -213,7 +216,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("v" "Ankify vocabulary" x/vocabulary-items)]
    ["Misc"
     ("l" "Remove links" x--remove-links)
-    ("f" "Fill subtree" x/fill-subtree)
+    ("F" "Fill subtree" x/fill-subtree)
     ("i" "Create ID" org-id-get-create)
     ("n" "Narrow" org-toggle-narrow-to-subtree)]])
 
