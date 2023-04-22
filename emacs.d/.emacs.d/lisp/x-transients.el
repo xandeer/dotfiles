@@ -110,6 +110,7 @@
     ("d" "Delete current buffer" x/delete-current-buffer)
     ("H-d" "Duplicate line" x/duplicate-line)]])
 
+(autoload 'consult-org-roam-search "consult-org-roam" nil t)
 (transient-define-prefix x/transient-search-group ()
   "Transient for searching."
   [["Search engine"
