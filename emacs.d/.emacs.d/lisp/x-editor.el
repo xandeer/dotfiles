@@ -109,12 +109,14 @@ If point was already at that position, move point to beginning of line."
                '(([remap kill-ring-save] easy-kill)
                  ([remap mark-sexp] easy-mark)))
 
-(setq whitespace-style '(newline newline-mark))
-(run-with-idle-timer 1 nil
-                     (lambda ()
-                       (global-whitespace-mode 1)
-                       (set-face-foreground 'whitespace-newline "gray75")
-                       (set-face-attribute 'whitespace-newline nil :height 0.7)))
+(defun x/init-whitespace-mode ()
+  "Initialize `whitespace-mode'."
+  (setq whitespace-style '(newline newline-mark))
+  (global-whitespace-mode 1)
+  (set-face-foreground 'whitespace-newline "gray75")
+  (set-face-attribute 'whitespace-newline nil :height 0.7))
+
+(run-with-idle-timer 1 nil 'x/init-whitespace-mode)
 
 (unless
     (fboundp 'auto-compression-mode)
