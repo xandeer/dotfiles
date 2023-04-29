@@ -11,7 +11,8 @@ TEMPERATURE is an optional parameter that controls the randomness of the model's
 
   (let* ((api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
          (url "https://api.openai.com/v1/edits")
-         (headers `(("Content-Type" . "application/json") ("Authorization" . ,(concat "Bearer " api-key))))
+         (headers `(("Content-Type" . "application/json")
+                    ("Authorization" . ,(concat "Bearer " api-key))))
          (data `((model . ,model)
                  (input . ,input)
                  (instruction . ,instruction)
@@ -76,20 +77,24 @@ text.  If AUTOSAVE is non-nil, the buffer will be saved after processing."
   ["GPT edit"
    ["Text"
     ("c" "Chinese" (lambda () (interactive)
-                     (gpt-elisp-edit-text "Rewrite into Chinese")))
+                     (gpt-elisp-edit-text "Rewrite into simple Chinese")))
     ("e" "English" (lambda () (interactive)
-                     (gpt-elisp-edit-text "Rewrite into English, without ended newline")))
+                     (gpt-elisp-edit-text "Rewrite into English")))
     ("g" "Git commit message" (lambda () (interactive)
                                 (gpt-elisp-edit-text "Rewrite into English, and make it shorter for git commit message, capialize the word after :")))]
    ["Code"
     ("d" "Doc String" (lambda () (interactive)
-                        (gpt-elisp-edit-code (concat "Rewrite with "
+                        (gpt-elisp-edit-code (concat "This is "
                                                      (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))
-                                                     " doc string"))))]])
+                                                     " code, write documentation"))))
+    ("i" "Implement comments" (lambda () (interactive)
+                        (gpt-elisp-edit-code (concat "You're "
+                                                     (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))
+                                                     " expert, implement the comments into code"))))]])
 
-(x/define-keys
- global-map
- '(("H-g" x/gpt-edit-group)))
+;; (x/define-keys
+;;  global-map
+;;  '(("H-g" x/gpt-edit-group)))
 
 (provide 'x-gpt)
 ;;; x-gpt.el ends here

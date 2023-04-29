@@ -120,6 +120,7 @@
 (require 'x-eva)
 (require 'x-flycheck)
 (require 'x-folding)
+(require 'x-gpt-completion)
 (require 'x-hippie-expand)
 (require 'x-jieba)
 (require 'x-lispy)
