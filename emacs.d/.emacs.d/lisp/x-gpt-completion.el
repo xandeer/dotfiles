@@ -54,6 +54,35 @@ corresponding to the 'message' key of the first choice object."
     ;; (message "Assistant's choice: %s" choice)
     (cdr (caddr (assoc 'message choice)))))
 
+(defun x/gpt-org-mode-instruction (instruction)
+  "Modify INSTRUCTION to request Org-mode markup syntax."
+  (concat instruction
+          " Use org-mode markup syntax instead of markdown. Headings should start at 3rd level like '*** hello'."))
+
+(defun x/gpt-insert-into-buffer (buffer content operation &optional instruction selected-text point-start point-end)
+  "Insert CONTENT into BUFFER according to OPERATION.
+
+BUFFER is the target buffer, CONTENT is the text to be inserted,
+OPERATION is one of 'replace', 'append', or 'buffer'.  If
+USED-REGION is non-nil, REGION-END-SAVED and POINT-MAX-SAVED are
+used to determine the insertion point."
+  (with-current-buffer buffer
+    (pcase operation
+      ('append (progn
+                 (goto-char point-end)
+                 (x/gpt-insert-separated-lines)))
+      ('buffer (progn
+                 (switch-to-buffer-other-window buffer)
+                 (unless (eq major-mode 'org-mode)
+                   (org-mode))
+                 (goto-char (point-max))
+                 (x/gpt-insert-separated-lines)
+                 (insert (concat "** Instruction:\n" instruction "\n"))
+                 (insert (concat "** Content:\n" selected-text "\n"))
+                 (insert "** GPT:\n")))
+      (_ (delete-region point-start point-end)))
+    (insert content)))
+
 (defun x/gpt-completion-edit (instruction &optional gpt-4? operation)
   "Request GPT model to generate completion based on `INSTRUCTION'.
 
@@ -70,20 +99,12 @@ and other symbols display the completion as a message."
       (setq x/gpt-completion-edit-buffer (current-buffer)))
   (with-current-buffer
       x/gpt-completion-edit-buffer
-    (let ((selected-text (if (use-region-p)
-                             (buffer-substring-no-properties (region-beginning) (region-end))
-                           (buffer-string)))
-          (initial-point (point))
-          (used-region (use-region-p))
-          (region-beginning-saved (if (use-region-p) (region-beginning) nil))
-          (region-end-saved (if (use-region-p) (region-end) nil))
-          (point-max-saved (point-max))
-          (point-min-saved (point-min))
-          (original-buffer (current-buffer)))
+    (let* ((point-start (if (use-region-p) (region-beginning) (point-min)))
+           (point-end (if (use-region-p) (region-end) (point-max)))
+           (selected-text (buffer-substring-no-properties point-start point-end))
+           (original-buffer (current-buffer)))
       (when (eq operation 'buffer)
-        (setq instruction
-              (concat instruction
-                      " Use org-mode markup syntax instead of markdown. `hello` should be =hello=. Heading start at 3th level like '*** hello'.")))
+        (setq instruction (x/gpt-org-mode-instruction instruction)))
       (deactivate-mark)
       (x/gpt-completion
        instruction
@@ -92,35 +113,16 @@ and other symbols display the completion as a message."
                       (let* ((content (x/gpt-completion-parse-message data))
                              (op (or operation 'replace))
                              (buffer (if (eq op 'buffer) x/gpt-buffer
-                                       x/gpt-completion-edit-buffer)))
+                                       original-buffer)))
                         (if (eq op 'message)
                             (kill-new (message content))
-                          (with-current-buffer (get-buffer-create buffer)
-                            (pcase op
-                              ('append (progn
-                                         (goto-char (if used-region region-end-saved
-                                                      point-max-saved))
-                                         (x/gpt-insert-separated-lines)))
-                              ('buffer (progn
-                                         (switch-to-buffer-other-window buffer)
-                                         (unless (eq major-mode 'org-mode)
-                                           (org-mode))
-                                         (goto-char (point-max))
-                                         (x/gpt-insert-separated-lines)
-                                         (insert (concat "** Instruction:\n" instruction "\n"))
-                                         (insert (concat "** Content:\n" selected-text "\n"))
-                                         (insert "** GPT:\n")))
-                              (_ (if used-region
-                                     (delete-region region-beginning-saved region-end-saved)
-                                   (delete-region point-min-saved point-max-saved))))
-                            (insert content))))))
+                          (x/gpt-insert-into-buffer buffer content op instruction selected-text point-start point-end)))))
        gpt-4?))))
 
 (defun x/gpt-insert-separated-lines ()
   "Insert two line breaks at the end of the current line to separate the text."
-  (end-of-line)
-  (newline)
-  (newline))
+  (goto-char (line-end-position))
+  (insert "\n\n"))
 
 (defun x/gpt-completion-prefix-for-code (instruction)
   "Construct a GPT code prompt prefix based on the current major mode.
@@ -132,17 +134,24 @@ INSTRUCTION is the message of the GPT completions."
           instruction))
 
 (defun x/gpt-completion-edit-code (instruction &optional operation)
-  "Request a gpt-4 completion for the given INSTRUCTION."
+  "Use GPT completion result with to edit the selected code.
+
+`INSTRUCTION' is a string representing the task to be completed.
+`OPERATION' determines how the result will be inserted into the buffer.
+It accepts two values:
+  'buffer: append the result in `x/gpt-buffer'
+  'replace: replace current region with result
+
+If no OPERATION is provided, it defaults to 'replace, if '--buffer' is
+in the list returned by `x/gpt-completion-args', otherwise 'replace."
   (interactive "sInstruction: ")
-  (x/gpt-completion-edit
-   (x/gpt-completion-prefix-for-code instruction)
-   t
-   (or operation
-       (pcase (x/gpt-completion-args)
-         ;; ((pred (lambda (args) (member "--append" args))) 'append)
-         ((pred (lambda (args) (member "--buffer" args))) 'buffer)
-         ;; ((pred (lambda (args) (member "--message" args))) 'message)
-         (_ 'replace)))))
+  (let ((prefixed-instruction (x/gpt-completion-prefix-for-code instruction))
+        (chosen-operation
+         (or operation
+             (if (member "--buffer" (x/gpt-completion-args))
+                 'buffer
+               'replace))))
+    (x/gpt-completion-edit prefixed-instruction t chosen-operation)))
 
 (defun x/gpt-completion-edit-text (instruction &optional gpt-4?)
   "Request a GPT completion for the given INSTRUCTION.
@@ -218,7 +227,7 @@ The selected or entered instruction is passed to the function
     ("r" "Review"
      (lambda () (interactive)
        (x/gpt-completion-edit-code
-        "Review code and provide improvement suggestions in Chinese for readability, efficiency, and best practices."
+        "Review code. 1. Provide improvement suggestions in Chinese for readability, efficiency, and best practices. 2. Identify issues."
         'buffer)))]])
 
 (x/define-keys
