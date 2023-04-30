@@ -69,6 +69,11 @@ text.  If AUTOSAVE is non-nil, the buffer will be saved after processing."
   (gpt-elisp-edit-generic "code-davinci-edit-001" instruction t))
 
 (defun gpt-elisp-edit-text (instruction)
+  "Edit text using GPT-3 based on the given INSTRUCTION.
+
+Interactively, prompt for an instruction to be passed to GPT.  This function
+utilizes the `gpt-elisp-edit-generic' function configured with the GPT-3 model
+called 'text-davinci-edit-001'.  The edited text is inserted at point."
   (interactive "sInstruction: ")
   (gpt-elisp-edit-generic "text-davinci-edit-001" instruction t))
 
