@@ -150,6 +150,7 @@ which will be called after the download is finished."
          (download-path (concat
                          (azure-tts--download-file-path url-request-data)
                          ".mp3")))
+    (kill-new download-path)
     (if (file-exists-p download-path)
         (funcall callback download-path)
       (url-retrieve
