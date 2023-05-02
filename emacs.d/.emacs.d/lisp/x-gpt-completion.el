@@ -104,6 +104,7 @@ and other symbols display the completion as a message."
            (selected-text (buffer-substring-no-properties point-start point-end))
            (original-buffer (current-buffer)))
       (when (eq operation 'buffer)
+        (get-buffer-create x/gpt-buffer)
         (setq instruction (x/gpt-org-mode-instruction instruction)))
       (deactivate-mark)
       (x/gpt-completion
