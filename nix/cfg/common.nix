@@ -46,6 +46,7 @@
     # starship
     tldr
     tree
+    enchant2
 
     (pass.withExtensions (exts: [ exts.pass-otp ]))
     hledger

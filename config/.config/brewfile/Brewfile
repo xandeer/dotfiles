@@ -3,6 +3,8 @@
 
 tap homebrew/core
 brew aom
+brew aribb24
+brew aspell
 brew autoconf
 brew awk
 brew bdw-gc
@@ -148,6 +150,7 @@ brew snappy
 brew speex
 brew sqlite
 brew srt
+brew svt-av1
 brew tesseract
 brew texinfo
 brew theora

@@ -23,21 +23,30 @@
 ;; (define-key corfu-map [escape] #'corfu-quit)
 (global-corfu-mode)
 
+;;; corfu-history
+(corfu-history-mode 1)
+(add-to-list 'savehist-additional-variables 'corfu-history)
+
+;;; corfu-quick
+(x/define-keys
+ corfu-map
+ '(("M-q" corfu-quick-complete)
+   ("C-q" corfu-quick-insert)))
+
 ;;; icon
 (require 'kind-icon)
 
 (setq kind-icon-default-face 'corfu-default)
 (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
-;;; corfu-doc
-(require 'corfu-doc)
+;;; corfu-popupinfo
+(corfu-popupinfo-mode 1)
 
-(add-hook 'corfu-mode-hook #'corfu-doc-mode)
-
-(x/define-keys corfu-map
-               '(("M-d" corfu-doc-toggle)
-                 ("M-n" corfu-doc-scroll-up)
-                 ("M-p" corfu-doc-scroll-down)))
+(x/define-keys
+ corfu-map
+ '(("M-d" corfu-popupinfo-toggle)
+   ("M-n" corfu-popupinfo-scroll-up)
+   ("M-p" corfu-popupinfo-scroll-down)))
 
 ;;; cape
 (setq cape-dabbrev-min-length 2)
@@ -78,7 +87,7 @@
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
 
 ;;; copilot
-(add-hook 'prog-mode-hook #'copilot-mode)
+(add-hook 'prog-mode-hook 'copilot-mode)
 
 (defun x/tab ()
   (interactive)
@@ -86,7 +95,16 @@
       (not (= (corfu-next) -1))
       (indent-for-tab-command)))
 
-(global-set-key (kbd "TAB") #'x/tab)
+(with-eval-after-load 'copilot
+  (x/define-keys
+   copilot-mode-map
+   '(("TAB" x/tab)
+     ("C-<tab>" copilot-clear-overlay)
+     ("M-<tab>" copilot-next-completion))))
+
+(x/define-keys
+ global-map
+ '(("TAB" x/tab)))
 
 (provide 'x-completion)
 ;;; x-completion.el ends here

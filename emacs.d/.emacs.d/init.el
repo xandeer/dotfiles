@@ -117,7 +117,7 @@
 (require 'x-dired)
 (require 'x-draw)
 (require 'x-embark)
-(require 'x-eva)
+;; (require 'x-eva)
 (require 'x-flycheck)
 (require 'x-folding)
 (require 'x-gpt-completion)
@@ -160,8 +160,9 @@
   ;; (unless (server-running-p)
   ;; (server-start))
   (org-roam-node-random)
-  (eva-mode)
-  (eva-set-date-today)
+  ;; something wrong with emacs 30
+  ;; (eva-mode)
+  ;; (eva-set-date-today)
   (x/start-timer-session))
 
 (let ((init-fn

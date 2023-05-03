@@ -90,6 +90,8 @@ Usages:
     htmlize
     hungry-delete
     ;; indent-tools
+    ;; spell checker
+    (jinx . ("minad/jinx" :files ("*.el"  "*.c" "*.h")))
     mmm-mode
     page-break-lines
     quick-peek
@@ -117,8 +119,7 @@ Usages:
     (cape  . "minad/cape")
     company
     (copilot . ("zerolfx/copilot.el" :files ("*.el" "dist")))
-    corfu
-    (corfu-doc . "galeo/corfu-doc")
+    (corfu . ("minad/corfu" :files ("*.el" "extensions/*.el")))
     ;; (kind-icon . "jdtsmith/kind-icon")
     ;; required by hind-icon
     ;; (svg-lib . "rougier/svg-lib")

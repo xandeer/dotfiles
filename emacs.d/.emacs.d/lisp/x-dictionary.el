@@ -105,5 +105,7 @@
 ;; (x/package-use '(insert-translated-name . ("manateelazycat/insert-translated-name" :files ("*.el" "*.ts"))))
 ;; (require 'insert-translated-name)
 
+(add-hook 'emacs-startup-hook 'global-jinx-mode)
+
 (provide 'x-dictionary)
 ;;; x-dictionary.el ends here

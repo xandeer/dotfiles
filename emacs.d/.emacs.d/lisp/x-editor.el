@@ -28,7 +28,8 @@ This will create a new function `x/upcase-word-backward` that calls  `upcase-wor
                  ("t" titlecase-line)
                  ("M-u" ,(x/defun-backward upcase-word))
                  ("M-l" ,(x/defun-backward downcase-word))
-                 ("M-c" ,(x/defun-backward capitalize-word))))
+                 ("M-c" ,(x/defun-backward capitalize-word))
+                 ("s" jinx-correct)))
 
 (x/define-keys ctl-x-map
                '(("c" x/case-map)
