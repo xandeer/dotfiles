@@ -54,11 +54,6 @@ corresponding to the 'message' key of the first choice object."
     ;; (message "Assistant's choice: %s" choice)
     (cdr (caddr (assoc 'message choice)))))
 
-(defun x/gpt-org-mode-instruction (instruction)
-  "Modify INSTRUCTION to request Org-mode markup syntax."
-  (concat instruction
-          " Use org-mode markup syntax instead of markdown. Headings should start at 3rd level like '*** hello'."))
-
 (defun x/gpt-insert-into-buffer (buffer content operation &optional instruction selected-text point-start point-end)
   "Insert CONTENT into BUFFER according to OPERATION.
 
@@ -81,7 +76,7 @@ used to determine the insertion point."
                  (insert (concat "** Content:\n" selected-text "\n"))
                  (insert "** GPT:\n")))
       (_ (delete-region point-start point-end)))
-    (insert content)))
+    (insert (gptel--convert-markdown->org content))))
 
 (defun x/gpt-completion-edit (instruction &optional gpt-4? operation)
   "Request GPT model to generate completion based on `INSTRUCTION'.
@@ -104,8 +99,7 @@ and other symbols display the completion as a message."
            (selected-text (buffer-substring-no-properties point-start point-end))
            (original-buffer (current-buffer)))
       (when (eq operation 'buffer)
-        (get-buffer-create x/gpt-buffer)
-        (setq instruction (x/gpt-org-mode-instruction instruction)))
+        (get-buffer-create x/gpt-buffer))
       (deactivate-mark)
       (x/gpt-completion
        instruction
@@ -122,7 +116,8 @@ and other symbols display the completion as a message."
 
 (defun x/gpt-insert-separated-lines ()
   "Insert two line breaks at the end of the current line to separate the text."
-  (goto-char (line-end-position))
+  (unless (eolp)
+    (goto-char (line-end-position)))
   (insert "\n\n"))
 
 (defun x/gpt-completion-prefix-for-code (instruction)
@@ -201,13 +196,13 @@ The selected or entered instruction is passed to the function
    ["Text"
     ("c" "Chinese"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "You're an translator. Rewrite into simple Chinese")))
+       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into simple Chinese, just give rewritten text.")))
     ("e" "English"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Rewrite into English, just give rewriten text")))
+       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("g" "Git commit message"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Rewrite into English, make it shorter for git commit message, capialize the word after :")))
+       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, make it shorter for git commit message, capitalize the word after :")))
     ("n" "Without instruction"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Let's think step by step.")))
@@ -215,20 +210,20 @@ The selected or entered instruction is passed to the function
    ["Code"
     ("d" "Doc String"
      (lambda () (interactive)
-       (x/gpt-completion-edit-code "Rewrite with concise and high quality docstring, every line must in 80 columns.")))
+       (x/gpt-completion-edit-code "Let's think step by step. Rewrite with concise and high quality docstring, every line must in 80 columns.")))
     ("i" "Implement comments"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
     ("s" "Explain step by step"
      (lambda () (interactive)
-       (x/gpt-completion-edit-code "Explain the code step by step using Chinese as comments.")))
+       (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments.")))
     ("o" "Optimize"
      (lambda () (interactive)
-       (x/gpt-completion-edit-code "Optimize the provided code for performance and maintainability.")))
+       (x/gpt-completion-edit-code "Let's think step by step. Optimize the provided code for performance and maintainability.")))
     ("r" "Review"
      (lambda () (interactive)
        (x/gpt-completion-edit-code
-        "Review code. 1. Provide improvement suggestions in Chinese for readability, efficiency, and best practices. 2. Identify issues."
+        "Review code: 1. Provide improvement suggestions for readability, efficiency, and best practices. 2. Identify issues. Let's think step by step. Use concise Chinese to answer."
         'buffer)))]])
 
 (x/define-keys
