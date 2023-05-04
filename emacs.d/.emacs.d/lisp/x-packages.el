@@ -208,6 +208,7 @@ Usages:
     ace-pinyin
     cal-china-x
     ebuku
+    (emacs-everywhere . "tecosaur/emacs-everywhere")
     embark
     embark-consult
     (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))

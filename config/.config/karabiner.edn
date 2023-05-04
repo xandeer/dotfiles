@@ -135,6 +135,9 @@
   ;;          ;; [:!COSe [:open "Emacs"]]
   ;;          ]}
 
+  {:des "launch emacsclient"
+   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient --eval \"(emacs-everywhere)\""]]}
+
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
            [:!COSr :!CS4]
@@ -153,9 +156,9 @@
            [:!Ox :!COSf1]]}
 
   ;; doesn't work
-  {:des "Raycast shortcuts"
-   :rules [:raycast
-           [:Tg :!Cw]]}
+  ;; {:des "Raycast shortcuts"
+  ;;  :rules [:raycast
+  ;;          [:Tg :!Cw]]}
 
   {:des "Edge"
    :rules [:edge
