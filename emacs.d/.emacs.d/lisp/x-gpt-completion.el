@@ -202,7 +202,7 @@ The selected or entered instruction is passed to the function
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("g" "Git commit message"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, make it shorter for git commit message, capitalize the word after :")))
+       (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message, capitalize the word after :, just return rewritten text.")))
     ("n" "Without instruction"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Let's think step by step.")))

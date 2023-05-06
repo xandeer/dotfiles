@@ -5,7 +5,6 @@
     [
       ../../cfg/darwin.nix
     ];
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
@@ -22,6 +21,9 @@
   # $ sysctl -n hw.ncpu
   nix.settings.max-jobs = 4;
   nix.settings.cores = 4;
+
+  # https://mirrors.ustc.edu.cn/help/nix-channels.html
+  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
 
   nixpkgs.config.allowBroken = true;
 }
