@@ -217,9 +217,9 @@ reads the sentence before point, and prints the ChatGPT's answer."
 (setq-default gptel-model "gpt-4")
 
 ;;; chatgpt-shell
-(x/package-use '(chatgpt-shell . "xenodium/chatgpt-shell"))
-(require 'chatgpt-shell)
-(setq chatgpt-shell-openai-key (doctor-chatgpt-api-token))
+;; (x/package-use '(chatgpt-shell . "xenodium/chatgpt-shell"))
+;; (require 'chatgpt-shell)
+;; (setq chatgpt-shell-openai-key (doctor-chatgpt-api-token))
 
 ;;; org-ai
 ;; (x/package-use '(org-ai . "rksm/org-ai"))

@@ -139,11 +139,11 @@
   (with-eval-after-load 'nov-xwidget
     (x/define-keys nov-mode-map '(("V" nov-xwidget-view)))))
 
-(x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
-(require 'nov-xwidget)
-(x/define-keys nov-xwidget-webkit-mode-map
-               '(("n" nov-xwidget-next-document)
-                 ("p" nov-xwidget-previous-document)))
+;; (x/package-use '(nov-xwidget . "chenyanming/nov-xwidget"))
+;; (require 'nov-xwidget)
+;; (x/define-keys nov-xwidget-webkit-mode-map
+;;                '(("n" nov-xwidget-next-document)
+;;                  ("p" nov-xwidget-previous-document)))
 
 (provide 'x-shr)
 ;;; x-shr.el ends here
