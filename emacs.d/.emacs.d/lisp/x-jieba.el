@@ -4,6 +4,7 @@
 
 ;; 使用 jieba 中文分词
 ;; prepare: cd ~/.emacs.d/straight/repos/jieba.el; yarn
+(setq jieba-server-start-args '("/run/current-system/sw/bin/node" "simple-jieba-server.js"))
 (x/append-init-hook #'jieba-mode)
 
 (provide 'x-jieba)
