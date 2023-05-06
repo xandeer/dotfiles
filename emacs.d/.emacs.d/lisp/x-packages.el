@@ -108,7 +108,7 @@ Usages:
     doom-modeline
     default-text-scale
     orderless
-    vertico
+    (vertico . ("minad/vertico" :files ("*.el" "extensions/*.el")))
     (vertico-posframe . "tumashu/vertico-posframe")
 
 ;;; window
@@ -209,7 +209,7 @@ Usages:
     cal-china-x
     ebuku
     (emacs-everywhere . "tecosaur/emacs-everywhere")
-    embark
+    (embark . ("oantolin/embark" :files (:defaults "*.el")))
     embark-consult
     (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
     dired-hacks
