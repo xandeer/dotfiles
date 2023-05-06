@@ -274,7 +274,6 @@
 ;;; org modern and faces
 (with-eval-after-load 'org-modern
   (setq org-modern-star '("♥" "◉" "◈" "◇"))
-  (set-face-attribute 'org-modern-block-keyword nil :family "Bookerly" :slant 'italic)
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
   ;; (set-face-attribute 'org-modern-time-active nil :background "gray92")
   (set-face-attribute 'org-modern-date-active nil :background "#c88562" :foreground "white" :distant-foreground "black")
@@ -319,10 +318,11 @@
 (with-eval-after-load 'embark
   (add-to-list 'marginalia-prompt-categories '("Go to heading" . consult-org-heading))
   ;; doesn't work without the context
-  (embark-define-keymap embark-org-heading-map
-    "Keymap for embark org heading."
-    ("i" org-clock-in)
-    ("r" org-refile))
+  (defvar-keymap embark-org-heading-map
+    :doc "Keymap for embark org heading."
+    :parent embark-org-heading-map
+    "i" 'org-clock-in
+    "r" 'org-refile)
   (add-to-list 'embark-keymap-alist '(consult-org-heading embark-org-heading-map))
 
   (x/define-keys embark-heading-map
