@@ -21,6 +21,7 @@ brew dav1d
 brew docbook
 brew docbook-xsl
 brew dust
+brew enchant
 brew exercism
 brew ffmpeg
 brew flac
@@ -43,6 +44,7 @@ brew gnupg
 brew gnutls
 brew gobject-introspection
 brew graphite2
+brew grep
 brew guile
 brew harfbuzz
 brew highway
