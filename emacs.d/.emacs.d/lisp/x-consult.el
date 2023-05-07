@@ -20,8 +20,8 @@
       xref-show-definitions-function #'consult-xref)
 
 (setq consult-async-min-input 1)
-(setq consult-ripgrep-args "rg --null --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
-   --smart-case --no-heading --line-number .")
+;; (setq consult-ripgrep-args "rg --null --hidden --line-buffered --color=never --max-columns=1000 --path-separator /\
+;;    --smart-case --no-heading --line-number .")
 
 (autoload 'projectile-project-root "projectile")
 (setq consult-project-root-function #'projectile-project-root)
@@ -62,7 +62,8 @@
 (x/define-keys
  x/meta-s-map
  '(("l" consult-focus-lines)
-   ("s" x/consult-line-dwim)))
+   ("s" x/consult-line-dwim)
+   ("M-s" x/consult-line-dwim)))
 
 (provide 'x-consult)
 ;;; x-consult.el ends here
