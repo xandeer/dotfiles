@@ -105,6 +105,24 @@
 ;; (x/package-use '(insert-translated-name . ("manateelazycat/insert-translated-name" :files ("*.el" "*.ts"))))
 ;; (require 'insert-translated-name)
 
+;;; jinx: spell check
+(setq jinx-exclude-regexps
+      '((emacs-lisp-mode "Package-Requires:.*$")
+        (t
+         ;; non ASCII
+         "\\cc"
+         ;; Uppercase words
+         "[A-Z]+\\>"
+         ;; Words with numbers, hex codes
+         "\\w*?[0-9]\\w*\\>"
+         ;; URI
+         "[a-z]+://\\S-+"
+         ;; Email
+         "<?[-+_.~a-zA-Z][-+_.~:a-zA-Z0-9]*@[-.a-zA-Z0-9]+>?"
+         ;; Local variable indicator
+         "\\(?:Local Variables\\|End\\):\\s-*$"
+         ;; Local variables
+         "jinx-\\(?:languages\\|local-words\\):\\s-+.*$")))
 (add-hook 'emacs-startup-hook 'global-jinx-mode)
 
 (provide 'x-dictionary)
