@@ -31,7 +31,5 @@
 ;; doesn't work on mac
 ;; (set-frame-parameter nil 'alpha-background 50)
 
-(setq package-enable-at-startup nil)
-
 (provide 'early-init)
 ;;; early-init.el ends here
