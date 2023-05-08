@@ -80,6 +80,7 @@
      ("j"  dired-next-line)
      ("k"  dired-previous-line)
      ("l"  dired-find-file)
+     ("r"  x/reveal-in-finder)
      ("."  dirvish))))
 
 (require 'dired-x)

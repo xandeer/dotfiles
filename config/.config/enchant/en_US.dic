@@ -23,3 +23,5 @@ js
 rimraf
 svgs
 util
+clojure
+exercism
