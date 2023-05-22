@@ -24,8 +24,9 @@ gpt-4 model; otherwise, it uses the gpt-3.5-turbo model."
          (url "https://api.openai.com/v1/chat/completions")
          (headers `(("Content-Type" . "application/json")
                     ("Authorization" . ,(concat "Bearer " api-key))))
-         (data `((model . ,(if gpt-4? "gpt-4"
-                             "gpt-3.5-turbo"))
+         (data `((model . "gpt-4")
+                 ;; (model . ,(if gpt-4? "gpt-4"
+                 ;;             "gpt-3.5-turbo"))
                  (messages . (((role . "system") (content . ,instruction))
                               ((role . "user") (content . ,message))))))
          (request-backend 'curl))
