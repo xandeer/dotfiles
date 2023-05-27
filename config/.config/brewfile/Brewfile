@@ -42,6 +42,7 @@ brew gnu-sed
 brew gnu-tar
 brew gnupg
 brew gnutls
+brew go
 brew gobject-introspection
 brew graphite2
 brew grep
@@ -120,14 +121,18 @@ brew mpg123
 brew nettle
 brew node
 brew node@16
+brew node@18
 brew npth
+brew nushell
 brew nvm
+brew oh-my-posh
 brew onefetch
 brew opencore-amr
 brew openexr
 brew openjdk
 brew openjpeg
 brew openssl@1.1
+brew openssl@3
 brew opus
 brew p11-kit
 brew pango
@@ -200,6 +205,8 @@ brew bore
 
 tap git-chglog/git-chglog
 brew git-chglog
+
+tap jandedobbeleer/oh-my-posh
 
 tap rcmdnk/file
 brew brew-file
