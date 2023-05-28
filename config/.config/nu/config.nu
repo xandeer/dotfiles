@@ -367,3 +367,9 @@ source ./alias.nu
 # cd HERE
 # oh-my-posh init nu --print | save oh-my-posh.nu --force
 source ./oh-my-posh.nu
+
+# plugins
+source plugins/init.nu
+
+# completions
+source completions/init.nu

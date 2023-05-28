@@ -97,7 +97,7 @@
 ;;; languages
 (require 'x-clojure)
 (require 'x-elisp)
-(require 'x-elixir)
+;; (require 'x-elixir)
 (require 'x-json)
 (require 'x-kotlin)
 (require 'x-racket)
@@ -158,7 +158,7 @@
   (interactive)
   ;; (require 'server)
   ;; (unless (server-running-p)
-  ;; (server-start))
+  (server-start)
   (org-roam-node-random)
   ;; something wrong with emacs 30
   ;; (eva-mode)

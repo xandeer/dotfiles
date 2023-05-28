@@ -98,8 +98,5 @@
   (interactive)
   (x/start-process (osx-lib-get-from-clipboard)))
 
-;;; nushell
-(x/package-use '(nushell-mode "azzamsa/emacs-nushell"))
-
 (provide 'x-sh)
 ;;; x-sh.el ends here

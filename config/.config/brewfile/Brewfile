@@ -176,6 +176,7 @@ brew xvid
 brew xz
 brew zeromq
 brew zimg
+brew zoxide
 brew zstd
 
 tap homebrew/cask-versions
@@ -187,6 +188,7 @@ tap homebrew/cask
 cask alt-tab
 cask docker
 cask karabiner-elements
+cask kitty
 cask raycast
 cask showyedge
 cask sioyek

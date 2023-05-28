@@ -162,10 +162,10 @@ Usages:
     multiple-cursors
 
     ;; elixir
-    elixir-mode
-    alchemist
-    exunit
-    flycheck-credo
+    ;; elixir-mode
+    ;; alchemist
+    ;; exunit
+    ;; flycheck-credo
 
     ;; json
     json-mode
@@ -176,6 +176,8 @@ Usages:
     kotlin-mode
     flycheck-kotlin
     (ob-kotlin . "zweifisch/ob-kotlin")
+
+    (nushell-mode . "azzamsa/emacs-nushell")
 
     ;; web
     ;; company-web
@@ -211,7 +213,7 @@ Usages:
     (emacs-everywhere . "tecosaur/emacs-everywhere")
     (embark . ("oantolin/embark" :files (:defaults "*.el")))
     embark-consult
-    (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
+    ;; (eva . ("meedstrom/eva" :files (:defaults "assets" "renv" "*.R" "*.gnuplot")))
     dired-hacks
     dirvish
     go-translate
