@@ -3,3 +3,6 @@ checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
 
 [doom]
 checkout = git clone 'git@github.com:doomemacs/doomemacs.git' 'doom'
+
+[nu_scripts]
+checkout = git clone 'git@github.com:nushell/nu_scripts.git' 'nu_scripts'
