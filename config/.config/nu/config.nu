@@ -361,8 +361,6 @@ let-env config = {
   ]
 }
 
-source ./alias.nu
-
 # oh-my-posh font install
 # cd HERE
 # oh-my-posh init nu --print | save oh-my-posh.nu --force
@@ -373,3 +371,5 @@ source plugins/init.nu
 
 # completions
 source completions/init.nu
+
+source ./alias.nu
