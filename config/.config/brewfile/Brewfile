@@ -179,6 +179,9 @@ brew zimg
 brew zoxide
 brew zstd
 
+tap homebrew/cask-fonts
+cask font-fira-code-nerd-font
+
 tap homebrew/cask-versions
 cask clashx-pro
 
