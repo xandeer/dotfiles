@@ -202,7 +202,7 @@ cask zotero
 tap candid82/brew
 
 tap d12frosted/emacs-plus
-brew emacs-plus@29 --with-xwidgets --with-imagemagick
+# brew emacs-plus@29 --with-xwidgets --with-imagemagick
 brew emacs-plus@30 --with-xwidgets --with-imagemagick
 
 tap ekzhang/bore
