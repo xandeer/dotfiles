@@ -63,7 +63,8 @@
  x/meta-s-map
  '(("l" consult-focus-lines)
    ("s" x/consult-line-dwim)
-   ("M-s" x/consult-line-dwim)))
+   ("M-s" x/consult-line-dwim)
+   ("i" consult-imenu)))
 
 (provide 'x-consult)
 ;;; x-consult.el ends here
