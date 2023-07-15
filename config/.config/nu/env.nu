@@ -18,3 +18,5 @@ def-env ensure-path [new_path: string] {
 ensure-path '/run/current-system/sw/bin'
 ensure-path '/opt/homebrew/bin'
 ensure-path $'($env.HOME)/bin'
+
+let-env NIX_PATH = $'darwin-config=/nix/var/nix/profiles/per-user/root/channels:($env.HOME)/.nix-defexpr/channels'

@@ -6,7 +6,7 @@ IS_TERMUX := $(shell command -v $(TERMUX_CHECK))
 
 UNAME := $(shell uname -s)
 # CONFIGS := doom fonts git mr tmux zsh ideavim bin
-CONFIGS := config mr tmux zsh bin lein stardict gpg wakatime authinfo ssh npm fly
+CONFIGS := config mr zsh bin lein stardict gpg wakatime authinfo ssh npm fly
 
 ifneq ($(IS_TERMUX),)
 UNAME := TERMUX
@@ -18,31 +18,17 @@ endif
 
 ifeq ($(UNAME), Linux)
 CONFIGS += compton i3 polybar rofi xresources
-MACHINE := nix-14
-NIX_TARGET := /
-NIX_SUDO := sudo
-NIX_DIR := /etc/nixos/
 endif
 
-ifeq ($(UNAME), Darwin)
-MACHINE := darwin-17
-NIX_TARGET := $(HOME)
-NIX_SUDO :=
-NIX_DIR := $(HOME)/.nixpkgs/
-endif
-
-MACHINE_DIR := $(CURDIR)/nix/machines/$(MACHINE)
 
 .PHONY: install
 install: ## Install the dotfiles by stow.
 	mkdir -p $(HOME)/.local/share
+	mkdir -p $(HOME)/.config/nix-darwin
+	cp -a $(CURDIR)/nix/* $(HOME)/.config/nix-darwin/
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
-	if test -z "$(IS_TERMUX)"; then \
-		$(NIX_SUDO) stow -d $(MACHINE_DIR) -t $(NIX_TARGET) nix; \
-		$(NIX_SUDO) ln -sf $(MACHINE_DIR)/*.nix $(NIX_DIR); \
-	fi
 
 .PHONY: update
 update: pull install ## Git pull and install all.

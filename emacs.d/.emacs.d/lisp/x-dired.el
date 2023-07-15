@@ -86,11 +86,18 @@
 (require 'dired-x)
 
 (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
-(setq dired-omit-files "\\`[.]?#\\|\\`[.][.]?\\'\\|.DS_Store")
+;; KOReader
+(add-to-list 'dired-omit-extensions ".sdr")
+;; syncthing
+(setq dired-omit-files
+      (concat dired-omit-files "\\|" (rx ".stfolder" string-end)))
+(setq dired-omit-files
+      (concat dired-omit-files "\\|" (rx ".DS_Store" string-end)))
+
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
-(add-hook 'dired-mode-hook #'dired-collapse-mode)
-(remove-hook 'dired-mode-hook #'dired-collapse-mode)
+;; (add-hook 'dired-mode-hook #'dired-collapse-mode)
+;; (remove-hook 'dired-mode-hook #'dired-collapse-mode)
 
 (require 'dired-filter)
 (with-eval-after-load 'dired-filter
@@ -124,7 +131,9 @@
             (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))
            ("Symlinks" (symlink))
            ("Git"
-            (regexp . "^\\.git"))))))
+            (regexp . "^\\.git"))
+           ("KOReader"
+            (extension "sdr"))))))
 
 (require 'dired-rainbow)
 (with-eval-after-load 'dired-rainbow
