@@ -9,8 +9,9 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs }: {
     # Build darwin flake using:
-    # nix build .#darwinConfiguration.Kevins-Mac-Studio.system
-    # $ darwin-rebuild build --flake .#Kevins-Mac-Studio
+    # $ nix run nix-darwin -- switch --flake ~/.config/nix-darwin
+    # After the first installing:
+    # $ darwin-rebuild switch --flake ~/.config/nix-darwin
     darwinConfigurations."Kevins-Mac-Studio" = nix-darwin.lib.darwinSystem {
       modules = [
         ./aarch64-darwin.nix
@@ -18,6 +19,7 @@
       ];
     };
 
+    # $ hostname -s
     darwinConfigurations."Kevins-MacBook-Air" = nix-darwin.lib.darwinSystem {
       modules = [ ./aarch64-darwin.nix ];
     };
