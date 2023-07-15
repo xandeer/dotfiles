@@ -18,7 +18,7 @@
       ];
     };
 
-    darwinConfigurations."Kevins-Mac-Air" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."Kevins-MacBook-Air" = nix-darwin.lib.darwinSystem {
       modules = [ ./aarch64-darwin.nix ];
     };
 

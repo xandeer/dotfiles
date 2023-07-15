@@ -24,8 +24,10 @@ endif
 .PHONY: install
 install: ## Install the dotfiles by stow.
 	mkdir -p $(HOME)/.local/share
+# nix flake can't use soft link
 	mkdir -p $(HOME)/.config/nix-darwin
 	cp -a $(CURDIR)/nix/* $(HOME)/.config/nix-darwin/
+
 	for config in $(CONFIGS); do \
 		stow -d $(CURDIR) -t $(HOME) $$config; \
 	done
