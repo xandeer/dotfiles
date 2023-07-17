@@ -23,6 +23,7 @@
 (setq large-file-warning-threshold 30000000)
 (setq display-line-numbers-type nil)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq sentence-end-double-space nil)
 
 ;; prepend , in it
 ;; (setq sentence-end-base "[.?!…‽][]\"'”’)}»›,]*")

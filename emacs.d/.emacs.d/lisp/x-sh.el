@@ -15,6 +15,8 @@
 
 (setq sh-shell-file "/bin/sh")
 
+(setq eshell-scroll-to-bottom-on-input 'this)
+
 (with-eval-after-load 'eshell
   (with-eval-after-load 'consult
     (defvar consult--eshell-history nil)

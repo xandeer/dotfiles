@@ -15,6 +15,7 @@
   (setq dired-create-destination-dirs 'always)
   (setq dired-mouse-drag-files t)
   (setq dired-kill-when-opening-new-dired-buffer t)
+  (setq dired-auto-revert-buffer t)
 
   (setq dirvish-attributes '(all-the-icons file-size collapse subtree-state vc-state git-msg))
   ;; (dirvish-override-dired-mode)

@@ -3,20 +3,22 @@
 ;;; Code:
 
 ;;; diff-hl
-(autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
-(add-hook 'dired-mode-hook #'diff-hl-dired-mode)
+;; (autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
+;; (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
 
 (autoload #'magit-stage "magit" nil t)
 ;;; magit
 (with-eval-after-load 'magit
+  (setq magit-save-repository-buffers 'dontask)
+  (setq magit-commit-ask-to-stage 'verbose)
   (setq magit-diff-refine-hunk t)
-  (autoload #'diff-hl-magit-post-refresh "diff-hl" nil t)
-  (autoload #'diff-hl-magit-pre-refresh "diff-hl" nil t)
+  ;; (autoload #'diff-hl-magit-post-refresh "diff-hl" nil t)
+  ;; (autoload #'diff-hl-magit-pre-refresh "diff-hl" nil t)
   ;; (autoload #'no-trailing-whitespace "magit" nil t)
-  (add-hook 'magit-pre-refresh-hook  #'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
+  ;; (add-hook 'magit-pre-refresh-hook  #'diff-hl-magit-pre-refresh)
+  ;; (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
   ;; (add-hook 'magit-post-refresh-hook #'no-trailing-whitespace)
-  (abridge-diff-mode)
+  ;; (abridge-diff-mode)
 
   (x/define-keys ctl-x-map
                  '(("g" magit-status)
