@@ -22,7 +22,7 @@
 (defvar x/doom? (boundp 'doom-version)
   "Whether use doom-emacs or not.")
 
-(defvar x/vertico-posframe? t
+(defvar x/vertico-posframe? nil
   "Whether use vertico-posframe or not.")
 
 (setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
