@@ -108,10 +108,14 @@
       (insert "\n"))))
 
 ;;; eww
-(add-hook 'eww-after-render-hook #'shrface-mode)
+;; (add-hook 'eww-after-render-hook #'shrface-mode)
+;; (remove-hook 'eww-after-render-hook #'shrface-mode)
 (with-eval-after-load 'eww
-  (x/define-keys eww-mode-map x/shr-map))
-(remove-hook 'eww-after-render-hook #'shrface-mode)
+  (x/define-keys eww-mode-map x/shr-map)
+  (x/define-keys
+   eww-mode-map
+   '(("x" (lambda () (interactive) (xwidget-webkit-browse-url (eww-current-url))))
+     ("o" eww-browse-with-external-browser))))
 
 ;;; info
 (with-eval-after-load 'info
