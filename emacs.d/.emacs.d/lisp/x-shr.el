@@ -47,6 +47,7 @@
 
 (with-eval-after-load 'shr
   (set-face-foreground 'shr-code "#7bc275")
+  (setq shr-max-image-proportion 0.7)
   (x/define-keys shr-map x/shr-map))
 
 ;;; shrface

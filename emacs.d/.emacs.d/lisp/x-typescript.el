@@ -123,7 +123,7 @@ prevent switching to the new buffer once created."
 
 ;;; org babel
 (with-eval-after-load 'org
-  (defalias 'ts-mode #'typescript-mode)
+  ;; (defalias 'ts-mode #'typescript-mode)
   (defalias 'org-babel-execute:ts #'org-babel-execute:typescript)
   (add-to-list 'org-babel-load-languages '(typescript . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))

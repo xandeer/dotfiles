@@ -210,6 +210,7 @@ Usages:
     ace-pinyin
     cal-china-x
     ebuku
+    elfeed
     (emacs-everywhere . "tecosaur/emacs-everywhere")
     (embark . ("oantolin/embark" :files (:defaults "*.el")))
     embark-consult
@@ -217,6 +218,7 @@ Usages:
     dired-hacks
     dirvish
     go-translate
+    (immersive-translate "Elilif/emacs-immersive-translate")
     (jieba . ("cireu/jieba.el" :files ("*.el" "*.json" "*.js")))
     link-hint
     makefile-executor

@@ -37,19 +37,32 @@
         (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))
         (zig . ("https://github.com/GrayJack/tree-sitter-zig"))))
 
-(setq major-mode-remap-alist
-      '((c-mode          . c-ts-mode)
-        (c++-mode        . c++-ts-mode)
-        (cmake-mode      . cmake-ts-mode)
-        (conf-toml-mode  . toml-ts-mode)
-        (css-mode        . css-ts-mode)
-        (js-mode         . js-ts-mode)
-        (js-json-mode    . json-ts-mode)
-        (python-mode     . python-ts-mode)
-        (sh-mode         . bash-ts-mode)
-        (typescript-mode . typescript-ts-mode)))
+;; (setq major-mode-remap-alist
+;;       '((c-mode          . c-ts-mode)
+;;         (c++-mode        . c++-ts-mode)
+;;         (cmake-mode      . cmake-ts-mode)
+;;         (conf-toml-mode  . toml-ts-mode)
+;;         (css-mode        . css-ts-mode)
+;;         (js-mode         . js-ts-mode)
+;;         (js-json-mode    . json-ts-mode)
+;;         (python-mode     . python-ts-mode)
+;;         (sh-mode         . bash-ts-mode)
+;;         (typescript-mode . typescript-ts-mode)))
 
-(add-hook 'emacs-lisp-mode-hook #'(lambda () (treesit-parser-create 'elisp)))
+(x/package-use 'tree-sitter-langs)
+(require 'tree-sitter-langs)
+;; (tree-sitter-require 'typescript)
+
+;; (setq tree-sitter-load-path (expand-file-name "tree-sitter" user-emacs-directory))
+;; (add-to-list 'tree-sitter-major-mode-language-alist
+;;              '(typescript-mode . typescript))
+                                        ; (add-hook 'emacs-lisp-mode-hook #'(lambda () (treesit-parser-create 'elisp)))
+                                        ; (tree-sitter-require 'typescript)
+;; (treesit-available-p)
+;; (require 'typescript-ts-mode)
+;; (x/package-use 'treesit-auto)
+;; (require 'treesit-auto)
+;; (setq treesit-auto-install 'prompt)
 
 (provide 'x-treesit)
 ;;; x-treesit.el ends here

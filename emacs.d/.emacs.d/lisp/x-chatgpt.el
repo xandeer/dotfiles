@@ -214,7 +214,7 @@ reads the sentence before point, and prints the ChatGPT's answer."
 (require 'gptel)
 (setq gptel-api-key (doctor-chatgpt-api-token))
 (setq gptel-default-mode 'org-mode)
-(setq-default gptel-model "gpt-4")
+(setq-default gptel-model "gpt-3.5-turbo")
 (setq gptel-max-tokens 1000)
 
 ;;; chatgpt-shell

@@ -95,6 +95,7 @@
 (require 'x-org-roam)
 
 ;;; languages
+;; (require 'x-treesit)
 (require 'x-clojure)
 (require 'x-elisp)
 ;; (require 'x-elixir)
@@ -132,6 +133,7 @@
 (require 'x-projectile)
 (require 'x-repeat)
 (require 'x-rime)
+(require 'x-rss)
 (require 'x-search-engine)
 (require 'x-sh)
 (require 'x-shr)

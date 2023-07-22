@@ -1,19 +1,6 @@
 ;;; x-folding.el --- Support code and region folding -*- lexical-binding: t -*-
 ;;
-;; Copyright (C) 2022 Kevin Du
-;;
-;; Author: Kevin Du <xandeer@gmail.com>
-;; Maintainer: Kevin Du <xandeer@gmail.com>
-;; Created: August 04, 2022
-;; Modified: August 04, 2022
-;; Version: 0.0.1
-;; Keywords: fold hide show
-;;
-;; This file is not part of GNU Emacs.
-;;
 ;;; Commentary:
-;;
-;;  Folding with `hs-minor-mode'.
 ;;
 ;;; Code:
 
@@ -40,7 +27,9 @@
    ;; ("k"    hs-toggle-hiding)
    ("l" hs-hide-level)))
 
-;; (global-set-key (kbd "M-h") #'x/folding-map)
+;;; ts-fold
+(x/package-use '(ts-fold "emacs-tree-sitter/ts-fold"))
+(require 'ts-fold)
 
 (provide 'x-folding)
 ;;; x-folding.el ends here
