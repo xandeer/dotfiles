@@ -54,6 +54,8 @@
        :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
        :render (gts-buffer-render)))
 
+(setq immersive-translate-backend 'chatgpt)
+
 ;;; xwidget
 (defvar x/translate-history nil
   "History of translate.")

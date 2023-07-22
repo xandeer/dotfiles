@@ -15,10 +15,9 @@
 
         ("https://www.huangjiwei.com/blog/?feed=rss2" comic)))
 
-(with-eval-after-load 'elfeed
-  (when (featurep 'immersive-translate)
-    (add-hook 'elfeed-show-mode-hook 'immersive-translate-setup))
+(add-hook 'elfeed-show-mode-hook 'immersive-translate-setup)
 
+(with-eval-after-load 'elfeed
   (x/define-keys
    elfeed-show-mode-map
    '(("d" scroll-up-command)

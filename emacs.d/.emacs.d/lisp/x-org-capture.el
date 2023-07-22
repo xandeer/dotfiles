@@ -65,7 +65,7 @@
 
   (add-to-list 'org-capture-templates
                '("j" "Journal entry" plain
-                 (function x/find-journal-location)
+                 #'x/find-journal-location
                  "*** %(format-time-string org-journal-time-format)%?"
                  :prepend t
                  :clock-in t
@@ -81,6 +81,32 @@
                  (file "gtd/inbox.org")
                  "* TODO %?"
                  :empty-lines-before 1))
+
+  (add-to-list 'org-capture-templates
+               '("a" "Anki Inbox" entry
+                 (file+headline "anki/inbox.org" "Anki Inbox")
+                 "* %?"
+                 :jump-to-captured t))
+
+  (defvar x/org-capture-anki-entry-title)
+  (add-to-list 'org-capture-templates
+               '("A" "Anki Entry" plain
+                 #'(lambda () (-> (concat (format-time-string "anki/%Y%m%d%H%M%S-")
+                                          (string-replace " " "_"
+                                                          x/org-capture-anki-entry-title)
+                                          ".org")
+                                  (expand-file-name org-directory)
+                                  find-file))
+                 #'(lambda ()
+                     (setq x/org-capture-anki-entry-title (read-string "Anki Entry: "))
+                     (let ((title x/org-capture-anki-entry-title))
+                       (concat "#+TITLE: " title "\n"
+                               "#+CREATED: <%<%Y-%m-%d %a %R>>\n"
+                               "#+FILETAGS: anki\n"
+                               "\n"
+                               "* " title " :" title ":\n"
+                               "%?")))
+                 :jump-to-captured t))
 
   (let ((sketches '("el" "kt" "org" "ts")))
     (dolist (sketch sketches)
