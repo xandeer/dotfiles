@@ -115,7 +115,8 @@
   (x/define-keys
    eww-mode-map
    '(("x" (lambda () (interactive) (xwidget-webkit-browse-url (eww-current-url))))
-     ("o" eww-browse-with-external-browser))))
+     ("o" eww-browse-with-external-browser)
+     ("K" eww-back-url))))
 
 ;;; info
 (with-eval-after-load 'info
@@ -126,13 +127,14 @@
   (x/define-keys helpful-mode-map x/shr-map))
 
 ;;; nov
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (with-eval-after-load 'nov
-  (require 'shrface)
-  (add-hook 'nov-mode-hook #'shrface-mode)
-  (setq nov-save-place-file nil)
-  (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
-  (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
-  ;; (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  ;; immersive-translate doesn't work with shrface-mode
+  ;; (add-hook 'nov-mode-hook #'shrface-mode)
+  ;; (remove-hook 'nov-mode-hook #'shrface-mode)
+  ;; (setq nov-shr-rendering-functions '((img . nov-render-img) (title . nov-render-title)))
+  ;; (setq nov-shr-rendering-functions (append nov-shr-rendering-functions shr-external-rendering-functions))
+  ;; (setq nov-save-place-file nil)
 
   (defun x/nov-setup ()
     (setq-local x/shr-next-document-fn #'nov-next-document)

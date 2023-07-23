@@ -15,13 +15,17 @@
 
         ("https://www.huangjiwei.com/blog/?feed=rss2" comic)))
 
-(add-hook 'elfeed-show-mode-hook 'immersive-translate-setup)
-
 (with-eval-after-load 'elfeed
+  (defun x/elfeed-show-setup ()
+    (setq-local x/shr-next-document-fn 'elfeed-show-next)
+    (setq-local x/shr-previous-document-fn 'elfeed-show-prev))
+
+  (add-hook 'elfeed-show-mode-hook #'x/elfeed-show-setup)
+
   (x/define-keys
    elfeed-show-mode-map
-   '(("d" scroll-up-command)
-     ("e" scroll-down-command)
+   '(("d" x/shr-scroll-up)
+     ("e" x/shr-scroll-down)
      ("f" x/link-hint-open-in-current-window)
      ("l" sdcv-search-pointer))))
 

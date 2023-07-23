@@ -42,23 +42,38 @@
     (interactive)
     (xwidget-webkit-scroll-down (x-xwidget--get-window-height-with-margin 3)))
 
-  (let ((map xwidget-webkit-mode-map))
-    (define-key map [remap meow-next] #'x-xwidget--scroll-up)
-    (define-key map [remap scroll-up] #'x-xwidget--scroll-up)
+  (defun x-xwidget--eww ()
+    (interactive)
+    (let ((url (xwidget-webkit-uri (xwidget-webkit-current-session))))
+      (when url (eww url))))
 
-    (define-key map [remap meow-prev] #'x-xwidget--scroll-down)
-    (define-key map [remap scroll-down] #'x-xwidget--scroll-down)
+  (defun x-xwidget--browse-generic ()
+    (interactive)
+    (let ((url (xwidget-webkit-uri (xwidget-webkit-current-session))))
+      (when url (browse-url-generic url))))
 
-    (define-key map "d" #'x-xwidget--scroll-up-half)
-    (define-key map "e" #'x-xwidget--scroll-down-half)
-    (define-key map "j" #'x-xwidget--scroll-up)
-    (define-key map "k" #'x-xwidget--scroll-down)
-    (define-key map "f" #'xwwp-ace-toggle)
-    (define-key map "v" #'xwwp-follow-link)
-    (define-key map "x" #'kill-current-buffer)
-    ;; todo: doesn't work in the input field
-    (define-key map "<escape>" #'keyboard-quit)
-    ))
+  (x/define-keys
+   xwidget-webkit-mode-map
+   '(([remap meow-next] x-xwidget--scroll-up)
+     ([remap scroll-up] x-xwidget--scroll-up)
+
+     ([remap meow-prev] x-xwidget--scroll-down)
+     ([remap scroll-down] x-xwidget--scroll-down)
+
+     ;; ("d" x-xwidget--scroll-up-half)
+     ;; ("e" x-xwidget--scroll-down-half)
+     ("d" x-xwidget--scroll-up)
+     ("j" x-xwidget--scroll-up)
+     ("e" x-xwidget--scroll-down)
+     ("k" x-xwidget--scroll-down)
+     ("f" xwwp-ace-toggle)
+     ("v" xwwp-follow-link)
+     ("x" kill-current-buffer)
+     ("o" x-xwidget--browse-generic)
+     ("E" x-xwidget--eww)
+     ("K" xwidget-webkit-back)
+     ;; todo: doesn't work in the input field
+     ("<escape>" keyboard-quit))))
 
 (defun x/xwidget-browse (url)
   "Ask xwidget-webkit to browse URL in a new session."

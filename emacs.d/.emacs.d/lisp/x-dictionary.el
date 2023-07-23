@@ -54,7 +54,10 @@
        :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
        :render (gts-buffer-render)))
 
+;;; immersive-translate
 (setq immersive-translate-backend 'chatgpt)
+(add-hook 'elfeed-show-mode-hook #'immersive-translate-setup)
+(add-hook 'nov-pre-html-render-hook #'immersive-translate-setup)
 
 ;;; xwidget
 (defvar x/translate-history nil
