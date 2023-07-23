@@ -211,6 +211,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("3" "Insert journal in 2023" (lambda () (interactive) (x--insert-journal-in-year 3) ))
     ("m" "Migrate journal" x--migrate-journal :transient t)]
    ["Anki"
+    ("H-k" "Anki cloze" x/anki-cloze)
     ("y" "Anki sync entry" org-anki-sync-entry)
     ("Y" "Anki sync all" org-anki-sync-all)
     ("v" "Ankify vocabulary" x/vocabulary-items)]
