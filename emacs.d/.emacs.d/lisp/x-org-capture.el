@@ -34,7 +34,7 @@
 
   (defun x/find-journal-location ()
     "Open today's journal."
-    (org-journal-new-entry t)
+    (org-roam-dailies-capture-today t)
     (beginning-of-buffer)
     (if (search-forward (format-time-string "** %Y") nil t)
         (progn
