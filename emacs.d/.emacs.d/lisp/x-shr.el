@@ -128,6 +128,7 @@
 
 ;;; nov
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq auto-mode-alist (delete '("\\.epub\\'" . nov-mode) auto-mode-alist))
 (with-eval-after-load 'nov
   ;; immersive-translate doesn't work with shrface-mode
   ;; (add-hook 'nov-mode-hook #'shrface-mode)

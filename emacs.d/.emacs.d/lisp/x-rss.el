@@ -20,7 +20,7 @@
     (setq-local x/shr-next-document-fn 'elfeed-show-next)
     (setq-local x/shr-previous-document-fn 'elfeed-show-prev))
 
-  (add-hook 'elfeed-show-mode-hook #'x/elfeed-show-setup)
+  (setq browse-url-browser-function 'eww)
 
   (x/define-keys
    elfeed-show-mode-map
