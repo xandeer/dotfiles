@@ -88,7 +88,7 @@
     ("H-j" "Register store" consult-register-store)
     ("l" "Open link" link-hint-open-link)
     ("H-l" "Open link" (lambda () (interactive)
-                       (let ((browse-url-browser-function 'eww))
+                       (let ((browse-url-browser-function 'browse-url-default-browser))
                          (link-hint-open-link))))
     ("k" "Consult bookmark" x/consult-bookmark)
     ("H-k" "Set bookmark" (lambda () (interactive) (if (equal major-mode 'org-mode)

@@ -20,8 +20,6 @@
     (setq-local x/shr-next-document-fn 'elfeed-show-next)
     (setq-local x/shr-previous-document-fn 'elfeed-show-prev))
 
-  (setq browse-url-browser-function 'eww)
-
   (x/define-keys
    elfeed-show-mode-map
    '(("d" x/shr-scroll-up)

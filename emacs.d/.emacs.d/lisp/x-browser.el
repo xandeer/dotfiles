@@ -2,6 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; browser
+(setq browse-url-browser-function 'eww-browse-url)
+
 ;;; bookmark
 (defvar x/bookmarks bookmark-alist)
 
