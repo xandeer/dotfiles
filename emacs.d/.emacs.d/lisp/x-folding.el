@@ -28,8 +28,8 @@
    ("l" hs-hide-level)))
 
 ;;; ts-fold
-(x/package-use '(ts-fold "emacs-tree-sitter/ts-fold"))
-(require 'ts-fold)
+;; (x/package-use '(ts-fold "emacs-tree-sitter/ts-fold"))
+;; (require 'ts-fold)
 
 (provide 'x-folding)
 ;;; x-folding.el ends here

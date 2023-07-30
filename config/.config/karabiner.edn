@@ -19,6 +19,7 @@
  :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
  :applications
  { ;; To obtain the app ID: `osascript -e 'id of app "Finder"'`
+  :anki ["net.ankiweb.dtop"]
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
   :edge   ["com.microsoft.edgemac.Dev"]
   :emacs  ["org.gnu.Emacs"]
@@ -142,6 +143,14 @@
    :rules [[:!COSw :!CS5]
            [:!COSr :!CS4]
            [:!COSs :!CS3]]}
+
+  {:des "Anki shortcuts"
+   :rules [:anki
+           [:d :!COSd]
+           [:m :1]
+           [:comma :2]
+           [:period :3]
+           [:j :4]]}
 
   {:des "Chrome shortcuts"
    :rules [:chrome

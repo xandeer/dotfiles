@@ -262,7 +262,7 @@
        ("MostlyCloudy")
        ("Showers")
        ("Haze")
-       ("Thunderstorms")
+       ("Thunderstorm")
        ("HeavyRain")
        (:endgroup)))
 (defun x/org-set-tags-without-fast-ui ()
