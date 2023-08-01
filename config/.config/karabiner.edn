@@ -144,7 +144,7 @@
            [:!COSr :!CS4]
            [:!COSs :!CS3]]}
 
-  {:des "Anki shortcuts"
+  {:des "Anki"
    :rules [:anki
            [:d :!COSd]
            [:m :1]

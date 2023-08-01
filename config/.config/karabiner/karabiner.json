@@ -3501,7 +3501,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "Anki shortcuts",
+        "description" : "Anki",
         "manipulators" : [ {
           "from" : {
             "key_code" : "d"
