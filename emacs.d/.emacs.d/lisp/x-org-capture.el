@@ -4,7 +4,6 @@
 
 (require 'org-capture)
 (global-set-key (kbd "C-c c") #'org-capture)
-(global-set-key (kbd "H-.") #'org-capture)
 
 (defvar x/expenses-history nil)
 
@@ -15,6 +14,38 @@
 (with-eval-after-load 'org-capture
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
+
+  (defun x/org-capture-place-template-current-window (oldfun &rest args)
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore)
+              ((symbol-function 'org-switch-to-buffer-other-window) #'switch-to-buffer))
+      (apply oldfun args)))
+
+  (advice-add 'org-capture-place-template :around #'x/org-capture-place-template-current-window)
+  (advice-add 'org-capture-finalize :around
+              (lambda (oldfun &rest args)
+                (cl-letf (((symbol-function 'set-window-configuration) 'ignore))
+                  (apply oldfun args))))
+
+  (setq x/org-capture--frame-name "x/org-capture")
+  (defun x/org-capture-frame ()
+    "Create a new frame and run org-capture."
+    (interactive)
+    (make-frame `((name . ,x/org-capture--frame-name)))
+    (select-frame-by-name x/org-capture--frame-name)
+    (switch-to-buffer "#x/org-capture")
+    (condition-case nil
+        (org-capture)
+      (user-error
+       (x/org-capture--cleanup-frame))))
+
+  (defun x/org-capture--cleanup-frame ()
+    (when (and (equal x/org-capture--frame-name
+                      (frame-parameter nil 'name))
+               (not org-capture-is-refiling))
+      (delete-frame nil t)))
+
+  (add-hook 'org-capture-after-finalize-hook #'x/org-capture--cleanup-frame)
+  (advice-add 'org-capture-refile :after #'x/org-capture--cleanup-frame)
 
   (defun x/find-phone-location ()
     "Positions point at current month heading in file"
@@ -43,14 +74,12 @@
       (progn
         (beginning-of-buffer)
         (if (search-forward (format-time-string "* %B %d") nil t)
-            (progn
-              (end-of-line)
-              (insert (format-time-string "\n** %Y :%a:")))
-          (progn
-            (beginning-of-buffer)
-            (search-forward "\n\n" nil t)
-            (insert (format-time-string "* %B %d\n** %Y :%a:"))))
-        (org-set-tags (format-time-string ":%a:"))
+            (end-of-line)
+          (beginning-of-buffer)
+          (search-forward "\n\n" nil t)
+          (insert (format-time-string "* %B %d")))
+        (insert (format-time-string "\n** %Y :%a:"))
+        (insert (format "%s:" x/org-today-tag))
         (newline))))
 
   (setq org-capture-templates nil)
@@ -68,8 +97,7 @@
                  #'x/find-journal-location
                  "*** %(format-time-string org-journal-time-format)%?"
                  :prepend t
-                 :clock-in t
-                 :clock-resume t))
+                 :jump-to-captured t))
 
   (add-to-list 'org-capture-templates
                '("h" "Habit" entry

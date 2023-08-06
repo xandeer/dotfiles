@@ -3448,7 +3448,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "launch emacsclient",
+        "description" : "run shell scripts",
         "manipulators" : [ {
           "from" : {
             "key_code" : "period",
@@ -3457,7 +3457,7 @@
             }
           },
           "to" : [ {
-            "shell_command" : "/opt/homebrew/bin/emacsclient --eval \"(emacs-everywhere)\""
+            "shell_command" : "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"
           } ],
           "type" : "basic"
         } ]

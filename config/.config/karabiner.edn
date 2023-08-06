@@ -136,8 +136,8 @@
   ;;          ;; [:!COSe [:open "Emacs"]]
   ;;          ]}
 
-  {:des "launch emacsclient"
-   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient --eval \"(emacs-everywhere)\""]]}
+  {:des "run shell scripts"
+   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]]}
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
