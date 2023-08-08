@@ -101,7 +101,7 @@
 ;; (require 'x-elixir)
 (require 'x-json)
 (require 'x-kotlin)
-(require 'x-racket)
+;; (require 'x-racket)
 (require 'x-web)
 
 ;;; tools
