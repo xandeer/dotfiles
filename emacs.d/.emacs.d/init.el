@@ -9,11 +9,7 @@
 
 ;;; Code:
 
-;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
-;; (setq debug-on-error t)
 (setq-default lexical-binding t)
-;; (defvar x/theme 'x-one-light)
-(defvar x/theme 'doom-one-light)
 
 (defun x/theme-light-p ()
   "Whether the theme is light."

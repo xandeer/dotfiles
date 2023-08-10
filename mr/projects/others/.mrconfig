@@ -1,5 +1,6 @@
 [zplug]
 checkout = git clone 'git@github.com:zplug/zplug.git' 'zplug'
+skip = true
 
 [doom]
 checkout = git clone 'git@github.com:doomemacs/doomemacs.git' 'doom'

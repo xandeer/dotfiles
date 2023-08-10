@@ -1,28 +1,59 @@
+# https://web.archive.org/web/20190923130548/http://dhis2.github.io/2019/06/managing-multiple-repositories/
+
 [DEFAULT]
-jobs = 18
+jobs = 8
 commit = echo 'skip'
 
+# Personal
 [.password-store]
 checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
 commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
-# [Exercism/clojure]
-# checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
+[projects/personal/dotfiles]
+checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
-# [Exercism/elixir]
-# checkout = git clone 'git@github.com:xandeer/elixir-exercism.git' 'elixir'
+[projects/personal/notes]
+checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
 
-# [Exercism/kotlin]
-# checkout = git clone 'git@github.com:xandeer/kotlin-exercism.git' 'kotlin'
+[projects/personal/pentip]
+checkout = git clone 'git@github.com:xandeer/pentip.git' 'pentip'
+skip = true
 
-# [Exercism/typescript]
-# checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
+[projects/personal/gadget]
+checkout = git clone 'git@github.com:xandeer/gadget.git' 'gadget'
+skip = true
 
-[.emacs.d]
-checkout = git clone 'git@github.com:plexus/chemacs2.git' '.emacs.d'
+[projects/personal/heart-music]
+checkout = git clone 'git@github.com:xandeer/heart-music.git' 'heart-music'
+skip = true
 
+[projects/personal/hs]
+checkout = git clone 'git@github.com:xandeer/hs.git' 'hs'
+skip = true
+
+## Exercism
+[Exercism/clojure]
+checkout = git clone 'git@github.com:xandeer/clojure-exercism.git' 'clojure'
+skip = true
+
+[Exercism/elixir]
+checkout = git clone 'git@github.com:xandeer/elixir-exercism.git' 'elixir'
+skip = true
+
+[Exercism/kotlin]
+checkout = git clone 'git@github.com:xandeer/kotlin-exercism.git' 'kotlin'
+skip = true
+
+[Exercism/typescript]
+checkout = git clone 'git@github.com:xandeer/typescript-exercism.git' 'typescript'
+skip = true
+
+# Work
 [projects/xmind/doughnut]
 checkout = git clone 'git@gitlab.xmind.cn:xmind/doughnut.git' 'doughnut'
 
-# [projects/xmind/viewer-kit]
-# checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'
+[projects/xmind/viewer-kit]
+checkout = git clone 'git@gitlab.xmind.cn:xmind/viewer-kit.git' 'viewer-kit'
+skip = true
