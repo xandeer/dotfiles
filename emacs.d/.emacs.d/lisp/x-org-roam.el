@@ -213,7 +213,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
    ["Anki"
     ("H-k" "Anki cloze" x/anki-cloze)
     ("y" "Anki sync entry" org-anki-sync-entry)
-    ("Y" "Anki sync all" org-anki-sync-all)
+    ("H-y" "Anki sync all" org-anki-sync-all)
     ("v" "Ankify vocabulary" x/vocabulary-items)]
    ["Misc"
     ("l" "Remove links" x--remove-links)
