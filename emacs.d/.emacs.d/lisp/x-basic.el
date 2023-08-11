@@ -28,7 +28,7 @@
 ;; prepend , in it
 ;; (setq sentence-end-base "[.?!…‽][]\"'”’)}»›,]*")
 ;; ，；
-(setq sentence-end-without-space "，；。．？！")
+(setq sentence-end-without-space "，；。．：？！")
 
 ;;; Indentations
 (setq-default tab-width 2)
