@@ -2,9 +2,13 @@
   # nix-darwin do not set PATH for nushell! so we need to do it manually
   # this is a workaround to add nix's PATH to nushell
   programs.nushell.enable = true;
-  programs.zoxide.enable = true;
-  programs.zoxide.enableNushellIntegration = true;
   programs.oh-my-posh.enable = true;
+
+  programs.zoxide = {
+    enable = true;
+    enableNushellIntegration = true;
+  };
+
   programs.nushell.extraConfig = ''
     let-env PATH = ([
       "${config.home.homeDirectory}/bin"
@@ -144,8 +148,7 @@ let-env config = {
 
   programs.nushell.shellAliases = {
     open = "^open";
-    ors = "darwin-rebuild switch --flake ~/.config/nix-darwin";
-    orst = "cp -u ~/.config/nix-darwin/* ~/projects/personal/dotfiles/nix/";
+    ors = "darwin-rebuild switch --flake ${config.home.homeDirectory}/projects/personal/dotfiles/nix/";
 
     e = "emacsclient";
 
@@ -179,9 +182,10 @@ let-env config = {
     ni = "npm -i";
 
     # brew
-    bf = "brew-file --no_appstore";
-    bi = "brew-file --no_appstore install";
-    bic = "brew-file --no_appstore --cask install";
+    # bf = "brew-file --no_appstore";
+    # bi = "brew-file --no_appstore install";
+    # bic = "brew-file --no_appstore --cask install";
+    bi = "brew install";
     bu = "brew uninstall";
     buc = "brew uninstall --cask";
   };

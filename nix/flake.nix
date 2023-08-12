@@ -38,9 +38,9 @@
 
   outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }: {
     # Build darwin flake using:
-    # $ nix run nix-darwin -- switch --flake ~/.config/nix-darwin
+    # $ nix run nix-darwin -- switch --flake ~/projects/personal/dotfiles/nix/
     # After the first installing:
-    # $ darwin-rebuild switch --flake ~/.config/nix-darwin
+    # $ darwin-rebuild switch --flake ~/projects/personal/dotfiles/nix/
     darwinConfigurations."Kevins-Mac-Studio" = darwin.lib.darwinSystem {
       modules = [
         ./darwin

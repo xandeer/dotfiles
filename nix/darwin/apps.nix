@@ -50,7 +50,6 @@
       "homebrew/services"
       "homebrew/cask-versions"
       "d12frosted/emacs-plus"
-      # "jandedobbeleer/oh-my-posh"
       "yqrashawn/goku"
     ];
 
