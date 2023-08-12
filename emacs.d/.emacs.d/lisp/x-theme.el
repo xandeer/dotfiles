@@ -32,7 +32,6 @@
     (set-fontset-font t charset x/cjk-font))
   ;; (add-to-list 'face-font-rescale-alist `(,unicode-font . 0.5))
   )
-
 (add-hook 'after-init-hook #'x/setup-fonts)
 ;; (add-hook 'after-make-frame-functions   #'x/setup-fonts)
 ;; (add-hook 'server-after-make-frame-hook #'x/setup-fonts)

@@ -9,6 +9,11 @@
             (add-to-list 'exec-path (expand-file-name dir)))
           '("~/.yarn/bin"
             "~/Library/Android/sdk/platform-tools"
+            "~/.nix-profile/bin"
+            "/etc/profiles/per-user/kevin/bin"
+            "/run/current-system/sw/bin"
+            "/nix/var/nix/profiles/default/bin"
+            "/opt/homebrew/bin"
             "/usr/local/bin"))))
 
 ;; (setq exec-path

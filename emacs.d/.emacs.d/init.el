@@ -172,6 +172,9 @@
 (x/append-init-hook
  '(ebuku))
 
+(x/package-use 'nix-mode)
+(require 'nix-mode)
+
 (provide 'init)
 
 ;; Local Variables:

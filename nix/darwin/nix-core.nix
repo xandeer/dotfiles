@@ -1,19 +1,15 @@
-{ config, pkgs, lib, ... }:
-
-{
-  environment.systemPackages = import ./pkgs.nix { inherit pkgs;  };
-
+{ lib, ... }: {
   nix = {
     settings = {
-      experimental-features = "nix-command flakes";
-
-      # https://mirrors.ustc.edu.cn/help/nix-channels.html
-      substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-
+      experimental-features = [ "nix-command" "flakes" ];
       # You should generally set this to the total number of logical cores in your system.
       # $ sysctl -n hw.ncpu
       max-jobs = lib.mkDefault 8;
       cores = lib.mkDefault 8;
+
+      # Manual optimise storage: nix-store --optimise
+      # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-auto-optimise-store
+      auto-optimise-store = true;
     };
 
     gc = {
@@ -23,8 +19,6 @@
     };
   };
 
-  time.timeZone = "Asia/Shanghai";
-
   nixpkgs = {
     hostPlatform = "aarch64-darwin";
     config = {
@@ -33,12 +27,8 @@
     };
   };
 
+  programs.nix-index.enable = true;
+
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-
-  # programs.zsh.enable = true;
-
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
 }

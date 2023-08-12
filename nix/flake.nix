@@ -1,27 +1,80 @@
 {
   description = "Personal Darwin system flake";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+  nixConfig = {
+    experimental-features = [ "nix-command" "flakes" ];
+    substituters = [
+      # replace official cache with a mirror located in China
+      "https://mirrors.ustc.edu.cn/nix-channels/store"
+      "https://cache.nixos.org/"
+    ];
+
+    # nix community's cache server
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs }: {
+  inputs = {
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
+
+    # home-manager, used for managing user configuration
+    home-manager = {
+      url = "github:nix-community/home-manager/release-23.05";
+      # The `follows` keyword in inputs is used for inheritance.
+      # Here, `inputs.nixpkgs` of home-manager is kept consistent with the `inputs.nixpkgs` of the current flake,
+      # to avoid problems caused by different versions of nixpkgs dependencies.
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+  };
+
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }: {
     # Build darwin flake using:
     # $ nix run nix-darwin -- switch --flake ~/.config/nix-darwin
     # After the first installing:
     # $ darwin-rebuild switch --flake ~/.config/nix-darwin
-    darwinConfigurations."Kevins-Mac-Studio" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."Kevins-Mac-Studio" = darwin.lib.darwinSystem {
       modules = [
-        ./aarch64-darwin.nix
+        ./darwin
         ./studio.nix
+
+        # home manager
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = inputs;
+            users.kevin = import ./home;
+          };
+        }
       ];
     };
 
     # $ hostname -s
-    darwinConfigurations."Kevins-MacBook-Air" = nix-darwin.lib.darwinSystem {
-      modules = [ ./aarch64-darwin.nix ];
+    darwinConfigurations."Kevins-MacBook-Air" = darwin.lib.darwinSystem {
+      modules = [
+        ./darwin
+
+        # home manager
+        home-manager.darwinModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = inputs;
+            users.kevin = import ./home;
+          };
+        }
+      ];
     };
 
     # Expose the package set, including overlays, for convenience.

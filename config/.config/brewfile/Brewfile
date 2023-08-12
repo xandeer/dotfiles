@@ -208,8 +208,8 @@ brew emacs-plus@30 --with-xwidgets --with-imagemagick
 tap ekzhang/bore
 brew bore
 
-tap git-chglog/git-chglog
-brew git-chglog
+# tap git-chglog/git-chglog
+# brew git-chglog
 
 tap jandedobbeleer/oh-my-posh
 

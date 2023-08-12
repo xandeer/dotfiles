@@ -1,0 +1,21 @@
+# Mac
+.DS_Store
+
+# Clojure
+.lein-repl-history
+.lein-failures
+completer.hist
+.nrepl-port
+repl-port
+
+# Node
+node_modules
+
+# Logs
+*.log
+
+# jetbrain
+.idea/inspectionProfiles/
+.idea/androidTestResultsUserPreferences.xml
+.idea/kotlinc.xml
+.idea/migrations.xml
