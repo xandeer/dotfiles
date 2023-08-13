@@ -19,7 +19,7 @@
   };
 
   homebrew = {
-    enable = true;
+    enable = false;
 
     onActivation = {
       autoUpdate = false;
@@ -88,7 +88,7 @@
       "syncthing"  # file sync
       "raycast"   # (HotKey: alt/option + space)search, caculate and run scripts(with many plugins)
       # "iglance"   # beautiful system monitor
-      "eudic"     # 欧路词典
+      # "eudic"     # 欧路词典
       "alt-tab"
       "kitty"
       "karabiner-elements"

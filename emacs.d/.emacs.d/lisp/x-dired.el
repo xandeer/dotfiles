@@ -88,7 +88,8 @@
 
 (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
 ;; KOReader
-(add-to-list 'dired-omit-extensions ".sdr")
+;; (add-to-list 'dired-omit-extensions ".sdr")
+;; (setq dired-omit-extensions (delete ".sdr" dired-omit-extensions))
 ;; syncthing
 (setq dired-omit-files
       (concat dired-omit-files "\\|" (rx ".stfolder" string-end)))

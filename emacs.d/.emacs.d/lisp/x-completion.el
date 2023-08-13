@@ -96,6 +96,34 @@
       (indent-for-tab-command)))
 
 (with-eval-after-load 'copilot
+  (advice-add
+   'copilot--start-agent
+   :override
+   (lambda ()
+     "Start the copilot agent process in local."
+     (setq copilot--connection
+           (make-instance 'jsonrpc-process-connection
+                          :name "copilot"
+                          :events-buffer-scrollback-size copilot-log-max
+                          :process
+                          (make-process
+                           :name "copilot agent"
+                           :command (list "nix"
+                                          "run"
+                                          "--impure"
+                                          "nixpkgs#nodejs-slim_16"
+                                          "--"
+                                          (concat copilot--base-dir "/dist/agent.js"))
+                           :coding 'utf-8-emacs-unix
+                           :connection-type 'pipe
+                           :stderr (get-buffer-create "*copilot stderr*")
+                           :noquery t)))
+     (message "Copilot agent started.")
+     (copilot--request 'initialize '(:capabilities '()))
+     (copilot--async-request 'setEditorInfo
+                             `(:editorInfo (:name "Emacs" :version ,emacs-version)
+                                           :editorPluginInfo (:name "copilot.el" :version ,copilot-version)))))
+
   (x/define-keys
    copilot-mode-map
    '(("TAB" x/tab)

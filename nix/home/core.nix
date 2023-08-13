@@ -57,6 +57,7 @@
     # need for ts-ls: typescript lsp
     deno
     nodejs
+    nodejs-slim-16_x
     yarn
 
     # android-tools
@@ -70,7 +71,4 @@
     babashka
     leiningen
   ];
-
-  programs = {
-  };
 }

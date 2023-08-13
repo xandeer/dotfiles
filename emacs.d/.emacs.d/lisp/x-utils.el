@@ -99,6 +99,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
   (interactive)
   (wdired-change-to-wdired-mode)
   (replace-string " (z-lib.org)" "")
+  (replace-string " (Z-Library)" "")
   (wdired-finish-edit))
 
 (defun x/flush-double-newlines ()
