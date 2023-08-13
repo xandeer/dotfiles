@@ -6,11 +6,9 @@
         "type": "indirect"
       },
       "to": {
-        "lastModified": 1691853136,
-        "narHash": "sha256-wTzDsRV4HN8A2Sl0SVQY0q8ILs90CD43Ha//7gNZE+E=",
-        "owner": "NixOS",
+        "owner": "nixos",
+        "ref": "nixpkgs-23.05-darwin",
         "repo": "nixpkgs",
-        "rev": "f0451844bbdf545f696f029d1448de4906c7f753",
         "type": "github"
       }
     }
