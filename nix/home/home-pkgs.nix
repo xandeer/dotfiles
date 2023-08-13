@@ -65,6 +65,7 @@
     jre
     # openjdk17
     # graalvm17-ce
+    kotlin
     kotlin-language-server
 
     # clojure interpreter
