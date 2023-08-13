@@ -110,6 +110,7 @@
                            :name "copilot agent"
                            :command (list "nix"
                                           "run"
+                                          "--offline"
                                           "--impure"
                                           "nixpkgs#nodejs-slim_16"
                                           "--"
