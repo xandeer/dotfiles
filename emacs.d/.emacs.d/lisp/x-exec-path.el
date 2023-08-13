@@ -2,19 +2,19 @@
 ;;; Commentary:
 ;;; Code:
 
-(let ((original-path (getenv "PATH")))
-  (unless (string-match-p "profiles/per-user/kevin" original-path)
-    (mapc (lambda (dir)
-            (setenv "PATH" (concat (expand-file-name dir) ":" (getenv "PATH")))
-            (add-to-list 'exec-path (expand-file-name dir)))
-          '("~/.yarn/bin"
-            "~/Library/Android/sdk/platform-tools"
-            "~/.nix-profile/bin"
-            "/etc/profiles/per-user/kevin/bin"
-            "/run/current-system/sw/bin"
-            "/nix/var/nix/profiles/default/bin"
-            "/opt/homebrew/bin"
-            "/usr/local/bin"))))
+;; (let ((original-path (getenv "PATH")))
+;;   (unless (string-match-p "profiles/per-user/kevin" original-path)
+;;     (mapc (lambda (dir)
+;;             (setenv "PATH" (concat (expand-file-name dir) ":" (getenv "PATH")))
+;;             (add-to-list 'exec-path (expand-file-name dir)))
+;;           '("~/.yarn/bin"
+;;             "~/Library/Android/sdk/platform-tools"
+;;             "~/.nix-profile/bin"
+;;             "/etc/profiles/per-user/kevin/bin"
+;;             ;; "/run/current-system/sw/bin"
+;;             "/nix/var/nix/profiles/default/bin"
+;;             "/opt/homebrew/bin"
+;;             "/usr/local/bin"))))
 
 ;; (setq exec-path
 ;;       (mapcar

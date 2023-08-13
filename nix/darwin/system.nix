@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, ... }:
 
   ###################################################################################
   #
@@ -18,6 +18,16 @@
       # activateSettings -u will reload the settings from the database and apply them to the current session,
       # so we do not need to logout and login again to make the changes take effect.
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+
+      export PATH="$PATH:$HOME/bin"
+      export PATH="$PATH:$HOME/.nix-profile/bin"
+      export PATH="$PATH:/etc/profiles/per-user/$USER/bin"
+      export PATH="$PATH:/nix/var/nix/profiles/default/bin"
+
+      export PATH="$PATH:/opt/homebrew/bin"
+
+      export PATH="$PATH:$HOME/.yarn/bin"
+      export PATH="$PATH:$HOME//Library/Android/sdk/platform-tools"
     '';
 
     defaults = {
@@ -150,13 +160,6 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  # this is required if you want to use darwin's default shell - zsh
-  # programs.zsh.enable = true;
-  # environment.shells = [
-    # pkgs.zsh
-  # ];
 
   # Set your time zone.
   # comment this due to the issue:

@@ -12,12 +12,14 @@
   programs.nushell.extraConfig = ''
     let-env PATH = ([
       "${config.home.homeDirectory}/bin"
-      "/usr/local/bin"
       "${config.home.homeDirectory}/.nix-profile/bin"
+      "${config.home.homeDirectory}/.yarn/bin"
+      "${config.home.homeDirectory}/Library/Android/sdk/platform-tools"
       "/etc/profiles/per-user/${config.home.username}/bin"
       "/run/current-system/sw/bin"
       "/nix/var/nix/profiles/default/bin"
       "/opt/homebrew/bin"
+      "/usr/local/bin"
 
       ($env.PATH | split row (char esep))
                                   ] | flatten)
