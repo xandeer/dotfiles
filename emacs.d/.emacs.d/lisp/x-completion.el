@@ -103,6 +103,7 @@
    copilot-mode-map
    '(("TAB" x/tab)
      ("C-<tab>" copilot-clear-overlay)
+     ("M-c" copilot-accept-completion-by-line)
      ("M-<tab>" copilot-next-completion))))
 
 (x/define-keys
