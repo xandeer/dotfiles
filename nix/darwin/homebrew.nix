@@ -9,7 +9,8 @@
   };
 
   homebrew = {
-    enable = true;
+    # enable = true;
+    enable = false;
 
     onActivation = {
       autoUpdate = false;

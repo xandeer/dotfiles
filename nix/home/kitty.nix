@@ -20,6 +20,8 @@
       shell = "nu";
       editor = "emacsclient";
       copy_on_select = "clipboard";
+      confirm_os_window_close = 0;
+      hide_window_decorations = "no";
     };
     theme = "Atom One Light";
   };

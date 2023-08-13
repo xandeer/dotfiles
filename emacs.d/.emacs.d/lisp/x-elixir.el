@@ -26,10 +26,10 @@
   (define-key elixir-mode-map (kbd "C-c e u") #'x/exercism-submit))
 
 (add-hook 'elixir-mode-hook #'alchemist-mode)
-(setq alchemist-execute-command (x/prepend-homebrew-path "elixir"))
-(setq alchemist-compile-command (x/prepend-homebrew-path "elixirc"))
+(setq alchemist-execute-command "elixir")
+(setq alchemist-compile-command "elixirc")
 ;; (setq alchemist-iex-program-name (x/prepend-homebrew-path "iex"))
-(setq alchemist-mix-command (x/prepend-homebrew-path "mix"))
+(setq alchemist-mix-command "mix")
 (setq alchemist-mix-env "prod")
 
 ;; (add-to-list 'exec-path (expand-file-name ".lsp/elixir" "~"))

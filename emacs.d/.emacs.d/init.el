@@ -55,8 +55,7 @@
 (require 'x-init-utils)
 (require 'x-utils)
 
-;; set "PATH" and `exec-path`
-(require 'x-exec-path)
+(require 'x-start-process)
 
 ;; osx
 (require 'x-osx)
