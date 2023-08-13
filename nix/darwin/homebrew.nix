@@ -1,15 +1,5 @@
-{ pkgs, ... }:
-
-{
-  environment.systemPackages = with pkgs; [
-    git
-    gnumake
-    corkscrew
-  ];
-  environment.variables.EDITOR = "emacsclient";
-
+{ ... }: {
   # Homebrew Mirror in China
-  # Feel free to remove this if you are not in China.
   environment.variables = {
     HOMEBREW_API_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api";
     HOMEBREW_BOTTLE_DOMAIN = "https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles";
@@ -19,7 +9,7 @@
   };
 
   homebrew = {
-    enable = false;
+    enable = true;
 
     onActivation = {
       autoUpdate = false;
@@ -32,8 +22,6 @@
     # otherwise Apple Store will refuse to install them.
     # For details, see https://github.com/mas-cli/mas
     masApps = {
-      # TODO Feel free to add your favorite apps here.
-
       # Xcode = 497799835;
       # Wechat = 836500024;
       # NeteaseCloudMusic = 944848654;
@@ -68,6 +56,17 @@
       "sbcl"
       "pinentry"
       "enchant"
+
+      {
+        name = "node@16";
+        link = true;
+        conflicts_with = [ "node" ];
+      }
+
+      {
+        name = "emacs-plus@30";
+        args = [ "with-xwidgets" "with-imagemagick" ];
+      }
     ];
 
     # `brew install --cask`

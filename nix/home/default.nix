@@ -1,6 +1,6 @@
 { config, ... }: {
   imports = [
-    ./core.nix
+    ./home-pkgs.nix
     ./git.nix
     ./nushell.nix
     ./kitty.nix
