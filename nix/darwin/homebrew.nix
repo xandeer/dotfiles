@@ -9,8 +9,8 @@
   };
 
   homebrew = {
-    enable = true;
-    # enable = false;
+    # enable = true;
+    enable = false;
 
     onActivation = {
       autoUpdate = false;
@@ -64,6 +64,8 @@
         conflicts_with = [ "node" ];
       }
 
+      # reinstall after terminal and shell prepared to inherit PATH environment.
+      # brew reinstall emacs-plus@30 --with-xwidgets --with-imagemagick
       {
         name = "emacs-plus@30";
         # link = true;
