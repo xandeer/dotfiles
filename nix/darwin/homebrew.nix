@@ -9,13 +9,13 @@
   };
 
   homebrew = {
-    # enable = true;
     enable = true;
+    # enable = false;
 
     onActivation = {
       autoUpdate = false;
       # 'zap': uninstalls all formulae(and related files) not listed here.
-      cleanup = "none";
+      cleanup = "zap";
     };
 
     # Applications to install from Mac App Store using mas.
@@ -52,10 +52,8 @@
       "sdcv"
       "trash"
       "wakatime-cli"
-      "nushell"
       "imagemagick"
-      "sbcl"
-      "pinentry"
+      # "pinentry"
       "enchant"
 
       "gnupg"
@@ -84,7 +82,7 @@
       # "telegram"
       # "discord"
 
-      # "anki"
+      "anki"
       "clashx-pro"    # proxy tool
       # "iina"      # video player
       # "openinterminal-lite"  # open current folder in terminal

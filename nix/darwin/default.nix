@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
   imports = [
     ./nix-core.nix
     ./system.nix
@@ -7,5 +7,15 @@
   ];
 
   users.users.kevin.home = "/Users/kevin";
-  environment.variables.EDITOR = "/opt/homebrew/bin/emacsclient";
+
+  environment = {
+    variables.EDITOR = "emacsclient";
+
+    systemPath = [
+      "$HOME/bin"
+      "$HOME/.yarn/bin"
+      "$HOME/Library/Android/sdk/platform-tools"
+      "/etc/profiles/per-user/kevin/bin"
+    ];
+  };
 }

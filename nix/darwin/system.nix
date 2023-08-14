@@ -11,12 +11,6 @@
   #
   ###################################################################################
 {
-  programs.zsh.enable = true;
-
-  environment.variables = {
-    PATH = "$PATH:$HOME/bin:/opt/homebrew/bin:$HOME/.yarn/bin:$HOME/Library/Android/sdk/platform-tools";
-  };
-
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
     activationScripts.postUserActivation.text = ''
