@@ -10,7 +10,7 @@
 
   homebrew = {
     # enable = true;
-    enable = false;
+    enable = true;
 
     onActivation = {
       autoUpdate = false;
@@ -58,6 +58,8 @@
       "pinentry"
       "enchant"
 
+      "gnupg"
+
       {
         name = "node@16";
         link = true;
@@ -66,6 +68,7 @@
 
       {
         name = "emacs-plus@30";
+        # link = true;
         args = [ "with-xwidgets" "with-imagemagick" ];
       }
     ];

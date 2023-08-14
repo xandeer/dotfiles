@@ -11,6 +11,11 @@
   #
   ###################################################################################
 {
+  programs.zsh.enable = true;
+
+  environment.variables = {
+    PATH = "$PATH:$HOME/bin:/opt/homebrew/bin:$HOME/.yarn/bin:$HOME/Library/Android/sdk/platform-tools";
+  };
 
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
@@ -19,15 +24,11 @@
       # so we do not need to logout and login again to make the changes take effect.
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 
-      export PATH="$PATH:$HOME/bin"
-      export PATH="$PATH:$HOME/.nix-profile/bin"
-      export PATH="$PATH:/etc/profiles/per-user/$USER/bin"
-      export PATH="$PATH:/nix/var/nix/profiles/default/bin"
+      # export PATH="$PATH:$HOME/.nix-profile/bin"
+      # export PATH="$PATH:/etc/profiles/per-user/$USER/bin"
+      # export PATH="$PATH:/nix/var/nix/profiles/default/bin"
 
-      export PATH="$PATH:/opt/homebrew/bin"
-
-      export PATH="$PATH:$HOME/.yarn/bin"
-      export PATH="$PATH:$HOME//Library/Android/sdk/platform-tools"
+      # export PATH="$PATH:$HOME/bin:/opt/homebrew/bin:$HOME/.yarn/bin:$HOME/Library/Android/sdk/platform-tools"
     '';
 
     defaults = {
