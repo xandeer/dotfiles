@@ -9,6 +9,7 @@
         ("https://oremacs.com/atom.xml" emacs)
         ("https://karthinks.com/index.xml" emacs)
         ("https://karthinks.com" emacs)
+        ("https://planet.emacslife.com/atom.xml" emacs)
 
         ("https://developer.android.com/feeds/androidx-release-notes.xml" android release)
         ("https://medium.com/feed/androiddevelopers" android blog)
