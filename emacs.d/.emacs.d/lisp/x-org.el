@@ -273,7 +273,7 @@
 
 ;;; org modern and faces
 (with-eval-after-load 'org-modern
-  (setq org-modern-star '("♥" "◉" "◈" "◇"))
+  (setq org-modern-star '("◉" "◈" "◇"))
   (set-face-attribute 'org-modern-label nil :family "Latin Modern Mono")
   ;; (set-face-attribute 'org-modern-time-active nil :background "gray92")
   (set-face-attribute 'org-modern-date-active nil :background "#c88562" :foreground "white" :distant-foreground "black")

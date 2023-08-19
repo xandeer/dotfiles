@@ -371,5 +371,24 @@ Example:
             (define-key map key command)))
         bindings))
 
+;;; url
+(defun x/fetch-api-as-raw-string (url)
+  "Fetch the content of an API URL and return it as a raw string."
+  (with-current-buffer (url-retrieve-synchronously url)
+    (goto-char (point-min))
+    (re-search-forward "\n\n")
+    (buffer-substring (point) (point-max))))
+
+(defun x/insert-weather ()
+  "Insert today's weather by wttr.in."
+  (interactive)
+  (let ((url "https://wttr.in/Shenzhen+Nanshan?format=\"%c%C,+%t,+%h,+%w\"")
+        (buffer (current-buffer)))
+    (insert (with-temp-buffer
+              (switch-to-buffer (current-buffer) nil t)
+              (mm-url-insert url)
+              ;; trim the surround ""
+              (buffer-substring (1+ (point-min)) (1- (point-max)))))))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here
