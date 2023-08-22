@@ -12,7 +12,7 @@
       "cmd+<" = "load_config_file";
 
       # open xandeer.conf
-      "cmd+," = "launch emacsclient -n ~/projects/personal/dotfiles/nix/home/kitty.nix";
+      "cmd+," = "launch /opt/homebrew/bin/emacsclient -n ~/projects/personal/dotfiles/nix/home/kitty.nix";
     };
     settings = {
       font_family = "FiraCode Nerd Font Mono";

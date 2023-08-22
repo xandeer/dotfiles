@@ -50,7 +50,6 @@
           # "Iosevka"
         ];
       })
-    noto-fonts-emoji
 
     # productivity
 
