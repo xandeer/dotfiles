@@ -65,5 +65,13 @@
   (add-hook 'kotlin-mode-hook #'x/kotlin--setup)
   (add-hook 'markdown-mode-hook #'x/kotlin--setup))
 
+;;; gradle utils
+;; https://docs.gradle.org/current/userguide/build_cache_debugging.html#in-place_caching_test
+(defun x/gradle-clear-cache ()
+  "Clear gradle cache."
+  (interactive)
+  (delete-directory (expand-file-name "~/.gradle/caches") 'recursive)
+  (message "Remember to run clean task."))
+
 (provide 'x-kotlin)
 ;;; x-kotlin.el ends here
