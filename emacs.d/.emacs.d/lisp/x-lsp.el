@@ -18,6 +18,7 @@
 
 (setq lsp-auto-guess-root t)
 (setq lsp-enable-snippet nil)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 (x/define-keys lsp-mode-map '(("C-c C-f" lsp-format-buffer)
                               ("C-c C-r" lsp-rename)
