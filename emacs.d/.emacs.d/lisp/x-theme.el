@@ -30,8 +30,10 @@
 
   (dolist (charset '(han kana cjk-misc))
     (set-fontset-font t charset x/cjk-font))
-  (set-fontset-font t 'symbol (font-spec :family "FiraCode Nerd Font Mono") nil)
-  (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend)
+  (set-fontset-font t 'symbol "FiraCode Nerd Font Mono")
+  (set-fontset-font t '(#x1f327 . #x1f327) "Apple Color Emoji")
+  (set-fontset-font t '(#x26c8 . #x26c8) "Apple Color Emoji")
+  (set-fontset-font t '(#x2713 . #x2713) "Arial Unicode MS")
   ;; (add-to-list 'face-font-rescale-alist `(,unicode-font . 0.5))
   )
 (add-hook 'after-init-hook #'x/setup-fonts)
