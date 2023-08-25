@@ -31,9 +31,14 @@
   (dolist (charset '(han kana cjk-misc))
     (set-fontset-font t charset x/cjk-font))
   (set-fontset-font t 'symbol "FiraCode Nerd Font Mono")
+
+  ;; weather
+  (set-fontset-font t '(#x26c5 . #x26c5) "Apple Color Emoji")
   (set-fontset-font t '(#x26c8 . #x26c8) "Apple Color Emoji")
-  (set-fontset-font t '(#x1f327 . #x1f327) "Apple Color Emoji")
+  (set-fontset-font t '(#x1f324 . #x1f32b) "Apple Color Emoji")
+
   (set-fontset-font t '(#x1f5fa . #x1f6cb) "Apple Color Emoji")
+
   (set-fontset-font t '(#x2713 . #x2713) "Arial Unicode MS")
   ;; (add-to-list 'face-font-rescale-alist `(,unicode-font . 0.5))
   )
