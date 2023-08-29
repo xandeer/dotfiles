@@ -7,7 +7,7 @@
 (autoload #'sdcv-search-input "sdcv" nil t)
 
 (setq sdcv-program (executable-find "sdcv"))
-(setq sdcv-say-word-p nil)
+(setq sdcv-say-word-p t)
 (setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict"))
 
 (with-eval-after-load 'sdcv
@@ -20,6 +20,15 @@
   (advice-add 'sdcv-translate-result :filter-return #'x-sdcv--translate-br)
 
   ;; say
+  (defun x/sdcv-say (word)
+    (azure-tts-play word
+                    (if (jieba-chinese-word? word) azure-tts-zh-voice-name
+                      azure-tts-en-voice-name)
+                    azure-tts-default-rate
+                    azure-tts-default-pitch))
+
+  (advice-add 'sdcv-say-word :override #'x/sdcv-say)
+
   (defvar x/sdcv-say-word-p t)
 
   (defun x-sdcv--say-word (&optional word)
@@ -28,7 +37,7 @@
                (not (jieba-chinese-word? word)))
       (osx-lib-say word)))
 
-  (advice-add 'sdcv-search-detail :after #'x-sdcv--say-word)
+  ;; (advice-add 'sdcv-search-detail :after #'x-sdcv--say-word)
 
   (define-key sdcv-mode-map (kbd "s")
               (lambda ()

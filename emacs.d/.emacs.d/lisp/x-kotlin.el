@@ -70,7 +70,7 @@
 (defun x/gradle-clear-cache ()
   "Clear gradle cache."
   (interactive)
-  (delete-directory (expand-file-name "~/.gradle/caches") 'recursive)
+  (delete-directory (expand-file-name "~/.gradle/caches/build-cache-1") 'recursive)
   (message "Remember to run clean task."))
 
 (provide 'x-kotlin)
