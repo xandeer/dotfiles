@@ -227,7 +227,8 @@ Remove Org-mode links, asterisks, and dynamic block markers from the text."
     (->> (filter-buffer-substring start end)
          (replace-regexp-in-string org-link "\\1")
          (replace-regexp-in-string org-dblock "")
-         (replace-regexp-in-string asterisk ""))))
+         (replace-regexp-in-string asterisk "")
+         (replace-regexp-in-string "\n" " "))))
 
 (defun azure-tts-play-region-chinese (start end &optional rate pitch)
   "Play the region from START to END in Chinese with the given RATE and PITCH.

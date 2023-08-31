@@ -3,7 +3,8 @@
 ;;; Code:
 
 ;;; browser
-(setq browse-url-browser-function 'eww-browse-url)
+;; (setq browse-url-browser-function 'eww-browse-url)
+(setq browse-url-browser-function 'browse-url-default-browser)
 
 ;;; bookmark
 (defvar x/bookmarks bookmark-alist)
