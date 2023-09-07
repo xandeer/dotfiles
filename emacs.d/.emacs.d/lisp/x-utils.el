@@ -382,7 +382,7 @@ Example:
 (defun x/insert-weather ()
   "Insert today's weather by wttr.in."
   (interactive)
-  (let ((url "https://wttr.in/Shenzhen+Nanshan?format=\"%c%C,+%t,+%h,+%w\"")
+  (let ((url "https://wttr.in/Shenzhen?format=\"%c%C,+%t,+%h,+%w\"")
         (buffer (current-buffer)))
     (insert (with-temp-buffer
               (switch-to-buffer (current-buffer) nil t)
