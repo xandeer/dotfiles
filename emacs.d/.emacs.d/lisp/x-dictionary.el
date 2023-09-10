@@ -28,6 +28,7 @@
                     azure-tts-default-pitch))
 
   (advice-add 'sdcv-say-word :override #'x/sdcv-say)
+  ;; (advice-remove 'sdcv-say-word 'x/sdcv-say)
 
   (defvar x/sdcv-say-word-p t)
 
@@ -37,12 +38,15 @@
                (not (jieba-chinese-word? word)))
       (osx-lib-say word)))
 
+  ;; (setq osx-lib-say-voice "Ting-Ting")
+
   ;; (advice-add 'sdcv-search-detail :after #'x-sdcv--say-word)
 
   (define-key sdcv-mode-map (kbd "s")
               (lambda ()
                 (interactive)
-                (osx-lib-say sdcv-current-translate-object))))
+                ;; (osx-lib-say sdcv-current-translate-object)
+                (sdcv-say-word sdcv-current-translate-object))))
 
 ;;; translate
 (autoload #'facemenu-add-face "facemenu" nil t)
