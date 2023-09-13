@@ -6,8 +6,8 @@
 
 (setq url-proxy-services
    '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
-     ("http" . "localhost:8010")
-     ("https" . "localhost:8010")))
+     ("http" . "localhost:6152")
+     ("https" . "localhost:6152")))
 
 (setq straight-recipes-gnu-elpa-use-mirror    t
       straight-repository-branch              "develop"
