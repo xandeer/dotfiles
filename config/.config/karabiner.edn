@@ -45,13 +45,15 @@
            [:f          :open_bracket]
            [:g          :close_bracket]
            ;; [:v          :close_bracket]
-           [:b          :grave_accent_and_tilde]
+           ;; [:b          :grave_accent_and_tilde]
            [:y          :equal_sign]
            [:h          :hyphen]
            [:n          :backslash]
-           [:semicolon  :!Ssemicolon]
+           ;; [:semicolon  :!Ssemicolon]
+           [:semicolon  :grave_accent_and_tilde]
            ;; [:slash      :period]
-           [:quote      :!Squote]]}
+           ;; [:quote      :!Squote]
+           ]}
 
   ;; {:des "swap : and ;"
   ;;  :rules [[:!Ssemicolon :semicolon]
@@ -77,10 +79,11 @@
            [:p       :!S0]
            [:f       :!Sopen_bracket]
            [:g       :!Sclose_bracket]
-           [:b       :!Sgrave_accent_and_tilde]
+           ;; [:b       :!Sgrave_accent_and_tilde]
            [:h       :!Shyphen]
            [:y       :!Sequal_sign]
-           [:n       :!Sbackslash]]}
+           [:n       :!Sbackslash]
+           [:semicolon  :!Sgrave_accent_and_tilde]]}
 
   {:des "(e-[key]) mouse"
    :rules [[:condi :built-in :e-mode]
