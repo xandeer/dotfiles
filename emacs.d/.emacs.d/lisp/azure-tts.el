@@ -219,6 +219,7 @@ Remove Org-mode links, asterisks, and dynamic block markers from the text."
   ;; Define the regular expressions for Org-mode links, asterisks,
   ;; and dynamic block markers
   (let* ((org-link (rx (seq "[[" (*? anything) "][" (group (+? anything)) "]]")))
+         (anki-cloze (rx (seq "{{c1::" (group (+? anything)) "}}")))
          (asterisk (rx (any "*")))
          (org-dblock (rx (seq "#+" (group (| "BEGIN" "begin" "END" "end")) (0+ nonl)))))
     ;; Use filter-buffer-substring to get the text between START and END
@@ -226,6 +227,7 @@ Remove Org-mode links, asterisks, and dynamic block markers from the text."
     ;; Remove dynamic block markers and asterisks using replace-regexp-in-string
     (->> (filter-buffer-substring start end)
          (replace-regexp-in-string org-link "\\1")
+         (replace-regexp-in-string anki-cloze "\\1")
          (replace-regexp-in-string org-dblock "")
          (replace-regexp-in-string asterisk "")
          (replace-regexp-in-string "\n" " "))))

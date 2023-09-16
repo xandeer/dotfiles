@@ -374,21 +374,51 @@ Example:
 ;;; url
 (defun x/fetch-api-as-raw-string (url)
   "Fetch the content of an API URL and return it as a raw string."
-  (with-current-buffer (url-retrieve-synchronously url)
+  (with-current-buffer
+      (url-retrieve-synchronously url)
     (goto-char (point-min))
-    (re-search-forward "\n\n")
+    (re-search-forward "\n\n")          ; Skip HTTP headers
     (buffer-substring (point) (point-max))))
 
-(defun x/insert-weather ()
-  "Insert today's weather by wttr.in."
+(defun x/fetch-api-as-json (url)
+  "Fetch the content of an API URL and return it as a json."
+  (json-read-from-string (x/fetch-api-as-raw-string url)))
+
+(defun get-json-value (key json-object)
+  "Get the value associated with KEY in JSON-OBJECT."
+  (cdr (assoc key json-object)))
+
+(defun x/get-current-location ()
+  "Fetch current latitude and longitude using an IP-based geolocation service."
   (interactive)
-  (let ((url "https://wttr.in/Shenzhen?format=\"%c%C,+%t,+%h,+%w\"")
-        (buffer (current-buffer)))
-    (insert (with-temp-buffer
-              (switch-to-buffer (current-buffer) nil t)
-              (mm-url-insert url)
-              ;; trim the surround ""
-              (buffer-substring (1+ (point-min)) (1- (point-max)))))))
+  (let ((url "https://ipinfo.io/json"))
+    (get-json-value 'loc (x/fetch-api-as-json url))))
+
+(defvar x/location nil)
+
+(defun x/insert-weather ()
+  "Insert current weather by weatherapi.com."
+  (interactive)
+  (unless x/location
+    (setq x/location (x/get-current-location)))
+
+  (let* ((url (format
+               "https://api.weatherapi.com/v1/current.json?key=%s&q=%s"
+               (auth-source-pick-first-password
+                :host "weatherapi.com"
+                :user "weather")
+               x/location))
+         (current (get-json-value 'current (x/fetch-api-as-json url)))
+
+         (condition (get-json-value 'text (get-json-value 'condition current)))
+         (temp (get-json-value 'temp_c current))
+         (feel (get-json-value 'feelslike_c current))
+         (humidity (get-json-value 'humidity current))
+         (wind (get-json-value 'wind_kph current))
+         (vis (get-json-value 'vis_km current)))
+
+    (insert (format "%s, %d°C, fl: %d°C, %d%%, %dkm/h, %dkm"
+                    condition temp feel humidity wind vis))))
 
 (provide 'x-utils)
 ;;; x-utils.el ends here
