@@ -36,31 +36,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ;; Delete the original text between BEG and END
     (delete-region beg end)))
 
-(defun x/convert-chinese-quotations ()
-  "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
-  (interactive)
-
-  (let ((quotas
-         '(("‘" . "『")
-           ("’" . "』")
-           ("“" . "「")
-           ("”" . "」")
-           ("，" . ", ")
-           ("；" . "; ")
-           ("。" . ". ")
-           ("？" . "? ")
-           ("：" . ": ")
-           ("（" . "(")
-           ("）" . ")")
-           ("・" . "·")
-           ("！" . "! ")
-           (" )" . ")")
-           (" 」" . "」")
-           (" 』" . "』"))))
-    (mapc (lambda (q)
-            (x/replace (car q) (cdr q)))
-          quotas)))
-
 (defun x/convert-to-chinese-quotations ()
   "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
   (interactive)
@@ -107,13 +82,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
   (interactive)
   (save-excursion
     (replace-regexp "\n\n\n" "\n\n")))
-
-(defun x/escape-readwise ()
-  "Convert Notes to comments, and flush double newlines."
-  (interactive)
-  (save-excursion
-    (replace-regexp "\n[*]\\{2\\}Note:[*]\\{2\\} \\(.*\\)$" "#+begin_comments\n\\1\n#+end_comments"))
-  (x/flush-double-newlines))
 
 (defun x/delete-current-buffer ()
   "Delete the current buffer."

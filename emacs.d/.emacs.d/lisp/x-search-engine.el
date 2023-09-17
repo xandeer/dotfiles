@@ -15,7 +15,7 @@
 (defengine wiki-en "https://en.wikipedia.org/wiki/%s" :keybinding "w" :browser 'eww)
 (defengine wiki-cn "https://zh.wikipedia.org/wiki/%s" :keybinding "f" :browser 'eww)
 
-(defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "u" :browser 'xwidget-webkit-browse-url)
+(defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "u")
 
 (provide 'x-search-engine)
 ;;; x-search-engine.el ends here

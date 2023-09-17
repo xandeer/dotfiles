@@ -121,6 +121,7 @@
 (require 'x-jieba)
 (require 'x-lispy)
 (require 'x-lsp)
+(require 'x-notes)
 (require 'x-git)
 (require 'x-meow)
 (require 'x-pass)
