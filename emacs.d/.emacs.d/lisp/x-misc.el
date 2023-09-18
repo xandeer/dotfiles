@@ -7,6 +7,7 @@
   (let ((command (format "osascript -e 'id of app \"%s\"'" app-name)))
     (string-trim (shell-command-to-string command))))
 
+;;;###autoload
 (defun x/get-bundle-id-from-application-directory ()
   "Get the bundle ID for the selected application from the Applications directory."
   (interactive)
@@ -15,6 +16,7 @@
          (app-name (completing-read "Select an application: " app-list)))
     (message (x/get-bundle-id app-name))))
 
+;;;###autoload
 (defun x/insert-bundle-id ()
   "Insert the bundle id."
   (interactive)

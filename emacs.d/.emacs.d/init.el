@@ -100,7 +100,6 @@
 (require 'x-web)
 
 ;;; tools
-(require 'x-anki)
 (require 'x-anzu)
 (require 'x-avy)
 (require 'x-browser)
@@ -121,7 +120,6 @@
 (require 'x-jieba)
 (require 'x-lispy)
 (require 'x-lsp)
-(require 'x-notes)
 (require 'x-git)
 (require 'x-meow)
 (require 'x-pass)
@@ -143,13 +141,19 @@
 (require 'x-image)
 (require 'x-mouse)
 (require 'x-wakatime)
-(require 'x-misc)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 (x--load-file-under-vanilla "local.el")
+
+;;; autoloads
+(add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
+(require 'x-autoloads)
+(require 'x-anki-autoloads)
+(require 'x-notes-autoloads)
+(require 'x-misc-autoloads)
 
 ;;; after loaded
 (defun x/load-init-session ()
@@ -171,9 +175,6 @@
 
 (x/append-init-hook
  '(ebuku))
-
-(x/package-use 'nix-mode)
-(require 'nix-mode)
 
 (provide 'init)
 

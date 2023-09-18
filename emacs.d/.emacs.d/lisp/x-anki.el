@@ -7,6 +7,7 @@
 ;; inspector: 31746032
 (setq org-anki-default-deck "Default")
 
+;;;###autoload
 (defun x/anki-cloze (beg end)
   "Transform the region between BEG and END into a cloze."
   (interactive "r")

@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;###autoload
 (defun x/boox-note-trim ()
   "Remove the information I don't care about in the boox notes."
   (interactive)
@@ -13,6 +14,7 @@
               (x/replace regexp ""))
             rxs)))
 
+;;;###autoload
 (defun x/escape-readwise ()
   "Convert Notes to comments, and flush double newlines."
   (interactive)

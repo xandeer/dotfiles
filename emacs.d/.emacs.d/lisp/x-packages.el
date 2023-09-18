@@ -177,6 +177,7 @@ Usages:
     flycheck-kotlin
     (ob-kotlin . "zweifisch/ob-kotlin")
 
+    nix-mode
     (nushell-mode . "azzamsa/emacs-nushell")
 
     ;; web
