@@ -33,13 +33,28 @@
 ;; Set default column view headings: Task Effort Clock_Summary
 (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
 
-(setq bh/organization-task-id "78C5A814-5215-47D0-AC09-6522CBCBA516")
-
-(setq x/work-chore-task-id "8170CF57-231D-493B-A8E1-1CBA9370A244")
-(defun x/clock-in-work-chore-task ()
-  (interactive)
-  (org-with-point-at (org-id-find x/work-chore-task-id 'marker)
+(defun x/clock-in-task-with-id (id)
+  "Clock in the particular task with `ID'."
+  (org-with-point-at (org-id-find id 'marker)
     (org-clock-in '(16))))
+
+(defvar x/work-chore-task-id "8170CF57-231D-493B-A8E1-1CBA9370A244")
+(defun x/clock-in-work-chore-task ()
+  "Clock in the chore task for work."
+  (interactive)
+  (x/clock-in-task-with-id x/work-chore-task-id))
+
+(defvar x/organization-task-id "78C5A814-5215-47D0-AC09-6522CBCBA516")
+(defun x/clock-in-organization-task ()
+  "Clock in the organization task."
+  (interactive)
+  (x/clock-in-task-with-id x/organization-task-id))
+
+(defvar x/reading-task-id "238104E0-22BC-4F0F-A0B3-87DA326828EF")
+(defun x/clock-in-reading-task ()
+  "Clock in the reading task."
+  (interactive)
+  (x/clock-in-task-with-id x/reading-task-id))
 
 (defvar x--clock-timer nil)
 

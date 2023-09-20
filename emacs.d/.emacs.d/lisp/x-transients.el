@@ -101,10 +101,11 @@
   "Transient for global actions."
   [["Clock"
     ("i" "In last" org-clock-in-last)
+    ("g" "In organization" x/clock-in-organization-task)
+    ("r" "In reading" x/clock-in-reading-task)
     ("H-i" "In work chore" x/clock-in-work-chore-task)
-    ("j" "Goto current" org-clock-goto)
-    ("H-l" "In organization" bh/clock-in-organization-task-as-default)
     ("l" "Out" org-clock-out)
+    ("j" "Goto current" org-clock-goto)
     ("k" "Done current" x/org-done-current)]
    ["Mics"
     ("n" "Focus lines" consult-focus-lines)
