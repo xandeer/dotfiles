@@ -6,7 +6,7 @@
 (defun x/boox-note-trim ()
   "Remove the information I don't care about in the boox notes."
   (interactive)
-  (let ((rxs '("^时间: 20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]\n"
+  (let ((rxs '("^时间：20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]\n"
                "^【原文】"
                "^【批注】\n"
                "^-------------------\n")))

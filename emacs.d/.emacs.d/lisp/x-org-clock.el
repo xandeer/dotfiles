@@ -56,6 +56,12 @@
   (interactive)
   (x/clock-in-task-with-id x/reading-task-id))
 
+(defvar x/noting-task-id "A1400159-820B-4D93-A14A-E064F7C542C7")
+(defun x/clock-in-noting-task ()
+  "Clock in the noting task."
+  (interactive)
+  (x/clock-in-task-with-id x/noting-task-id))
+
 (defvar x--clock-timer nil)
 
 (defun x--clock-cancel ()

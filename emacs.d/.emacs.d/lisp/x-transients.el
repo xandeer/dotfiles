@@ -103,12 +103,13 @@
     ("i" "In last" org-clock-in-last)
     ("g" "In organization" x/clock-in-organization-task)
     ("r" "In reading" x/clock-in-reading-task)
+    ("n" "In noting" x/clock-in-noting-task)
     ("H-i" "In work chore" x/clock-in-work-chore-task)
     ("l" "Out" org-clock-out)
     ("j" "Goto current" org-clock-goto)
     ("k" "Done current" x/org-done-current)]
    ["Mics"
-    ("n" "Focus lines" consult-focus-lines)
+    ("f" "Focus lines" consult-focus-lines)
     ("o" "Consult outline" consult-outline)
 
     ("c" "Convert quotations" x/convert-to-chinese-quotations)
