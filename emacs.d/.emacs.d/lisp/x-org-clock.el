@@ -71,20 +71,16 @@
 (defun x--clock-out ()
   (if (y-or-n-p "It's time to take a rest? ")
       (org-clock-out)
-    (x--clock-in "3")))
+    (x--clock-in 3)))
 
 (defun x--clock-in (&optional minutes)
   "Max MINUTES while clock in."
-  (when (s-blank-str? minutes)
-    (setq minutes (read-from-minibuffer "Set a timer to stop(with siri?), default[52], j[45], k[25]: ")))
-  (setq minutes (cond ((s-blank-str? minutes) 25)
-                      ((s-equals? minutes "j") 45)
-                      ((s-equals? minutes "k") 52)
-                      (t (string-to-number minutes))))
+  (unless minutes
+    (setq minutes 25))
+
   (x--clock-cancel)
-  (when (> minutes 0)
-    (setq x--clock-timer
-          (run-with-timer (* minutes 60) nil #'x--clock-out))))
+  (setq x--clock-timer
+        (run-with-timer (* minutes 60) nil #'x--clock-out)))
 
 (add-hook 'org-clock-out-hook #'x--clock-cancel)
 (add-hook 'org-clock-in-hook #'x--clock-in)

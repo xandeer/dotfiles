@@ -48,6 +48,7 @@
     ;; ("k" "Buffer" consult-buffer)
     ;; ("H-k" "Buffer other window" consult-buffer-other-window)
     ("b" "Projectile book" (lambda () (interactive)  (projectile-find-file-in-directory (expand-file-name "syncthing/personal/book" "~"))))
+    ("n" "Projectile notes" (lambda () (interactive)  (projectile-find-file-in-directory org-directory)))
     ("w" "Projectile work" (lambda () (interactive)  (projectile-find-file-in-directory x/work-directory)))
     ("H-d" "Projectile dots" (lambda () (interactive)  (projectile-find-file-in-directory (x/expand-repo "dotfiles"))))
     ("H-f" "Project find file" projectile-find-file)
