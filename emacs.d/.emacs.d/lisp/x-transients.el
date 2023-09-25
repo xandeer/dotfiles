@@ -20,7 +20,7 @@
                                      (interactive)
                                      (shell-command "mr -d ~ update")
                                      (bookmark-maybe-load-default-file)
-                                     (x/restart-emacs)))
+                                     (restart-emacs)))
     ("c" "mr commit" (lambda ()
                        (interactive)
                        (recentf-save-list)
@@ -39,7 +39,7 @@
     ("x" "open second brain" (lambda () (interactive) (x/open "https://mdk.vercel.app")))
     ("H-x" "launch another emacs" x/launch-separate-emacs-under-x)
     ;; ("s" "eva query sleep" eva-query-sleep)
-    ("H-r" "restart" x/restart-emacs)]])
+    ("H-r" "restart" restart-emacs)]])
 
 (transient-define-prefix x/transient-buffer-group ()
   "Transient for opening buffers."

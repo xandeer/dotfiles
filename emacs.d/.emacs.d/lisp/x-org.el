@@ -42,6 +42,7 @@
 (setq org-blank-before-new-entry
       '((heading)
         (plain-list-item . auto)))
+(setq org-export-preserve-breaks t)
 (setq org-confirm-babel-evaluate nil)
 (setq org-startup-indented t)
 (setq org-indent-indentation-per-level 2)

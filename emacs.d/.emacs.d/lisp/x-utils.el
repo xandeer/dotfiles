@@ -206,12 +206,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
   (interactive)
   (call-process "sh" nil nil nil "-c" "emacs &"))
 
-(defun x/restart-emacs ()
-  "Restart Emacs."
-  (interactive)
-  (let ((kill-emacs-hook (append kill-emacs-hook (list #'x/launch-separate-emacs-under-x))))
-    (save-buffers-kill-emacs)))
-
 (defun x/load-current ()
   "Load the current elisp file."
   (interactive)
