@@ -9,8 +9,14 @@
 ;;
 ;; Resume clocking task on clock-in if the clock is open
 (setq org-clock-in-resume t)
+(defun x/clock-in-to-next (kw)
+  "Switch a task from TODO to NEXT when clocking in.
+Skips capture tasks, projects, and subprojects."
+  (when (and (not (and (boundp 'org-capture-mode) org-capture-mode))
+             (member (org-get-todo-state) '("TODO" "WAITING")))
+    "NEXT"))
 ;; Change tasks to NEXT when clocking in
-(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+(setq org-clock-in-switch-to-state 'x/clock-in-to-next)
 ;; Separate drawers for clocking and logs
 (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
 ;; Save clock data and state changes and notes in the LOGBOOK drawer
