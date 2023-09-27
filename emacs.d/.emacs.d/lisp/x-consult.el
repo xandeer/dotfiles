@@ -51,7 +51,8 @@
 ;; Other custom bindings
 (x/define-keys global-map
                '(("M-y" consult-yank-pop)
-                 ("<help> a" consult-apropos)
+                 ("<help> i" consult-info)
+                 ("<help> I" info)
                  ("C-s" consult-line)))
 
 (global-set-key (kbd "C-x M-:") 'consult-complex-command) ;; orig. repeat-complex-command
