@@ -379,7 +379,7 @@ Example:
          (wind (get-json-value 'wind_kph current))
          (vis (get-json-value 'vis_km current)))
 
-    (insert (format "%s, %d°C, fl: %d°C, %d%%, %dkm/h, %dkm"
+    (insert (format ", %s, %d°C, fl: %d°C, %d%%, %dkm/h, %dkm"
                     condition temp feel humidity wind vis))))
 
 (provide 'x-utils)
