@@ -20,10 +20,11 @@
 
 (x/load-file-in-user-emacs-directory "private.el")
 
-(let ((paths '("lisp" "autoloads" "other")))
-  (mapc (lambda (path)
-          (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
-        paths))
+(defun x/load-path-add (path)
+  "Add PATH in `user-emacs-directory' to `load-path'."
+  (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
+
+(mapc 'x/load-path-add '("lisp" "autoloads" "other"))
 
 ;;; Bootstrap
 ;; straight
@@ -77,7 +78,6 @@
 (require 'x-org-roam)
 
 ;;; languages
-;; (require 'x-treesit)
 (require 'x-clojure)
 (require 'x-elisp)
 ;; (require 'x-elixir)

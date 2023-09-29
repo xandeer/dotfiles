@@ -33,9 +33,6 @@
 (global-set-key [remap eval-last-sexp] 'pp-eval-last-sexp)
 (x/append-init-hook #'eros-mode)
 
-;; (require-package 'elisp-demos)
-;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
-
 (with-eval-after-load 'ert
   ;; https://docs.racket-lang.org/test-engine/index.html#%28form._%28%28lib._test-engine%2Fracket-tests..rkt%29._check-satisfied%29%29
   (defun statified? (exp pred?)

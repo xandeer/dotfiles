@@ -5,7 +5,8 @@
 (defconst x/autoloads-files
   '("anki"
     "notes"
-    "misc"))
+    "misc"
+    "weather"))
 
 (defconst x/autoloads-dir
   (expand-file-name "autoloads" user-emacs-directory))

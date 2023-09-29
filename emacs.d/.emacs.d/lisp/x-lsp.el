@@ -2,18 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;; The old version 2.17 doesn't provide function =-compose=,
-;; which is required by =lsp-mode=.
-;; (require-package
-;;  '(dash
-;;    :host github
-;;    :repo "magnars/dash.el"
-;;    :tag "2.18.1"))
-
-;; (require 'dash)
-;; (with-eval-after-load 'dash
-;;   (dash-enable-font-lock))
-
 (require 'lsp-mode)
 
 (setq lsp-auto-guess-root t)
