@@ -16,6 +16,7 @@
   (setq dired-mouse-drag-files t)
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-auto-revert-buffer t)
+  (setq dired-clean-confirm-killing-deleted-buffers nil)
 
   (setq dirvish-attributes '(all-the-icons file-size collapse subtree-state vc-state git-msg))
   ;; (dirvish-override-dired-mode)
@@ -65,46 +66,54 @@
                (expand-file-name (file-name-nondirectory file)
                                  downloads-dir))) files)))
 
+  (defun x/rm-zlib-suffix ()
+    "Remove zlib suffix in the current Dired buffer."
+    (interactive)
+    (wdired-change-to-wdired-mode)
+    (replace-string " (z-lib.org)" "")
+    (replace-string " (Z-Library)" "")
+    (wdired-finish-edit))
+
   (x/define-keys
    dired-mode-map
    '(("* n" dired-next-marked-file)
      ("* p" dired-prev-marked-file)
-     ("q"  +dired/quit-all)
-     ("d"  dired-do-delete)
-     ("h"  dired-up-directory)
-     ("u"  dired-up-directory)
-     ("n"  dired-unmark)
-     ("N"  dired-unmark-all-marks)
-     ("@"  x/change-hs-on-dired)
-     ("^"  x/cow-current)
-     (">"  x/telega-send-to-chat)
-     ("i"  wdired-change-to-wdired-mode)
-     ("j"  dired-next-line)
-     ("k"  dired-previous-line)
-     ("l"  dired-find-file)
-     ("r"  x/reveal-in-finder)
-     ("."  dirvish))))
+     ("q" +dired/quit-all)
+     ("d" dired-do-delete)
+     ("h" dired-up-directory)
+     ("u" dired-up-directory)
+     ("n" dired-unmark)
+     ("N" dired-unmark-all-marks)
+     ("@" x/change-hs-on-dired)
+     ("^" x/cow-current)
+     (">" x/telega-send-to-chat)
+     ("i" wdired-change-to-wdired-mode)
+     ("j" dired-next-line)
+     ("k" dired-previous-line)
+     ("l" dired-find-file)
+     ("r" x/reveal-in-finder)
+     ("." dirvish)))
 
-(require 'dired-x)
+  (add-hook 'dired-mode-hook #'dired-omit-mode)
 
-(setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
-;; KOReader
-;; (add-to-list 'dired-omit-extensions ".sdr")
-;; (setq dired-omit-extensions (delete ".sdr" dired-omit-extensions))
-;; syncthing
-(setq dired-omit-files
-      (concat dired-omit-files "\\|" (rx ".stfolder" string-end)))
-(setq dired-omit-files
-      (concat dired-omit-files "\\|" (rx ".DS_Store" string-end)))
-
-(setq dired-clean-confirm-killing-deleted-buffers nil)
-(add-hook 'dired-mode-hook (lambda () (dired-omit-mode)))
-;; (add-hook 'dired-mode-hook #'dired-collapse-mode)
-;; (remove-hook 'dired-mode-hook #'dired-collapse-mode)
-
-(require 'dired-filter)
-(with-eval-after-load 'dired-filter
+  (autoload #'dired-filter-group-mode "dired-filter" nil t)
   (add-hook 'dired-mode-hook #'dired-filter-group-mode)
+  ;; (add-hook 'dired-mode-hook #'dired-collapse-mode)
+
+  (require 'dired-rainbow))
+
+(with-eval-after-load 'dired-x
+  (setq-default dired-omit-extensions (remove ".bin" dired-omit-extensions))
+  ;; KOReader
+  ;; (add-to-list 'dired-omit-extensions ".sdr")
+  ;; (setq dired-omit-extensions (delete ".sdr" dired-omit-extensions))
+  ;; syncthing
+  (setq dired-omit-files
+        (concat dired-omit-files "\\|" (rx ".stfolder" string-end)))
+  (setq dired-omit-files
+        (concat dired-omit-files "\\|" (rx ".DS_Store" string-end))))
+
+(with-eval-after-load 'dired-filter
   (define-key dired-filter-map "p" #'dired-filter-pop-all)
 
   (setq dired-filter-revert 'always)
@@ -138,7 +147,6 @@
            ("KOReader"
             (extension "sdr"))))))
 
-(require 'dired-rainbow)
 (with-eval-after-load 'dired-rainbow
   (dired-rainbow-define html "#eb5286"
                         ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
@@ -179,11 +187,11 @@
   (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
-(require 'dired-narrow)
-(with-eval-after-load 'dired-narrow
-  (define-key dired-narrow-map (kbd "<down>") 'dired-narrow-next-file)
-  (define-key dired-narrow-map (kbd "<up>") 'dired-narrow-previous-file)
-  (define-key dired-narrow-map (kbd "<right>") 'dired-narrow-enter-directory))
+;; (require 'dired-narrow)
+;; (with-eval-after-load 'dired-narrow
+;;   (define-key dired-narrow-map (kbd "<down>") 'dired-narrow-next-file)
+;;   (define-key dired-narrow-map (kbd "<up>") 'dired-narrow-previous-file)
+;;   (define-key dired-narrow-map (kbd "<right>") 'dired-narrow-enter-directory))
 
 (provide 'x-dired)
 ;;; x-dired.el ends here

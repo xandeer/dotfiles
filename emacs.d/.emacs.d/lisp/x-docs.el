@@ -17,7 +17,7 @@
 
   (add-hook 'css-mode-hook (x/devdocs-setup '("css" "tailwindcss")))
   (add-hook 'elixir-mode-hook (x/devdocs-setup '("elixir~1.13")))
-  (add-hook 'kotlin-mode-hook (x/devdocs-setup '("kotlin~1.6" "openjdk~18")))
+  (add-hook 'kotlin-mode-hook (x/devdocs-setup '("kotlin~1.9" "openjdk~18")))
   (add-hook 'typescript-mode-hook (x/devdocs-setup '("typescript" "javascript" "rxjs" "tailwindcss")))
   (add-hook 'js2-mode-hook (x/devdocs-setup '("javascript" "rxjs" "tailwindcss")))
   (add-hook 'clojure-mode-hook (x/devdocs-setup '("clojure~1.11")))

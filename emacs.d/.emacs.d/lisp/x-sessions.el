@@ -40,7 +40,7 @@
 (add-to-list 'savehist-additional-variables '(kill-ring . 20))
 (add-to-list 'savehist-additional-variables '(regexp-search-ring . 20))
 
-(x/append-init-hook #'session-initialize)
+;; (x/append-init-hook #'session-initialize)
 (setq session-save-file (no-littering-expand-var-file-name "session"))
 (setq session-name-disable-regexp "\\(?:\\`'/tmp\\|notes/journal/.+\\|\\.git/[A-Z_]+\\'\\)")
 (setq session-save-file-coding-system 'utf-8)

@@ -102,10 +102,6 @@ If point was already at that position, move point to beginning of line."
 (add-hook 'deactivate-mark-hook #'hungry-delete-mode)
 (x/append-init-hook #'global-hungry-delete-mode)
 
-;; Something wrong with `golden-ration-mode'.
-;; (setq-default visual-fill-column-width 76)
-;; (x/append-init-hook #'global-visual-fill-column-mode)
-
 (x/define-keys global-map
                '(([remap kill-ring-save] easy-kill)
                  ([remap mark-sexp] easy-mark)))
@@ -123,18 +119,6 @@ If point was already at that position, move point to beginning of line."
     (fboundp 'auto-compression-mode)
   (autoload #'auto-compression-mode "jka-cmpr" nil t))
 (x/append-init-hook #'auto-compression-mode)
-
-(require 'auto-save)
-(setq auto-save-silent t)
-(setq auto-save-delete-trailing-whitespace t)
-(setq auto-save-idle 0.5)
-(add-hook 'org-capture-mode-hook #'auto-save-disable)
-(add-hook 'org-capture-prepare-finalize-hook #'auto-save-enable)
-(x/append-init-hook #'auto-save-enable)
-
-(add-hook 'eldoc-mode-hook #'eldoc-box-hover-at-point-mode)
-(with-eval-after-load 'eldoc-box
-  (set-face-background 'eldoc-box-border "gray10"))
 
 (setq expand-region-subword-enabled t)
 (x/define-keys global-map
@@ -156,62 +140,49 @@ If point was already at that position, move point to beginning of line."
 (x/append-init-hook #'global-hl-line-mode)
 ;; (with-eval-after-load 'hl-line
 ;;   (set-face-background 'hl-line "#2a2e48"))
-
 
-(add-hook 'prog-mode-hook #'color-identifiers-mode)
+;;; misc
+(defun x/flush-double-newlines ()
+  "Replace double newlines with one."
+  (interactive)
+  (save-excursion
+    (replace-regexp "\n\n\n" "\n\n")))
 
-(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
-(setq highlight-indent-guides-responsive nil)
-(setq highlight-indent-guides-delay 0.5)
-(setq highlight-indent-guides-auto-odd-face-perc 3)
-(setq highlight-indent-guides-auto-even-face-perc 6)
+(defun x/duplicate-line ()
+  "Duplicate the current line."
+  (interactive)
+  (progn
+    (move-beginning-of-line 1)
+    (insert (thing-at-point 'line))
+    (move-end-of-line 1)))
 
-(x/append-init-hook #'rainbow-mode)
-(add-hook 'text-mode-hook #'rainbow-mode)
-(add-hook 'org-mode-hook #'rainbow-mode)
-(add-hook 'css-mode-hook #'rainbow-mode)
-(add-hook 'html-mode-hook #'rainbow-mode)
-(add-hook 'prog-mode-hook #'rainbow-mode)
-(with-eval-after-load 'rainbow-mode
-  (when (fboundp 'diminish)
-    (diminish 'rainbow-mode)))
+(defun x/toggle-narrow (arg)
+  (interactive "p")
+  (if (buffer-narrowed-p)
+      (widen)
+    (cond ((region-active-p)
+           (narrow-to-region (region-beginning) (region-end)))
+          (lispy-mode
+           (lispy-narrow arg))
+          ((equal major-mode 'org-mode)
+           (org-toggle-narrow-to-subtree))
+          (smartparens-mode
+           (sp-narrow-to-sexp arg)))))
 
-(add-hook 'css-mode-hook #'rainbow-identifiers-mode)
-(add-hook 'html-mode-hook #'rainbow-identifiers-mode)
-(add-hook 'prog-mode-hook #'rainbow-identifiers-mode)
-(with-eval-after-load 'rainbow-identifiers
-  (when (fboundp 'diminish)
-    (diminish 'rainbow-identifiers-mode)))
+(defun x/new-line-before ()
+  "Insert a new line before the current line."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-according-to-mode))
 
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'org-src-mode-hook #'rainbow-delimiters-mode)
-
-(setq htmlize-pre-style t)
-
-(x/append-init-hook #'show-paren-mode)
-
-(x/append-init-hook #'smartparens-global-mode)
-(setq sp-hybrid-kill-entire-symbol nil)
-;; https://stackoverflow.com/questions/22107501/set-emacs-to-smart-auto-line-after-a-parentheses-pair
-(with-eval-after-load 'smartparens
-  (require 'smartparens-config)
-  (sp-with-modes '(js-mode json-mode web-mode kotlin-mode css-mode typescript-mode)
-    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
-    (sp-local-pair "[" nil :post-handlers '(:add ("||\n[i]" "RET")))
-    (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))))
-
-(custom-set-faces
- '(quick-peek-border-face
-   ((t
-     (:background "#75b79e" :height 0.1))))
- '(quick-peek-padding-face
-   ((t
-     (:height 0.1)))))
-
-(setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator " • ")
-(setq uniquify-after-kill-buffer-p t)
-(setq uniquify-ignore-buffers-re "^\\*")
+(defun x/new-line-after ()
+  "Insert a new line after the current line."
+  (interactive)
+  (end-of-line)
+  (newline)
+  (indent-according-to-mode))
 
 (provide 'x-editor)
 ;;; x-editor.el ends here

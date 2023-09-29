@@ -45,9 +45,6 @@
 
 (require 'x-start-process)
 
-;; osx
-(require 'x-osx)
-
 ;;; key bindings
 (require 'x-transients)
 ;; which-key, keyfreq, osx-modifiers
@@ -78,6 +75,7 @@
 (require 'x-org-roam)
 
 ;;; languages
+(require 'x-prog)
 (require 'x-clojure)
 (require 'x-elisp)
 ;; (require 'x-elixir)
@@ -121,6 +119,9 @@
 (require 'x-telega)
 (require 'x-vertico)
 (require 'x-xwidget)
+
+;; osx
+(require 'x-osx)
 
 ;;; chores
 (require 'x-image)

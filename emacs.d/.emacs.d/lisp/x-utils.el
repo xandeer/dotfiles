@@ -69,47 +69,15 @@ If BEG and END are not provided, the function operates on the entire buffer."
             (x/replace (car q) (cdr q)))
           quotas)))
 
-(defun x/rm-zlib-suffix ()
-  "Remove zlib suffix in the current Dired buffer."
-  (interactive)
-  (wdired-change-to-wdired-mode)
-  (replace-string " (z-lib.org)" "")
-  (replace-string " (Z-Library)" "")
-  (wdired-finish-edit))
-
-(defun x/flush-double-newlines ()
-  "Replace double newlines with one."
-  (interactive)
-  (save-excursion
-    (replace-regexp "\n\n\n" "\n\n")))
-
-(defun x/delete-current-buffer ()
-  "Delete the current buffer."
-  (interactive)
-  (delete-file (buffer-name))
-  (kill-current-buffer))
-
-(defun x/duplicate-line ()
-  "Duplicate the current line."
-  (interactive)
-  (progn
-    (move-beginning-of-line 1)
-    (insert (thing-at-point 'line))
-    (move-end-of-line 1)))
-
-(defun x/bookmark (name)
-  "Goto bookmark with NAME, or update it."
-  (interactive)
-  (if (s-contains? name (buffer-name))
-      (bookmark-set name)
-    (bookmark-jump name)))
-
 (defun x/kill-other-window-buffer ()
   "Kill the buffer in other window."
   (interactive)
   (other-window 1)
   (kill-buffer)
   (other-window 1))
+
+;; (global-set-key (kbd "H-e") 'x/kill-other-window-buffer)
+(global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
 (defun x/expand-repo (path)
   "Expand PATH in ~/prejects/personal ."
@@ -119,47 +87,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
   "Expand PATH in `org-directory`."
   (expand-file-name path (x/expand-repo "notes")))
 
-(global-set-key (kbd "H-e") 'x/kill-other-window-buffer)
-(global-set-key (kbd "H-b") (lambda () (interactive) (switch-to-buffer "*scratch*")))
-
-(defun x/trash-temp ()
-  "Move some temp files to trash."
-  (interactive)
-  (dolist (path '("~/syncthing/donut/apk"
-                  "~/syncthing/personal/temp"))
-    (shell-command (concat "trash " path
-                           "; mkdir -p " path)
-                   "*x/trash-temp*")))
-
-;; Move it to /Library/LaunchDaemons
-;; (add-hook #'after-init-hook
-          ;; (lambda ()
-            ;; (async-shell-command "~/bin/hs -d ~/Downloads" "*hs-daemon*")))
-
-;; (defun x/change-hs-root (path)
-;;   (interactive)
-;;   (let ((url-request-method "PUT"))
-;;     (with-current-buffer
-;;         (url-retrieve-synchronously
-;;          (concat "http://localhost"
-;;                  (expand-file-name path)))
-;;       (buffer-string))))
-
-(defun x/change-hs-root (path)
-  "Start dufs at PATH."
-  (interactive)
-  (let* ((program "hs")
-         (buffer (x/process-buffer-get program))
-         (process (get-buffer-process buffer)))
-    (when process
-      (kill-process process)
-      (sleep-for 0.1))
-    (x/start-process (format "%s %s" program path))))
-
-(defun x/change-hs-on-dired ()
-  (interactive)
-  (x/change-hs-root dired-directory))
-
 (defun x/ifconfig ()
   (interactive)
   (message (format-network-address
@@ -167,35 +94,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
              (car (network-interface-info "en0"))
              (car (network-interface-info "en1")))
             t)))
-
-;;; file
-;; https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el
-(defun x/rename ()
-  "Renames both current buffer and file it's visiting to a new name."
-  (interactive)
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (unless filename
-      (error "Buffer '%s' is not visiting a file!" name))
-    (when (file-exists-p filename)
-      (let ((new-name (read-from-minibuffer "New name: " name)))
-        (rename-file filename new-name 1)
-        (set-visited-file-name new-name)
-        (rename-buffer new-name)))))
-
-(defun x/browse-current-file ()
-  "Open the current file as a URL using `browse-url`."
-  (interactive)
-  (let ((file-name (buffer-file-name)))
-    (if (and (fboundp 'tramp-tramp-file-p)
-             (tramp-tramp-file-p file-name))
-        (error "Cannot open tramp file")
-      (browse-url (concat "file://" file-name)))))
-
-(defun x/copy-file-path ()
-  "Copy the current buffer's file path to the kill ring."
-  (interactive)
-  (kill-new (buffer-file-name)))
 
 (defun x/string-append-time-suffix (string)
   "Append a time suffix to STRING."
@@ -205,39 +103,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
   "Launch a separate Emacs instance under X."
   (interactive)
   (call-process "sh" nil nil nil "-c" "emacs &"))
-
-(defun x/load-current ()
-  "Load the current elisp file."
-  (interactive)
-  (load-file (buffer-file-name)))
-
-(defun x/toggle-narrow (arg)
-  (interactive "p")
-  (if (buffer-narrowed-p)
-      (widen)
-    (cond ((region-active-p)
-           (narrow-to-region (region-beginning) (region-end)))
-          (lispy-mode
-           (lispy-narrow arg))
-          ((equal major-mode 'org-mode)
-           (org-toggle-narrow-to-subtree))
-          (smartparens-mode
-           (sp-narrow-to-sexp arg)))))
-
-(defun x/new-line-before ()
-  "Insert a new line before the current line."
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-(defun x/new-line-after ()
-  "Insert a new line after the current line."
-  (interactive)
-  (end-of-line)
-  (newline)
-  (indent-according-to-mode))
 
 ;;; exercism
 (defun x/exercism-submit ()
@@ -251,13 +116,6 @@ If BEG and END are not provided, the function operates on the entire buffer."
   (interactive)
   (let ((root (locate-dominating-file (buffer-file-name) "README.md")))
     (find-file-other-window (expand-file-name "README.md" root))))
-
-(defun x/null-st ()
-  "Upload the current file to 0x0.st"
-  (interactive)
-  (x/start-process
-   (format "null.exs %s"
-           (buffer-file-name))))
 
 ;;; dots
 (defun x/makefile-executor-execute (filename)
@@ -276,7 +134,7 @@ FILENAME defaults to current buffer."
 (defun x/dots ()
   "Run make with dotfiles/Makefile."
   (interactive)
-  (x/makefile-executor-execute (expand-file-name "~/projects/personal/dotfiles/Makefile")))
+  (x/makefile-executor-execute (x/expand-repo "dotfiles/Makefile")))
 
 ;;; string
 ;; copy from https://github.com/purcell/emacs.d/blob/master/lisp/init-utils.el

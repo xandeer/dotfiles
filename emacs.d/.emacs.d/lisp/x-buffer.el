@@ -31,5 +31,20 @@ If DERIVED-P, test with `derived-mode-p', otherwise use `eq'."
                  ;; ("k" kill-current-buffer)
                  ))
 
+;;; autosave
+(require 'auto-save)
+(setq auto-save-silent t)
+(setq auto-save-delete-trailing-whitespace t)
+(setq auto-save-idle 0.5)
+(add-hook 'org-capture-mode-hook #'auto-save-disable)
+(add-hook 'org-capture-prepare-finalize-hook #'auto-save-enable)
+(x/append-init-hook #'auto-save-enable)
+
+;;; uniquify
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator " • ")
+(setq uniquify-after-kill-buffer-p t)
+(setq uniquify-ignore-buffers-re "^\\*")
+
 (provide 'x-buffer)
 ;;; x-buffer.el ends here

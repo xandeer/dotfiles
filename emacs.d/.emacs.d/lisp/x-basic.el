@@ -66,13 +66,5 @@
 (setq bookmark-save-flag 1)
 (x/append-init-hook #'bookmark-maybe-load-default-file)
 
-;;; Move
-(defun x/line-move-visual (num)
-  "Move NUM lines visual."
-  (interactive "nMove: ")
-  (line-move-visual num))
-
-;; (global-set-key (kbd "M-j") #'x/line-move-visual)
-
 (provide 'x-basic)
 ;;; x-basic.el ends here
