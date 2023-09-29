@@ -101,7 +101,7 @@
        (propertize "#+end_src" 'face nil 'display '(space :width (1))))
       (shr-ensure-newline)
       (setq end (point))
-      (if (x/theme-light-p)             ; light theme
+      (if (x/theme-light?)             ; light theme
           (add-face-text-property start end '(:background "#ede5c3" :extend t))
         (add-face-text-property start end '(:background "#191b1e" :extend t)))
       (shr-ensure-newline)

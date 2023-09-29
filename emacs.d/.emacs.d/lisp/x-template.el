@@ -5,7 +5,7 @@
 (require 'tempel)
 
 ;;; config
-(setq tempel-path (expand-file-name "etc/templates" vanilla-path))
+(setq tempel-path (expand-file-name "etc/templates" user-emacs-directory))
 
 (defun x-template--setup-capf ()
   "Add the Tempel Capf to `completion-at-point-functions".
@@ -83,7 +83,7 @@
 ;; Copied from doom
 (defun x/template--file-templates-in-emacs-dirs-p (file)
   "Returns t if FILE is in your emacs.d directory."
-  (file-in-directory-p file vanilla-path))
+  (file-in-directory-p file user-emacs-directory))
 
 (defvar x/template--file-templates-alist
   ;; elisp

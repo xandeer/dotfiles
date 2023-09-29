@@ -45,26 +45,21 @@ Usages:
 ;; Sync all by `straight-x-pull-all'.
 ;; Tell straight.el about the profiles we are going to be using.
 (setq straight-profiles
-      `((nil . ,(expand-file-name "etc/packages-default.el" vanilla-path))
+      `((nil . ,(expand-file-name "etc/packages-default.el" user-emacs-directory))
         ;; Packages which are pinned to a specific commit.
-        (pinned . ,(expand-file-name "etc/packages-pinned.el" vanilla-path))))
+        (pinned . ,(expand-file-name "etc/packages-pinned.el" user-emacs-directory))))
 
 ;; Sync just pinned by `straight-x-thaw-pinned-versions'.
 (defvar x/packages-pinned
-  '((consult . "minad/consult")
-    telega)
+  '(telega)
   "Pinned packages install with `x/package-use'")
 
 (setq straight-x-pinned-packages
-      '(("consult" . "f517b70dd8a3be0b8c883633f2a7721448b40f0f")
-        ("telega.el" . "11c0c785ed9e479b65514a10022d5c34984aab59")))
+      '(("telega.el" . "11c0c785ed9e479b65514a10022d5c34984aab59")))
 
 ;;; others
 (defvar x/packages
   '(
-;;; core
-    ;; copied a counterpart in other folder
-    ;; (short-lambda . "abo-abo/short-lambda")
 ;;; basic
     all-the-icons
     anzu

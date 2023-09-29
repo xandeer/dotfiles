@@ -48,7 +48,7 @@
 
 (add-hook 'after-init-hook #'default-text-scale-mode)
 
-(setq custom-theme-directory (expand-file-name "theme" vanilla-path))
+(setq custom-theme-directory (expand-file-name "theme" user-emacs-directory))
 
 ;;; doom-theme
 (add-hook 'after-init-hook
@@ -59,6 +59,10 @@
 (with-eval-after-load 'doom-theme
   (with-eval-after-load 'org-mode
     (doom-themes-org-config)))
+
+(defun x/theme-light? ()
+  "Whether the theme is light."
+  (eq 'light (frame-parameter nil 'background-mode)))
 
 (provide 'x-theme)
 ;;; x-theme.el ends here

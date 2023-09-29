@@ -39,7 +39,7 @@
                 (read-file-name "Attach file: "
                                 (x/telega-chatbuf-attach-select-dir)
                                 nil nil nil
-                                (fn (not (string-equal % ".DS_Store"))))))
+                                (lambda (name) (not (string-equal name ".DS_Store"))))))
   (require 'telega)
   (if (telega-server-live-p)
       (let ((file-mime (or (mailcap-extension-to-mime

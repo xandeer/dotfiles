@@ -59,10 +59,11 @@
     (interactive)
     (let ((downloads-dir (expand-file-name "~/Downloads"))
           (files (dired-get-marked-files)))
-      (mapc (fn (copy-file
-                 %
-                 (expand-file-name (file-name-nondirectory %)
-                                   downloads-dir))) files)))
+      (mapc (lambda (file)
+              (copy-file
+               file
+               (expand-file-name (file-name-nondirectory file)
+                                 downloads-dir))) files)))
 
   (x/define-keys
    dired-mode-map

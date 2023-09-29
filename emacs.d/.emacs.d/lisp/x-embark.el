@@ -26,6 +26,11 @@
 (with-eval-after-load 'consult
   (require 'embark-consult))
 
+(with-eval-after-load 'grep
+  (x/define-keys
+   grep-mode-map
+   '(("i" wgrep-change-to-wgrep-mode))))
+
 (defgroup x/embark ()
   "Extensions for `embark`."
   :group 'editing)

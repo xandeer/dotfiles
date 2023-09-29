@@ -25,8 +25,15 @@
               (update-file-autoloads file t out))))
         x/autoloads-files))
 
+(defun x/autoloads-load ()
+  "Load autoloads."
+  (let ((files (directory-files x/autoloads-dir t "x-.*-autoloads.el$")))
+    (mapc #'load files)))
+
 (unless (file-exists-p x/autoloads-dir)
   (x/autoloads-generate))
+
+(x/autoloads-load)
 
 (provide 'x-autoloads)
 ;;; x-autoloads.el ends here

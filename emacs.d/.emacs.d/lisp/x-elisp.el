@@ -2,11 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
-(global-set-key (kbd "C-h F") #'helpful-function)
-(global-set-key (kbd "C-h C") #'helpful-command)
+(x/define-keys
+ help-map
+ '(("f" helpful-callable)
+   ("v" helpful-variable)
+   ("k" helpful-key)
+   ("F" helpful-function)
+   ("C" helpful-command)))
 
 (transient-define-prefix x/transient-elisp-helpful ()
   "Transient for Elisp."
@@ -33,6 +35,16 @@
 
 ;; (require-package 'elisp-demos)
 ;; (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
+
+(with-eval-after-load 'ert
+  ;; https://docs.racket-lang.org/test-engine/index.html#%28form._%28%28lib._test-engine%2Fracket-tests..rkt%29._check-satisfied%29%29
+  (defun statified? (exp pred?)
+    "Return t if `EXP' is statified by `PRED?'."
+    (should (funcall pred? exp)))
+
+  (defun statified-not? (exp pred?)
+    "Return t if `EXP' is not statified by `PRED?'."
+    (should-not (funcall pred? exp))))
 
 (provide 'x-elisp)
 ;;; x-elisp.el ends here

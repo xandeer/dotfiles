@@ -1,8 +1,5 @@
 ;;; init.el --- Xandeer's Emacs Configuration file. -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; 1. package name starts with "x"
-;; 2. global symbol starts with "x/"
-;; 3. local symbol starts with "x--"
 
 ;;; Refs:
 ;; 1. https://github.com/purcell/emacs.d/
@@ -11,48 +8,38 @@
 
 (setq-default lexical-binding t)
 
-(defun x/theme-light-p ()
-  "Whether the theme is light."
-  (eq 'light (frame-parameter nil 'background-mode)))
-
-(defvar x/doom? (boundp 'doom-version)
-  "Whether use doom-emacs or not.")
-
 (defvar x/vertico-posframe? nil
   "Whether use vertico-posframe or not.")
 
-(setq vanilla-path (expand-file-name "~/projects/personal/dotfiles/emacs.d/.emacs.d"))
-
-(defun x--load-file-under-vanilla (file)
-  "Load FILE under `vanilla-path'."
-  (let ((path (expand-file-name file vanilla-path)))
+(defun x/load-file-in-user-emacs-directory (file)
+  "Load FILE in `user-emacs-directory'."
+  (let ((path (expand-file-name file user-emacs-directory)))
     (if (file-exists-p path)
         (load-file path)
       (message "File %s not found." path))))
 
-(x--load-file-under-vanilla "private.el")
+(x/load-file-in-user-emacs-directory "private.el")
 
-(add-to-list 'load-path (expand-file-name "lisp" vanilla-path))
-(add-to-list 'load-path (expand-file-name "other" vanilla-path))
-
-;;; Adjust garbage collection thresholds during startup, and thereafter
-(setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'emacs-startup-hook
-            (lambda ()
-              (require 'gcmh)
-              (gcmh-mode)
-              ;; (setq gcmh-verbose t)
-              (setq gcmh-low-cons-threshold #x800000)
-              (setq gcmh-high-cons-threshold #x880000)))
-
-(require 'x-core)
+(let ((paths '("lisp" "autoloads" "other")))
+  (mapc (lambda (path)
+          (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
+        paths))
 
 ;;; Bootstrap
 ;; straight
 (require 'x-bootstrap)
 (require 'x-packages)
 (require 'no-littering)
+
 (require 'x-init-utils)
+;; If I'm modifying the config, after restart open the init.el,
+;; else run `x/load-init-session'.
+(let ((init-fn
+       (if x/configing?
+           (lambda () (find-file (expand-file-name "init.el" user-emacs-directory)))
+         #'x/load-init-session)))
+  (run-with-idle-timer 1 nil init-fn))
+
 (require 'x-utils)
 
 (require 'x-start-process)
@@ -112,7 +99,6 @@
 (require 'x-dired)
 (require 'x-draw)
 (require 'x-embark)
-;; (require 'x-eva)
 (require 'x-flycheck)
 (require 'x-folding)
 (require 'x-gpt-completion)
@@ -134,7 +120,6 @@
 (require 'x-template)
 (require 'x-telega)
 (require 'x-vertico)
-;; (require 'x-point-mode)
 (require 'x-xwidget)
 
 ;;; chores
@@ -146,32 +131,17 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(x--load-file-under-vanilla "local.el")
+(x/load-file-in-user-emacs-directory "local.el")
 
 ;;; autoloads
-(add-to-list 'load-path (expand-file-name "autoloads" user-emacs-directory))
 (require 'x-autoloads)
-(require 'x-anki-autoloads)
-(require 'x-notes-autoloads)
-(require 'x-misc-autoloads)
 
 ;;; after loaded
 (defun x/load-init-session ()
   (interactive)
-  ;; (require 'server)
-  ;; (unless (server-running-p)
   (server-start)
   (org-roam-node-random)
-  ;; something wrong with emacs 30
-  ;; (eva-mode)
-  ;; (eva-set-date-today)
   (x/start-timer-session))
-
-(let ((init-fn
-       (if x/configing?
-           (lambda () (find-file (expand-file-name "init.el" vanilla-path)))
-         #'x/load-init-session)))
-  (run-with-idle-timer 1 nil init-fn))
 
 (x/append-init-hook
  '(ebuku))

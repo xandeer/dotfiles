@@ -5,13 +5,9 @@
 (defun x/append-init-hook (arg)
   "Add ARG as hook on `after-init-hook`."
   (cond ((functionp arg)
-         (if x/doom?
-             (run-with-idle-timer 0.1 nil arg)
-           (add-hook 'after-init-hook arg)))
+         (add-hook 'after-init-hook arg))
         (t (dolist (fn arg)
-             (if x/doom?
-                 (run-with-idle-timer 0.1 nil fn)
-               (add-hook 'after-init-hook fn))))))
+             (add-hook 'after-init-hook fn)))))
 
 (defun x--push-notes ()
   (when (y-or-n-p "Push notes to github? ")

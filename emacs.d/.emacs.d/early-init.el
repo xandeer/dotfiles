@@ -4,7 +4,14 @@
 
 (setq inhibit-startup-screen t)
 (setq package-enable-at-startup nil)
+;;; Adjust garbage collection thresholds during startup, and thereafter
 (setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'emacs-startup-hook
+            (lambda ()
+              (require 'gcmh)
+              (gcmh-mode)
+              (setq gcmh-low-cons-threshold #x800000)
+              (setq gcmh-high-cons-threshold #x880000)))
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -18,16 +25,21 @@
  window-resize-pixelwise t
  frame-resize-pixelwise t)
 
-(add-to-list 'default-frame-alist '(internal-border-width . 2))
-(add-to-list 'default-frame-alist '(top . 5))
-(add-to-list 'default-frame-alist '(left . 0.5))
-(add-to-list 'default-frame-alist '(width . 0.33))
-(add-to-list 'default-frame-alist '(height . 0.66))
-;; (add-to-list 'default-frame-alist '(background-color . "#f6f1d9"))
-;; (add-to-list 'default-frame-alist '(alpha . (85 . 78)))
+(let ((frame-options
+       '((internal-border-width . 2)
+         (top . 5)
+         (left . 0.5)
+         (width . 0.33)
+         (height . 0.66)
+         ;; (background-color . "#f6f1d9")
+         ;; (alpha . (85 . 78))
+         (vertical-scroll-bars)
+         (undecorated . t))))
+  (mapc (lambda (option)
+          (add-to-list 'default-frame-alist option))
+        frame-options))
+
 ;; (set-frame-parameter nil 'alpha 90)
-(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
-(add-to-list 'default-frame-alist '(undecorated . t))
 ;; doesn't work on mac
 ;; (set-frame-parameter nil 'alpha-background 50)
 

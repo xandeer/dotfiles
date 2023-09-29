@@ -280,7 +280,7 @@
   (set-face-attribute 'org-modern-date-active nil :background "#c88562" :foreground "white" :distant-foreground "black")
   (set-face-attribute 'org-modern-date-inactive nil :background "#e0ce87" :foreground "white" :distant-foreground "black")
   (set-face-attribute 'org-modern-done nil :background "#ede5c3" :foreground "white" :distant-foreground "black")
-  (when (x/theme-light-p)
+  (when (x/theme-light?)
     (set-face-attribute 'org-modern-tag nil
                         :foreground "white"
                         :distant-foreground "black"))
@@ -298,7 +298,7 @@
 ;; it will be changed by doom-theme, so we need to set it again
 (run-with-idle-timer 0.1 nil
                      (lambda ()
-                       (when (x/theme-light-p)
+                       (when (x/theme-light?)
                          (set-face-foreground 'org-block-begin-line "gray60"))))
 
 (set-face-attribute 'org-verse nil :slant 'italic)

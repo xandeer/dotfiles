@@ -4,7 +4,7 @@
 ;;
 ;;; Code:
 
-(mapc (fn (add-hook % #'hs-minor-mode))
+(mapc (lambda (hook) (add-hook hook #'hs-minor-mode))
       '(emacs-lisp-mode-hook
         kotlin-mode-hook
         cider-mode-hook
