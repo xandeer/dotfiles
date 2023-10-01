@@ -11,7 +11,9 @@
    :host "openai.com"
    :user "chatgpt"))
 
-(defconst x/gpt-buffer "*x/gpt*")
+(defun x/gpt-buffer-get ()
+  "Return the buffer of x-gpt-completion.org in notes."
+  (find-file-noselect (x/expand-note "x-gpt-completion.org")))
 
 (defun x/gpt-completion (instruction message callback &optional gpt-4?)
   "Request GPT completion based on `INSTRUCTION' and `MESSAGE'.
@@ -99,8 +101,6 @@ and other symbols display the completion as a message."
            (point-end (if (use-region-p) (region-end) (point-max)))
            (selected-text (buffer-substring-no-properties point-start point-end))
            (original-buffer (current-buffer)))
-      (when (eq operation 'buffer)
-        (get-buffer-create x/gpt-buffer))
       (deactivate-mark)
       (x/gpt-completion
        instruction
@@ -108,7 +108,7 @@ and other symbols display the completion as a message."
        (cl-function (lambda (&key data &allow-other-keys)
                       (let* ((content (x/gpt-completion-parse-message data))
                              (op (or operation 'replace))
-                             (buffer (if (eq op 'buffer) x/gpt-buffer
+                             (buffer (if (eq op 'buffer) (x/gpt-buffer-get)
                                        original-buffer)))
                         (if (eq op 'message)
                             (kill-new (message content))
