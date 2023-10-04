@@ -148,6 +148,14 @@ FILENAME defaults to current buffer."
   (add-hook (derived-mode-hook-name mode)
             (apply-partially 'x/set-major-mode-name name)))
 
+;;; emacs
+(defun x/restart-emacs ()
+  "Restart Emacs."
+  (interactive)
+  (let* ((launch-emacs-under-x (lambda () (call-process "sh" nil nil nil "-c" "emacs &")))
+         (kill-emacs-hook (append kill-emacs-hook `(,launch-emacs-under-x))))
+    (save-buffers-kill-emacs)))
+
 ;;; keybindings
 (defun x/define-keys (map bindings)
   "Define keys in MAP according to BINDINGS.

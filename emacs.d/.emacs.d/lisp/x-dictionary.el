@@ -21,11 +21,12 @@
 
   ;; say
   (defun x/sdcv-say (word)
-    (azure-tts-play word
-                    (if (jieba-chinese-word? word) azure-tts-zh-voice-name
-                      azure-tts-en-voice-name)
-                    azure-tts-default-rate
-                    azure-tts-default-pitch))
+    (when word
+      (azure-tts-play word
+                      (if (jieba-chinese-word? word) azure-tts-zh-voice-name
+                        azure-tts-en-voice-name)
+                      azure-tts-default-rate
+                      azure-tts-default-pitch)))
 
   (advice-add 'sdcv-say-word :override #'x/sdcv-say)
   ;; (advice-remove 'sdcv-say-word 'x/sdcv-say)

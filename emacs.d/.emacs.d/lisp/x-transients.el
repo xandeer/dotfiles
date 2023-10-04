@@ -20,7 +20,7 @@
                                      (interactive)
                                      (shell-command "mr -d ~ update")
                                      (bookmark-maybe-load-default-file)
-                                     (restart-emacs)))
+                                     (x/restart-emacs)))
     ("c" "mr commit" (lambda ()
                        (interactive)
                        (recentf-save-list)
@@ -39,7 +39,7 @@
     ("x" "open second brain" (lambda () (interactive) (x/open "https://mdk.vercel.app")))
     ("H-x" "launch another emacs" x/launch-separate-emacs-under-x)
     ;; ("s" "eva query sleep" eva-query-sleep)
-    ("H-r" "restart" restart-emacs)]])
+    ("H-r" "restart" x/restart-emacs)]])
 
 (transient-define-prefix x/transient-buffer-group ()
   "Transient for opening buffers."
@@ -132,7 +132,8 @@
     ("H-l" "Lookup input" sdcv-search-input)
     ("k" "Translate" gts-do-translate)
     ("i" "TTS EN" azure-tts-play-region-english)
-    ("H-i" "TTS ZH" azure-tts-play-region-chinese)]
+    ("H-i" "TTS ZH" azure-tts-play-region-chinese)
+    ("H-r" "TTS replay" azure-tts-replay)]
    ["Consult"
     ("a" "agenda" consult-org-agenda)
     ("d" "dir" consult-dir)

@@ -35,6 +35,8 @@
   :type 'string
   :group 'azure-tts)
 
+(defvar azure-tts-last-result nil "The cache of the last result.")
+
 (setq azure-tts-region "eastasia")
 
 (defcustom azure-tts-temp-dir nil
@@ -151,6 +153,7 @@ which will be called after the download is finished."
                          (azure-tts--download-file-path url-request-data)
                          ".mp3")))
     (kill-new download-path)
+    (setq azure-tts-last-result download-path)
     (if (file-exists-p download-path)
         (funcall callback download-path)
       (url-retrieve
@@ -195,6 +198,12 @@ which will be called after the download is finished."
   (azure-tts--download-audio
    (azure-tts--ssml text voice-name rate pitch)
    #'azure-tts--player-play))
+
+(defun azure-tts-replay ()
+  "Play the last result."
+  (interactive)
+  (when azure-tts-last-result
+    (funcall #'azure-tts--player-play azure-tts-last-result)))
 
 (defun azure-tts-play-region (start end &optional voice-name rate pitch)
   "Play the region from START to END with the given VOICE-NAME, RATE and PITCH.

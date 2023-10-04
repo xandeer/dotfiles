@@ -150,7 +150,7 @@ in the list returned by `x/gpt-completion-args', otherwise 'replace."
                'replace))))
     (x/gpt-completion-edit prefixed-instruction t chosen-operation)))
 
-(defun x/gpt-completion-edit-text (instruction &optional gpt-4?)
+(defun x/gpt-completion-edit-text (instruction &optional gpt-4? operation)
   "Request a GPT completion for the given INSTRUCTION.
 
 When `GPT-4?' is not nil, use \"gpt-4\", else \"gpt-3.5-turbo\"."
@@ -159,11 +159,12 @@ When `GPT-4?' is not nil, use \"gpt-4\", else \"gpt-3.5-turbo\"."
    instruction
    (or gpt-4?
        (member "--gpt-4" (x/gpt-completion-args)))
-   (pcase (x/gpt-completion-args)
-     ((pred (lambda (args) (member "--append" args))) 'append)
-     ((pred (lambda (args) (member "--buffer" args))) 'buffer)
-     ((pred (lambda (args) (member "--message" args))) 'message)
-     (_ 'replace))))
+   (or operation
+       (pcase (x/gpt-completion-args)
+         ((pred (lambda (args) (member "--append" args))) 'append)
+         ((pred (lambda (args) (member "--buffer" args))) 'buffer)
+         ((pred (lambda (args) (member "--message" args))) 'message)
+         (_ 'replace)))))
 
 (defun x/gpt-completion-args ()
   "Return a list of command-line arguments for GPT completion.
@@ -201,6 +202,9 @@ The selected or entered instruction is passed to the function
     ("e" "English"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
+    ("H-e" "Example"
+     (lambda () (interactive)
+       (x/gpt-completion-edit-text "Give me 3 example sentences, 3 synonyms and 3 antonym" t 'append)))
     ("g" "Git commit message"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
