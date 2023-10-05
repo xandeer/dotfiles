@@ -114,10 +114,9 @@ If point was already at that position, move point to beginning of line."
   (set-face-attribute 'whitespace-newline nil :height 0.7))
 
 (run-with-idle-timer 1 nil 'x/init-whitespace-mode)
+(add-hook 'nov-mode-hook (lambda () (whitespace-mode -1)))
 
-(unless
-    (fboundp 'auto-compression-mode)
-  (autoload #'auto-compression-mode "jka-cmpr" nil t))
+(autoload 'auto-compression-mode "jka-cmpr" nil t)
 (x/append-init-hook #'auto-compression-mode)
 
 (setq expand-region-subword-enabled t)
