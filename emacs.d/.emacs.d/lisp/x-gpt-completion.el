@@ -204,7 +204,7 @@ The selected or entered instruction is passed to the function
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("H-e" "Example"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Give me 3 example sentences, 3 synonyms and 3 antonym" t 'append)))
+       (x/gpt-completion-edit-text "Give interpretation in Chinese, 3 synonyms, 3 antonyms, 3 example sentences" t 'append)))
     ("g" "Git commit message"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
