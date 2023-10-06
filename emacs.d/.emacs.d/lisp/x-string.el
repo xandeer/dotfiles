@@ -35,5 +35,20 @@ Returns:
          (replace-regexp-in-string asterisk "")
          (replace-regexp-in-string "\n" " "))))
 
+;;;###autoload
+(defun x/text-normalize-region (beg end)
+  "Normalize text in the region from BEG to END.
+
+This function is a wrapper around `x/text-normalize' that operates on the
+region from BEG to END.  It is intended to be used as an interactive command.
+
+Args:
+  BEG (int): The beginning of the region.
+  END (int): The end of the region."
+  (interactive "r")
+  (let ((text (buffer-substring-no-properties beg end)))
+    (delete-region beg end)
+    (insert (x/text-normalize text))))
+
 (provide 'x-string)
 ;;; x-string.el ends here
