@@ -5,8 +5,10 @@
 (defconst x/autoloads-files
   '("anki"
     "file"
+    "insert-translated-text"
     "notes"
     "osx-misc"
+    "string"
     "weather"))
 
 (defconst x/autoloads-dir

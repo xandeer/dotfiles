@@ -41,7 +41,7 @@ RU: Russian"
   "Face for keyword match."
   :group 'x/insert-translated-text)
 
-
+;;;###autoload
 (defun x/insert-translated-text ()
   "Automatic insertion of translated content using DeepL."
   (interactive)
