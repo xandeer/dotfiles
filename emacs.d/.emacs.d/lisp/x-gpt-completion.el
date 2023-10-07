@@ -204,7 +204,15 @@ The selected or entered instruction is passed to the function
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("H-e" "Example"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Give interpretation in Chinese, 3 synonyms, 3 antonyms, 3 example sentences" t 'append)))
+       (x/gpt-completion-edit-text "Give interpretation in Chinese, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
+- v. 争端，纠纷
+- n. 争论，争执，纷争
+- Synonyms: conflict, argument, controversy
+- Antonyms: agreement, accord, consensus
+*** They've had a long-standing {{c1::dispute}} over property boundaries.
+*** Countries are encouraged to settle their {{c1::disputes}} peacefully.
+*** The {{c1::dispute}} about the new contract is still unresolved.
+" t 'append)))
     ("g" "Git commit message"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
