@@ -50,5 +50,93 @@ Args:
     (delete-region beg end)
     (insert (x/text-normalize text))))
 
+;;;###autoload
+(defun x/replace (old new &optional beg end)
+  "Replace occurrences of string OLD with string NEW in the current buffer.
+Operate between positions BEG and END.
+If BEG and END are not provided, the function operates on the entire buffer."
+  ;; Set BEG and END to the buffer boundaries if they are not provided
+  (setq beg (or beg (point-min)))
+  (setq end (or end (point-max)))
+
+  ;; Ensure BEG is less than or equal to END
+  (when (> beg end)
+    (let (mid)
+      (setq mid end end beg beg mid)))
+  ;; Save the current position and restore it later
+  (save-excursion
+    ;; Go to the END position
+    (goto-char end)
+    ;; Insert the modified text
+    (insert
+     ;; Create a temporary buffer to perform the replacement
+     (let ((buf (current-buffer)))
+       (with-temp-buffer
+         ;; Switch to the temporary buffer and copy the text from the original buffer
+         (switch-to-buffer (current-buffer) nil t)
+         (insert-buffer-substring buf beg end)
+         ;; Perform the replacement in the temporary buffer
+         (goto-char (point-min))
+         (while (re-search-forward old nil t)
+           (replace-match new))
+         ;; Return the modified text from the temporary buffer
+         (buffer-string))))
+    ;; Delete the original text between BEG and END
+    (delete-region beg end)))
+
+;;;###autoload
+(defun x/convert-to-chinese-quotations ()
+  "Convert all [“|“ ‘|’] to [ 「|」『|』] in current buffer."
+  (interactive)
+
+  (let ((quotas
+         '(("‘" . "『")
+           ("’" . "』")
+           ("“" . "「")
+           ("”" . "」")
+           (", " . "，")
+           ("," . "，")
+           ("; " . "；")
+           ("\\. " . "。")
+           ("^\\([0-9]*\\)。" . "\\1. ")
+           ;; sub items
+           ("\\(  [0-9]*\\)。" . "\\1. ")
+           ("\\.」" . "。」")
+           ("\\.』" . "。』")
+           ("\\.$" . "。")
+           ("? " . "？")
+           ;; (": " . "：")
+           (" \\{2,\\}:" . " :")
+           ("（" . "(")
+           ("）" . ")")
+           ("・" . "·")
+           ("! " . "！")
+           (" )" . ")")
+           (" 」" . "」")
+           (" 』" . "』"))))
+    (mapc (lambda (q)
+            (x/replace (car q) (cdr q)))
+          quotas)))
+
+;;;###autoload
+(defun x/journal-replace-addr-tags ()
+  "Replace home tags in current buffer."
+  (interactive)
+  (let ((office21 (rx (seq (group "** 2021 " (*? anything)) "@office")))
+        (office22 (rx (seq (group "** 2022 " (*? anything)) "@office")))
+        (home21 (rx (seq (group "** 2021 " (*? anything)) "@home")))
+        (home22 (rx (seq (group "** 2022 " (*? anything)) "@home")))
+        (buffer-modified (buffer-modified-p))
+        (replace-tag (lambda (reg to)
+                       (goto-char (point-min))
+                       (while (re-search-forward reg nil t)
+                         (replace-match to)))))
+    (save-excursion
+      (funcall replace-tag office21 "\\1海信")
+      (funcall replace-tag office22 "\\1海信")
+      (funcall replace-tag home21 "\\1南水")
+      (funcall replace-tag home22 "\\1水湾"))
+    (set-buffer-modified-p buffer-modified)))
+
 (provide 'x-string)
 ;;; x-string.el ends here
