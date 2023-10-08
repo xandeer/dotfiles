@@ -126,6 +126,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
         (office22 (rx (seq (group "** 2022 " (*? anything)) "@office")))
         (home21 (rx (seq (group "** 2021 " (*? anything)) "@home")))
         (home22 (rx (seq (group "** 2022 " (*? anything)) "@home")))
+        (home23 (rx (seq (group "** 2023 " (*? anything)) "@home")))
         (buffer-modified (buffer-modified-p))
         (replace-tag (lambda (reg to)
                        (goto-char (point-min))
@@ -135,7 +136,8 @@ If BEG and END are not provided, the function operates on the entire buffer."
       (funcall replace-tag office21 "\\1海信")
       (funcall replace-tag office22 "\\1海信")
       (funcall replace-tag home21 "\\1南水")
-      (funcall replace-tag home22 "\\1水湾"))
+      (funcall replace-tag home22 "\\1水湾")
+      (funcall replace-tag home23 "\\1水湾"))
     (set-buffer-modified-p buffer-modified)))
 
 (provide 'x-string)
