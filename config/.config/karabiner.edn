@@ -50,7 +50,7 @@
            [:h          :hyphen]
            [:n          :backslash]
            ;; [:semicolon  :!Ssemicolon]
-           [:semicolon  :grave_accent_and_tilde]
+           [:quote  :grave_accent_and_tilde]
            ;; [:slash      :period]
            ;; [:quote      :!Squote]
            ]}
@@ -83,7 +83,7 @@
            [:h       :!Shyphen]
            [:y       :!Sequal_sign]
            [:n       :!Sbackslash]
-           [:semicolon  :!Sgrave_accent_and_tilde]]}
+           [:quote  :!Sgrave_accent_and_tilde]]}
 
   {:des "(e-[key]) mouse"
    :rules [[:condi :built-in :e-mode]

@@ -1172,7 +1172,7 @@
           } ]
         }, {
           "from" : {
-            "key_code" : "semicolon",
+            "key_code" : "quote",
             "modifiers" : {
               "optional" : [ "left_shift", "right_shift" ]
             }
@@ -1212,7 +1212,7 @@
             "simultaneous" : [ {
               "key_code" : "s"
             }, {
-              "key_code" : "semicolon"
+              "key_code" : "quote"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -2196,7 +2196,7 @@
           } ]
         }, {
           "from" : {
-            "key_code" : "semicolon"
+            "key_code" : "quote"
           },
           "to" : [ {
             "key_code" : "grave_accent_and_tilde",
@@ -2232,7 +2232,7 @@
             "simultaneous" : [ {
               "key_code" : "a"
             }, {
-              "key_code" : "semicolon"
+              "key_code" : "quote"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
