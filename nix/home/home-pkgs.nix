@@ -15,6 +15,7 @@
     mr
 
     # utils
+    asdf-vm
     bat
     buku
     curl
