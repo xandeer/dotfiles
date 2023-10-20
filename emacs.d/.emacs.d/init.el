@@ -69,7 +69,7 @@
 (require 'x-org-agenda)
 (require 'x-org-capture)
 (require 'x-org-clock)
-(require 'x-org-habit)
+;; (require 'x-org-habit)
 (require 'x-org-refile)
 (require 'x-org-publish)
 (require 'x-org-roam)
