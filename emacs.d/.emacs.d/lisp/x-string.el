@@ -27,12 +27,16 @@ Returns:
   (let ((org-link (rx (seq "[[" (*? anything) "][" (group (+? anything)) "]]")))
         (anki-cloze (rx (seq "{{c1::" (group (+? anything)) "}}")))
         (asterisk (rx (any "*")))
-        (org-dblock (rx (seq "#+" (group (| "BEGIN" "begin" "END" "end")) (0+ nonl)))))
+        (org-comment (rx (seq "#+" (*? anything) "\n")))
+        ;; (org-dblock (rx (seq "#+" (group (| "BEGIN" "begin" "END" "end")) (0+ nonl))))
+        )
     (->> text
          (replace-regexp-in-string org-link "\\1")
          (replace-regexp-in-string anki-cloze "\\1")
-         (replace-regexp-in-string org-dblock "")
+         (replace-regexp-in-string org-comment "")
+         ;; (replace-regexp-in-string org-dblock "")
          (replace-regexp-in-string asterisk "")
+         (replace-regexp-in-string org-property-drawer-re "")
          (replace-regexp-in-string "\n" " "))))
 
 ;;;###autoload
