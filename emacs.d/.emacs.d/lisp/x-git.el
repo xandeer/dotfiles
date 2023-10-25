@@ -31,7 +31,7 @@
     (interactive)
     (call-interactively #'magit-tag-create)
     (magit-push-tags "origin")
-    (yarn-run "chglog"))
+    (x/start-process "sh update-changelog.sh"))
 
   ;; override default magit-tag
   (transient-define-prefix magit-tag ()
