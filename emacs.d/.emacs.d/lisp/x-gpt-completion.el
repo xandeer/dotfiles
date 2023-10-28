@@ -66,20 +66,26 @@ USED-REGION is non-nil, REGION-END-SAVED and POINT-MAX-SAVED are
 used to determine the insertion point."
   (with-current-buffer buffer
     (pcase operation
-      ('append (progn
+      ('append (save-excursion
                  (goto-char point-end)
-                 (x/gpt-insert-separated-lines)))
+                 (x/gpt-insert-separated-line)))
       ('buffer (progn
                  (switch-to-buffer-other-window buffer)
                  (unless (eq major-mode 'org-mode)
                    (org-mode))
                  (goto-char (point-max))
-                 (x/gpt-insert-separated-lines)
+                 (x/gpt-insert-separated-line)
                  (insert (concat "** Instruction:\n" instruction "\n"))
                  (insert (concat "** Content:\n" selected-text "\n"))
                  (insert "** GPT:\n")))
-      (_ (delete-region point-start point-end)))
-    (insert (gptel--convert-markdown->org content))))
+      (_ (save-excursion (delete-region point-start point-end))))
+    (if (equal operation 'buffer)
+        (insert (gptel--convert-markdown->org content))
+      (save-excursion
+        (if (equal operation 'append)
+            (goto-char (1+ point-end))
+          (goto-char point-start))
+        (insert (gptel--convert-markdown->org content))))))
 
 (defun x/gpt-completion-edit (instruction &optional gpt-4? operation)
   "Request GPT model to generate completion based on `INSTRUCTION'.
@@ -115,11 +121,11 @@ and other symbols display the completion as a message."
                           (x/gpt-insert-into-buffer buffer content op instruction selected-text point-start point-end)))))
        gpt-4?))))
 
-(defun x/gpt-insert-separated-lines ()
+(defun x/gpt-insert-separated-line ()
   "Insert two line breaks at the end of the current line to separate the text."
   (unless (eolp)
     (goto-char (line-end-position)))
-  (insert "\n\n"))
+  (insert "\n"))
 
 (defun x/gpt-completion-prefix-for-code (instruction)
   "Construct a GPT code prompt prefix based on the current major mode.
