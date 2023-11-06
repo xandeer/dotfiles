@@ -66,7 +66,8 @@
               (x/start-process
                (format "push2fs.sh -u kevin -p %s -f %s -d donut-apk"
                        pwd
-                       file)))
+                       file)
+               't))
             files)))
 
   (defun x/dired-copy-files-to-downloads ()
