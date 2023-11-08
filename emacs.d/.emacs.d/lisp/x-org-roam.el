@@ -217,7 +217,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("v" "Ankify vocabulary" x/vocabulary-items)]
    ["Misc"
     ("l" "Remove links" x--remove-links)
-    ("g" "gptel mode" gptel-mode)
+    ;; ("g" "gptel mode" gptel-mode)
     ("F" "Fill subtree" x/fill-subtree)
     ("i" "Create ID" org-id-get-create)
     ("n" "Narrow" org-toggle-narrow-to-subtree)]])
