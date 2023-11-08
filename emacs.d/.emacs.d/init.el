@@ -89,7 +89,7 @@
 (require 'x-avy)
 (require 'x-browser)
 (require 'x-calendar)
-;; (require 'x-chatgpt)
+(require 'x-chatgpt)
 (require 'azure-tts)
 (require 'x-completion)
 (require 'x-consult)
