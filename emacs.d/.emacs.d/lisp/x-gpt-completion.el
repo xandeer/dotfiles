@@ -210,10 +210,16 @@ The selected or entered instruction is passed to the function
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("H-e" "Example"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Give interpretation in Chinese, pronunciation, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
+       (x/gpt-completion-edit-text "Give interpretation in Chinese, pronunciation, help me remember using word segmentation, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
 - [dis'pju:t]
 - v. 争端，纠纷
 - n. 争论，争执，纷争
+
+1. dis: 这个前缀通常表示否定或相反的含义。在 /dispute/ 中，它为冲突或分歧设定了背景。
+1. pute: 这一部分可能让你想起「争论」的意思。它是单词的核心，可以让你联想到争吵或解决分歧的概念。
+
+因此，当你想到 /dispute/ 这个单词时，你可以将它与负面的分歧或冲突联系起来，涉及争论或解决分歧的过程。
+
 - Synonyms: conflict, argument, controversy
 - Antonyms: agreement, accord, consensus
 *** They've had a long-standing {{c1::dispute}} over property boundaries.
