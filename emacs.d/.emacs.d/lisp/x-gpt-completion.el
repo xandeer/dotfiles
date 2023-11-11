@@ -26,7 +26,7 @@ gpt-4 model; otherwise, it uses the gpt-3.5-turbo model."
          (url "https://api.openai.com/v1/chat/completions")
          (headers `(("Content-Type" . "application/json")
                     ("Authorization" . ,(concat "Bearer " api-key))))
-         (data `((model . "gpt-4")
+         (data `((model . "gpt-4-1106-preview")
                  ;; (model . ,(if gpt-4? "gpt-4"
                  ;;             "gpt-3.5-turbo"))
                  (messages . (((role . "system") (content . ,instruction))
@@ -105,7 +105,7 @@ and other symbols display the completion as a message."
       x/gpt-completion-edit-buffer
     (let* ((point-start (if (use-region-p) (region-beginning) (point-min)))
            (point-end (if (use-region-p) (region-end) (point-max)))
-           (selected-text (buffer-substring-no-properties point-start point-end))
+           (selected-text (x/text-normalize (buffer-substring-no-properties point-start point-end)))
            (original-buffer (current-buffer)))
       (deactivate-mark)
       (x/gpt-completion
@@ -229,6 +229,14 @@ The selected or entered instruction is passed to the function
     ("g" "Git commit message"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
+    ("H-s" "Explain sentence structure"
+     (lambda () (interactive)
+       (x/gpt-completion-edit-text "Act like my English teacher. Explain sentence structure, return in Chinese. For example:
+She didn't follow the instruction properly, so the experiment failed.
+
+这句话的结构是复合句，包含两个主要的分句，通过逗号和连词 /so/ 进行连接。
+1. /She didn't follow the instruction properly/ 是第一个分句，这是一个简单句。主语是 /she/，谓语是 /didn't follow/，修饰语是 /properly/，表示她没有正确地遵循指示。
+2. /so the experiment failed/ 是第二个分句，也是一个简单句。主语是 /the experiment/，谓语是 /failed/，表明实验失败。这个分句通过 /so/ 与前一分句相连，表达了因果关系，即由于她没有正确遵循指示，所以实验失败。" t 'append)))
     ("n" "Without instruction"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Let's think step by step.")))
