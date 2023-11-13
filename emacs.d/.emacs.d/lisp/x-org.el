@@ -178,9 +178,9 @@
                ;; set emphasis face
                '("*" x/org-bold))
   ;; set emphasis support 16 lines
-  (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
-  (org-set-emph-re 'org-emphasis-regexp-components
-                   org-emphasis-regexp-components)
+  ;; (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
+  ;; (org-set-emph-re 'org-emphasis-regexp-components
+  ;;                  org-emphasis-regexp-components)
 
   (defun x--reset-filling ()
     (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
