@@ -181,6 +181,10 @@
   ;; (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
   ;; (org-set-emph-re 'org-emphasis-regexp-components
   ;;                  org-emphasis-regexp-components)
+  ;; recognize non-ASCII characters (which include Chinese characters) both before and after an emphasis marker.
+  (setcar org-emphasis-regexp-components " \t('\"{[:nonascii:]")
+  (setcar (nthcdr 1 org-emphasis-regexp-components) "- \t.,:!?;'\")}\\[:nonascii:]")
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 
   (defun x--reset-filling ()
     (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
