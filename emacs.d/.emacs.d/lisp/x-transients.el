@@ -16,6 +16,10 @@
   [["mr"
     ;; ("u" "mr update" ,(x/interactive-wrapper) (x/start-process "mr -d ~ update"))
     ("u" "mr update" (lambda () (interactive) (x/start-process "mr -d ~ update")))
+    ("H-u" "reload bookmarks & revert org buffers" (lambda ()
+                         (interactive)
+                         (x/update-bookmarks)
+                         (org-revert-all-org-buffers)))
     ("r" "restart after mr update" (lambda ()
                                      (interactive)
                                      (shell-command "mr -d ~ update")
