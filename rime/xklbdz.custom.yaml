@@ -16,6 +16,7 @@ patch:
   key_binder/bindings:
     - {accept: comma, send: comma, when: paging}
     - {accept: period, send: period, when: has_menu}
+    - { when: always, accept: Control+i, select: .next }
   punctuator/half_shape:
     "#": "#"
     "$": "¥"

@@ -26,6 +26,8 @@ patch:
     Control_R: noop
     Shift_L: noop
     Shift_R: noop
+  # key_binder/bindings:
+    # - { when: always, accept: Control+i, select: .next }
   key_binder/select_first_character: Alt+a
   key_binder/select_last_character: Alt+e
   menu/page_size: 5
