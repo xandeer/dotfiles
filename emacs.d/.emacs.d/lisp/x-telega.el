@@ -107,7 +107,9 @@
 
 (with-eval-after-load 'telega-chat
   (defun x/telega--chat-mode-setup ()
-    (setq-local line-spacing 0))
+    (setq-local line-spacing 0)
+    ;; Treat the Chinese colon as a word separator
+    (modify-syntax-entry ?\uff1a "." (syntax-table)))
 
   (add-hook 'telega-chat-mode-hook #'x/telega--chat-mode-setup)
 

@@ -164,12 +164,12 @@
 ;; (add-hook 'org-mode-hook #'auto-fill-mode)
 
 (with-eval-after-load 'org
-  (setq org-emphasis-regexp-components ;; markup chinesee without space
-        (list (concat " \t('\"{"            "[:nonascii:]")
-              (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
-              " \t\r\n,\"'"
-              "."
-              1))
+  ;; (setq org-emphasis-regexp-components ;; markup chinesee without space
+  ;;       (list (concat " \t('\"{"            "[:nonascii:]")
+  ;;             (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
+  ;;             " \t\r\n,\"'"
+  ;;             "."
+  ;;             1))
   (defface x/org-bold
     '((t (:inherit bold :foreground "#f00056")))
     "Bold face.")
@@ -192,6 +192,11 @@
       (setq-local paragraph-start paragraph-ending)
       (setq-local paragraph-separate paragraph-ending)))
   (advice-add 'org-setup-filling :after #'x--reset-filling)
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              ;; Treat the Chinese colon as a word separator
+              (modify-syntax-entry ?\uff1a "." (syntax-table))))
 
   ;; babel
   (add-to-list 'org-babel-load-languages '(shell      . t))
