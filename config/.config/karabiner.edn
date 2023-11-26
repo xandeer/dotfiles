@@ -24,6 +24,7 @@
   :edge   ["com.microsoft.edgemac.Dev"]
   :emacs  ["org.gnu.Emacs"]
   :finder ["com.apple.finder"]
+  :preview ["com.apple.Preview"]
   :raycast ["com.raycast.macos"]
   :studio ["com.google.android.studio", "com.google.android.studio-EAP"]}
  :main
@@ -153,7 +154,8 @@
            [:m :1]
            [:comma :2]
            [:period :3]
-           [:j :4]]}
+           [:j :4]
+           [:!Ox :!COSf1]]}
 
   {:des "Chrome shortcuts"
    :rules [:chrome
@@ -165,6 +167,10 @@
 
   {:des "Finder shortcuts"
    :rules [:finder
+           [:!Ox :!COSf1]]}
+
+  {:des "Preview shortcuts"
+   :rules [:preview
            [:!Ox :!COSf1]]}
 
   ;; doesn't work
