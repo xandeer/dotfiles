@@ -28,6 +28,14 @@
              (car (network-interface-info "en1")))
             t)))
 
+(defun x/copy-clipboard-to-downloads ()
+  "Copy clipboard file to ~/Downloads."
+  (interactive)
+  (let* ((source (substring-no-properties (car kill-ring)))
+         (target (expand-file-name (file-name-nondirectory source)
+                                   "~/Downloads")))
+    (f-copy source target)))
+
 (defun x/string-append-time-suffix (string)
   "Append a time suffix to STRING."
   (concat string (format-time-string "%F-%H-%M-%S%3N")))
