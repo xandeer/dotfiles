@@ -15,6 +15,14 @@
   (unless (boundp 'org-capture-templates)
     (defvar org-capture-templates nil))
 
+  (defun x/cmb2wechat ()
+    "Replace cmb with wechat."
+    (interactive)
+    (x/replace "cmb:6265" "wechat "))
+
+  (x/define-keys org-capture-mode-map
+                 '(("C-c w" x/cmb2wechat)))
+
   (defun x/org-capture-place-template-current-window (oldfun &rest args)
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore)
               ((symbol-function 'org-switch-to-buffer-other-window) #'switch-to-buffer))
