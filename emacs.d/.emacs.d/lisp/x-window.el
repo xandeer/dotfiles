@@ -119,7 +119,8 @@ Otherwise, enable `golden-ratio-mode'."
   (toggle-frame-maximized)
   (switch-to-buffer "*scratch*")
   (select-window (split-window-right))
-  (split-window-right))
+  ;; (split-window-right)
+  )
 
 (x/append-init-hook #'x/window-startup)
 
