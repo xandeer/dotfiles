@@ -29,7 +29,7 @@ gpt-4 model; otherwise, it uses the gpt-3.5-turbo model."
          (data `((model . "gpt-4-1106-preview")
                  ;; (model . ,(if gpt-4? "gpt-4"
                  ;;             "gpt-3.5-turbo"))
-                 (messages . (((role . "system") (content . ,instruction))
+                 (messages . (((role . "system") (content . ,(concat instruction " Let's think step by step")))
                               ((role . "user") (content . ,message))))))
          (request-backend 'curl))
 
@@ -210,7 +210,7 @@ The selected or entered instruction is passed to the function
        (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
     ("H-e" "Example"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Give interpretation in Chinese, pronunciation, help me remember using word segmentation, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
+       (x/gpt-completion-edit-text "Give interpretation in Chinese, pronunciation in USA, help me remember using word segmentation, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
 - [dis'pju:t]
 - v. 争端，纠纷
 - n. 争论，争执，纷争
