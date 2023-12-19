@@ -62,7 +62,7 @@
     };
 
     # $ hostname -s
-    darwinConfigurations."Kevins-Air" = darwin.lib.darwinSystem {
+    darwinConfigurations."Kevins-MacBook-Air" = darwin.lib.darwinSystem {
       modules = [
         ./darwin
 

@@ -47,6 +47,7 @@
       ".idea/androidTestResultsUserPreferences.xml"
       ".idea/kotlinc.xml"
       ".idea/migrations.xml"
+      ".idea/appInsightsSettings.xml"
     ];
 
     extraConfig = {
