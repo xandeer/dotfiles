@@ -121,6 +121,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
         (addr18 (rx (seq (group "** 2018 " (*? anything)) ":" eol)))
         (addr19 (rx (seq (group "** 2019 " (*? anything)) ":" eol)))
         (addr20 (rx (seq (group "** 2020 " (*? anything)) ":" eol)))
+        (addr21 (rx (seq (group "** 2021 " (*? anything)) ":" eol)))
         (replace-tag (lambda (reg to)
                        (goto-char (point-min))
                        (while (re-search-forward reg nil t)
@@ -133,7 +134,8 @@ If BEG and END are not provided, the function operates on the entire buffer."
       (funcall replace-tag addr18 "\\1:大冲:泰邦:")
       (funcall replace-tag addr19 "\\1:金钟:海信:")
       (funcall replace-tag addr20 "\\1:金钟:海信:")
-      (funcall replace-tag home21 "\\1南水")
+      (funcall replace-tag addr21 "\\1:南水:海信:")
+      ;; (funcall replace-tag home21 "\\1南水")
       (funcall replace-tag home22 "\\1水湾")
       (funcall replace-tag home23 "\\1水湾"))))
 
