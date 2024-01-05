@@ -63,8 +63,8 @@
          :picker (gts-prompt-picker)
          ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
          ;; :engines `(,(gts-google-engine))
-         ;; :engines `(,(gts-bing-engine))
-         :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
+         :engines `(,(gts-bing-engine))
+         ;; :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
          :render (gts-buffer-render)))
 
   (advice-add 'gts-text :filter-return #'x/text-normalize))
