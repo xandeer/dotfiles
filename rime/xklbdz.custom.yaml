@@ -13,10 +13,10 @@ patch:
       - xform/^/〔/
       - xform/$/〕/
   # menu/page_size: 9
-  key_binder/bindings:
-    - {accept: comma, send: comma, when: paging}
-    - {accept: period, send: period, when: has_menu}
-    - { when: always, accept: Control+i, select: .next }
+  # key_binder/bindings:
+    # - {accept: comma, send: comma, when: paging}
+    # - {accept: period, send: period, when: has_menu}
+    # - { when: always, accept: Control+i, select: .next }
   punctuator/half_shape:
     "#": "#"
     "$": "¥"
