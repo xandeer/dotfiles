@@ -3382,7 +3382,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "run shell scripts",
+        "description" : "run scripts",
         "manipulators" : [ {
           "from" : {
             "key_code" : "period",
@@ -3392,6 +3392,17 @@
           },
           "to" : [ {
             "shell_command" : "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "p",
+            "modifiers" : {
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript ~/syncthing/personal/configs/xandeer-scripts/emacs-gpt.applescript"
           } ],
           "type" : "basic"
         } ]

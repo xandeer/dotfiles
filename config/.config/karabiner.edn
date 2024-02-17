@@ -140,8 +140,9 @@
   ;;          ;; [:!COSe [:open "Emacs"]]
   ;;          ]}
 
-  {:des "run shell scripts"
-   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]]}
+  {:des "run scripts"
+   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
+           [:!COSp ["osascript ~/syncthing/personal/configs/xandeer-scripts/emacs-gpt.applescript"]]]}
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
