@@ -48,6 +48,7 @@
       ".idea/kotlinc.xml"
       ".idea/migrations.xml"
       ".idea/appInsightsSettings.xml"
+      ".idea/deploymentTargetSelector.xml"
     ];
 
     extraConfig = {
