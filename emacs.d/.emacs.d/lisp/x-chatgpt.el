@@ -45,7 +45,7 @@
                                    (minibuffer . t)))))
     (select-frame chat-frame))
   (add-hook 'gptel-post-response-hook (lambda () (goto-char (point-max))))
-  (gptel "#gpt anywhere#")
+  (gptel "#gpt anywhere#" gptel-api-key nil)
   (switch-to-buffer "#gpt anywhere#")
   (delete-other-windows))
 
