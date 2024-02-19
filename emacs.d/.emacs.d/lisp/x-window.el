@@ -3,6 +3,8 @@
 ;;; Code:
 
 (setq window-divider-default-right-width 1)
+(setq-default left-margin-width 1
+              right-margin-width 1)
 (x/append-init-hook #'window-divider-mode)
 
 ;;; libs

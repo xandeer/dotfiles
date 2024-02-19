@@ -26,7 +26,7 @@
  frame-resize-pixelwise t)
 
 (let ((frame-options
-       '((internal-border-width . 2)
+       '((internal-border-width . 8)
          (top . 5)
          (left . 0.5)
          (width . 0.33)

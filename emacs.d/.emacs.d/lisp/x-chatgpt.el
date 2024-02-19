@@ -23,7 +23,7 @@
 ;;; gptel
 (x/package-use '(gptel . "karthink/gptel"))
 (require 'gptel)
-(setq gptel-api-key (doctor-chatgpt-api-token))
+(setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 (setq gptel-default-mode 'org-mode)
 (setq-default gptel-model "gpt-4-turbo-preview")
 (setq gptel-max-tokens 1000)
@@ -45,7 +45,7 @@
                                    (minibuffer . t)))))
     (select-frame chat-frame))
   (add-hook 'gptel-post-response-hook (lambda () (goto-char (point-max))))
-  (gptel "#gpt anywhere#" gptel-api-key nil)
+  (gptel "#gpt anywhere#")
   (switch-to-buffer "#gpt anywhere#")
   (delete-other-windows))
 
