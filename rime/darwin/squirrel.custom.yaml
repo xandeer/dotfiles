@@ -39,6 +39,9 @@ patch:
     com.apple.Terminal:
       ascii_mode: true
       no_inline: true
+    net.ankiweb.dtop:
+      ascii_mode: true
+      no_inline: true
     com.googlecode.iterm2:
       ascii_mode: true
     com.apple.dt.Xcode:
