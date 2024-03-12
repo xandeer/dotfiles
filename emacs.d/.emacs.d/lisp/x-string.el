@@ -130,7 +130,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     (save-excursion
       (funcall replace-tag office21 "\\1海信")
       (funcall replace-tag office22 "\\1海信")
-      (funcall replace-tag office23 "\\1海信")
+      (funcall replace-tag office23 "\\1汉京")
       (funcall replace-tag addr16 "\\1:兴东:中粮:")
       ;; (funcall replace-tag addr17 "\\1:大冲:泰邦:")
       (funcall replace-tag addr17 "\\1:兴东:中粮:")
