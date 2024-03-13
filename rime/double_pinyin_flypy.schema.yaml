@@ -151,7 +151,8 @@ recognizer:
     email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"                            # 自带的，e-mail 正则
     # uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"                           # 自带的，大写字母开头后，可以输入[-_+.'0-9A-Za-z]这些字符
     url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"  # 自带的，URL 正则
-    punct: "^v([0-9]|10|[A-Za-z]+)$"  # 响应 symbols_custom.yaml 下的 punctuator/symbols，用「v」替换「/」并支持大写
+    # punct: "^v([0-9]|10|[A-Za-z]+)$"  # 响应 symbols_custom.yaml 下的 punctuator/symbols，用「v」替换「/」并支持大写
+    punct: "^/([0-9]|10|[A-Za-z]+)$"
     reverse_lookup: "^u[a-z]+$"       # 响应星空两笔单字的反查
     # 一些不直接上屏的配置示例：
     # url_2: "^[A-Za-z]+[.].*"     # 句号不上屏，支持 google.com abc.txt 等网址或文件名，使用句号翻页时需要注释掉
@@ -171,7 +172,7 @@ xklbdz:
 speller:
   # 如果不想让什么标点直接上屏，可以加在 alphabet，或者编辑标点符号为两个及以上的映射
   alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
-  delimiter: " '"  # 第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
+  # delimiter: " '"  # 第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
     - abbrev/^(.).+$/$1/
     - erase/^xx$/
@@ -217,14 +218,14 @@ key_binder:
     - {accept: "Control+n", send: Down, when: composing}
     - {accept: "Control+b", send: Left, when: composing}
     - {accept: "Control+f", send: Right, when: composing}
-    # - {accept: "Alt+b", send: "Shift+Left", when: composing}
-    # - {accept: "Alt+f", send: "Shift+Right", when: composing}
+    - {accept: "Alt+b", send: "Shift+Left", when: composing}
+    - {accept: "Alt+f", send: "Shift+Right", when: composing}
     - {accept: "Control+a", send: Home, when: composing}
     - {accept: "Control+e", send: End, when: composing}
     - {accept: "Control+d", send: Delete, when: composing}
     - {accept: "Control+k", send: "Shift+Delete", when: composing}
     - {accept: "Control+h", send: BackSpace, when: composing}
     - {accept: "Control+g", send: Escape, when: composing}
-    - {accept: "Alt+v", send: Page_Up, when: composing}
-    - {accept: "Control+v", send: Page_Down, when: composing}
+    - {accept: "Alt+v", send: Page_Up, when: paging}
+    - {accept: "Control+v", send: Page_Down, when: has_menu}
   # import_preset: default
