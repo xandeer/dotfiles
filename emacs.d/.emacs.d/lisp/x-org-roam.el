@@ -107,7 +107,6 @@
 (defun x--is-current-year? (year)
   (= year (string-to-number (format-time-string "%y"))))
 
-(setq x/org-today-tag x/office)
 (defun x--insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
   (interactive "nYear[< 5: 2x, else: 1x]: ")
@@ -229,7 +228,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
 
 (x/define-keys
  global-map
- `(("H-g" ,(x/interactive-wrapper (org-roam-node-find t)))
+ `(;; ("H-g" ,(x/interactive-wrapper (org-roam-node-find t)))
    ("H-n" org-roam-node-find)))
 
 ;;; tbl mode
