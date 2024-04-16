@@ -44,6 +44,8 @@ patch:
       no_inline: true
     com.googlecode.iterm2:
       ascii_mode: true
+    net.kovidgoyal.kitty:
+      ascii_mode: true
     com.apple.dt.Xcode:
       ascii_mode: true
     # com.google.Chrome:
