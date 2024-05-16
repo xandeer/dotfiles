@@ -25,7 +25,7 @@
 (require 'gptel)
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 (setq gptel-default-mode 'org-mode)
-(setq-default gptel-model "gpt-4-turbo-preview")
+(setq-default gptel-model "gpt-4o")
 (setq gptel-max-tokens 1000)
 
 (defun x/gpt-from-anywhere ()
