@@ -50,6 +50,7 @@
       ".idea/appInsightsSettings.xml"
       ".idea/deploymentTargetSelector.xml"
       ".idea/other.xml"
+      ".idea/sonarlint/"
     ];
 
     extraConfig = {
