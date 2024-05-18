@@ -125,6 +125,7 @@
 (transient-define-prefix x/transient-search-group ()
   "Transient for searching."
   [["Search engine"
+    ("p" "perplexity" engine/search-perplexity)
     ("b" "Zlib" engine/search-zlib)
     ("c" "Grep.app" engine/search-grep-app)
     ("g" "Google" engine/search-google)

@@ -16,6 +16,7 @@
 (defengine wiki-cn "https://zh.wikipedia.org/wiki/%s" :keybinding "f" :browser 'eww)
 
 (defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "u")
+(defengine perplexity "https://www.perplexity.ai/search?q=%s" :keybinding "a")
 
 (provide 'x-search-engine)
 ;;; x-search-engine.el ends here
