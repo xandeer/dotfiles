@@ -78,7 +78,7 @@
     casks = [
       # "firefox"
       # "google-chrome"
-      # "visual-studio-code"
+      "visual-studio-code"
 
       # IM & audio & remote desktop & meeting
       # "telegram"
