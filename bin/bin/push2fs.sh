@@ -26,7 +26,8 @@ curl -u $user:$pwd -T $file https://fs.xmind.cn/remote.php/dav/files/$user/$dir/
 data=$(curl -su $user:$pwd -H "OCS-APIRequest: true" -X POST -d "path=$dir/$(basename $file)&shareType=3" https://fs.xmind.cn/ocs/v2.php/apps/files_sharing/api/v1/shares)
 
 url=$(echo "$data" | sed -n 's/.*<url>\(.*\)<\/url>.*/\1/p')
+download_url="$url/download"
 
-echo "Uploaded $file to $url"
+echo "Uploaded $file to $download_url"
 
-echo "- [$(basename $file)]($url)" | pbcopy
+echo "- [$(basename $file)]($download_url)" | pbcopy
