@@ -51,6 +51,7 @@
       ".idea/deploymentTargetSelector.xml"
       ".idea/other.xml"
       ".idea/sonarlint/"
+      ".idea/vcs.xml"
     ];
 
     extraConfig = {
