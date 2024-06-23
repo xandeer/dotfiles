@@ -1,3 +1,5 @@
 .DS_Store
 .uuid
 /etc/
+config/.config/github-copilot/ai
+config/.config/github-copilot/versions.json
