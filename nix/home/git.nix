@@ -52,6 +52,7 @@
       ".idea/other.xml"
       ".idea/sonarlint/"
       ".idea/vcs.xml"
+      ".idea/GitlabSettingsPlugin.xml"
     ];
 
     extraConfig = {
