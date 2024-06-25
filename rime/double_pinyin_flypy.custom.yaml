@@ -1,8 +1,6 @@
 # 任何一项配置出错，就会导致部署失败。emacs-rime 部署失败时，不会有提示。
 patch:
-  # key_binder/bindings:
-    # - { when: always, accept: Control+i, select: .next }
-    # - {accept: "Control+g", send: Escape, when: composing}
+  key_binder/import_preset: default
   punctuator/import_preset: symbols
   punctuator/half_shape:
     "#": "#"
