@@ -136,8 +136,8 @@ If BEG and END are not provided, the function operates on the entire buffer."
       (funcall replace-tag addr18 "\\1:大冲:泰邦:")
       (funcall replace-tag addr19 "\\1:金钟:海信:")
       (funcall replace-tag addr20 "\\1:金钟:海信:")
-      (funcall replace-tag addr21 "\\1:南水:海信:")
-      ;; (funcall replace-tag home21 "\\1南水")
+      ;; (funcall replace-tag addr21 "\\1:南水:海信:")
+      (funcall replace-tag home21 "\\1南水")
       (funcall replace-tag home22 "\\1水湾")
       (funcall replace-tag home23 "\\1水湾"))))
 
