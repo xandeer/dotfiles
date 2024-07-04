@@ -33,7 +33,7 @@ echo "Uploaded $file to $download_url"
 echo "- [$(basename $file)]($download_url)" | pbcopy
 
 # target=$(echo $data | sed -n 's/.*<file_target>\(.*\)<\/file_target>.*/\1/p')
-if [ "$file" ~= ".*\.apk" ]; then
+if [ "${file##*.}" = "apk" ]; then
   echo "    - version: "
   echo "      url: '$download_url'"
 fi
