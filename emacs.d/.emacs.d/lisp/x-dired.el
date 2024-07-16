@@ -55,20 +55,10 @@
   (define-key dired-mode-map [remap dired-find-file] #'x/dired-find-file)
   (define-key dired-mode-map [remap dired-find-file-other-window] #'x/dired-find-file-other-window)
 
-  (defun x/push2fs ()
+  (defun x/dired-push2fs ()
     "Push files to fs.xmind.cn."
     (interactive)
-    (let ((files (dired-get-marked-files))
-          (pwd (auth-source-pick-first-password
-                :host "fs.xmind.cn"
-                :user "kevin")))
-      (mapc (lambda (file)
-              (x/start-process
-               (format "push2fs.sh -u kevin -p %s -f %s -d donut-apk"
-                       pwd
-                       file)
-               't))
-            files)))
+    (mapc #'x/push2fs (dired-get-marked-files)))
 
   (defun x/dired-copy-files-to-downloads ()
     "Copy marked files to Downloads folder."

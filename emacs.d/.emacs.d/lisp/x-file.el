@@ -76,5 +76,24 @@
    (format "null.exs %s"
            (buffer-file-name))))
 
+;;;###autoload
+(defun x/push2fs (file)
+  "Push `FILE' to fs.xmind.cn."
+  (interactive "f")
+  (let* ((user "kevin")
+         (pwd (auth-source-pick-first-password
+               :host "fs.xmind.cn"
+               :user user)))
+    (x/start-process
+     (format "push2fs.sh -u %s -p %s -f %s -d donut-apk"
+             user pwd file)
+     't)))
+
+;;;###autoload
+(defun x/push2fs-current ()
+  "Push current file to fs.xmind.cn."
+  (interactive)
+  (x/push2fs (buffer-file-name)))
+
 (provide 'x-file)
 ;;; x-file.el ends here
