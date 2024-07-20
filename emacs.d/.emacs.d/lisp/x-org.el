@@ -163,13 +163,44 @@
 
 ;; (add-hook 'org-mode-hook #'auto-fill-mode)
 
+;; https://emacs-china.org/t/org-mode/26643
+(defun x/org-emphasis-markers-for-chinese ()
+  ;; 配置 prettify
+  (setq prettify-symbols-unprettify-at-point t)
+  (defun org-prettify-set ()
+    (interactive)
+    (setq prettify-symbols-alist
+          (mapcan (lambda (x)
+                    (list x (cons (upcase (car x)) (cdr x)))) '(
+                    ("\u200b" . 8248)   ; 零宽空格
+                    )))
+    (prettify-symbols-mode 1))
+  (add-hook 'org-mode-hook 'org-prettify-set)
+  ;; 导出时（导出为 org 时除外），去除零宽空格
+  (defun +org-export-remove-zero-width-space (text _backend _info)
+    "Remove zero width spaces from TEXT."
+    (unless (org-export-derived-backend-p 'org)
+      (replace-regexp-in-string "\u200b" "" text)))
+  (with-eval-after-load 'ox         ; 没有这一行的话，会因变量未定义而报错。
+    (add-to-list 'org-export-filter-final-output-functions #'+org-export-remove-zero-width-space t))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              ;; emphasis字符加上零宽空格
+              (defmacro add_zero_space_char (ch)
+                `(lambda ()
+                   (interactive)
+                   ;; r支持region！但注意有些键`easy-mark'会影响到，如=
+                   (tempel-insert (list "" "\x200B" ,ch 'r ,ch "\x200B"))))
+              (local-set-key "*" (add_zero_space_char "*"))
+              (local-set-key "/" (add_zero_space_char "/"))
+              (local-set-key "_" (add_zero_space_char "_"))
+              (local-set-key "=" (add_zero_space_char "="))
+              (local-set-key "~" (add_zero_space_char "~"))
+              (local-set-key "+" (add_zero_space_char "+"))
+              (local-set-key "`" (add_zero_space_char "`")))))
+
 (with-eval-after-load 'org
-  ;; (setq org-emphasis-regexp-components ;; markup chinesee without space
-  ;;       (list (concat " \t('\"{"            "[:nonascii:]")
-  ;;             (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")
-  ;;             " \t\r\n,\"'"
-  ;;             "."
-  ;;             1))
   (defface x/org-bold
     '((t (:inherit bold :foreground "#f00056")))
     "Bold face.")
@@ -177,14 +208,7 @@
   (add-to-list 'org-emphasis-alist
                ;; set emphasis face
                '("*" x/org-bold))
-  ;; set emphasis support 16 lines
-  ;; (setcar (nthcdr 4 org-emphasis-regexp-components) 16)
-  ;; (org-set-emph-re 'org-emphasis-regexp-components
-  ;;                  org-emphasis-regexp-components)
-  ;; recognize non-ASCII characters (which include Chinese characters) both before and after an emphasis marker.
-  (setcar org-emphasis-regexp-components " \t('\"{[:nonascii:]")
-  (setcar (nthcdr 1 org-emphasis-regexp-components) "- \t.,:!?;'\")}\\[:nonascii:]")
-  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+  (x/org-emphasis-markers-for-chinese)
 
   (defun x--reset-filling ()
     (let ((paragraph-ending (concat (substring org-element-paragraph-separate 1)
@@ -199,9 +223,9 @@
               (modify-syntax-entry ?\uff1a "." (syntax-table))))
 
   ;; babel
-  (add-to-list 'org-babel-load-languages '(shell      . t))
-  (add-to-list 'org-babel-load-languages '(clojure    . t))
-  (add-to-list 'org-babel-load-languages '(plantuml   . t))
+  (add-to-list 'org-babel-load-languages '(shell . t))
+  (add-to-list 'org-babel-load-languages '(clojure . t))
+  (add-to-list 'org-babel-load-languages '(plantuml . t))
   (add-to-list 'org-babel-load-languages '(restclient . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
