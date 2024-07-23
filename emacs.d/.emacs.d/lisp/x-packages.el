@@ -214,7 +214,7 @@ Usages:
     dired-hacks
     dirvish
     go-translate
-    (immersive-translate "Elilif/emacs-immersive-translate")
+    ;; (immersive-translate "Elilif/emacs-immersive-translate")
     (jieba . ("cireu/jieba.el" :files ("*.el" "*.json" "*.js")))
     link-hint
     makefile-executor

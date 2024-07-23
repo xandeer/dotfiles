@@ -70,16 +70,16 @@
   (advice-add 'gts-text :filter-return #'x/text-normalize))
 
 ;;; immersive-translate
-(setq immersive-translate-backend 'chatgpt)
-(add-hook 'elfeed-show-mode-hook #'immersive-translate-setup)
-(add-hook 'nov-pre-html-render-hook #'immersive-translate-setup)
+;; (setq immersive-translate-backend 'chatgpt)
+;; (add-hook 'elfeed-show-mode-hook #'immersive-translate-setup)
+;; (add-hook 'nov-pre-html-render-hook #'immersive-translate-setup)
 
 ;; https://emacs-china.org/t/emacs-macos-ocr/23071
-(defun x/siri-ocr ()
-  "Run ocr and put result to the clipboard."
-  (interactive)
-  (shell-command "shortcuts run \"OCR Selected Area\"")
-  (do-applescript "tell application id \"org.gnu.Emacs\" to activate"))
+;; (defun x/siri-ocr ()
+;;   "Run ocr and put result to the clipboard."
+;;   (interactive)
+;;   (shell-command "shortcuts run \"OCR Selected Area\"")
+;;   (do-applescript "tell application id \"org.gnu.Emacs\" to activate"))
 
 ;; (x/package-use 'websocket)
 ;; (x/package-use '(deno-bridge . "manateelazycat/deno-bridge"))
