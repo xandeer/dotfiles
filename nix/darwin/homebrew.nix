@@ -55,6 +55,7 @@
       "imagemagick"
       # "pinentry"
       "enchant"
+      "ffmpeg"
 
       "gnupg"
 
