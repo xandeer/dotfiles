@@ -21,7 +21,8 @@
     (x/replace "cmb:6265" "wechat "))
 
   (x/define-keys org-capture-mode-map
-                 '(("C-c w" x/cmb2wechat)))
+                 '(("C-c w" x/cmb2wechat)
+                   ("C-c M-w" x/insert-weather)))
 
   (defun x/org-capture-place-template-current-window (oldfun &rest args)
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore)
