@@ -3717,7 +3717,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]
@@ -3739,7 +3739,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]
@@ -3757,7 +3757,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]
@@ -3776,7 +3776,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP" ]
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "org.gnu.Emacs" ]

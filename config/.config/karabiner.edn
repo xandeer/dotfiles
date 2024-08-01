@@ -26,7 +26,7 @@
   :finder ["com.apple.finder"]
   :preview ["com.apple.Preview"]
   :raycast ["com.raycast.macos"]
-  :studio ["com.google.android.studio", "com.google.android.studio-EAP"]}
+  :studio ["com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
    :rules [[:condi :s-mode :built-in]
