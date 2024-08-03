@@ -47,17 +47,18 @@
       "wget"  # download tool
       "curl"  # no not install curl via nixpkgs, it's not working well on macOS!
       # "aria2"  # download tool
-      "httpie"  # http client
+      # "httpie"  # http client
       "goku" # karabiner by edn watcher
       "sdcv"
       "trash"
       "wakatime-cli"
       "imagemagick"
-      # "pinentry"
       "enchant"
       "ffmpeg"
 
-      "gnupg"
+      # "pass"
+      # "gnupg"
+      # "pinentry"
 
       {
         name = "node@16";
@@ -86,7 +87,7 @@
       # "discord"
 
       "anki"
-      "clashx-pro"    # proxy tool
+      # "clashx-pro"    # proxy tool
       # "iina"      # video player
       # "openinterminal-lite"  # open current folder in terminal
       "syncthing"  # file sync

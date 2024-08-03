@@ -18,16 +18,16 @@
     asdf-vm
     bat
     buku
-    curl
+    # curl
     duf
     fd
     lsof
     ncdu
     neofetch
-    tldr
+    # tldr
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
-    fzf # A command-line fuzzy finder
+    # fzf # A command-line fuzzy finder
 
     # aria2 # A lightweight multi-protocol & multi-source command-line download utility
 
@@ -36,9 +36,10 @@
     gnutar
     gawk
     ispell
-    caddy
-    gnupg
+    # caddy
+
     (pass.withExtensions (exts: [ exts.pass-otp ]))
+    gnupg
 
     hledger
 
