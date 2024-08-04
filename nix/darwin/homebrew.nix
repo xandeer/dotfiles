@@ -60,6 +60,8 @@
       # "gnupg"
       # "pinentry"
 
+      "mint"
+
       {
         name = "node@16";
         link = true;
