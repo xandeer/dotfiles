@@ -40,6 +40,7 @@
 
     (pass.withExtensions (exts: [ exts.pass-otp ]))
     gnupg
+    zbar
 
     hledger
 
