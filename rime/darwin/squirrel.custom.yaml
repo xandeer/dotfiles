@@ -64,6 +64,9 @@ patch:
     com.google.android.studio:
       ascii_mode: true
       no_inline: true
+    com.huawei.devecostudio.ds:
+      ascii_mode: true
+      no_inline: true
     # com.google.android.studio-EAP:
       # ascii_mode: true
       # no_inline: true
