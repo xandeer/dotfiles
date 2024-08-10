@@ -66,6 +66,7 @@ The function expands the given PATH to an absolute path."
     ;; ("k" "Exercism/kotlin" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/kotlin/"))))
     ;; ("l" "Android-lab" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/android-lab/"))))
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
+    ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/moon-dust"))))
     ;; ("t" "Exercism/typescript" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/typescript/"))))
     ("w" "Work" (lambda () (interactive) (magit-status (expand-file-name x/work-directory))))
     ("h" "Harmony" (lambda () (interactive) (magit-status (expand-file-name x/harmony-directory))))
