@@ -25,7 +25,7 @@
 (require 'gptel)
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 (setq gptel-default-mode 'org-mode)
-(setq-default gptel-model "gpt-4o")
+(setq-default gptel-model "gpt-4o-mini")
 (setq gptel-max-tokens 1000)
 
 (defun x/gpt-from-anywhere ()
@@ -48,15 +48,6 @@
   (gptel "#gpt anywhere#" gptel-api-key nil)
   (switch-to-buffer "#gpt anywhere#")
   (delete-other-windows))
-
-;;; chatgpt-shell
-;; (x/package-use '(chatgpt-shell . "xenodium/chatgpt-shell"))
-;; (require 'chatgpt-shell)
-;; (setq chatgpt-shell-openai-key (doctor-chatgpt-api-token))
-
-;;; org-ai
-;; (x/package-use '(org-ai . "rksm/org-ai"))
-;; (require 'org-ai)
 
 (provide 'x-chatgpt)
 ;;; x-chatgpt.el ends here

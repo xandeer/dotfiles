@@ -5,57 +5,27 @@
 (require 'request)
 (require 'transient)
 
-(defun x/gpt-get-api-key ()
-  "Get the api key of openai."
-  (auth-source-pick-first-password
-   :host "openai.com"
-   :user "chatgpt"))
-
 (defun x/gpt-buffer-get ()
   "Return the buffer of x-gpt-completion.org in notes."
   (find-file-noselect (x/expand-note "x-gpt-completion.org")))
 
-(defun x/gpt-completion (instruction message callback &optional gpt-4?)
-  "Request GPT completion based on `INSTRUCTION' and `MESSAGE'.
+;; gpt4all
+(defvar x/gpt-completion-backend
+  (gptel-make-gpt4all "GPT4All"
+    :protocol "http"
+    :host "localhost:4891"
+    :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
+(defvar x/gpt-completion-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
-This function sends a request to the OpenAI API to generate a
-completion.  The completion is obtained by calling `CALLBACK' upon
-a successful API response.  If `GPT-4?' is non-nil, it uses the
-gpt-4 model; otherwise, it uses the gpt-3.5-turbo model."
-  (let* ((api-key (x/gpt-get-api-key))
-         (url "https://api.openai.com/v1/chat/completions")
-         (headers `(("Content-Type" . "application/json")
-                    ("Authorization" . ,(concat "Bearer " api-key))))
-         (data `((model . ,gptel-model)
-                 ;; (model . ,(if gpt-4? "gpt-4"
-                 ;;             "gpt-3.5-turbo"))
-                 (messages . (((role . "system") (content . ,(concat instruction " Let's think step by step")))
-                              ((role . "user") (content . ,message))))))
-         (request-backend 'curl))
+(setq x/gpt-completion-backend gptel-backend)
+(setq x/gpt-completion-model gptel-model)
 
-    ;; Uncomment the following line to log the data of the request
-    ;; (message "data: %S" (json-encode data))
-
-    (request
-      url
-      :type "POST"
-      :headers headers
-      :data (json-encode data)
-      :parser 'json-read
-      :success callback
-      :error (cl-function
-              (lambda (&key error-thrown &allow-other-keys)
-                (message "Error: %S" error-thrown))))))
-
-(defun x/gpt-completion-parse-message (data)
-  "Parse the completion message from DATA returned by OpenAI API.
-
-DATA is an alist representing the decoded JSON response from
-the GPT API.  The function extracts and returns the value
-corresponding to the 'message' key of the first choice object."
-  (let ((choice (aref (cdr (assoc 'choices data)) 0)))
-    ;; (message "Assistant's choice: %s" choice)
-    (cdr (caddr (assoc 'message choice)))))
+(defun x/gpt-completion (instruction message callback)
+  (let ((gptel-backend x/gpt-completion-backend)
+        (gptel-model x/gpt-completion-model))
+    (gptel-request message
+      :system (concat instruction " Let's think step by step.")
+      :callback callback)))
 
 (defun x/gpt-insert-into-buffer (buffer content operation &optional instruction selected-text point-start point-end)
   "Insert CONTENT into BUFFER according to OPERATION.
@@ -87,12 +57,11 @@ used to determine the insertion point."
           (goto-char point-start))
         (insert (gptel--convert-markdown->org content))))))
 
-(defun x/gpt-completion-edit (instruction &optional gpt-4? operation)
+(defun x/gpt-completion-edit (instruction &optional operation)
   "Request GPT model to generate completion based on `INSTRUCTION'.
 
 The completion is applied to the selected text or the whole buffer
-based on `OPERATION'.  If `GPT-4?' is non-nil, use GPT-4 model, otherwise
-use GPT-3.5. The `OPERATION' can be `replace' (default), `append', `buffer'
+based on `OPERATION'. The `OPERATION' can be `replace' (default), `append', `buffer'
 or anyother symbol.  `replace' replaces the text with the completion,
 `append' appends the completion, `buffer' appends to `x/gpt-buffer',
 and other symbols display the completion as a message."
@@ -111,15 +80,15 @@ and other symbols display the completion as a message."
       (x/gpt-completion
        instruction
        selected-text
-       (cl-function (lambda (&key data &allow-other-keys)
-                      (let* ((content (x/gpt-completion-parse-message data))
-                             (op (or operation 'replace))
-                             (buffer (if (eq op 'buffer) (x/gpt-buffer-get)
-                                       original-buffer)))
-                        (if (eq op 'message)
-                            (kill-new (message content))
-                          (x/gpt-insert-into-buffer buffer content op instruction selected-text point-start point-end)))))
-       gpt-4?))))
+       (lambda (response info)
+         (if response
+             (let* ((op (or operation 'replace))
+                    (buffer (if (eq op 'buffer) (x/gpt-buffer-get)
+                              original-buffer)))
+               (if (eq op 'message)
+                   (kill-new response)
+                 (x/gpt-insert-into-buffer buffer response op instruction selected-text point-start point-end))))
+         (message "Error: %S" info))))))
 
 (defun x/gpt-insert-separated-line ()
   "Insert two line breaks at the end of the current line to separate the text."
@@ -154,17 +123,13 @@ in the list returned by `x/gpt-completion-args', otherwise 'replace."
              (if (member "--buffer" (x/gpt-completion-args))
                  'buffer
                'replace))))
-    (x/gpt-completion-edit prefixed-instruction t chosen-operation)))
+    (x/gpt-completion-edit prefixed-instruction chosen-operation)))
 
-(defun x/gpt-completion-edit-text (instruction &optional gpt-4? operation)
-  "Request a GPT completion for the given INSTRUCTION.
-
-When `GPT-4?' is not nil, use \"gpt-4\", else \"gpt-3.5-turbo\"."
+(defun x/gpt-completion-edit-text (instruction &optional operation)
+  "Request a GPT completion for the given INSTRUCTION."
   (interactive "sInstruction: ")
   (x/gpt-completion-edit
    instruction
-   (or gpt-4?
-       (member "--gpt-4" (x/gpt-completion-args)))
    (or operation
        (pcase (x/gpt-completion-args)
          ((pred (lambda (args) (member "--append" args))) 'append)
@@ -196,7 +161,6 @@ The selected or entered instruction is passed to the function
 (transient-define-prefix x/gpt-completion-edit-group ()
   "Transient for gpt completion edit."
   ["Arguments"
-   ("-f" "Use gpt-4?" "--gpt-4")
    ("-a" "Instead of replacing, we can append." "--append")
    ("-b" "Write to x/gpt-buffer." "--buffer")
    ("-m" "Display in echo area." "--message")]
@@ -250,7 +214,7 @@ She didn't follow the instruction properly, so the experiment failed.
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
     ("s" "Explain step by step"
      (lambda () (interactive)
-       (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments.")))
+       (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments." 'buffer)))
     ("o" "Optimize"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Let's think step by step. Optimize the provided code for performance and maintainability.")))

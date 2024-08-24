@@ -5,6 +5,40 @@
 (require 'transient)
 (require 'consult)
 
+;; workaround for transient.el bug static-if
+(defun transient--wrap-command ()
+  (letrec
+      ((prefix transient--prefix)
+       (suffix this-command)
+       (advice
+        (lambda (fn &rest args)
+          (interactive
+           (lambda (spec)
+             (let ((abort t))
+               (unwind-protect
+                   (prog1 (let ((debugger #'transient--exit-and-debug))
+                            (advice-eval-interactive-spec spec))
+                     (setq abort nil))
+                 (when abort
+                   (when-let ((unwind (oref prefix unwind-suffix)))
+                     (transient--debug 'unwind-interactive)
+                     (funcall unwind suffix))
+                   (advice-remove suffix advice)
+                   (oset prefix unwind-suffix nil))))))
+          (unwind-protect
+              (let ((debugger #'transient--exit-and-debug))
+                (apply fn args))
+            (when-let ((unwind (oref prefix unwind-suffix)))
+              (transient--debug 'unwind-command)
+              (funcall unwind suffix))
+            (advice-remove suffix advice)
+            (oset prefix unwind-suffix nil)))))
+    (when (symbolp this-command)
+      (advice-add suffix :around advice '((depth . -99))))
+    (cl-assert
+     (>= emacs-major-version 30) nil
+     "Emacs was downgraded, making it necessary to recompile Transient")))
+
 (defmacro x/interactive-wrapper (form)
   "Create an interactive wrapper for a non-interactive FORM ."
   `(lambda ()
