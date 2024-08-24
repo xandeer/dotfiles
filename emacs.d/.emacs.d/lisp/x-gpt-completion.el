@@ -10,15 +10,27 @@
   (find-file-noselect (x/expand-note "x-gpt-completion.org")))
 
 ;; gpt4all
-(defvar x/gpt-completion-backend
+(defvar x/gpt-local-backend
   (gptel-make-gpt4all "GPT4All"
     :protocol "http"
     :host "localhost:4891"
     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
-(defvar x/gpt-completion-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
+(defvar x/gpt-local-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
-(setq x/gpt-completion-backend gptel-backend)
-(setq x/gpt-completion-model gptel-model)
+(defvar x/gpt-completion-backend x/gpt-local-backend)
+(defvar x/gpt-completion-model x/gpt-local-model)
+
+(defun x/gpt-completion-local ()
+  "Use local gpt for completion."
+  (interactive)
+  (setq x/gpt-completion-backend x/gpt-local-backend)
+  (setq x/gpt-completion-model x/gpt-local-model))
+
+(defun x/gpt-completion-remote ()
+  "Use remote gpt for completion."
+  (interactive)
+  (setq x/gpt-completion-backend gptel-backend)
+  (setq x/gpt-completion-model gptel-model))
 
 (defun x/gpt-completion (instruction message callback)
   (let ((gptel-backend x/gpt-completion-backend)

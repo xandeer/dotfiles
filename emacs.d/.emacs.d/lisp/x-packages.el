@@ -135,6 +135,7 @@ Usages:
     ;; used for roam
     emacsql-sqlite-builtin
     restclient
+    (copilot-chat . ("chep/copilot-chat.el" :files ("*.el")))
 
 ;;; programs
     devdocs
