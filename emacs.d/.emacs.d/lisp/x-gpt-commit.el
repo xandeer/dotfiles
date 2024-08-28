@@ -5,12 +5,21 @@
 (require 'magit)
 (require 'gptel)
 
+;; (setq x/gpt-commit-backend
+;;       (gptel-make-gpt4all "GPT4All"
+;;     :protocol "http"
+;;     :host "localhost:4891"
+;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
+;; (setq x/gpt-commit-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
+
 (setq x/gpt-commit-backend
-      (gptel-make-gpt4all "GPT4All"
-    :protocol "http"
-    :host "localhost:4891"
-    :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
-(setq x/gpt-commit-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
+      (gptel-make-ollama "Ollama"
+        :host "localhost:11434"
+        :stream t
+        :models '("deepseek-coder-v2:16b")))
+
+(setq x/gpt-commit-model "deepseek-coder-v2:16b")
+(setq x/gpt-commit-max-tokens 80000)
 
 (defconst x/gpt-commit-system-prompt
   "The user provides the result of running `git diff --cached`. You suggest a conventional commit message. Don't add anything else to the response. The following describes conventional commits.
@@ -42,8 +51,8 @@ The commit message should be structured as follows:
 The commit contains the following structural elements, to communicate intent to the
 consumers of your library:
 
-1. **Fix:** a commit of the _type_ `fix` patches a bug in your codebase (this correlates with [`PATCH`](http://semver.org/#summary) in Semantic Versioning).
-1. **Feat:** a commit of the _type_ `feat` introduces a new feature to the codebase (this correlates with [`MINOR`](http://semver.org/#summary) in Semantic Versioning).
+1. **Fix:** a commit of the _type_ `Fix` patches a bug in your codebase (this correlates with [`PATCH`](http://semver.org/#summary) in Semantic Versioning).
+1. **Feat:** a commit of the _type_ `Feat` introduces a new feature to the codebase (this correlates with [`MINOR`](http://semver.org/#summary) in Semantic Versioning).
 1. **BREAKING CHANGE:** a commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`](http://semver.org/#summary) in Semantic Versioning).
 A BREAKING CHANGE can be part of commits of any _type_.
 1. _types_ other than `Fix:` and `Feat:` are allowed, for example [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) (based on the [Angular convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)) recommends `Build:`, `Chore:`,
@@ -53,17 +62,38 @@ A BREAKING CHANGE can be part of commits of any _type_.
 
 Additional types are not mandated by the Conventional Commits specification, and have no implicit effect in Semantic Versioning (unless they include a BREAKING CHANGE).
 <br /><br />
-A scope may be provided to a commit's type, to provide additional contextual information and is contained within parenthesis, e.g., `Feat(parser): add ability to parse arrays`.")
+A scope may be provided to a commit's type, to provide additional contextual information and is contained within parenthesis, e.g., `Feat(parser): Add ability to parse arrays`.")
 
-(defun x/gpt-commit-generate-message (callback)
-  "Generate a commit message using GPT and pass it to the CALLBACK."
+(defun x/gpt-commit-request (prompt callback)
+  "Send a commit request to GPT with the given PROMPT and handle the response with CALLBACK.
+
+This function collects the staged changes from Git, formats them into a single string,
+and sends them to the GPT system using gptel-request. The GPT system is configured
+using predefined variables x/gpt-commit-backend, x/gpt-commit-model, and x/gpt-commit-max-tokens.
+
+Arguments:
+PROMPT -- The system prompt to send to the GPT system.
+CALLBACK -- A function to handle the response from the GPT system.
+
+Usage:
+  (x/gpt-commit-request \"Review the following changes:\" #'my-callback-function)
+
+Dependencies:
+  - gptel-request: A function that sends a request to the GPT system.
+  - magit-git-lines: A function from Magit to get the staged changes from Git.
+  - Predefined variables: x/gpt-commit-backend, x/gpt-commit-model, x/gpt-commit-max-tokens.
+
+Example:
+  (x/gpt-commit-request \"Review the following changes:\" (lambda (res info) (message \"Response: %s\" res)))
+
+This function is intended to be used programmatically."
   (let* ((gptel-backend x/gpt-commit-backend)
          (gptel-model x/gpt-commit-model)
-         (gptel-max-tokens 8000)
+         (gptel-max-tokens x/gpt-commit-max-tokens)
          (lines (magit-git-lines "diff" "--cached"))
          (changes (string-join lines "\n")))
     (gptel-request changes
-      :system x/gpt-commit-system-prompt
+      :system prompt
       :callback callback)))
 
 (defun x/gpt-commit-message ()
@@ -83,12 +113,53 @@ Example usage:
   (interactive)
   (unless (git-commit-buffer-message)
     (let ((buffer (current-buffer)))
-      (x/gpt-commit-generate-message
-       (lambda (commit-message info)
-         (if commit-message
-             (with-current-buffer buffer
-               (insert commit-message))
-           (message "Error: %s" info)))))))
+      (x/gpt-commit-request x/gpt-commit-system-prompt
+                                     (lambda (commit-message info)
+                                       (if commit-message
+                                           (with-current-buffer buffer
+                                             (insert commit-message))
+                                         (message "Error: %s" info)))))))
+
+(defconst x/gpt-review-system-prompt "I would like your help in reviewing the following code. Please focus on the following aspects:
+
+1. **Readability**: Is the code easy to read and understand?
+2. **Efficiency**: Are there any performance improvements that can be made?
+3. **Best Practices**: Does the code adhere to common coding standards and best practices?
+4. **Functionality**: Are there any potential bugs or logical errors?
+5. **Suggestions**: Any general suggestions for improvement or refactoring?
+
+Here's the code:\n\n")
+
+(defun x/gpt-review-changes ()
+  "Review changes using GPT and display the response in a dedicated buffer.
+
+This function creates or reuses a buffer named '*gpt-review*' to display the
+response from the GPT system. It sends a request with a predefined prompt
+`x/gpt-review-system-prompt` and handles the response asynchronously. If the
+response is successful, it inserts the response into the '*gpt-review*' buffer
+and pops to that buffer. If there is an error, it displays an error message
+with the error information.
+
+Usage:
+  M-x x/gpt-review-changes
+
+Dependencies:
+  - `x/gpt-commit-request`: A function that sends a request to the GPT system.
+  - `x/gpt-review-system-prompt`: A predefined prompt string for the GPT system.
+
+Example:
+  (x/gpt-review-changes)
+
+This function is intended to be used interactively."
+  (interactive)
+  (let ((buffer (get-buffer-create "*gpt-review*")))
+    (x/gpt-commit-request x/gpt-review-system-prompt
+                          (lambda (res info)
+                            (if res
+                                (with-current-buffer buffer
+                                  (insert res)
+                                  (pop-to-buffer buffer))
+                              (message "Error: %s" info))))))
 
 (provide 'x-gpt-commit)
 ;;; x-gpt-commit.el ends here

@@ -224,17 +224,20 @@ She didn't follow the instruction properly, so the experiment failed.
     ("i" "Implement comments"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
-    ("s" "Explain step by step"
-     (lambda () (interactive)
-       (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments." 'buffer)))
-    ("o" "Optimize"
-     (lambda () (interactive)
-       (x/gpt-completion-edit-code "Let's think step by step. Optimize the provided code for performance and maintainability.")))
-    ("r" "Review"
-     (lambda () (interactive)
-       (x/gpt-completion-edit-code
-        "Review code: 1. Provide improvement suggestions for readability, efficiency, and best practices. 2. Identify issues. Let's think step by step. Use concise Chinese to answer."
-        'buffer)))]])
+    ;; ("s" "Explain step by step"
+    ;;  (lambda () (interactive)
+    ;;    (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments." 'buffer)))
+    ("s" "Explain step by step" copilot-chat-explain)
+    ;; ("o" "Optimize"
+    ;;  (lambda () (interactive)
+    ;;    (x/gpt-completion-edit-code "Let's think step by step. Optimize the provided code for performance and maintainability.")))
+    ("o" "Optimize" copilot-chat-optimize)
+    ;; ("r" "Review"
+    ;;  (lambda () (interactive)
+    ;;    (x/gpt-completion-edit-code
+    ;;     "Review code: 1. Provide improvement suggestions for readability, efficiency, and best practices. 2. Identify issues. Let's think step by step. Use concise Chinese to answer."
+    ;;     'buffer)))
+    ("r" "Review" copilot-chat-review)]])
 
 (x/define-keys
  global-map
