@@ -202,9 +202,9 @@ The selected or entered instruction is passed to the function
 *** Countries are encouraged to settle their {{c1::disputes}} peacefully.
 *** The {{c1::dispute}} about the new contract is still unresolved.
 " t 'append)))
-    ("g" "Git commit message"
-     (lambda () (interactive)
-       (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
+    ;; ("g" "Git commit message"
+    ;;  (lambda () (interactive)
+    ;;    (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
     ("H-s" "Explain sentence structure"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Act like my English teacher. Explain sentence structure, return in Chinese. For example:
@@ -217,10 +217,11 @@ She didn't follow the instruction properly, so the experiment failed.
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Let's think step by step.")))
     ("x" "With typing instruction" x/gpt)]
-   ["Code"
-    ("d" "Doc String"
-     (lambda () (interactive)
-       (x/gpt-completion-edit-code "Let's think step by step. Rewrite with concise and high quality docstring, every line must in 80 columns.")))
+   ["Copilot Chat"
+    ;; ("d" "Doc String"
+    ;;  (lambda () (interactive)
+    ;;    (x/gpt-completion-edit-code "Let's think step by step. Rewrite with concise and high quality docstring, every line must in 80 columns.")))
+    ("d" "Doc" copilot-chat-doc)
     ("i" "Implement comments"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
@@ -237,7 +238,9 @@ She didn't follow the instruction properly, so the experiment failed.
     ;;    (x/gpt-completion-edit-code
     ;;     "Review code: 1. Provide improvement suggestions for readability, efficiency, and best practices. 2. Identify issues. Let's think step by step. Use concise Chinese to answer."
     ;;     'buffer)))
-    ("r" "Review" copilot-chat-review)]])
+    ("r" "Review" copilot-chat-review)
+    ("f" "Fix" copilot-chat-fix)
+    ("p" "Custom Prompt" copilot-chat-custom-prompt-selection)]])
 
 (x/define-keys
  global-map

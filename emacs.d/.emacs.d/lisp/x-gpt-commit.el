@@ -28,13 +28,28 @@
 2. **Brief Description**: Summarize the main purpose of this commit in one sentence.
 3. **Detailed Description** (optional): If necessary, provide additional background or context explaining why these changes were made. They should be listed in bullet points.
 
-Please follow this format for the commit message:
+Please follow this format for the commit message, without any other wrapping:
 
 <type>: <brief description>
 
 <detailed description>
 
 Here is the diff content:")
+
+(defun x/gpt-commit-message-copilot-chat ()
+  "Send to Copilot a commit message prompt followed by the git diff --cache code."
+  (interactive)
+  (unless (git-commit-buffer-message)
+    (let* ((prompt x/gpt-commit-system-prompt)
+           (lines (magit-git-lines "diff" "--cached"))
+           (changes (string-join lines "\n"))
+           (formatted-prompt (concat prompt "\n" changes))
+           (current-buf (current-buffer)))
+
+      (copilot-chat--ask formatted-prompt
+                         (lambda (content)
+                           (with-current-buffer current-buf
+                             (insert (string-replace copilot-chat--magic "" content))))))))
 
 (defun x/gpt-commit-request (prompt callback)
   "Send a commit request to GPT with the given PROMPT and handle the response with CALLBACK.
