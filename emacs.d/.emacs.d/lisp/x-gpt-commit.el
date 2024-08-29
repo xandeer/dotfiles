@@ -22,47 +22,19 @@
 (setq x/gpt-commit-max-tokens 80000)
 
 (defconst x/gpt-commit-system-prompt
-  "The user provides the result of running `git diff --cached`. You suggest a conventional commit message. Don't add anything else to the response. The following describes conventional commits.
+  "You are a professional developer assistant responsible for generating Git commit messages. Please create a concise, clear, and best-practice commit message based on the provided diff content. Ensure the commit message includes the following elements:
 
-# Conventional Commits 1.0.0
+1. **Type** (e.g., Feat, Fix, Docs, Style, Refactor, Perf, Test, Chore, etc.)
+2. **Brief Description**: Summarize the main purpose of this commit in one sentence.
+3. **Detailed Description** (optional): If necessary, provide additional background or context explaining why these changes were made. They should be listed in bullet points.
 
-## Summary
+Please follow this format for the commit message:
 
-The Conventional Commits specification is a lightweight convention on top of commit messages.
-It provides an easy set of rules for creating an explicit commit history;
-which makes it easier to write automated tools on top of.
-This convention dovetails with [SemVer](http://semver.org),
-by describing the features, fixes, and breaking changes made in commit messages.
+<type>: <brief description>
 
-The commit message should be structured as follows:
+<detailed description>
 
----
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
----
-
-<br />
-The commit contains the following structural elements, to communicate intent to the
-consumers of your library:
-
-1. **Fix:** a commit of the _type_ `Fix` patches a bug in your codebase (this correlates with [`PATCH`](http://semver.org/#summary) in Semantic Versioning).
-1. **Feat:** a commit of the _type_ `Feat` introduces a new feature to the codebase (this correlates with [`MINOR`](http://semver.org/#summary) in Semantic Versioning).
-1. **BREAKING CHANGE:** a commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with [`MAJOR`](http://semver.org/#summary) in Semantic Versioning).
-A BREAKING CHANGE can be part of commits of any _type_.
-1. _types_ other than `Fix:` and `Feat:` are allowed, for example [@commitlint/config-conventional](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional) (based on the [Angular convention](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)) recommends `Build:`, `Chore:`,
-  `CI:`, `Docs:`, `Style:`, `Refactor:`, `Perf:`, `Test:`, and others.
-1. _footers_ other than `BREAKING CHANGE: <description>` may be provided and follow a convention similar to
-  [git trailer format](https://git-scm.com/docs/git-interpret-trailers).
-
-Additional types are not mandated by the Conventional Commits specification, and have no implicit effect in Semantic Versioning (unless they include a BREAKING CHANGE).
-<br /><br />
-A scope may be provided to a commit's type, to provide additional contextual information and is contained within parenthesis, e.g., `Feat(parser): Add ability to parse arrays`.")
+Here is the diff content:")
 
 (defun x/gpt-commit-request (prompt callback)
   "Send a commit request to GPT with the given PROMPT and handle the response with CALLBACK.
@@ -120,15 +92,27 @@ Example usage:
                                              (insert commit-message))
                                          (message "Error: %s" info)))))))
 
-(defconst x/gpt-review-system-prompt "I would like your help in reviewing the following code. Please focus on the following aspects:
+(defconst x/gpt-review-system-prompt "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Please review the provided diff content and provide a detailed code review, addressing the following points:
 
-1. **Readability**: Is the code easy to read and understand?
-2. **Efficiency**: Are there any performance improvements that can be made?
-3. **Best Practices**: Does the code adhere to common coding standards and best practices?
-4. **Functionality**: Are there any potential bugs or logical errors?
-5. **Suggestions**: Any general suggestions for improvement or refactoring?
+1. **Overall Assessment**: Provide a high-level assessment of the changes, including the impact, complexity, and potential risks.
 
-Here's the code:\n\n")
+2. **Functional Changes**: Analyze the functional changes made in the code. Ensure they address the intended requirements and do not introduce unintended side effects.
+
+3. **Code Quality**: Evaluate the code quality, considering factors such as readability, maintainability, and adherence to best practices and coding standards.
+
+4. **Edge Cases and Error Handling**: Check if the code handles edge cases and potential errors appropriately.
+
+5. **Performance and Scalability**: Assess the impact of the changes on performance and scalability, if applicable.
+
+6. **Security Considerations**: Identify any potential security vulnerabilities or concerns introduced by the changes.
+
+7. **Documentation and Comments**: Ensure the code is well-documented and commented, making it easier for other developers to understand and maintain.
+
+8. **Suggested Improvements**: Provide constructive feedback and suggestions for improvement, focusing on areas that could be optimized or refactored.
+
+Please provide your code review in a clear and structured format, addressing each point mentioned above. Use markdown formatting for better readability.
+
+Here is the diff content:")
 
 (defun x/gpt-review-changes ()
   "Review changes using GPT and display the response in a dedicated buffer.
