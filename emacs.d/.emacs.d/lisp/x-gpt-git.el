@@ -1,4 +1,4 @@
-;;; x-gpt-commit.el --- gpt commit -*- lexical-binding: t -*-
+;;; x-gpt-git.el --- gpt with git -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -36,20 +36,18 @@ Please follow this format for the commit message, without any other wrapping:
 
 Here is the diff content:")
 
-(defun x/gpt-commit-message-copilot-chat ()
-  "Send to Copilot a commit message prompt followed by the git diff --cache code."
-  (interactive)
-  (unless (git-commit-buffer-message)
-    (let* ((prompt x/gpt-commit-system-prompt)
-           (lines (magit-git-lines "diff" "--cached"))
-           (changes (string-join lines "\n"))
-           (formatted-prompt (concat prompt "\n" changes))
-           (current-buf (current-buffer)))
+(defun x/gpt-git--get-changes ()
+  "Retrieve the cached Git diff and return it as a single string.
 
-      (copilot-chat--ask formatted-prompt
-                         (lambda (content)
-                           (with-current-buffer current-buf
-                             (insert (string-replace copilot-chat--magic "" content))))))))
+This function uses `magit-git-lines' to get the lines of the Git diff
+for the cached changes (staged changes). It then joins these lines into
+a single string with newline characters separating each line.
+
+Returns:
+  A string containing the cached Git diff."
+  (string-join
+   (magit-git-lines "diff" "--cached")
+   "\n"))
 
 (defun x/gpt-commit-request (prompt callback)
   "Send a commit request to GPT with the given PROMPT and handle the response with CALLBACK.
@@ -76,10 +74,8 @@ Example:
 This function is intended to be used programmatically."
   (let* ((gptel-backend x/gpt-commit-backend)
          (gptel-model x/gpt-commit-model)
-         (gptel-max-tokens x/gpt-commit-max-tokens)
-         (lines (magit-git-lines "diff" "--cached"))
-         (changes (string-join lines "\n")))
-    (gptel-request changes
+         (gptel-max-tokens x/gpt-commit-max-tokens))
+    (gptel-request (x/gpt-git--get-changes)
       :system prompt
       :callback callback)))
 
@@ -101,11 +97,11 @@ Example usage:
   (unless (git-commit-buffer-message)
     (let ((buffer (current-buffer)))
       (x/gpt-commit-request x/gpt-commit-system-prompt
-                                     (lambda (commit-message info)
-                                       (if commit-message
-                                           (with-current-buffer buffer
-                                             (insert commit-message))
-                                         (message "Error: %s" info)))))))
+                            (lambda (commit-message info)
+                              (if commit-message
+                                  (with-current-buffer buffer
+                                    (insert commit-message))
+                                (message "Error: %s" info)))))))
 
 (defconst x/gpt-review-system-prompt "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Please review the provided diff content and provide a detailed code review, addressing the following points:
 
@@ -160,5 +156,32 @@ This function is intended to be used interactively."
                                   (pop-to-buffer buffer))
                               (message "Error: %s" info))))))
 
-(provide 'x-gpt-commit)
-;;; x-gpt-commit.el ends here
+(defun x/gpt-copilot-commit-message ()
+  "Send to Copilot a commit message prompt followed by the git diff --cache code."
+  (interactive)
+  (unless (git-commit-buffer-message)
+    (let* ((prompt x/gpt-commit-system-prompt)
+           (changes (x/gpt-git--get-changes))
+           (formatted-prompt (concat prompt "\n" changes))
+           (current-buf (current-buffer)))
+
+      (copilot-chat--ask formatted-prompt
+                         (lambda (content)
+                           (with-current-buffer current-buf
+                             (insert (string-replace copilot-chat--magic "" content))))))))
+
+(add-hook 'git-commit-setup-hook 'x/gpt-copilot-commit-message)
+
+(defun x/gpt-copilot-review ()
+  "Send to Copilot a review prompt followed by the  git diff --cache code."
+  (interactive)
+  (let* ((prompt x/gpt-review-system-prompt)
+         (changes (x/gpt-git--get-changes))
+         (formatted-prompt (concat prompt "\n" changes)))
+    (with-current-buffer copilot-chat-prompt-buffer
+      (erase-buffer)
+      (insert formatted-prompt))
+    (copilot-chat-prompt-send)))
+
+(provide 'x-gpt-git)
+;;; x-gpt-git.el ends here
