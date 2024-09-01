@@ -4,6 +4,7 @@
 
 (require 'magit)
 (require 'gptel)
+(require 'x-gpt-code)
 
 ;; (setq x/gpt-commit-backend
 ;;       (gptel-make-gpt4all "GPT4All"
@@ -12,176 +13,96 @@
 ;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
 ;; (setq x/gpt-commit-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
-(setq x/gpt-commit-backend
+(setq x/gpt-git-backend
       (gptel-make-ollama "Ollama"
         :host "localhost:11434"
         :stream t
         :models '("deepseek-coder-v2:16b")))
 
-(setq x/gpt-commit-model "deepseek-coder-v2:16b")
-(setq x/gpt-commit-max-tokens 80000)
+(setq x/gpt-git-model "deepseek-coder-v2:16b")
+(setq x/gpt-git-max-tokens 80000)
 
-(defconst x/gpt-commit-system-prompt
-  "You are a professional developer assistant responsible for generating Git commit messages. Please create a concise, clear, and best-practice commit message based on the provided diff content. Ensure the commit message includes the following elements:
+(defun x/gpt-git-request (prompt callback)
+  "Make a GPT request with Git changes.
 
-1. **Type** (e.g., Feat, Fix, Docs, Style, Refactor, Perf, Test, Chore, etc.)
-2. **Brief Description**: Summarize the main purpose of this commit in one sentence.
-3. **Detailed Description** (optional): If necessary, provide additional background or context explaining why these changes were made. They should be listed in bullet points.
+PROMPT is a string that serves as the system prompt for the GPT request.
+CALLBACK is a function that will be called with the result of the GPT request.
 
-Please follow this format for the commit message, without any other wrapping:
+This function sets up the GPT request parameters using predefined variables:
+- x/gpt-git-backend: The backend service to use for the GPT request.
+- x/gpt-git-model: The model to use for the GPT request.
+- x/gpt-git-max-tokens: The maximum number of tokens for the GPT request.
 
-<type>: <brief description>
+The function then calls gptel-request with the changes obtained from x/gpt-code--get-changes,
+passing the PROMPT and CALLBACK to it.
 
-<detailed description>
-
-Here is the diff content:")
-
-(defun x/gpt-git--get-changes ()
-  "Retrieve the cached Git diff and return it as a single string.
-
-This function uses `magit-git-lines' to get the lines of the Git diff
-for the cached changes (staged changes). It then joins these lines into
-a single string with newline characters separating each line.
-
-Returns:
-  A string containing the cached Git diff."
-  (string-join
-   (magit-git-lines "diff" "--cached")
-   "\n"))
-
-(defun x/gpt-commit-request (prompt callback)
-  "Send a commit request to GPT with the given PROMPT and handle the response with CALLBACK.
-
-This function collects the staged changes from Git, formats them into a single string,
-and sends them to the GPT system using gptel-request. The GPT system is configured
-using predefined variables x/gpt-commit-backend, x/gpt-commit-model, and x/gpt-commit-max-tokens.
-
-Arguments:
-PROMPT -- The system prompt to send to the GPT system.
-CALLBACK -- A function to handle the response from the GPT system.
-
-Usage:
-  (x/gpt-commit-request \"Review the following changes:\" #'my-callback-function)
+Example usage:
+  (x/gpt-git-request \"Describe the recent changes\" #'my-callback-function)
 
 Dependencies:
-  - gptel-request: A function that sends a request to the GPT system.
-  - magit-git-lines: A function from Magit to get the staged changes from Git.
-  - Predefined variables: x/gpt-commit-backend, x/gpt-commit-model, x/gpt-commit-max-tokens.
+- `gptel-request`: Function to make the GPT request.
+- `x/gpt-code--get-changes`: Function to get the Git changes.
 
-Example:
-  (x/gpt-commit-request \"Review the following changes:\" (lambda (res info) (message \"Response: %s\" res)))
-
-This function is intended to be used programmatically."
-  (let* ((gptel-backend x/gpt-commit-backend)
-         (gptel-model x/gpt-commit-model)
-         (gptel-max-tokens x/gpt-commit-max-tokens))
-    (gptel-request (x/gpt-git--get-changes)
+Arguments:
+PROMPT -- The system prompt for the GPT request.
+CALLBACK -- The function to call with the result of the GPT request."
+  (let* ((gptel-backend x/gpt-git-backend)
+         (gptel-model x/gpt-git-model)
+         (gptel-max-tokens x/gpt-git-max-tokens))
+    (gptel-request (x/gpt-code--get-changes)
       :system prompt
       :callback callback)))
 
-(defun x/gpt-commit-message ()
-  "Automatically generate a conventional commit message using GPT-Commit.
+(defun x/gpt-git-generate-commit-message ()
+  "Generate a commit message using GPT and insert it into the commit buffer.
 
-This function is a hook intended to be added to `git-commit-setup-hook'.
-When called, it analyzes the changes in the Git repository and generates
-a conventional commit message using the GPT model.
+This function is interactive and can be called directly by the user.
+If the current Git commit buffer does not already contain a commit message,
+it makes a request to a GPT-based backend to generate a commit message.
 
-The generated commit message follows the conventional commit format,
-providing a structured description of the changes made in the commit.
+The function uses `x/gpt-git-request` to make the GPT request with the prompt
+defined in `x/gpt-code-generate-commit-message-prompt`. The generated commit
+message is then inserted into the current buffer.
 
 Example usage:
-  (require 'x/gpt-commit)
-  (add-hook 'git-commit-setup-hook 'x/gpt-commit-message)"
+  M-x x/gpt-git-generate-commit-message
 
+Dependencies:
+- `git-commit-buffer-message`: Function to check if the commit buffer already has a message.
+- `x/gpt-git-request`: Function to make the GPT request."
   (interactive)
   (unless (git-commit-buffer-message)
     (let ((buffer (current-buffer)))
-      (x/gpt-commit-request x/gpt-commit-system-prompt
-                            (lambda (commit-message info)
-                              (if commit-message
-                                  (with-current-buffer buffer
-                                    (insert commit-message))
-                                (message "Error: %s" info)))))))
+      (x/gpt-git-request x/gpt-code-generate-commit-message-prompt
+                         (lambda (commit-message info)
+                           (if commit-message
+                               (with-current-buffer buffer
+                                 (insert commit-message))
+                             (message "Error: %s" info)))))))
 
-(defconst x/gpt-review-system-prompt "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Please review the provided diff content and provide a detailed code review, addressing the following points:
+(defun x/gpt-git-review-changes ()
+  "Review Git changes using GPT and display the review in a dedicated buffer.
 
-1. **Overall Assessment**: Provide a high-level assessment of the changes, including the impact, complexity, and potential risks.
+This function is interactive and can be called directly by the user.
+It makes a request to a GPT-based backend to review the Git changes using the prompt
+defined in `x/gpt-code-review-prompt`. The review result is then inserted into a buffer
+named `*gpt-review*` and displayed to the user.
 
-2. **Functional Changes**: Analyze the functional changes made in the code. Ensure they address the intended requirements and do not introduce unintended side effects.
-
-3. **Code Quality**: Evaluate the code quality, considering factors such as readability, maintainability, and adherence to best practices and coding standards.
-
-4. **Edge Cases and Error Handling**: Check if the code handles edge cases and potential errors appropriately.
-
-5. **Performance and Scalability**: Assess the impact of the changes on performance and scalability, if applicable.
-
-6. **Security Considerations**: Identify any potential security vulnerabilities or concerns introduced by the changes.
-
-7. **Documentation and Comments**: Ensure the code is well-documented and commented, making it easier for other developers to understand and maintain.
-
-8. **Suggested Improvements**: Provide constructive feedback and suggestions for improvement, focusing on areas that could be optimized or refactored.
-
-Please provide your code review in a clear and structured format, addressing each point mentioned above. Use markdown formatting for better readability.
-
-Here is the diff content:")
-
-(defun x/gpt-review-changes ()
-  "Review changes using GPT and display the response in a dedicated buffer.
-
-This function creates or reuses a buffer named '*gpt-review*' to display the
-response from the GPT system. It sends a request with a predefined prompt
-`x/gpt-review-system-prompt` and handles the response asynchronously. If the
-response is successful, it inserts the response into the '*gpt-review*' buffer
-and pops to that buffer. If there is an error, it displays an error message
-with the error information.
-
-Usage:
-  M-x x/gpt-review-changes
+Example usage:
+  M-x x/gpt-git-review-changes
 
 Dependencies:
-  - `x/gpt-commit-request`: A function that sends a request to the GPT system.
-  - `x/gpt-review-system-prompt`: A predefined prompt string for the GPT system.
-
-Example:
-  (x/gpt-review-changes)
-
-This function is intended to be used interactively."
+- `x/gpt-git-request`: Function to make the GPT request.
+- `x/gpt-code-review-prompt`: Prompt used for the GPT request."
   (interactive)
   (let ((buffer (get-buffer-create "*gpt-review*")))
-    (x/gpt-commit-request x/gpt-review-system-prompt
-                          (lambda (res info)
-                            (if res
-                                (with-current-buffer buffer
-                                  (insert res)
-                                  (pop-to-buffer buffer))
-                              (message "Error: %s" info))))))
-
-(defun x/gpt-copilot-commit-message ()
-  "Send to Copilot a commit message prompt followed by the git diff --cache code."
-  (interactive)
-  (unless (git-commit-buffer-message)
-    (let* ((prompt x/gpt-commit-system-prompt)
-           (changes (x/gpt-git--get-changes))
-           (formatted-prompt (concat prompt "\n" changes))
-           (current-buf (current-buffer)))
-
-      (copilot-chat--ask formatted-prompt
-                         (lambda (content)
-                           (with-current-buffer current-buf
-                             (insert (string-replace copilot-chat--magic "" content))))))))
-
-(add-hook 'git-commit-setup-hook 'x/gpt-copilot-commit-message)
-
-(defun x/gpt-copilot-review ()
-  "Send to Copilot a review prompt followed by the  git diff --cache code."
-  (interactive)
-  (let* ((prompt x/gpt-review-system-prompt)
-         (changes (x/gpt-git--get-changes))
-         (formatted-prompt (concat prompt "\n" changes)))
-    (with-current-buffer copilot-chat-prompt-buffer
-      (erase-buffer)
-      (insert formatted-prompt))
-    (copilot-chat-prompt-send)))
+    (x/gpt-git-request x/gpt-code-review-prompt
+                       (lambda (res info)
+                         (if res
+                             (with-current-buffer buffer
+                               (insert res)
+                               (pop-to-buffer buffer))
+                           (message "Error: %s" info))))))
 
 (provide 'x-gpt-git)
 ;;; x-gpt-git.el ends here

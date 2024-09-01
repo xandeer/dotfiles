@@ -110,11 +110,5 @@
  global-map
  '(("TAB" x/tab)))
 
-;;; copilot chat
-(with-eval-after-load 'copilot-chat
-  (setq copilot-chat-frontend 'markdown)
-  (require 'copilot-chat-markdown)
-  (copilot-chat-markdown-init))
-
 (provide 'x-completion)
 ;;; x-completion.el ends here
