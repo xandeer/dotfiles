@@ -89,7 +89,6 @@
 (require 'x-avy)
 (require 'x-browser)
 (require 'x-calendar)
-(require 'x-chatgpt)
 (require 'azure-tts)
 (require 'x-completion)
 (require 'x-consult)
@@ -99,7 +98,6 @@
 (require 'x-embark)
 (require 'x-flycheck)
 (require 'x-folding)
-(require 'x-gpt-completion)
 (require 'x-hippie-expand)
 (require 'x-jieba)
 (require 'x-lispy)
@@ -119,6 +117,12 @@
 (require 'x-telega)
 (require 'x-vertico)
 (require 'x-xwidget)
+
+;; ai
+(require 'x-chatgpt)
+(require 'x-gpt-completion)
+(require 'x-gpt-code)
+(require 'x-gpt-git)
 
 ;; osx
 (require 'x-osx)
