@@ -11,6 +11,14 @@
   (setq copilot-chat-frontend 'org)
   (copilot-chat-org-init)
 
+  (defun x/gpt-code--copilot-token ()
+    "Get the copilot token."
+    (auth-source-pick-first-password
+     :host "copilot.github.com"
+     :user "kkevindu"))
+
+  (advice-add 'copilot-chat--get-cached-token :override #'x/gpt-code--copilot-token)
+
   (defun x/gpt-code-copilot-chat--org-format-data (content type)
     (let ((data ""))
       (if (eq type 'prompt)
