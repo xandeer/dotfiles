@@ -17,6 +17,13 @@
     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
 (defvar x/gpt-local-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
+;; (defvar x/gpt-local-backend
+;;   (gptel-make-ollama "Ollama"
+;;     :host "localhost:11434"
+;;     :stream t
+;;     :models '("llama3.1:8b")))
+;; (defvar x/gpt-local-model "llama3.1:8b")
+
 (defvar x/gpt-completion-backend x/gpt-local-backend)
 (defvar x/gpt-completion-model x/gpt-local-model)
 
@@ -31,6 +38,8 @@
   (interactive)
   (setq x/gpt-completion-backend gptel-backend)
   (setq x/gpt-completion-model gptel-model))
+
+(x/gpt-completion-remote)
 
 (defun x/gpt-completion (instruction message callback)
   (let ((gptel-backend x/gpt-completion-backend)
@@ -99,8 +108,8 @@ and other symbols display the completion as a message."
                               original-buffer)))
                (if (eq op 'message)
                    (kill-new response)
-                 (x/gpt-insert-into-buffer buffer response op instruction selected-text point-start point-end))))
-         (message "Error: %S" info))))))
+                 (x/gpt-insert-into-buffer buffer response op instruction selected-text point-start point-end)))
+           (message "Error: %S" info)))))))
 
 (defun x/gpt-insert-separated-line ()
   "Insert two line breaks at the end of the current line to separate the text."

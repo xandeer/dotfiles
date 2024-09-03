@@ -18,15 +18,13 @@
 
 ;;; Code:
 
-(require 'markdown-mode)
-
 ;;; gptel
 (x/package-use '(gptel . "karthink/gptel"))
 (require 'gptel)
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 (setq gptel-default-mode 'org-mode)
 (setq-default gptel-model "gpt-4o-mini")
-(setq gptel-max-tokens 1000)
+(setq gptel-max-tokens 3000)
 
 (defun x/gpt-from-anywhere ()
   "Use `gptel' to generate text from anywhere."
