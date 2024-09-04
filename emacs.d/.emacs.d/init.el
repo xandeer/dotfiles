@@ -123,6 +123,7 @@
 (require 'x-gpt-completion)
 (require 'x-gpt-code)
 (require 'x-gpt-git)
+(require 'x-whisper)
 
 ;; osx
 (require 'x-osx)
