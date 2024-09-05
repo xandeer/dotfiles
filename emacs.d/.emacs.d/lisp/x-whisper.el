@@ -3,15 +3,32 @@
 ;;; Code:
 
 (x/package-use '(whisper . "natrys/whisper.el"))
-
 (require 'whisper)
+
+;; models
+;; https://huggingface.co/dixyes/Belle-whisper-large-v3-zh-punct-GGML/tree/main
+
 (setq whisper-install-directory "~/temp/"
       whisper-model "large-v3"
       whisper-language "zh"
       whisper-translate nil
       ;; whisper-use-threads (/ (num-processors) 2)
-      whisper-use-threads 8
+      whisper-use-threads (- (num-processors) 1)
       whisper-return-cursor-to-start nil)
+
+(defun x/whisper-command-with-prompt (command)
+  (append command
+          '("--prompt" "Please generate Simple Chinese. Use full-width punctuation marks, like: ，。？.")))
+
+(advice-add 'whisper-command :filter-return #'x/whisper-command-with-prompt)
+
+(defun x/whisper-retranscribe ()
+  (interactive)
+  (setq whisper--point-buffer (current-buffer))
+  (when whisper-insert-text-at-point
+    (with-current-buffer whisper--point-buffer
+      (setq whisper--marker (point-marker))))
+  (whisper--transcribe-audio))
 
 (defun rk/get-ffmpeg-device ()
   "Gets the list of devices available to ffmpeg.
