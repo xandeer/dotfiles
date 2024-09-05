@@ -18,7 +18,10 @@
 
 (defun x/whisper-command-with-prompt (command)
   (append command
-          '("--prompt" "Please generate Simple Chinese. Use full-width punctuation marks, like: ，。？.")))
+          '("--prompt" "请输出简体中文，并使用中文标点符号，。？")
+          ;; `("--processors" ,(number-to-string (- (num-processors) 1)))
+          ;; '("--max-context" "4096")
+          ))
 
 (advice-add 'whisper-command :filter-return #'x/whisper-command-with-prompt)
 

@@ -119,6 +119,7 @@
 (require 'x-xwidget)
 
 ;; ai
+(require 'x-gpt-prompts)
 (require 'x-chatgpt)
 (require 'x-gpt-completion)
 (require 'x-gpt-code)

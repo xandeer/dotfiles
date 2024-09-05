@@ -61,7 +61,7 @@ If the current Git commit buffer does not already contain a commit message,
 it makes a request to a GPT-based backend to generate a commit message.
 
 The function uses `x/gpt-git-request` to make the GPT request with the prompt
-defined in `x/gpt-code-generate-commit-message-prompt`. The generated commit
+defined in `x/gpt-prompt-code-generate-commit-message`. The generated commit
 message is then inserted into the current buffer.
 
 Example usage:
@@ -73,7 +73,7 @@ Dependencies:
   (interactive)
   (unless (git-commit-buffer-message)
     (let ((buffer (current-buffer)))
-      (x/gpt-git-request x/gpt-code-generate-commit-message-prompt
+      (x/gpt-git-request x/gpt-prompt-code-generate-commit-message
                          (lambda (commit-message info)
                            (if commit-message
                                (with-current-buffer buffer
@@ -85,7 +85,7 @@ Dependencies:
 
 This function is interactive and can be called directly by the user.
 It makes a request to a GPT-based backend to review the Git changes using the prompt
-defined in `x/gpt-code-review-prompt`. The review result is then inserted into a buffer
+defined in `x/gpt-prompt-code-review`. The review result is then inserted into a buffer
 named `*gpt-review*` and displayed to the user.
 
 Example usage:
@@ -96,7 +96,7 @@ Dependencies:
 - `x/gpt-code-review-prompt`: Prompt used for the GPT request."
   (interactive)
   (let ((buffer (get-buffer-create "*gpt-review*")))
-    (x/gpt-git-request x/gpt-code-review-prompt
+    (x/gpt-git-request x/gpt-prompt-code-review
                        (lambda (res info)
                          (if res
                              (with-current-buffer buffer

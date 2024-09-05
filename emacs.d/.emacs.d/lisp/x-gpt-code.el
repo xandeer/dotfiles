@@ -19,6 +19,22 @@
 
   (advice-add 'copilot-chat--get-cached-token :override #'x/gpt-code--copilot-token)
 
+  ;; (defun x/gpt-code-copilot-chat--replace-src-block (content &optional buffer)
+  ;;   (when (string= content copilot-chat--magic)
+  ;;     (with-current-buffer (or buffer copilot-chat-buffer)
+  ;;       (read-only-mode -1)
+  ;;       (save-excursion
+  ;;         (goto-char (point-min))
+  ;;         (while (re-search-forward "^[[:space:]]*===\\(.+\\)$" nil t)
+  ;;           (replace-match "#+begin_src \\1"))
+  ;;         (goto-char (point-min))
+  ;;         (while (re-search-forward "^[[:space:]]*===$" nil t)
+  ;;           (replace-match "#+end_src\n")))
+  ;;       (read-only-mode))))
+
+  ;; (advice-add 'copilot-chat-prompt-cb :before #'x/gpt-code-copilot-chat--replace-src-block)
+  ;; (advice-remove 'copilot-chat-prompt-cb  #'x/gpt-code-copilot-chat--replace-src-block)
+
   (defun x/gpt-code-copilot-chat--org-format-data (content type)
     (let ((data ""))
       (if (eq type 'prompt)
@@ -40,69 +56,6 @@
 
   (advice-add 'copilot-chat--org-format-data :override #'x/gpt-code-copilot-chat--org-format-data))
 
-(defconst x/gpt-code-generate-commit-message-prompt
-  "You are a professional developer assistant responsible for generating Git commit messages. Please create a concise, clear, and best-practice commit message based on the provided diff content. Ensure the commit message includes the following elements:
-
-1. Type (e.g., Feat, Fix, Docs, Style, Refactor, Perf, Test, Chore, etc.) should be capitalized.
-2. Brief Description: Summarize the main purpose of this commit in one sentence.
-3. Detailed Description (optional): If necessary, provide additional background or context explaining why these changes were made. They should be listed in bullet points.
-
-
-Please follow this format for the commit message, without any other wrapping like ```:
-<Type>: <Brief Description>
-
-<Detailed Description>
-
-Not like below:
-```
-**Type**: Feat
-
-**Brief Description**: Add file sharing functionality and improve logging in EntryAbility and FwPage.
-
-**Detailed Description**:
-```
-
-Commit message examples:
-```
-Feat: Add a new feature
-
-- Add a new feature to the project
-- Improve the performance of the existing code
-- Fix a bug in the existing code
-```
-
-```
-Refactor: Improve the code quality
-
-- Refactor the existing code to improve readability
-- Remove the redundant code
-- Optimize the code structure
-```
-
-Start with the diff:\n")
-
-(defconst x/gpt-code-review-prompt "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Please review the provided diff content and provide a detailed code review, addressing the following points:
-
-1. *Overall Assessment*: Provide a high-level assessment of the changes, including the impact, complexity, and potential risks.
-
-2. *Functional Changes*: Analyze the functional changes made in the code. Ensure they address the intended requirements and do not introduce unintended side effects.
-
-3. *Code Quality*: Evaluate the code quality, considering factors such as readability, maintainability, and adherence to best practices and coding standards.
-
-4. *Edge Cases and Error Handling*: Check if the code handles edge cases and potential errors appropriately.
-
-5. *Performance and Scalability*: Assess the impact of the changes on performance and scalability, if applicable.
-
-6. *Security Considerations*: Identify any potential security vulnerabilities or concerns introduced by the changes.
-
-7. *Documentation and Comments*: Ensure the code is well-documented and commented, making it easier for other developers to understand and maintain.
-
-8. *Suggested Improvements*: Provide constructive feedback and suggestions for improvement, focusing on areas that could be optimized or refactored.
-
-Please provide your code review in a clear and structured format, addressing each point mentioned above. Use markdown formatting for better readability.
-
-Here is the diff content:")
-
 (defun x/gpt-code--get-changes ()
   "Retrieve the cached Git diff and return it as a single string.
 
@@ -121,7 +74,7 @@ Returns:
   (interactive)
   (unless (git-commit-buffer-message)
     (let* ((changes (x/gpt-code--get-changes))
-           (formatted-prompt (concat x/gpt-code-generate-commit-message-prompt "\n" changes))
+           (formatted-prompt (concat x/gpt-prompt-code-generate-commit-message "\n" changes))
            (current-buf (current-buffer)))
 
       (copilot-chat--ask formatted-prompt
@@ -130,16 +83,59 @@ Returns:
                              (insert (string-replace copilot-chat--magic "" content))))))))
 (add-hook 'git-commit-setup-hook 'x/gpt-code-generate-commit-message)
 
-(defun x/gpt-code-review ()
+(defconst x/gpt-code--org-prompt "Use only Emacs org mode formatting in your answers
+Make sure to include the programming language name at the start of the org mode code blocks.
+This is an example of python code block in emacs org syntax:
+#+begin_src python
+def hello_world():
+	print('Hello, World!')
+#+end_src
+Avoid wrapping the whole response in the block code.
+
+Don't forget the most important rule when you are formatting your response: use emacs org syntax only.")
+
+(defun x/gpt-code-review-changes ()
   "Send to Copilot a review prompt followed by the  git diff --cache code."
   (interactive)
   (let* ((changes (x/gpt-code--get-changes))
-         (formatted-prompt (concat x/gpt-code-review-prompt "\n" changes)))
+         (formatted-prompt (concat x/gpt-prompt-code-review "\n" changes)))
     (copilot-chat--prepare-buffers)
     (with-current-buffer copilot-chat-prompt-buffer
       (erase-buffer)
+      (insert x/gpt-code--org-prompt)
       (insert formatted-prompt))
     (copilot-chat-prompt-send)))
+
+(defun x/gpt-code-ask-region (prompt)
+  "Send the selected region's code to Copilot with a given PROMPT.
+
+This function extracts the code from the current region, prepares the
+Copilot chat buffers, and sends the code along with the provided
+PROMPT to Copilot for processing."
+  (let ((code (buffer-substring-no-properties (region-beginning) (region-end))))
+    (copilot-chat--prepare-buffers)
+    (with-current-buffer copilot-chat-prompt-buffer
+      (erase-buffer)
+      (insert x/gpt-code--org-prompt)
+      (insert (concat prompt "\n Code:\n" code)))
+    (copilot-chat-prompt-send)))
+
+(defun x/gpt-code-doc ()
+  "Generate documentation for the selected region using copilot-chat."
+  (interactive)
+  (x/gpt-code-ask-region x/gpt-prompt-code-doc))
+
+(defun x/gpt-code-optimize ()
+  (interactive)
+  (x/gpt-code-ask-region x/gpt-prompt-code-optimize))
+
+(defun x/gpt-code-review ()
+  (interactive)
+  (x/gpt-code-ask-region x/gpt-prompt-code-review))
+
+(defun x/gpt-code-explain ()
+  (interactive)
+  (x/gpt-code-ask-region x/gpt-prompt-code-explain))
 
 (provide 'x-gpt-code)
 ;;; x-gpt-code.el ends here

@@ -187,69 +187,42 @@ The selected or entered instruction is passed to the function
    ("-m" "Display in echo area." "--message")]
   ["GPT edit"
    ["Text"
-    ("c" "Chinese"
+    ("ta" "Alternate"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into simple Chinese. Just give me the rewritten text, without something like \"这是中文。\".")))
-    ("e" "English"
+       (x/gpt-completion-edit-text x/gpt-prompt-text-alter 'append)))
+    ("tc" "Chinese"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "First, identify the language of the text. Then rewrite into English, just give rewritten text.")))
-    ("H-e" "Example"
+       (x/gpt-completion-edit-text x/gpt-prompt-text-to-zh)))
+    ("te" "English"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Give interpretation in Chinese, pronunciation in USA, help me remember using word segmentation, 3 synonyms, 3 antonyms, 3 example sentences in English. For example, input is dispute. Response should like:
-- [dis'pju:t]
-- v. 争端，纠纷
-- n. 争论，争执，纷争
-
-1. dis: 这个前缀通常表示否定或相反的含义。在 /dispute/ 中，它为冲突或分歧设定了背景。
-1. pute: 这一部分可能让你想起「争论」的意思。它是单词的核心，可以让你联想到争吵或解决分歧的概念。
-
-因此，当你想到 /dispute/ 这个单词时，你可以将它与负面的分歧或冲突联系起来，涉及争论或解决分歧的过程。
-
-- Synonyms: conflict, argument, controversy
-- Antonyms: agreement, accord, consensus
-*** They've had a long-standing {{c1::dispute}} over property boundaries.
-*** Countries are encouraged to settle their {{c1::disputes}} peacefully.
-*** The {{c1::dispute}} about the new contract is still unresolved.
-" t 'append)))
-    ;; ("g" "Git commit message"
-    ;;  (lambda () (interactive)
-    ;;    (x/gpt-completion-edit-text "First, identify the language of the text.  Then rewrite into English, make it shorter for git commit message. Capitalize the word after \":\". Just return rewritten text.")))
-    ("H-s" "Explain sentence structure"
+       (x/gpt-completion-edit-text x/gpt-prompt-text-to-en)))
+    ("ts" "Summarize"
      (lambda () (interactive)
-       (x/gpt-completion-edit-text "Act like my English teacher. Explain sentence structure, return in Chinese. For example:
-She didn't follow the instruction properly, so the experiment failed.
-
-这句话的结构是复合句，包含两个主要的分句，通过逗号和连词 /so/ 进行连接。
-1. /She didn't follow the instruction properly/ 是第一个分句，这是一个简单句。主语是 /she/，谓语是 /didn't follow/，修饰语是 /properly/，表示她没有正确地遵循指示。
-2. /so the experiment failed/ 是第二个分句，也是一个简单句。主语是 /the experiment/，谓语是 /failed/，表明实验失败。这个分句通过 /so/ 与前一分句相连，表达了因果关系，即由于她没有正确遵循指示，所以实验失败。" t 'append)))
-    ("n" "Without instruction"
+       (x/gpt-completion-edit-text x/gpt-prompt-text-summarize 'buffer)))
+    ("tn" "Without instruction"
      (lambda () (interactive)
        (x/gpt-completion-edit-text "Let's think step by step.")))
-    ("x" "With typing instruction" x/gpt)]
+    ("tx" "With typing instruction" x/gpt)]
+   ["English"
+    ("ee" "Example"
+     (lambda () (interactive)
+       (x/gpt-completion-edit-text x/gpt-prompt-english-word-example 'append)))
+    ("es" "Explain sentence structure"
+     (lambda () (interactive)
+       (x/gpt-completion-edit-text x/gpt-prompt-english-explain-sentence 'append)))]
    ["Copilot Chat"
-    ;; ("d" "Doc String"
-    ;;  (lambda () (interactive)
-    ;;    (x/gpt-completion-edit-code "Let's think step by step. Rewrite with concise and high quality docstring, every line must in 80 columns.")))
-    ("d" "Doc" copilot-chat-doc)
-    ("i" "Implement comments"
+    ("cd" "Doc" x/gpt-code-doc)
+    ("ci" "Implement comments"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
     ;; ("s" "Explain step by step"
     ;;  (lambda () (interactive)
     ;;    (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments." 'buffer)))
-    ("s" "Explain step by step" copilot-chat-explain)
-    ;; ("o" "Optimize"
-    ;;  (lambda () (interactive)
-    ;;    (x/gpt-completion-edit-code "Let's think step by step. Optimize the provided code for performance and maintainability.")))
-    ("o" "Optimize" copilot-chat-optimize)
-    ;; ("r" "Review"
-    ;;  (lambda () (interactive)
-    ;;    (x/gpt-completion-edit-code
-    ;;     "Review code: 1. Provide improvement suggestions for readability, efficiency, and best practices. 2. Identify issues. Let's think step by step. Use concise Chinese to answer."
-    ;;     'buffer)))
-    ("r" "Review" copilot-chat-review)
-    ("f" "Fix" copilot-chat-fix)
-    ("p" "Custom Prompt" copilot-chat-custom-prompt-selection)]])
+    ("ce" "Explain step by step" x/gpt-code-explain)
+    ("co" "Optimize" x/gpt-code-optimize)
+    ("cr" "Review" x/gpt-code-review)
+    ("cf" "Fix" copilot-chat-fix)
+    ("cp" "Custom Prompt" copilot-chat-custom-prompt-selection)]])
 
 (x/define-keys
  global-map
