@@ -17,7 +17,8 @@
      :host "copilot.github.com"
      :user "kkevindu"))
 
-  (advice-add 'copilot-chat--get-cached-token :override #'x/gpt-code--copilot-token)
+  (setf (copilot-chat-github-token copilot-chat--instance) (x/gpt-code--copilot-token))
+  ;; (advice-add 'copilot-chat--get-cached-token :override #'x/gpt-code--copilot-token)
 
   ;; (defun x/gpt-code-copilot-chat--replace-src-block (content &optional buffer)
   ;;   (when (string= content copilot-chat--magic)
