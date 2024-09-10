@@ -79,6 +79,10 @@
     ;; ("s" "eva query sleep" eva-query-sleep)
     ("H-r" "restart" x/restart-emacs)]])
 
+(defun x/open-with-cursor ()
+  (interactive)
+  (x/start-process (format "cursor %s" buffer-file-name)))
+
 (transient-define-prefix x/transient-buffer-group ()
   "Transient for opening buffers."
   [["Projectile"
@@ -103,7 +107,8 @@
     (">" "Send file to Telega" x/telega-send-to-chat)]
    ["Other"
     ("l" "Recent files" consult-recent-file)
-    ("H-e" "Find library" find-library)]])
+    ("H-e" "Find library" find-library)
+    ("c" "Open with Cursor" x/open-with-cursor)]])
 
 (defalias 'x/consult-dir #'consult-bookmark)
 (consult-customize x/consult-dir :initial "dir: ")

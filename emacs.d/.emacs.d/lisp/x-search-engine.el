@@ -13,7 +13,7 @@
 (defengine zlib (concat x/zlib-domain "/s/%s?extensions[]=epub") :keybinding "b")
 
 (defengine wiki-en "https://en.wikipedia.org/wiki/%s" :keybinding "w" :browser 'eww)
-(defengine wiki-cn "https://zh.wikipedia.org/wiki/%s" :keybinding "f" :browser 'eww)
+(defengine wiki-cn "https://zh.wikipedia.org/wiki/%s" :keybinding "f")
 
 (defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "u")
 (defengine perplexity "https://www.perplexity.ai/search?q=%s" :keybinding "a")
