@@ -25,7 +25,8 @@
                    ("M-g" magit-dispatch)) )
   (x/define-keys magit-status-mode-map
                  '(("q" kill-current-buffer)
-                   ("K" magit-discard)))
+                   ("K" magit-discard)
+                   ("R" x/gpt-code-review-changes)))
 
   (defun x/git-create-tag-and-update-chglog ()
     (interactive)
