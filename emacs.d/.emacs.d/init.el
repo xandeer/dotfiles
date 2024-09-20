@@ -83,6 +83,7 @@
 (require 'x-kotlin)
 ;; (require 'x-racket)
 (require 'x-web)
+(require 'x-swift)
 
 ;;; tools
 (require 'x-anzu)

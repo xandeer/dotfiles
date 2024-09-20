@@ -61,6 +61,8 @@
       # "gnupg"
       # "pinentry"
 
+      "swift-format"
+
       "mint"
 
       {
