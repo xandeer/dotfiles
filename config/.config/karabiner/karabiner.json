@@ -3382,6 +3382,20 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "launch apps",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "a",
+            "modifiers" : {
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"Xcode\" to activate'"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "run scripts",
         "manipulators" : [ {
           "from" : {

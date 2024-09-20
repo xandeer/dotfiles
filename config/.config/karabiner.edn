@@ -133,12 +133,14 @@
   {:des "misc"
    :rules [[:!COSi [:!COSi :return_or_enter]]]}
 
-  ;; use raycast instead
-  ;; {:des "launch apps"
-  ;;  :rules [[:!COSa [:open "Android Studio"]]
-  ;;          [:!COSc [:open "Google Chrome"]]
-  ;;          ;; [:!COSe [:open "Emacs"]]
-  ;;          ]}
+
+  {:des "launch apps"
+   :rules [[:!COSa
+            ;; [:open "Android Studio"]
+            [:open "Xcode"]]
+           ;; [:!COSc [:open "Google Chrome"]]
+           ;; [:!COSe [:open "Emacs"]]
+           ]}
 
   {:des "run scripts"
    :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
