@@ -5,6 +5,8 @@
 (x/package-use 'swift-mode)
 (x/package-use 'lsp-sourcekit)
 
+(setq swift-mode:basic-offset 2)
+
 (with-eval-after-load 'swift-mode
   (add-hook 'swift-mode-hook #'lsp)
 
