@@ -53,7 +53,9 @@
   (transient-define-prefix x/transient-swift ()
     "Transient for Swift."
     [["Swift"
+      ("f" "Format" format-swift-buffer)
       ("r" "Run" xcode-run)
+      ("c" "Open in Cursor" x/open-with-cursor)
       ("o" "Open in Xcode" (lambda () (interactive) (shell-command (concat "open " buffer-file-name))))]])
 
   (define-key swift-mode-map (kbd "H-k") #'x/transient-swift))
