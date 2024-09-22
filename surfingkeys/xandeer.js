@@ -4,6 +4,7 @@ const { Clipboard, Hints, Visual, RUNTIME, Front, addSearchAlias, iunmap, map, m
 settings.focusFirstCandidate = true;
 settings.nextLinkRegex = /((>>|next|pre)+)/i;
 settings.prevLinkRegex = /((<<|prev(ious)?)+)/;
+settings.tabsThreshold = 0;
 
 // Search engines
 addSearchAlias('c', 'grep.app', 'https://grep.app/search?q=', 's', 'https://grep.app/search?q=', function(response) {
