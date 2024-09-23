@@ -120,6 +120,7 @@
     ("d" "Agenda daily" org-agenda-list)
     ("e" "Agenda emacs" (lambda () (interactive) (org-agenda nil "e")))
     ("i" "Agenda inbox" (lambda () (interactive) (org-agenda nil "i")))
+    ("m" "Agenda MoonDust" (lambda () (interactive) (org-agenda nil "m")))
     ("p" "Agenda personal" (lambda () (interactive) (org-agenda nil "p")))
     ("t" "Agenda todo" (lambda () (interactive) (org-agenda nil "t")))
     ("v" "Agenda list" org-agenda)
