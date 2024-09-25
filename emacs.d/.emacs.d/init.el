@@ -31,6 +31,7 @@
 (require 'x-bootstrap)
 (require 'x-packages)
 (require 'no-littering)
+(require 'x-env)
 
 (require 'x-init-utils)
 ;; If I'm modifying the config, after restart open the init.el,
