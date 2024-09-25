@@ -141,8 +141,8 @@
             ;; [:open "Xcode"]
             ]
            ;; [:!COSc [:open "Google Chrome"]]
-           ;; [:!COSe [:open "Emacs"]]
-           ]}
+           [:!COSe [:open "Emacs"]]
+           [:!COSx [:open "Xcode"]]]}
 
   {:des "run scripts"
    :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
