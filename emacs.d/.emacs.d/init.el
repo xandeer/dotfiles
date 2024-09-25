@@ -151,6 +151,9 @@
   (org-roam-node-random)
   (x/start-timer-session))
 
+;; auto focus after restart
+(select-frame-set-input-focus (selected-frame))
+
 (x/append-init-hook
  '(ebuku))
 
