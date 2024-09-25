@@ -3391,7 +3391,7 @@
             }
           },
           "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Android Studio\" to activate'"
+            "shell_command" : "osascript -e 'tell application \"DevEco-Studio\" to activate'"
           } ],
           "type" : "basic"
         } ]
