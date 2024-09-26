@@ -26,6 +26,16 @@
 (setq-default gptel-model "gpt-4o-mini")
 (setq gptel-max-tokens 3000)
 
+(setq x/gh-ai-token (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
+
+(setq x/gpt-gh (gptel-make-azure "github" ;Name, whatever you'd like
+                 :protocol "https"        ;Optional -- https is the default
+                 :host "models.inference.ai.azure.com"
+                 :endpoint "/chat/completions" ;or equivalent
+                 :stream t                     ;Enable streaming responses
+                 :key #'x/gh-ai-token          ;API key
+                 :models '("gpt-4o" "gpt-4o-mini")))
+
 (defun x/gpt-from-anywhere ()
   "Use `gptel' to generate text from anywhere."
   (interactive)

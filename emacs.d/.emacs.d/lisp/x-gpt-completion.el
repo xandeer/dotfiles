@@ -36,7 +36,8 @@
 (defun x/gpt-completion-remote ()
   "Use remote gpt for completion."
   (interactive)
-  (setq x/gpt-completion-backend gptel-backend)
+  ;; (setq x/gpt-completion-backend gptel-backend)
+  (setq x/gpt-completion-backend x/gpt-gh)
   (setq x/gpt-completion-model gptel-model))
 
 (x/gpt-completion-remote)
