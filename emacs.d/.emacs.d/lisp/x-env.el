@@ -22,5 +22,7 @@
           "/usr/local/bin"
           "/usr/sbin"))))
 
+(setenv "PATH" (mapconcat 'identity exec-path ":"))
+
 (provide 'x-env)
 ;;; x-env.el ends here
