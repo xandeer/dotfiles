@@ -49,7 +49,7 @@
                                    (top . ,frame-top)
                                    (left . ,frame-left)
                                    (width . (text-pixels . ,frame-width))
-                                   (heigth . (text-pixels . ,frame-height))
+                                   (height . (text-pixels . ,frame-height))
                                    (minibuffer . t)))))
     (select-frame chat-frame))
   (add-hook 'gptel-post-response-hook (lambda () (goto-char (point-max))))
