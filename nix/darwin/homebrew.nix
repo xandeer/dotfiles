@@ -60,6 +60,7 @@
       # "pass"
       # "gnupg"
       # "pinentry"
+      "clojure/tools/clojure"
 
       "swift-format"
 
