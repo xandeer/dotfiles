@@ -142,7 +142,8 @@
             ]
            ;; [:!COSc [:open "Google Chrome"]]
            [:!COSe [:open "Emacs"]]
-           [:!COSx [:open "Xcode"]]]}
+           [:!COSx [:open "Xcode"]]
+           [:!COSh [:open "Cursor"]]]}
 
   {:des "run scripts"
    :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
@@ -151,8 +152,8 @@
 
   {:des "screenshots"
    :rules [[:!COSw :!CS5]
-           [:!COSr :!CS4]
-           [:!COSs :!CS3]]}
+           [:!COSr :!CTS4]
+           [:!COSs :!CTS3]]}
 
   {:des "Anki"
    :rules [:anki

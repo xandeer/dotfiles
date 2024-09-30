@@ -3416,6 +3416,17 @@
             "shell_command" : "osascript -e 'tell application \"Xcode\" to activate'"
           } ],
           "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "h",
+            "modifiers" : {
+              "mandatory" : [ "left_command", "left_option", "left_shift" ]
+            }
+          },
+          "to" : [ {
+            "shell_command" : "osascript -e 'tell application \"Cursor\" to activate'"
+          } ],
+          "type" : "basic"
         } ]
       }, {
         "description" : "run scripts",
@@ -3454,7 +3465,7 @@
           },
           "to" : [ {
             "key_code" : "4",
-            "modifiers" : [ "left_command", "left_shift" ]
+            "modifiers" : [ "left_command", "left_control", "left_shift" ]
           } ],
           "type" : "basic"
         }, {
@@ -3466,7 +3477,7 @@
           },
           "to" : [ {
             "key_code" : "3",
-            "modifiers" : [ "left_command", "left_shift" ]
+            "modifiers" : [ "left_command", "left_control", "left_shift" ]
           } ],
           "type" : "basic"
         } ]
