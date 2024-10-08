@@ -155,14 +155,14 @@
            [:!COSr :!CTS4]
            [:!COSs :!CTS3]]}
 
-  {:des "Anki"
-   :rules [:anki
-           [:d :!COSd]
-           [:m :1]
-           [:comma :2]
-           [:period :3]
-           [:j :4]
-           [:!Ox :!COSf1]]}
+  ;; {:des "Anki"
+  ;;  :rules [:anki
+  ;;          [:d :!COSd]
+  ;;          [:m :1]
+  ;;          [:comma :2]
+  ;;          [:period :3]
+  ;;          [:j :4]
+  ;;          [:!Ox :!COSf1]]}
 
   {:des "Chrome shortcuts"
    :rules [:chrome

@@ -3,3 +3,4 @@
 /etc/
 config/.config/github-copilot/ai
 config/.config/github-copilot/versions.json
+.env
