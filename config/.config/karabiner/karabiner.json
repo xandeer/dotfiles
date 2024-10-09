@@ -3384,7 +3384,7 @@
             }
           },
           "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Xcode\" to activate'"
+            "shell_command" : "osascript -e 'tell application \"DevEco-Studio\" to activate'"
           } ],
           "type" : "basic"
         }, {
