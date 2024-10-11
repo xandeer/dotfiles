@@ -30,14 +30,12 @@
   "Azure TTS."
   :group 'azure)
 
-(defcustom azure-tts-region "eastus"
+(defcustom azure-tts-region "eastasia"
   "Azure TTS region."
   :type 'string
   :group 'azure-tts)
 
 (defvar azure-tts-last-result nil "The cache of the last result.")
-
-(setq azure-tts-region "eastasia")
 
 (defcustom azure-tts-temp-dir nil
   "Azure TTS temporary dir for storing downloaded files.
@@ -205,18 +203,27 @@ which will be called after the download is finished."
   (when azure-tts-last-result
     (funcall #'azure-tts--player-play azure-tts-last-result)))
 
+(defun azure-tts--detect-voice-name (text)
+  "Detect the voice name of the TEXT."
+  (if (string-match-p (rx (category chinese)) text)
+      azure-tts-zh-voice-name
+    azure-tts-en-voice-name))
+
 (defun azure-tts-play-region (start end &optional voice-name rate pitch)
   "Play the region from START to END with the given VOICE-NAME, RATE and PITCH.
 If VOICE-NAME, RATE and PITCH are not given, use the default values.
 \\[universal-argument] means decrease the rate by 20."
   (interactive "r")
-  (let ((rate-decrease
-         (if (and current-prefix-arg (listp current-prefix-arg))
-             (round (* 20 (log (car current-prefix-arg) 4)))
-           0)))
+  (let* ((rate-decrease
+          (if (and current-prefix-arg (listp current-prefix-arg))
+              (round (* 20 (log (car current-prefix-arg) 4)))
+            0))
+         (text (x/text-normalize (filter-buffer-substring start end)))
+         (voice-name (or voice-name (azure-tts--detect-voice-name text))))
+
     (azure-tts-play
-     (x/text-normalize (filter-buffer-substring start end))
-     (or voice-name azure-tts-en-voice-name)
+     text
+     voice-name
      (- (or rate azure-tts-default-rate)
         rate-decrease)
      (or pitch azure-tts-default-pitch))))

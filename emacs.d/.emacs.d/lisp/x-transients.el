@@ -176,9 +176,8 @@
     ("l" "Lookup point" sdcv-search-pointer)
     ("H-l" "Lookup input" sdcv-search-input)
     ("k" "Translate" gts-do-translate)
-    ("i" "TTS EN" azure-tts-play-region-english)
-    ("H-i" "TTS ZH" azure-tts-play-region-chinese)
-    ("H-r" "TTS replay" azure-tts-replay)]
+    ("i" "TTS" azure-tts-play-region)
+    ("H-i" "TTS replay" azure-tts-replay)]
    ["Consult"
     ("a" "agenda" consult-org-agenda)
     ("d" "dir" consult-dir)
