@@ -20,7 +20,11 @@
         :models '("deepseek-coder-v2:16b")))
 
 (setq x/gpt-git-model "deepseek-coder-v2:16b")
-(setq x/gpt-git-max-tokens 80000)
+
+(setq x/gpt-git-backend x/gpt-gh)
+(setq x/gpt-git-model "gpt-4o")
+
+(setq x/gpt-git-max-tokens 16384)
 
 (defun x/gpt-git-request (prompt callback)
   "Make a GPT request with Git changes.
@@ -80,6 +84,8 @@ Dependencies:
                                  (insert commit-message))
                              (message "Error: %s" info)))))))
 
+;; (add-hook 'git-commit-setup-hook 'x/gpt-git-generate-commit-message)
+
 (defun x/gpt-git-review-changes ()
   "Review Git changes using GPT and display the review in a dedicated buffer.
 
@@ -96,13 +102,14 @@ Dependencies:
 - `x/gpt-code-review-prompt`: Prompt used for the GPT request."
   (interactive)
   (let ((buffer (get-buffer-create "*gpt-review*")))
-    (x/gpt-git-request x/gpt-prompt-code-review
-                       (lambda (res info)
-                         (if res
-                             (with-current-buffer buffer
-                               (insert res)
-                               (pop-to-buffer buffer))
-                           (message "Error: %s" info))))))
+    (x/gpt-git-request
+     (concat x/gpt-prompt-format-org x/gpt-prompt-code-review)
+     (lambda (res info)
+       (if res
+           (with-current-buffer buffer
+             (insert res)
+             (pop-to-buffer buffer))
+         (message "Error: %s" info))))))
 
 (provide 'x-gpt-git)
 ;;; x-gpt-git.el ends here

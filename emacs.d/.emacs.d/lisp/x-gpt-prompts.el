@@ -2,6 +2,18 @@
 ;;; Commentary:
 ;;; Code:
 
+;; format
+(defconst x/gpt-prompt-format-org "Use only Emacs org mode formatting in your answers.
+Make sure to include the programming language name at the start of the org mode code blocks.
+This is an example of python code block in emacs org syntax:
+#+begin_src python
+def hello_world():
+	print('Hello, World!')
+#+end_src
+Avoid wrapping the whole response in the block code.
+
+Don't forget the most important rule when you are formatting your response: use emacs org syntax only.")
+
 ;; coding
 (defconst x/gpt-prompt-code-generate-commit-message
   "You are a professional developer assistant responsible for generating Git commit messages. Please create a concise, clear, and best-practice commit message based on the provided diff content. Ensure the commit message includes the following elements:
