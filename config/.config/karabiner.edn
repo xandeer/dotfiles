@@ -136,9 +136,9 @@
 
   {:des "launch apps"
    :rules [[:!COSa
-            [:open "Android Studio"]
+            ;; [:open "Android Studio"]
             ;; [:open "DevEco-Studio"]
-            ;; [:open "Xcode"]
+            [:open "Xcode"]
             ]
            ;; [:!COSc [:open "Google Chrome"]]
            [:!COSe [:open "Emacs"]]
