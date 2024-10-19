@@ -113,6 +113,12 @@
         ("o" . org-open-at-point)
         ("?" . org-speed-command-help)))
 
+(defun x/org-toggle-marks ()
+  "Toggle visibility of `org-mode' markup characters."
+  (interactive)
+  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (org-restart-font-lock))
+
 (defun x/fill-subtree ()
   "Toggle fill in current subtree."
   (interactive)
