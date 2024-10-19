@@ -135,15 +135,16 @@
 
 
   {:des "launch apps"
-   :rules [[:!COSa
-            ;; [:open "Android Studio"]
-            ;; [:open "DevEco-Studio"]
-            [:open "Xcode"]
-            ]
+   :rules [;; [:!COSa
+           ;;  ;; [:open "Android Studio"]
+           ;;  ;; [:open "DevEco-Studio"]
+           ;;  [:open "Xcode"]
+           ;;  ]
            ;; [:!COSc [:open "Google Chrome"]]
-           [:!COSe [:open "Emacs"]]
-           [:!COSx [:open "Xcode"]]
-           [:!COSh [:open "Cursor"]]]}
+           ;; [:!COSe [:open "Emacs"]]
+           ;; [:!COSx [:open "Xcode"]]
+           ;; [:!COSh [:open "Cursor"]]
+           ]}
 
   {:des "run scripts"
    :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
