@@ -1,0 +1,80 @@
+#!/bin/bash
+
+source ~/.config/auth.env
+
+# Azure TTS service configuration
+REGION="eastasia"
+KEY="$AZURE_TTS_KEY"
+ENDPOINT="https://$REGION.tts.speech.microsoft.com/cognitiveservices/v1"
+OUTPUT_FORMAT="audio-16khz-128kbitrate-mono-mp3"
+CACHE_DIR="$HOME/.cache/azure-tts"
+
+# Ensure the cache directory exists.
+mkdir -p "$CACHE_DIR"
+
+# Function to detect language and select voice
+detect_language_and_voice() {
+  local text="$1"
+
+  # if echo "$text" | grep -q '[ぁ-んァ-ン]'; then
+  # echo "ja-JP-NanamiNeural"
+  # el
+  if echo "$text" | grep -q '[一-龥]'; then
+    echo "zh-CN-XiaochenNeural"
+    # echo "zh-HK-WanLungNeural"
+  else
+    echo "en-US-MichelleNeural"
+  fi
+}
+
+# Function to generate SSML
+generate_ssml() {
+  local text="$1"
+  local voice_name="$2"
+  echo "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"en-US\"><voice name=\"$voice_name\">$text</voice></speak>"
+}
+
+# Function to get MD5 hash of input text
+get_md5() {
+  echo -n "$1" | md5sum | awk '{print $1}'
+}
+
+# Main function
+tts() {
+  local input_text="$1"
+  local voice_name=$(detect_language_and_voice "$input_text")
+  local md5_hash=$(get_md5 "$input_text")
+  local cache_file="$CACHE_DIR/$voice_name-$md5_hash.mp3"
+
+  if [ -f "$cache_file" ]; then
+    echo "Using cached audio file."
+    afplay "$cache_file"
+  else
+    echo "Generating new audio file..."
+    local ssml=$(generate_ssml "$input_text" "$voice_name")
+
+    curl -s -X POST "$ENDPOINT" \
+      -H "Ocp-Apim-Subscription-Key: $KEY" \
+      -H "Content-Type: application/ssml+xml" \
+      -H "X-Microsoft-OutputFormat: $OUTPUT_FORMAT" \
+      -d "$ssml" \
+      -o "$cache_file"
+
+    if [ $? -eq 0 ]; then
+      echo "Audio file generated and cached."
+      afplay "$cache_file"
+    else
+      echo "Error generating audio file."
+      exit 1
+    fi
+  fi
+}
+
+# Check if input is provided
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 <text to convert to speech>"
+  exit 1
+fi
+
+# Call the main function with all arguments
+tts "$*"

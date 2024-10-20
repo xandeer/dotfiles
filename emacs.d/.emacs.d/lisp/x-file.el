@@ -46,7 +46,8 @@
   "Move some temp files to trash."
   (interactive)
   (dolist (path '("~/syncthing/donut/apk"
-                  "~/syncthing/personal/temp"))
+                  "~/syncthing/personal/temp"
+                  "~/.cache/azure-tts/"))
     (shell-command (concat "trash " path
                            "; mkdir -p " path)
                    "*x/trash-temp*")))
