@@ -32,8 +32,8 @@ PT: Portuguese
 RU: Russian"
   :type 'string)
 
-(defcustom x/insert-translated-text-end-symbol "|"
-  "The end symbol of typing."
+(defcustom x/insert-translated-text-end-string "   "
+  "The end string of typing. Default is three spaces."
   :type 'string)
 
 (defface x/insert-translated-text-font-lock-mark-text
@@ -56,7 +56,7 @@ RU: Russian"
     (activate-input-method default-input-method))
 
   ;; Add monitor hook.
-  (add-hook 'after-change-functions #'x--insert-translated-text-monitor-after-change nil t)
+  (add-hook 'after-change-functions #'x-insert-translated--text-monitor-after-change nil t)
   (advice-add 'keyboard-quit :before #'x/insert-translated-text-inactivate)
 
   ;; Make sure build hash to contain placeholder.
@@ -77,7 +77,7 @@ RU: Russian"
 
   ;; Print play hint.
   (unless (minibuffer-window-active-p (get-buffer-window))
-    (message "Type and press \"%s\" to translate to %s." x/insert-translated-text-end-symbol x/insert-translated-text-target-lang)))
+    (message "Type and press 3 spaces to translate to %s."  x/insert-translated-text-target-lang)))
 
 (defun x/insert-translated-text-inactivate ()
   (interactive)
@@ -100,24 +100,28 @@ RU: Russian"
 
   (advice-remove 'keyboard-quit #'x/insert-translated-text-inactivate))
 
-(defun x--insert-translated-text-monitor-after-change (start end len)
+(defun x-insert-translated--text-monitor-after-change (start end len)
   (when (and (boundp 'insert-translated-text-active-point))
     (if insert-translated-text-active-point
-        (let ((translate-start insert-translated-text-active-point)
-              (translate-end (point)))
+        (let* ((translate-start insert-translated-text-active-point)
+               (translate-end (point))
+               (text (buffer-substring-no-properties translate-start translate-end))
+               (end-string (and (length> text (length x/insert-translated-text-end-string))
+                                (substring text (- (length x/insert-translated-text-end-string))))))
+
           (cond
-           ;; Translate current text after press `x/insert-translated-text-end-symbol'.
-           ((string-equal (buffer-substring-no-properties start end) x/insert-translated-text-end-symbol)
-            (let ((text (buffer-substring-no-properties translate-start (1- translate-end))))
+           ;; Translate current text after press `x/insert-translated-text-end-string'.
+           ((string-equal end-string x/insert-translated-text-end-string)
+            (let ((content (substring text 0 (- (length x/insert-translated-text-end-string)))))
+
               ;; Delete input text.
               (kill-region translate-start translate-end)
-
               ;; Query translation.
-              (x--insert-translated-text-query-translation text)
+              (x--insert-translated-text-query-translation content)
 
               ;; Inactivate.
               (x/insert-translated-text-inactivate)))
-           ;; Update active overlay bound if user press any other non `x/insert-translated-text-end-symbol' character.
+           ;; Update active overlay bound if user press any other non `x/insert-translated-text-end-string' character.
            (t
             (move-overlay insert-translated-text-active-overlay translate-start translate-end)))))))
 ;;
