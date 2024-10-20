@@ -8,35 +8,41 @@ SYSTEM_PROMPT="You are a helpful assistant."
 
 # Function to display usage
 usage() {
-    echo "Usage: GH_OPENAI_KEY=[github key] $0 [-m MODEL] [-s SYSTEM_PROMPT] <user_prompt>"
-    echo "  -m MODEL           Specify the OpenAI model (default: gpt-4o-mini)"
-    echo "  -s SYSTEM_PROMPT   Specify the system prompt (default: You are a helpful assistant.)"
-    exit 1
+  echo "Usage: GH_OPENAI_KEY=[github key] $0 [-m MODEL] [-s SYSTEM_PROMPT] <user_prompt>"
+  echo "  -m MODEL           Specify the OpenAI model (default: gpt-4o-mini)"
+  echo "  -s SYSTEM_PROMPT   Specify the system prompt (default: You are a helpful assistant.)"
+  exit 1
 }
 
 # Parse command line options
 while getopts ":k:m:s:" opt; do
-    case $opt in
-        m) MODEL="$OPTARG" ;;
-        s) SYSTEM_PROMPT="$OPTARG" ;;
-        \?) echo "Invalid option: -$OPTARG" >&2; usage ;;
-        :) echo "Option -$OPTARG requires an argument." >&2; usage ;;
-    esac
+  case $opt in
+  m) MODEL="$OPTARG" ;;
+  s) SYSTEM_PROMPT="$OPTARG" ;;
+  \?)
+    echo "Invalid option: -$OPTARG" >&2
+    usage
+    ;;
+  :)
+    echo "Option -$OPTARG requires an argument." >&2
+    usage
+    ;;
+  esac
 done
 
 # Remove the options from the positional parameters
-shift $((OPTIND-1))
+shift $((OPTIND - 1))
 
 # Check if API key is provided
 if [ -z "$GH_OPENAI_KEY" ]; then
-    echo "Error: API key is required."
-    usage
+  echo "Error: API key is required."
+  usage
 fi
 
 # Check if a user prompt is provided
 if [ $# -eq 0 ]; then
-    echo "Error: User prompt is required."
-    usage
+  echo "Error: User prompt is required."
+  usage
 fi
 
 # Combine all remaining arguments as the user prompt
@@ -44,9 +50,9 @@ USER_PROMPT="$*"
 
 # Make the API call
 response=$(curl -s -X POST "https://models.inference.ai.azure.com/chat/completions" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $GH_OPENAI_KEY" \
-    -d '{
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $GH_OPENAI_KEY" \
+  -d '{
         "model": "'"$MODEL"'",
         "messages": [
             {"role": "system", "content": "'"$SYSTEM_PROMPT"'"},
