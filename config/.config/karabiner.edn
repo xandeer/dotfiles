@@ -156,30 +156,30 @@
            [:!COSr :!CTS4]
            [:!COSs :!CTS3]]}
 
-  ;; {:des "Anki"
-  ;;  :rules [:anki
-  ;;          [:d :!COSd]
-  ;;          [:m :1]
-  ;;          [:comma :2]
-  ;;          [:period :3]
-  ;;          [:j :4]
-  ;;          [:!Ox :!COSf1]]}
+  {:des "Anki"
+   :rules [:anki
+           [:d :!COSd]
+           [:m :1]
+           [:comma :2]
+           [:period :3]
+           [:j :4]
+           [:!Ox :!COS1]]}
 
   {:des "Chrome shortcuts"
    :rules [:chrome
            [:!Ol :!Ttab]
            [:!Oh :!TStab]
-           [:!Ox :!COSf1]
+           [:!Ox :!COS1]
            [:!Oj :!Copen_bracket]
            [:!Ok :!Cclose_bracket]]}
 
   {:des "Finder shortcuts"
    :rules [:finder
-           [:!Ox :!COSf1]]}
+           [:!Ox :!COS1]]}
 
   {:des "Preview shortcuts"
    :rules [:preview
-           [:!Ox :!COSf1]]}
+           [:!Ox :!COS1]]}
 
   ;; doesn't work
   ;; {:des "Raycast shortcuts"
@@ -192,7 +192,7 @@
            [:!Oh :!TStab]
            ;; read aloud
            [:!Os :!CSu]
-           [:!Ox :!COSf1]]}
+           [:!Ox :!COS1]]}
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]
