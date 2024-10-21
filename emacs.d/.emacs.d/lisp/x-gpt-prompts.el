@@ -56,27 +56,29 @@ Refactor: Improve the code quality
 
 Start with the diff:\n")
 
-(defconst x/gpt-prompt-code-review "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Response in Chinese. Please review the provided diff content and provide a detailed code review, addressing the following points:
+;; (defconst x/gpt-prompt-code-review "You are an experienced code reviewer tasked with reviewing code changes submitted by a developer. Response in Chinese. Please review the provided diff content and provide a detailed code review, addressing the following points:
 
-1. *Overall Assessment*: Provide a high-level assessment of the changes, including the impact, complexity, and potential risks.
+;; 1. *Overall Assessment*: Provide a high-level assessment of the changes, including the impact, complexity, and potential risks.
 
-2. *Functional Changes*: Analyze the functional changes made in the code. Ensure they address the intended requirements and do not introduce unintended side effects.
+;; 2. *Functional Changes*: Analyze the functional changes made in the code. Ensure they address the intended requirements and do not introduce unintended side effects.
 
-3. *Code Quality*: Evaluate the code quality, considering factors such as readability, maintainability, and adherence to best practices and coding standards.
+;; 3. *Code Quality*: Evaluate the code quality, considering factors such as readability, maintainability, and adherence to best practices and coding standards.
 
-4. *Edge Cases and Error Handling*: Check if the code handles edge cases and potential errors appropriately.
+;; 4. *Edge Cases and Error Handling*: Check if the code handles edge cases and potential errors appropriately.
 
-5. *Performance and Scalability*: Assess the impact of the changes on performance and scalability, if applicable.
+;; 5. *Performance and Scalability*: Assess the impact of the changes on performance and scalability, if applicable.
 
-6. *Security Considerations*: Identify any potential security vulnerabilities or concerns introduced by the changes.
+;; 6. *Security Considerations*: Identify any potential security vulnerabilities or concerns introduced by the changes.
 
-7. *Documentation and Comments*: Ensure the code is well-documented and commented, making it easier for other developers to understand and maintain.
+;; 7. *Documentation and Comments*: Ensure the code is well-documented and commented, making it easier for other developers to understand and maintain.
 
-8. *Suggested Improvements*: Provide constructive feedback and suggestions for improvement, focusing on areas that could be optimized or refactored.
+;; 8. *Suggested Improvements*: Provide constructive feedback and suggestions for improvement, focusing on areas that could be optimized or refactored.
 
-Please provide your code review in a clear and structured format, addressing each point mentioned above. Use markdown formatting for better readability.
+;; Please provide your code review in a clear and structured format, addressing each point mentioned above. Use markdown formatting for better readability.
 
-Here is the diff content:")
+;; Here is the diff content:")
+
+(defconst x/gpt-prompt-code-review "I want you to act as a code review helper. Response in Chinese. I'm going to provide you with some git diffs, and I need your assistance in reviewing the changes. Please evaluate the modifications, looking for potential issues, improvements, and adherence to coding standards. Offer suggestions on the logic, performance enhancements, and any refactoring opportunities to ensure high-quality code.")
 
 (defconst x/gpt-prompt-code-doc "Let's think step by step. Rewrite with concise and high quality docstring, every line must in 80 columns.")
 
