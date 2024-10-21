@@ -26,6 +26,8 @@
 (setq-default gptel-model "gpt-4o-mini")
 (setq gptel-max-tokens 3000)
 
+(add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
+
 (setq x/gh-ai-token (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
 
 (setq x/gpt-gh (gptel-make-azure "github" ;Name, whatever you'd like

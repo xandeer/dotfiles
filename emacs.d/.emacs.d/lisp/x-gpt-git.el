@@ -13,76 +13,65 @@
 ;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
 ;; (setq x/gpt-commit-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
-(setq x/gpt-git-backend
-      (gptel-make-ollama "Ollama"
-        :host "localhost:11434"
-        :stream t
-        :models '("deepseek-coder-v2:16b")))
+;; (setq x/gpt-git-backend
+;;       (gptel-make-ollama "Ollama"
+;;         :host "localhost:11434"
+;;         :stream t
+;;         :models '("deepseek-coder-v2:16b")))
 
-(setq x/gpt-git-model "deepseek-coder-v2:16b")
+;; (setq x/gpt-git-model "deepseek-coder-v2:16b")
 
 (setq x/gpt-git-backend x/gpt-gh)
 (setq x/gpt-git-model "gpt-4o")
 
 (setq x/gpt-git-max-tokens 16384)
 
-(defun x/gpt-git-request (prompt callback)
-  "Make a GPT request with Git changes.
+(defun x/gpt-git-request (prompt buffer position)
+  "Make a GPT request for Git-related operations.
 
-PROMPT is a string that serves as the system prompt for the GPT request.
-CALLBACK is a function that will be called with the result of the GPT request.
-
-This function sets up the GPT request parameters using predefined variables:
-- x/gpt-git-backend: The backend service to use for the GPT request.
-- x/gpt-git-model: The model to use for the GPT request.
-- x/gpt-git-max-tokens: The maximum number of tokens for the GPT request.
-
-The function then calls gptel-request with the changes obtained from x/gpt-code--get-changes,
-passing the PROMPT and CALLBACK to it.
-
-Example usage:
-  (x/gpt-git-request \"Describe the recent changes\" #'my-callback-function)
-
-Dependencies:
-- `gptel-request`: Function to make the GPT request.
-- `x/gpt-code--get-changes`: Function to get the Git changes.
+This function sets up the GPT backend, model, and token limit for Git operations,
+then makes a request to the GPT model using the current Git changes.
 
 Arguments:
-PROMPT -- The system prompt for the GPT request.
-CALLBACK -- The function to call with the result of the GPT request."
+PROMPT: The system prompt to be used for the GPT request.
+BUFFER: The buffer where the response will be inserted.
+POSITION: The position in the buffer where the response should be inserted.
+
+The function uses `x/gpt-git-backend`, `x/gpt-git-model`, and `x/gpt-git-max-tokens`
+as the GPT backend, model, and maximum token limit respectively.
+
+It calls `x/gpt-code--get-changes` to retrieve the current Git changes and uses
+them as the content for the GPT request.
+
+Returns:
+The result of the `gptel-request` call, which is typically the response from the GPT model."
   (let* ((gptel-backend x/gpt-git-backend)
          (gptel-model x/gpt-git-model)
          (gptel-max-tokens x/gpt-git-max-tokens))
     (gptel-request (x/gpt-code--get-changes)
       :system prompt
-      :callback callback)))
+      :stream t
+      :buffer buffer
+      :position position)))
 
 (defun x/gpt-git-generate-commit-message ()
-  "Generate a commit message using GPT and insert it into the commit buffer.
+  "Generate a commit message using GPT.
 
 This function is interactive and can be called directly by the user.
-If the current Git commit buffer does not already contain a commit message,
-it makes a request to a GPT-based backend to generate a commit message.
+It checks if there's already a commit message in the buffer. If not,
+it uses GPT to generate a commit message based on the current Git changes.
 
-The function uses `x/gpt-git-request` to make the GPT request with the prompt
-defined in `x/gpt-prompt-code-generate-commit-message`. The generated commit
-message is then inserted into the current buffer.
+The function uses `x/gpt-git-request` to make a request to the GPT model,
+passing the prompt defined in `x/gpt-prompt-code-generate-commit-message`.
+The generated message is then inserted at the beginning of the current buffer.
 
-Example usage:
-  M-x x/gpt-git-generate-commit-message
-
-Dependencies:
-- `git-commit-buffer-message`: Function to check if the commit buffer already has a message.
-- `x/gpt-git-request`: Function to make the GPT request."
+This function is particularly useful when added to `git-commit-setup-hook`
+to automatically generate commit messages."
   (interactive)
   (unless (git-commit-buffer-message)
-    (let ((buffer (current-buffer)))
-      (x/gpt-git-request x/gpt-prompt-code-generate-commit-message
-                         (lambda (commit-message info)
-                           (if commit-message
-                               (with-current-buffer buffer
-                                 (insert commit-message))
-                             (message "Error: %s" info)))))))
+    (x/gpt-git-request x/gpt-prompt-code-generate-commit-message
+                       (current-buffer)
+                       (point-min))))
 
 ;; (add-hook 'git-commit-setup-hook 'x/gpt-git-generate-commit-message)
 
@@ -103,13 +92,12 @@ Dependencies:
   (interactive)
   (let ((buffer (get-buffer-create "*gpt-review*")))
     (x/gpt-git-request
-     (concat x/gpt-prompt-format-org x/gpt-prompt-code-review)
-     (lambda (res info)
-       (if res
-           (with-current-buffer buffer
-             (insert res)
-             (pop-to-buffer buffer))
-         (message "Error: %s" info))))))
+     x/gpt-prompt-code-review
+     buffer
+     (with-current-buffer buffer
+       (org-mode)
+       (pop-to-buffer buffer)
+       (point-max)))))
 
 (provide 'x-gpt-git)
 ;;; x-gpt-git.el ends here
