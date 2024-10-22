@@ -40,6 +40,7 @@
       "homebrew/cask-versions"
       "d12frosted/emacs-plus"
       "yqrashawn/goku"
+      "daipeihust/tap"
     ];
 
     # `brew install`
@@ -56,6 +57,7 @@
       "imagemagick"
       "enchant"
       "ffmpeg"
+      "im-select"
 
       # "pass"
       # "gnupg"
