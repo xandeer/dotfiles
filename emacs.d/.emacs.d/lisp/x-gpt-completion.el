@@ -38,7 +38,7 @@
   (interactive)
   ;; (setq x/gpt-completion-backend gptel-backend)
   (setq x/gpt-completion-backend x/gpt-gh)
-  (setq x/gpt-completion-model gptel-model))
+  (setq x/gpt-completion-model "gpt-4o"))
 
 (x/gpt-completion-remote)
 
