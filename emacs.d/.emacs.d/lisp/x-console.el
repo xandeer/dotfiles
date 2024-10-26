@@ -37,7 +37,8 @@
     "Jump to an eshell history."
     (interactive)
     (require 'em-hist)
-    (let* ((completion-beg (eshell-bol))
+    (goto-char (point-max))
+    (let* ((completion-beg (point-at-bol))
            (completion-end (point-at-eol))
            (input (buffer-substring-no-properties
                    completion-beg
