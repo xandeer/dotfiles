@@ -7,10 +7,8 @@
 
 (x/package-use '(aider . "tninja/aider.el"))
 
-(setq openai-api-base "https://models.inference.ai.azure.com")
-(setq openai-api-key (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
-(setenv "OPENAI_API_BASE" openai-api-base)
-(setenv "OPENAI_API_KEY" openai-api-key)
+(setenv "OPENAI_API_BASE" "https://models.inference.ai.azure.com")
+(setenv "OPENAI_API_KEY" (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
 (setq aider-args '("--model" "gpt-4o"))
 
 (provide 'x-aider)

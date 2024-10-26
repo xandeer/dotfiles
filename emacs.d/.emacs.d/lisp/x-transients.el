@@ -72,7 +72,7 @@
    ["Others"
     ("a" "adb connect" x/sh-adb-connect)
     ("l" "open localhost" x/open-localhost)
-    ("e" "eshell" eshell)
+    ("e" "eat eshell" eshell)
     ;; ("x" "open github.io" (x/open "https://xandeer.github.io/20210629191000-000_index.html"))
     ("x" "open second brain" (lambda () (interactive) (x/open "https://mdk.vercel.app")))
     ("H-x" "launch another emacs" x/launch-separate-emacs-under-x)

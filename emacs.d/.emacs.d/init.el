@@ -93,6 +93,7 @@
 (require 'x-calendar)
 (require 'azure-tts)
 (require 'x-completion)
+(require 'x-console)
 (require 'x-consult)
 (require 'x-dictionary)
 (require 'x-dired)
