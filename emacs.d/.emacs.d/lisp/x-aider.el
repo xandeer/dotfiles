@@ -9,7 +9,7 @@
 
 (setenv "OPENAI_API_BASE" "https://models.inference.ai.azure.com")
 (setenv "OPENAI_API_KEY" (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
-(setq aider-args `("--model" "gpt-4o" "--commit-prompt" ,x/gpt-prompt-code-generate-commit-message))
+(setq aider-args `("--model" "gpt-4o" "--no-dirty-commits" "--commit-prompt" ,x/gpt-prompt-code-generate-commit-message))
 
 (provide 'x-aider)
 ;;; x-aider.el ends here
