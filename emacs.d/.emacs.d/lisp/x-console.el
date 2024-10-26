@@ -38,24 +38,21 @@
     (interactive)
     (require 'em-hist)
     (goto-char (point-max))
-    (let* ((completion-beg (point-at-bol))
-           (completion-end (point-at-eol))
-           (input (buffer-substring-no-properties
-                   completion-beg
-                   completion-end))
-           (cand (delete-dups
-                  (when (> (ring-size eshell-history-ring) 0)
-                    (ring-elements eshell-history-ring)))))
-      (end-of-line)
-      (let ((his (consult--read
-                  cand
-                  :prompt "Eshell history: "
-                  :initial input
-                  :sort nil
-                  :require-match t
-                  :history '(:input consult--eshell-history)
-                  :add-history (thing-at-point 'symbol)
-                  :state (consult--insertion-preview completion-beg completion-end))))
+    (let* ((start (point-at-bol))
+           (end (point-at-eol))
+           (current-input (buffer-substring-no-properties start end))
+           (history-candidates (delete-dups
+                                (when (> (ring-size eshell-history-ring) 0)
+                                  (ring-elements eshell-history-ring)))))
+      (let ((selected-history (consult--read
+                               history-candidates
+                               :prompt "Eshell history: "
+                               :initial current-input
+                               :sort nil
+                               :require-match t
+                               :history '(:input consult--eshell-history)
+                               :add-history (thing-at-point 'symbol)
+                               :state (consult--insertion-preview start end))))
         (when (minibufferp)
           (delete-minibuffer-contents))
         (eshell-kill-input)
