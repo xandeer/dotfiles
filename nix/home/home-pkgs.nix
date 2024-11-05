@@ -22,7 +22,7 @@
     duf
     fd
     lsof
-    ncdu
+    # ncdu
     neofetch
     # tldr
     ripgrep # recursively searches directories for a regex pattern
