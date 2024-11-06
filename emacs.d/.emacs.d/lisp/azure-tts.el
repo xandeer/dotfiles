@@ -17,5 +17,11 @@
     (setq azure-tts-last-text text)
     (x/start-process (format "tts %s" text))))
 
+(defun azure-tts-play (text)
+  "Play the TEXT."
+  (interactive "sText: ")
+  (setq azure-tts-last-text text)
+  (x/start-process (format "tts %s" text)))
+
 (provide 'azure-tts)
 ;;; azure-tts.el ends here
