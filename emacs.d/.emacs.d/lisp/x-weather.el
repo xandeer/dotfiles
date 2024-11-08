@@ -4,14 +4,14 @@
 
 (require 'x-curl)
 
+(defvar x/location nil)
+
 ;;;###autoload
 (defun x/get-current-location ()
   "Fetch current latitude and longitude using an IP-based geolocation service."
   (interactive)
   (let ((url "https://ipinfo.io/json"))
     (get-json-value 'loc (x/fetch-api-as-json url))))
-
-(defvar x/location nil)
 
 ;;;###autoload
 (defun x/insert-weather ()
