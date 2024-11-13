@@ -107,7 +107,7 @@ PROMPT to Copilot for processing."
     (copilot-chat--prepare-buffers)
     (with-current-buffer copilot-chat-prompt-buffer
       (erase-buffer)
-      (insert x/gpt-code--org-prompt)
+      (insert x/gpt-prompt-format-org)
       (insert (concat prompt "\n Code:\n" code)))
     (copilot-chat-prompt-send)))
 
