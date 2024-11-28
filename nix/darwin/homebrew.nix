@@ -47,7 +47,7 @@
     brews = [
       "wget"  # download tool
       "curl"  # no not install curl via nixpkgs, it's not working well on macOS!
-      "httrack" # cache http web
+      # "httrack" # cache http web
       # "aria2"  # download tool
       # "httpie"  # http client
       "goku" # karabiner by edn watcher
@@ -58,6 +58,8 @@
       "enchant"
       "ffmpeg"
       "im-select"
+
+      "oven-sh/bun/bun"
 
       # "pass"
       # "gnupg"
