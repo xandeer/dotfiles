@@ -184,7 +184,8 @@ Usages:
     tide
     ts-comint
     web-mode
-    (yarn . "jmfirth/yarn.el")
+    ;; (yarn . "jmfirth/yarn.el")
+    (bun . "xandeer/bun.el")
 
 ;;; git
     abridge-diff

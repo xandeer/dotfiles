@@ -49,10 +49,8 @@ Use `lsp''s definitions/references jump."
 (add-hook 'js2-mode-hook #'lsp)
 (add-hook 'json-mode-hook #'lsp)
 
-;;; yarn
-(autoload 'yarn-install "yarn" nil t)
-(autoload 'yarn-test "yarn" nil t)
-(with-eval-after-load 'yarn
+;;; bun
+(with-eval-after-load 'bun
   (require 'cl))
 
 (defun x/web-locate-package-json (&optional _dir)
@@ -65,9 +63,9 @@ Use `lsp''s definitions/references jump."
     (x/define-keys
      map
      '(("C-c d" x/docs-lookup)
-       ("C-c i" yarn-install)
-       ("C-c r" yarn-run)
-       ("C-c t" yarn-test)))
+       ("C-c i" bun-install)
+       ("C-c r" bun-run)
+       ("C-c t" bun-test)))
     map))
 
 (define-minor-mode x/web-mode
