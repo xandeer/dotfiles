@@ -68,10 +68,10 @@ The function expands the given PATH to an absolute path."
     ;; ("l" "Android-lab" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/android-lab/"))))
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
     ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/moon-dust"))))
+    ("r" "Moon Reader" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/moon-reader"))))
     ;; ("t" "Exercism/typescript" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/typescript/"))))
     ("w" "Work" (lambda () (interactive) (magit-status (expand-file-name x/work-directory))))
-    ("h" "Harmony" (lambda () (interactive) (magit-status (expand-file-name x/harmony-directory))))
-    ("r" "Work Review" (lambda () (interactive) (magit-status (expand-file-name x/work-review-directory))))]])
+    ("h" "Harmony" (lambda () (interactive) (magit-status (expand-file-name x/harmony-directory))))]])
 
 (global-set-key (kbd "H-m") #'x/transient-magit-status)
 
