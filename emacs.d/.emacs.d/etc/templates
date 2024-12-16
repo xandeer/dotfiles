@@ -85,8 +85,7 @@ org-mode
 (d2lang "#+begin_src d2 :file d2/" p ".png" n> r> n "#+end_src")
 (day (format-time-string "%d(%a)" (current-time)))
 (weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) r
-        n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:"
-        n "1. donut:")
+        n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:")
 (monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
 (author "- author :: " r n)
 (from "- from :: " r n)
