@@ -122,6 +122,7 @@
     ("i" "Agenda inbox" (lambda () (interactive) (org-agenda nil "i")))
     ("m" "Agenda MoonDust" (lambda () (interactive) (org-agenda nil "m")))
     ("p" "Agenda personal" (lambda () (interactive) (org-agenda nil "p")))
+    ("r" "Agenda MoonReader" (lambda () (interactive) (org-agenda nil "r")))
     ("t" "Agenda todo" (lambda () (interactive) (org-agenda nil "t")))
     ("v" "Agenda list" org-agenda)
     ("w" "Agenda work" (lambda () (interactive) (org-agenda nil "w")))

@@ -268,6 +268,21 @@ ARG is passed through to `x/org-schedule'."
                            ((org-agenda-overriding-header "Other")))
                 (tags-todo "MoonDust+CATEGORY=\"Chore\""
                            ((org-agenda-overriding-header "Chore"))))))
+;;; moon reader
+(add-to-list 'org-agenda-custom-commands
+             '("r" "MoonReader"
+               ((tags-todo "MoonReader+CATEGORY=\"Bug\""
+                           ((org-agenda-overriding-header "Bug")))
+                (tags-todo "MoonReader+CATEGORY=\"Feat\""
+                           ((org-agenda-overriding-header "Feature")))
+                (tags-todo "MoonReader+CATEGORY=\"Refactor\""
+                           ((org-agenda-overriding-header "Refactor")))
+                (tags-todo "MoonReader+CATEGORY=\"Review\""
+                           ((org-agenda-overriding-header "Review")))
+                (tags-todo "MoonReader+CATEGORY=\"Other\""
+                           ((org-agenda-overriding-header "Other")))
+                (tags-todo "MoonReader+CATEGORY=\"Chore\""
+                           ((org-agenda-overriding-header "Chore"))))))
 ;;; agenda book
 (add-to-list 'org-agenda-custom-commands
              '("b" "Book"
