@@ -82,7 +82,7 @@ Returns:
                          (lambda (content)
                            (with-current-buffer current-buf
                              (insert (string-replace copilot-chat--magic "" content))))))))
-(add-hook 'git-commit-setup-hook 'x/gpt-code-generate-commit-message)
+;; (add-hook 'git-commit-setup-hook 'x/gpt-code-generate-commit-message)
 ;; (remove-hook 'git-commit-setup-hook 'x/gpt-code-generate-commit-message)
 
 (defun x/gpt-code-review-changes ()

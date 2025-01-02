@@ -125,9 +125,9 @@
 (require 'x-gpt-prompts)
 (require 'x-chatgpt)
 (require 'x-gpt-completion)
-(require 'x-gpt-code)
+;; (require 'x-gpt-code)
 (require 'x-aider)
-;; (require 'x-gpt-git)
+(require 'x-gpt-git)
 (require 'x-whisper)
 
 ;; osx

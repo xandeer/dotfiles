@@ -23,12 +23,12 @@
 (require 'gptel)
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 (setq gptel-default-mode 'org-mode)
-(setq-default gptel-model "gpt-4o-mini")
+(setq-default gptel-model "gpt-4o")
 (setq gptel-max-tokens 3000)
 
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 
-(setq x/gh-ai-token (auth-source-pick-first-password :host "ai.github.com" :user "kkevindu"))
+(setq x/gh-ai-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
 
 (setq x/gpt-gh (gptel-make-azure "github" ;Name, whatever you'd like
                  :protocol "https"        ;Optional -- https is the default

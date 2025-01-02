@@ -73,7 +73,7 @@ to automatically generate commit messages."
                        (current-buffer)
                        (point-min))))
 
-;; (add-hook 'git-commit-setup-hook 'x/gpt-git-generate-commit-message)
+(add-hook 'git-commit-setup-hook 'x/gpt-git-generate-commit-message)
 
 (defun x/gpt-git-review-changes ()
   "Review Git changes using GPT and display the review in a dedicated buffer.
