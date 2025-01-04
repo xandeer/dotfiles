@@ -97,7 +97,8 @@ Skips capture tasks, projects, and subprojects."
    (format
     "osascript -e 'tell application \"Calendar\" to tell calendar \"%s\" to make new event with properties {summary:\"%s\", start date:date \"%s\", end date:date \"%s\"}'"
     "Org"
-    org-clock-heading
+    (titlecase--string (string-trim-left org-clock-heading "<.*> ")
+                       titlecase-style)
     (time-to-calendar-string org-clock-start-time)
     (time-to-calendar-string))))
 
