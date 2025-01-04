@@ -21,15 +21,27 @@
 ;;; gptel
 (x/package-use '(gptel . "karthink/gptel"))
 (require 'gptel)
+
+(defvar x/gpt-local-backend
+  (gptel-make-ollama "Ollama"
+    :host "localhost:11434"
+    :stream t
+    :models '("deepseek-v3:latest")))
+
+(defvar x/gpt-local-model "deepseek-v3:latest")
+
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
+
 (setq gptel-default-mode 'org-mode)
-(setq-default gptel-model "gpt-4o")
+;; (setq-default gptel-model "gpt-4o")
+(setq-default gptel-model x/gpt-local-model)
+(setq-default gptel-backend x/gpt-local-backend)
+
 (setq gptel-max-tokens 3000)
 
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 
 (setq x/gh-ai-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
-
 (setq x/gpt-gh (gptel-make-azure "github" ;Name, whatever you'd like
                  :protocol "https"        ;Optional -- https is the default
                  :host "models.inference.ai.azure.com"

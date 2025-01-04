@@ -4,7 +4,7 @@
 
 (require 'magit)
 (require 'gptel)
-(require 'x-gpt-code)
+(require 'x-chatgpt)
 
 ;; (setq x/gpt-commit-backend
 ;;       (gptel-make-gpt4all "GPT4All"
@@ -21,8 +21,8 @@
 
 ;; (setq x/gpt-git-model "deepseek-coder-v2:16b")
 
-(setq x/gpt-git-backend x/gpt-gh)
-(setq x/gpt-git-model "gpt-4o")
+(setq x/gpt-git-backend x/gpt-local-backend)
+(setq x/gpt-git-model x/gpt-local-model)
 
 (setq x/gpt-git-max-tokens 16384)
 

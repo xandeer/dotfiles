@@ -4,25 +4,19 @@
 
 (require 'request)
 (require 'transient)
+(require 'x-chatgpt)
 
 (defun x/gpt-buffer-get ()
   "Return the buffer of x-gpt-completion.org in notes."
   (find-file-noselect (x/expand-note "x-gpt-completion.org")))
 
 ;; gpt4all
-(defvar x/gpt-local-backend
-  (gptel-make-gpt4all "GPT4All"
-    :protocol "http"
-    :host "localhost:4891"
-    :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
-(defvar x/gpt-local-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
-
 ;; (defvar x/gpt-local-backend
-;;   (gptel-make-ollama "Ollama"
-;;     :host "localhost:11434"
-;;     :stream t
-;;     :models '("llama3.1:8b")))
-;; (defvar x/gpt-local-model "llama3.1:8b")
+;;   (gptel-make-gpt4all "GPT4All"
+;;     :protocol "http"
+;;     :host "localhost:4891"
+;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
+;; (defvar x/gpt-local-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
 
 (defvar x/gpt-completion-backend x/gpt-local-backend)
 (defvar x/gpt-completion-model x/gpt-local-model)
@@ -40,7 +34,7 @@
   (setq x/gpt-completion-backend x/gpt-gh)
   (setq x/gpt-completion-model "gpt-4o"))
 
-(x/gpt-completion-remote)
+;; (x/gpt-completion-remote)
 
 (defun x/gpt-completion (instruction message callback)
   (let ((gptel-backend x/gpt-completion-backend)
