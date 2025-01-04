@@ -92,6 +92,23 @@ Skips capture tasks, projects, and subprojects."
 (add-hook 'org-clock-in-hook #'x--clock-in)
 (add-hook 'org-clock-out-hook #'bh/clock-out-maybe 'append)
 
+(defun x/org-clock-sync2cal ()
+  (shell-command
+   (format
+    "osascript -e 'tell application \"Calendar\" to tell calendar \"%s\" to make new event with properties {summary:\"%s\", start date:date \"%s\", end date:date \"%s\"}'"
+    "Org"
+    org-clock-heading
+    (time-to-calendar-string org-clock-start-time)
+    (time-to-calendar-string))))
+
+(add-hook 'org-clock-out-hook #'x/org-clock-sync2cal)
+
+(defun time-to-calendar-string (&optional time)
+  "Convert `TIME' to string like: January 4, 2025 12:00 PM; January 4, 2025 11:30 AM."
+  (let ((time (or time (current-time)))
+        (format "%B %d, %Y %I:%M %p"))
+    (format-time-string format time)))
+
 (defun x/org-done-current ()
   (interactive)
   (if (org-clocking-p)
