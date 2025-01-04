@@ -22,13 +22,13 @@
 (x/package-use '(gptel . "karthink/gptel"))
 (require 'gptel)
 
-(defvar x/gpt-local-backend
+(setq x/gpt-local-backend
   (gptel-make-ollama "Ollama"
     :host "localhost:11434"
     :stream t
-    :models '("deepseek-v3:latest")))
+    :models '("deepseek-v3:latest" "llama3.3:latest")))
 
-(defvar x/gpt-local-model "deepseek-v3:latest")
+(setq x/gpt-local-model "llama3.3:latest")
 
 (setq gptel-api-key (auth-source-pick-first-password :host "openai.com" :user "chatgpt"))
 
