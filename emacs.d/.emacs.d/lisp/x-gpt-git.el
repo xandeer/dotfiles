@@ -4,32 +4,15 @@
 
 (require 'magit)
 (require 'gptel)
-(require 'x-chatgpt)
-
-;; (setq x/gpt-commit-backend
-;;       (gptel-make-gpt4all "GPT4All"
-;;     :protocol "http"
-;;     :host "localhost:4891"
-;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
-;; (setq x/gpt-commit-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
-
-;; (setq x/gpt-git-backend
-;;       (gptel-make-ollama "Ollama"
-;;         :host "localhost:11434"
-;;         :stream t
-;;         :models '("deepseek-coder-v2:16b")))
-
-;; (setq x/gpt-git-model "deepseek-coder-v2:16b")
-
-(setq x/gpt-git-backend x/gpt-local-backend)
-(setq x/gpt-git-model x/gpt-local-model)
+(require 'x-gpt)
+(require 'x-gpt-prompts)
 
 (setq x/gpt-git-max-tokens 16384)
 
 (defun x/gpt-git-request (prompt buffer position)
   "Make a GPT request for Git-related operations.
 
-This function sets up the GPT backend, model, and token limit for Git operations,
+This function sets up the GPT token limit for Git operations,
 then makes a request to the GPT model using the current Git changes.
 
 Arguments:
@@ -37,22 +20,30 @@ PROMPT: The system prompt to be used for the GPT request.
 BUFFER: The buffer where the response will be inserted.
 POSITION: The position in the buffer where the response should be inserted.
 
-The function uses `x/gpt-git-backend`, `x/gpt-git-model`, and `x/gpt-git-max-tokens`
-as the GPT backend, model, and maximum token limit respectively.
-
 It calls `x/gpt-code--get-changes` to retrieve the current Git changes and uses
 them as the content for the GPT request.
 
 Returns:
 The result of the `gptel-request` call, which is typically the response from the GPT model."
-  (let* ((gptel-backend x/gpt-git-backend)
-         (gptel-model x/gpt-git-model)
-         (gptel-max-tokens x/gpt-git-max-tokens))
-    (gptel-request (x/gpt-code--get-changes)
+  (let ((gptel-max-tokens x/gpt-git-max-tokens))
+    (gptel-request (x/gpt-git--get-changes)
       :system prompt
       :stream t
       :buffer buffer
       :position position)))
+
+(defun x/gpt-git--get-changes ()
+  "Retrieve the cached Git diff and return it as a single string.
+
+This function uses `magit-git-lines' to get the lines of the Git diff
+for the cached changes (staged changes). It then joins these lines into
+a single string with newline characters separating each line.
+
+Returns:
+  A string containing the cached Git diff."
+  (string-join
+   (magit-git-lines "diff" "--cached")
+   "\n"))
 
 (defun x/gpt-git-generate-commit-message ()
   "Generate a commit message using GPT.
@@ -85,10 +76,7 @@ named `*gpt-review*` and displayed to the user.
 
 Example usage:
   M-x x/gpt-git-review-changes
-
-Dependencies:
-- `x/gpt-git-request`: Function to make the GPT request.
-- `x/gpt-code-review-prompt`: Prompt used for the GPT request."
+"
   (interactive)
   (let ((buffer (get-buffer-create "*gpt-review*")))
     (x/gpt-git-request

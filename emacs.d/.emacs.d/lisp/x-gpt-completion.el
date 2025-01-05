@@ -2,46 +2,31 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'request)
 (require 'transient)
-(require 'x-chatgpt)
+(require 'x-gpt)
+(require 'x-gpt-prompts)
 
 (defun x/gpt-buffer-get ()
   "Return the buffer of x-gpt-completion.org in notes."
   (find-file-noselect (x/expand-note "x-gpt-completion.org")))
 
-;; gpt4all
-;; (defvar x/gpt-local-backend
-;;   (gptel-make-gpt4all "GPT4All"
-;;     :protocol "http"
-;;     :host "localhost:4891"
-;;     :models '("Meta-Llama-3-8B-Instruct.Q4_0.gguf")))
-;; (defvar x/gpt-local-model "Meta-Llama-3-8B-Instruct.Q4_0.gguf")
-
-(defvar x/gpt-completion-backend x/gpt-local-backend)
-(defvar x/gpt-completion-model x/gpt-local-model)
-
-(defun x/gpt-completion-local ()
-  "Use local gpt for completion."
-  (interactive)
-  (setq x/gpt-completion-backend x/gpt-local-backend)
-  (setq x/gpt-completion-model x/gpt-local-model))
-
-(defun x/gpt-completion-remote ()
-  "Use remote gpt for completion."
-  (interactive)
-  ;; (setq x/gpt-completion-backend gptel-backend)
-  (setq x/gpt-completion-backend x/gpt-gh)
-  (setq x/gpt-completion-model "gpt-4o"))
-
-;; (x/gpt-completion-remote)
-
 (defun x/gpt-completion (instruction message callback)
-  (let ((gptel-backend x/gpt-completion-backend)
-        (gptel-model x/gpt-completion-model))
-    (gptel-request message
-      :system (concat instruction " Let's think step by step.")
-      :callback callback)))
+  "Send a completion request to a GPT model with step-by-step reasoning.
+
+`INSTRUCTION': A string containing the system-level instructions that
+             guide the behavior of the GPT model.
+             Example: \"Explain this code.\"
+
+`MESSAGE': A string containing the user-level input or query to be processed by the model.
+
+`CALLBACK': A function to handle the response from the GPT model.
+
+This function sends a request to the GPT model, formatting the system-level
+instruction by appending \"Let's think step by step.\" to encourage the
+model to provide reasoning or explanations in response."
+  (gptel-request message
+    :system (concat instruction " Let's think step by step.")
+    :callback callback))
 
 (defun x/gpt-insert-into-buffer (buffer content operation &optional instruction selected-text point-start point-end)
   "Insert CONTENT into BUFFER according to OPERATION.
@@ -206,18 +191,27 @@ The selected or entered instruction is passed to the function
      (lambda () (interactive)
        (x/gpt-completion-edit-text x/gpt-prompt-english-explain-sentence 'append)))]
    ["Copilot Chat"
-    ("cd" "Doc" x/gpt-code-doc)
+    ("cd" "Doc" (lambda () (interactive)
+                  (x/gpt-completion-edit-code x/gpt-prompt-code-doc 'buffer)))
     ("ci" "Implement comments"
      (lambda () (interactive)
        (x/gpt-completion-edit-code "Implement the comments into code, and keep the comments")))
     ;; ("s" "Explain step by step"
     ;;  (lambda () (interactive)
     ;;    (x/gpt-completion-edit-code "Let's think step by step. Explain the code step by step using Chinese as comments." 'buffer)))
-    ("ce" "Explain step by step" x/gpt-code-explain)
-    ("co" "Optimize" x/gpt-code-optimize)
-    ("cr" "Review" x/gpt-code-review)
-    ("cf" "Fix" copilot-chat-fix)
-    ("cp" "Custom Prompt" copilot-chat-custom-prompt-selection)]])
+    ("ce" "Explain step by step" (lambda () (interactive)
+                                   (x/gpt-completion-edit-code x/gpt-prompt-code-explain 'buffer)))
+    ("co" "Optimize" (lambda () (interactive)
+                       (x/gpt-completion-edit-code x/gpt-prompt-code-optimize 'buffer)))
+    ("cr" "Review" (lambda () (interactive)
+                     (x/gpt-completion-edit-code x/gpt-prompt-code-review 'buffer)))
+    ("cf" "Fix" (lambda () (interactive)
+                  (x/gpt-completion-edit-code x/gpt-prompt-code-fix 'buffer)))
+    ("cp" "Custom Prompt" (lambda () (interactive)
+                            (x/gpt-completion-edit-code (completing-read "Instruction: "
+                                                                         x/gpt-instruction-history
+                                                                         nil nil nil
+                                                                         'x/gpt-instruction-history) 'buffer)))]])
 
 (x/define-keys
  global-map

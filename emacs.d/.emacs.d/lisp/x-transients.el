@@ -67,8 +67,7 @@
     ("hd" "hs downloads" (lambda () (interactive) (x/change-hs-root "~/Downloads")))
     ("ht" "hs temp" (lambda () (interactive) (x/change-hs-root "~/temp")))
     ("hs" "hs syncthing" (lambda () (interactive) (x/change-hs-root "~/syncthing")))
-    ("hp" "hs personal" (lambda () (interactive) (x/change-hs-root "~/syncthing/personal")))
-    ("hw" "hs work" (lambda () (interactive) (x/change-hs-root "~/syncthing/donut")))]
+    ("hp" "hs personal" (lambda () (interactive) (x/change-hs-root "~/syncthing/personal")))]
    ["Others"
     ("a" "adb connect" x/sh-adb-connect)
     ("l" "open localhost" x/open-localhost)
@@ -91,7 +90,6 @@
     ;; ("H-k" "Buffer other window" consult-buffer-other-window)
     ("b" "Projectile book" (lambda () (interactive)  (projectile-find-file-in-directory (expand-file-name "syncthing/personal/book" "~"))))
     ("n" "Projectile notes" (lambda () (interactive)  (projectile-find-file-in-directory org-directory)))
-    ("w" "Projectile work" (lambda () (interactive)  (projectile-find-file-in-directory x/work-directory)))
     ("H-d" "Projectile dots" (lambda () (interactive)  (projectile-find-file-in-directory (x/expand-repo "dotfiles"))))
     ("H-f" "Project find file" projectile-find-file)
     ;; ("f" "Find file" find-file)
@@ -125,7 +123,6 @@
     ("r" "Agenda MoonReader" (lambda () (interactive) (org-agenda nil "r")))
     ("t" "Agenda todo" (lambda () (interactive) (org-agenda nil "t")))
     ("v" "Agenda list" org-agenda)
-    ("w" "Agenda work" (lambda () (interactive) (org-agenda nil "w")))
     ("H-i" "Consult agenda" consult-org-agenda)]
    ["Mark and register"
     ("f" "Mark" consult-mark)
@@ -150,7 +147,6 @@
     ("g" "In organization" x/clock-in-organization-task)
     ("r" "In reading" x/clock-in-reading-task)
     ("n" "In noting" x/clock-in-noting-task)
-    ("H-i" "In work chore" x/clock-in-work-chore-task)
     ("l" "Out" org-clock-out)
     ("j" "Goto current" org-clock-goto)
     ("k" "Done current" x/org-done-current)]

@@ -6,6 +6,10 @@
 ;; (autoload #'diff-hl-dired-mode "diff-hl-dired" nil t)
 ;; (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
 
+(defcustom x/personal-projects-directory (expand-file-name "~/projects/personal")
+  "The directory where I keep my personal projects."
+  :type 'directory)
+
 (autoload #'magit-stage "magit" nil t)
 ;;; magit
 (with-eval-after-load 'magit
@@ -26,7 +30,7 @@
   (x/define-keys magit-status-mode-map
                  '(("q" kill-current-buffer)
                    ("K" magit-discard)
-                   ("R" x/gpt-code-review-changes)))
+                   ("R" x/gpt-git-review-changes)))
 
   (defun x/git-create-tag-and-update-chglog ()
     (interactive)
@@ -61,17 +65,16 @@ The function expands the given PATH to an absolute path."
   "Transient for Magit status."
   [["Magit"
     ;; ("c" "Exercism/clojure" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/clojure/"))))
-    ("d" "Dotfiles" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/dotfiles"))))
+    ("d" "Dotfiles" (lambda () (interactive) (magit-status (expand-file-name "dotfiles" x/personal-projects-directory))))
     ;; ("e" "Exercism/elixir" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/elixir/"))))
     ;; ("h" "Heart-music" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/heart-music/"))))
     ;; ("k" "Exercism/kotlin" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/kotlin/"))))
     ;; ("l" "Android-lab" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/android-lab/"))))
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
-    ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/moon-dust"))))
-    ("r" "Moon Reader" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/moon-reader"))))
+    ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "moon-dust" x/personal-projects-directory))))
+    ("r" "Moon Reader" (lambda () (interactive) (magit-status (expand-file-name "moon-reader" x/personal-projects-directory))))
     ;; ("t" "Exercism/typescript" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/typescript/"))))
-    ("w" "Work" (lambda () (interactive) (magit-status (expand-file-name x/work-directory))))
-    ("h" "Harmony" (lambda () (interactive) (magit-status (expand-file-name x/harmony-directory))))]])
+    ]])
 
 (global-set-key (kbd "H-m") #'x/transient-magit-status)
 
@@ -136,10 +139,6 @@ The function expands the given PATH to an absolute path."
 (defun x--git-clone (project directory)
   "Clone a git PROJECT into a given DIRECTORY."
   (x/start-process (format "git -C %s clone %s " directory project) t))
-
-(defcustom x/personal-projects-directory (expand-file-name "~/projects/personal")
-  "The directory where I keep my personal projects."
-  :type 'directory)
 
 (defcustom x/others-projects-directory (expand-file-name "~/projects/others")
   "The directory where I keep others projects."

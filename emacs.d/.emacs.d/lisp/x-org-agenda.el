@@ -148,7 +148,7 @@ ARG is passed through to `x/org-schedule'."
          ((tags-todo "REFILE+CATEGORY=\"Inbox\""
                      ((org-agenda-overriding-header "Inbox")))))
         ("x" "Agenda"
-         ((tags-todo "-WORK-CANCELLED/!NEXT"
+         ((tags-todo "-CANCELLED/!NEXT"
                      ((org-agenda-overriding-header (concat "Project Next Tasks"
                                                             (if bh/hide-scheduled-and-waiting-next-tasks
                                                                 ""
@@ -163,18 +163,18 @@ ARG is passed through to `x/org-schedule'."
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")
                  (org-tags-match-list-sublevels nil)))
-          (tags-todo "-WORK-CANCELLED/!"
+          (tags-todo "-CANCELLED/!"
                      ((org-agenda-overriding-header "Stuck Projects")
                       (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-WORK-HOLD-CANCELLED/!"
+          (tags-todo "-HOLD-CANCELLED/!"
                      ((org-agenda-overriding-header "Projects")
                       (org-agenda-skip-function 'bh/skip-non-projects)
                       (org-tags-match-list-sublevels 'indented)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-WORK-REFILE-CANCELLED-WAITING-HOLD/!"
+          (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
                      ((org-agenda-overriding-header (concat "Project Subtasks"
                                                             (if bh/hide-scheduled-and-waiting-next-tasks
                                                                 ""
@@ -185,7 +185,7 @@ ARG is passed through to `x/org-schedule'."
                       (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-WORK-REFILE-CANCELLED-WAITING-HOLD/!"
+          (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
                      ((org-agenda-overriding-header (concat "Standalone Tasks"
                                                             (if bh/hide-scheduled-and-waiting-next-tasks
                                                                 ""
@@ -196,7 +196,7 @@ ARG is passed through to `x/org-schedule'."
                       (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
                       (org-agenda-sorting-strategy
                        '(category-keep))))
-          (tags-todo "-WORK-CANCELLED+WAITING|HOLD/!"
+          (tags-todo "-CANCELLED+WAITING|HOLD/!"
                      ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
                                                             (if bh/hide-scheduled-and-waiting-next-tasks
                                                                 ""
@@ -205,27 +205,11 @@ ARG is passed through to `x/org-schedule'."
                       (org-tags-match-list-sublevels nil)
                       (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
                       (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
-          (tags "-WORK-REFILE/"
+          (tags "-REFILE/"
                 ((org-agenda-overriding-header "Tasks to Archive")
                  (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
                  (org-tags-match-list-sublevels nil))))
          nil)))
-
-;;; agenda work
-(add-to-list 'org-agenda-custom-commands
-             '("w" "Work"
-               ((tags-todo "WORK+CATEGORY=\"Bug\""
-                           ((org-agenda-overriding-header "Bug")))
-                (tags-todo "WORK+CATEGORY=\"Feat\""
-                           ((org-agenda-overriding-header "Feature")))
-                (tags-todo "WORK+CATEGORY=\"Refactor\""
-                           ((org-agenda-overriding-header "Refactor")))
-                (tags-todo "WORK+CATEGORY=\"Review\""
-                           ((org-agenda-overriding-header "Review")))
-                (tags-todo "WORK+CATEGORY=\"Other\""
-                           ((org-agenda-overriding-header "Other")))
-                (tags-todo "WORK+CATEGORY=\"Chore\""
-                           ((org-agenda-overriding-header "Chore"))))))
 
 ;;; agenda emacs
 (add-to-list 'org-agenda-custom-commands

@@ -105,6 +105,8 @@ Include the following in your explanation:
 3. **Overall Logic**: Describe how the lines of code work together to achieve the overall functionality.
 4. **Examples**: If applicable, provide examples of input and output to illustrate how the code operates.")
 
+(defconst x/gpt-prompt-code-fix "There is a problem in this code. Please rewrite the code to show it with the bug fixed.")
+
 ;; text
 (defconst x/gpt-prompt-text-to-zh "Act as a spelling corrector, content writer, and text improver/editor. Reply to each message only with the rewritten text.
 Stricly follow these rules:

@@ -44,12 +44,6 @@ Skips capture tasks, projects, and subprojects."
   (org-with-point-at (org-id-find id 'marker)
     (org-clock-in '(16))))
 
-(defvar x/work-chore-task-id "8170CF57-231D-493B-A8E1-1CBA9370A244")
-(defun x/clock-in-work-chore-task ()
-  "Clock in the chore task for work."
-  (interactive)
-  (x/clock-in-task-with-id x/work-chore-task-id))
-
 (defvar x/organization-task-id "78C5A814-5215-47D0-AC09-6522CBCBA516")
 (defun x/clock-in-organization-task ()
   "Clock in the organization task."
