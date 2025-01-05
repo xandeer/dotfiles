@@ -1,6 +1,7 @@
 ;;; x-org-clock.el --- Settings for org clock -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
+(require 'titlecase)
 
 (setq org-clock-mode-line-total 'current)
 (setq org-clock-history-length 23)
@@ -86,17 +87,36 @@ Skips capture tasks, projects, and subprojects."
 (add-hook 'org-clock-in-hook #'x--clock-in)
 (add-hook 'org-clock-out-hook #'bh/clock-out-maybe 'append)
 
-(defun x/org-clock-sync2cal ()
-  (shell-command
-   (format
-    "osascript -e 'tell application \"Calendar\" to tell calendar \"%s\" to make new event with properties {summary:\"%s\", start date:date \"%s\", end date:date \"%s\"}'"
-    "Org"
-    (titlecase--string (string-trim-left org-clock-heading "<.*> ")
-                       titlecase-style)
-    (time-to-calendar-string org-clock-start-time)
-    (time-to-calendar-string))))
+(defcustom x/org-sync-min-clock-duration 1
+  "Minimum duration in minutes for syncing org-clock with calendar."
+  :group 'x/org
+  :type '(restricted-sexp :match (lambda (value)
+                                   (and (integerp value) (>= value 0)))
+                          :doc "A non-negative integer."))
 
-(add-hook 'org-clock-out-hook #'x/org-clock-sync2cal)
+(defcustom x/org-sync-calendar "Org"
+  "The default calendar name for x/org synchronization."
+  :group 'x/org
+  :type 'string)
+
+(defun x/org-clock-sync-to-calendar ()
+  (when (and org-clock-start-time
+             (> (/ (float-time (time-since org-clock-start-time)) 60)
+                x/org-sync-min-clock-duration))
+    (let ((heading (or org-clock-heading "No title"))
+          (exit-code))
+      (setq exit-code
+            (shell-command
+             (format
+              "osascript -e 'tell application \"Calendar\" to tell calendar \"%s\" to make new event with properties {summary:\"%s\", start date:date \"%s\", end date:date \"%s\"}'"
+              x/org-sync-calendar
+              (titlecase--string (string-trim-left heading "<.*> ") titlecase-style)
+              (time-to-calendar-string org-clock-start-time)
+              (time-to-calendar-string))))
+      (when (not (eq exit-code 0))
+        (warn "Failed to sync to Calendar! Command exited with code %d" exit-code)))))
+
+(add-hook 'org-clock-out-hook #'x/org-clock-sync-to-calendar)
 
 (defun time-to-calendar-string (&optional time)
   "Convert `TIME' to string like: January 4, 2025 12:00 PM; January 4, 2025 11:30 AM."
