@@ -145,6 +145,7 @@
   [["Clock"
     ("i" "In last" org-clock-in-last)
     ("g" "In organization" x/clock-in-organization-task)
+    ("w" "In working" x/clock-in-working-task)
     ("r" "In reading" x/clock-in-reading-task)
     ("n" "In noting" x/clock-in-noting-task)
     ("l" "Out" org-clock-out)

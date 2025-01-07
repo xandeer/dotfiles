@@ -63,6 +63,12 @@ Skips capture tasks, projects, and subprojects."
   (interactive)
   (x/clock-in-task-with-id x/noting-task-id))
 
+(defvar x/working-task-id "20C42DE8-87B3-4F65-BD1F-988BCE4AD62B")
+(defun x/clock-in-working-task ()
+  "Clock in the working task."
+  (interactive)
+  (x/clock-in-task-with-id x/working-task-id))
+
 (defvar x--clock-timer nil)
 
 (defun x--clock-cancel ()
