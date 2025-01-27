@@ -7,7 +7,8 @@
 (require 'x-gpt)
 (require 'x-gpt-prompts)
 
-(setq x/gpt-git-max-tokens 16384)
+;; (setq x/gpt-git-max-tokens 16384)
+(setq x/gpt-git-max-tokens 8192)
 
 (defun x/gpt-git-request (prompt buffer position)
   "Make a GPT request for Git-related operations.
