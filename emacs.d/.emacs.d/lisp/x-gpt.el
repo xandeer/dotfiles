@@ -13,6 +13,7 @@
         :models '("llama3.3:latest")))
 (setq x/gpt--model-local "llama3.3:latest")
 
+;; github
 (setq x/gpt--gh-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
 (setq x/gpt--backend-gh (gptel-make-azure "github" ;Name, whatever you'd like
                  :host "models.inference.ai.azure.com"
@@ -22,11 +23,26 @@
                  :models '("gpt-4o" "gpt-4o-mini")))
 (setq x/gpt--model-gh "gpt-4o")
 
+;; deepseek
+(setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
+;; OPTIONAL configuration
+(setq x/gpt--model-ds "deepseek-reasoner"
+      x/gpt--backend-ds
+      (gptel-make-openai "DeepSeek"     ;Any name you want
+        :host "api.deepseek.com"
+        :endpoint "/chat/completions"
+        :stream t
+        :key x/gpt--ds-token          ;can be a function that returns the key
+        :models '("deepseek-chat" "deepseek-reasoner")))
+
 (setq gptel-default-mode 'org-mode)
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 ;; (setq gptel-max-tokens 3000)
-(setq-default gptel-backend x/gpt--backend-gh)
-(setq-default gptel-model x/gpt--model-gh)
+;; (setq-default gptel-backend x/gpt--backend-gh)
+;; (setq-default gptel-model x/gpt--model-gh)
+
+(setq-default gptel-backend x/gpt--backend-ds)
+(setq-default gptel-model x/gpt--model-ds)
 
 (defun x/gpt-from-anywhere ()
   "Use `gptel' to generate text from anywhere."
