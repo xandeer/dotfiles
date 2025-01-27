@@ -66,5 +66,10 @@
 (setq bookmark-save-flag 1)
 (x/append-init-hook #'bookmark-maybe-load-default-file)
 
+(x/package-use '(ultra-scroll . "jdtsmith/ultra-scroll"))
+(setq scroll-conservatively 101         ; important!
+      scroll-margin 0)
+(ultra-scroll-mode 1)
+
 (provide 'x-basic)
 ;;; x-basic.el ends here
