@@ -109,8 +109,8 @@
 
 (defun x--insert-journal-in-year (year)
   "Insert a journal heading like: ** YEAR :Mon:."
-  (interactive "nYear[< 5: 2x, else: 1x]: ")
-  (setq year (+ year (if (< year 5) 20 10)))
+  (interactive "nYear[2x]: ")
+  (setq year (+ year 20))
   (goto-char (point-min))
   (let ((today (x--journal-date year)))
     (if (x--is-current-year? year) (progn
@@ -207,7 +207,7 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("." "Dailies goto today" org-roam-dailies-goto-today :transient t)
     ("j" "Dailies next" org-roam-dailies-goto-next-note :transient t)
     ("k" "Dailies previous" org-roam-dailies-goto-previous-note :transient t)
-    ("4" "Insert journal in 2024" (lambda () (interactive) (x--insert-journal-in-year 4) ))
+    ("5" "Insert journal in 2025" (lambda () (interactive) (x--insert-journal-in-year 5) ))
     ("m" "Migrate journal" x--migrate-journal :transient t)]
    ["Anki"
     ("H-k" "Anki cloze" x/anki-cloze)
