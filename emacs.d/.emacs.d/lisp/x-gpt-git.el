@@ -26,7 +26,9 @@ them as the content for the GPT request.
 
 Returns:
 The result of the `gptel-request` call, which is typically the response from the GPT model."
-  (let ((gptel-max-tokens x/gpt-git-max-tokens))
+  (let ((gptel-backend x/gpt--backend-gh)
+        (gptel-model "gpt-4o")
+        (gptel-max-tokens x/gpt-git-max-tokens))
     (gptel-request (x/gpt-git--get-changes)
       :system prompt
       :stream t

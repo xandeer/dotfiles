@@ -20,8 +20,8 @@
                  :endpoint "/chat/completions" ;or equivalent
                  :stream t                     ;Enable streaming responses
                  :key #'x/gpt--gh-token          ;API key
-                 :models '("gpt-4o" "gpt-4o-mini")))
-(setq x/gpt--model-gh "gpt-4o")
+                 :models '("gpt-4o" "gpt-4o-mini DeepSeek-R1")))
+(setq x/gpt--model-gh "DeepSeek-R1")
 
 ;; deepseek
 (setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
@@ -38,11 +38,11 @@
 (setq gptel-default-mode 'org-mode)
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 ;; (setq gptel-max-tokens 3000)
-;; (setq-default gptel-backend x/gpt--backend-gh)
-;; (setq-default gptel-model x/gpt--model-gh)
+(setq-default gptel-backend x/gpt--backend-gh)
+(setq-default gptel-model x/gpt--model-gh)
 
-(setq-default gptel-backend x/gpt--backend-ds)
-(setq-default gptel-model x/gpt--model-ds)
+;; (setq-default gptel-backend x/gpt--backend-ds)
+;; (setq-default gptel-model x/gpt--model-ds)
 
 (defun x/gpt-from-anywhere ()
   "Use `gptel' to generate text from anywhere."
