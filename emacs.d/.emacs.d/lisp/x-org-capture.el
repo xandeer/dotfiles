@@ -151,10 +151,10 @@
     (dolist (sketch sketches)
       (add-to-list 'org-capture-templates
                    `(,(concat "s" (substring sketch 0 1)) ,(concat sketch " sketch") plain
-                     (function (lambda () (-> (concat org-directory "sketch/")
-                                              x/string-append-time-suffix
-                                              (concat "." ,sketch)
-                                              find-file)))
+                     #'(lambda () (-> (concat org-directory "sketch/")
+                                      x/string-append-time-suffix
+                                      (concat "." ,sketch)
+                                      find-file))
                      "%?"
                      :jump-to-captured t))))
 
@@ -169,34 +169,12 @@
                '("f" "Financial" plain
                  (file "hledger-financial.org")
                  (file "capture-templates/financial.tmpl")
-                 ;; :jump-to-captured t
                  :empty-lines 1))
 
   (add-to-list 'org-capture-templates
-               '("e" "EM"))
-  (add-to-list 'org-capture-templates
-               '("eb" "EM Bond" plain
+               '("e" "EM Cash" plain
                  (file "hledger-financial.org")
-                 (file "capture-templates/em-bond.tmpl")
-                 ;; :jump-to-captured t
-                 :empty-lines 1))
-  (add-to-list 'org-capture-templates
-               '("ec" "EM Cash" plain
-                 (file "hledger-financial.org")
-                 (file "capture-templates/em-cash.tmpl")
-                 ;; :jump-to-captured t
-                 :empty-lines 1))
-  (add-to-list 'org-capture-templates
-               '("eg" "EM Gold" plain
-                 (file "hledger-financial.org")
-                 (file "capture-templates/em-gold.tmpl")
-                 ;; :jump-to-captured t
-                 :empty-lines 1))
-  (add-to-list 'org-capture-templates
-               '("es" "EM Stock" plain
-                 (file "hledger-financial.org")
-                 (file "capture-templates/em-stock.tmpl")
-                 ;; :jump-to-captured t
+                 (file "capture-templates/em.tmpl")
                  :empty-lines 1)))
 
 (provide 'x-org-capture)
