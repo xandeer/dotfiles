@@ -24,9 +24,10 @@
 This function sends a request to the GPT model, formatting the system-level
 instruction by appending \"Let's think step by step.\" to encourage the
 model to provide reasoning or explanations in response."
-  (gptel-request message
-    :system (concat instruction " Let's think step by step.")
-    :callback callback))
+  (let ((gptel-model 'gpt-4o))          ; use gpt-4o before https://github.com/karthink/gptel/pull/592 merged
+    (gptel-request message
+      :system (concat instruction " Let's think step by step.")
+      :callback callback)))
 
 (defun x/gpt-insert-into-buffer (buffer content operation &optional instruction selected-text point-start point-end)
   "Insert CONTENT into BUFFER according to OPERATION.

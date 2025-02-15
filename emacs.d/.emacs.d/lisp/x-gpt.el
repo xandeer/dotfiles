@@ -10,8 +10,8 @@
       (gptel-make-ollama "Ollama"
         :host "localhost:11434"
         :stream t
-        :models '("llama3.3:latest")))
-(setq x/gpt--model-local "llama3.3:latest")
+        :models '(llama3.3:latest)))
+(setq x/gpt--model-local 'llama3.3:latest)
 
 ;; github
 (setq x/gpt--gh-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
@@ -20,8 +20,8 @@
                  :endpoint "/chat/completions" ;or equivalent
                  :stream t                     ;Enable streaming responses
                  :key #'x/gpt--gh-token          ;API key
-                 :models '("gpt-4o" "gpt-4o-mini DeepSeek-R1")))
-(setq x/gpt--model-gh "DeepSeek-R1")
+                 :models '(gpt-4o gpt-4o-mini DeepSeek-R1)))
+(setq x/gpt--model-gh 'DeepSeek-R1)
 
 ;; deepseek
 (setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
@@ -33,7 +33,7 @@
         :endpoint "/chat/completions"
         :stream t
         :key x/gpt--ds-token          ;can be a function that returns the key
-        :models '("deepseek-chat" "deepseek-reasoner")))
+        :models '(deepseek-chat deepseek-reasoner)))
 
 (setq gptel-default-mode 'org-mode)
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
