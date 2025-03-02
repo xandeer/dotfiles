@@ -10,6 +10,8 @@
   "The directory where I keep my personal projects."
   :type 'directory)
 
+(x/package-use 'llama)
+
 (autoload #'magit-stage "magit" nil t)
 ;;; magit
 (with-eval-after-load 'magit
