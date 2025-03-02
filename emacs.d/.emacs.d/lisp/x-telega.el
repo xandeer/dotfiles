@@ -23,7 +23,6 @@
   '("Downloads/"
     "temp/"
     "syncthing/"
-    "syncthing/donut/apk/"
     "syncthing/personal/temp/"))
 
 (defun x/telega-chatbuf-attach-select-dir ()
