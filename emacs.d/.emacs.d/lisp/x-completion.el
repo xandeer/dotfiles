@@ -87,11 +87,11 @@
 (add-hook 'minibuffer-setup-hook #'x-completion--enable-in-minibuffer)
 
 ;;; copilot
-(add-hook 'prog-mode-hook 'copilot-mode)
+;; (add-hook 'prog-mode-hook 'copilot-mode)
 
 (defun x/tab ()
   (interactive)
-  (or (copilot-accept-completion)
+  (or ;; (copilot-accept-completion)
       (not (= (corfu-next) -1))
       (indent-for-tab-command)))
 
