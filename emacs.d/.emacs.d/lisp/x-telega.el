@@ -3,6 +3,8 @@
 ;;; Code:
 ;;; Dependencies: brew install ffmpeg
 
+(require 'x-telega-cus-edit-patch)
+
 (setq telega-root-fill-column 48)
 (setq telega-chat-fill-column 65)
 (setq telega-chat-scroll-conservatively 101)
@@ -136,7 +138,7 @@
 
 (defun z/telega-company ()
   (set (make-local-variable 'company-backends)
-       (append (list telega-emoji-company-backend
+       (append (list 'telega-emoji-company-backend
                      'telega-company-username
                      'telega-company-hashtag
                      'telega-company-markdown-precode)
