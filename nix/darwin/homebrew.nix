@@ -109,6 +109,7 @@
       "karabiner-elements"
       "showyedge"
       "squirrel"
+      "jordanbaird-ice" # mac menu manager
 
       # "emacs-plus@30 --with-xwidgets --with-imagemagick"
 
