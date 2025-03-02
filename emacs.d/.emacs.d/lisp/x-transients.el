@@ -173,7 +173,7 @@
    ["Dictionary or translator"
     ("l" "Lookup point" sdcv-search-pointer)
     ("H-l" "Lookup input" sdcv-search-input)
-    ("k" "Translate" gts-do-translate)
+    ("k" "Translate" gt-do-translate)
     ("i" "TTS" azure-tts-play-region)
     ("H-i" "TTS replay" azure-tts-replay)]
    ["Consult"

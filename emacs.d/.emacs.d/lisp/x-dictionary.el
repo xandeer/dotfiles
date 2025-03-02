@@ -46,7 +46,7 @@
                 (sdcv-say-word sdcv-current-translate-object))))
 
 ;;; translate
-(setq gts-translate-list '(("zh" "en")))
+(setq gt-translate-list '(("zh" "en")))
 ;; (autoload #'facemenu-add-face "facemenu" nil t) ; required by gts v1, and it's deprecated
 
 (defun x/deepl-key ()
@@ -54,16 +54,16 @@
   (auth-source-pick-first-password :host "deepl.com" :user "deepl"))
 
 (with-eval-after-load 'go-translate
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
+  (setq gt-default-translator
+        (gt-translator
+         :taker   (gt-taker :text 'buffer :pick 'paragraph)  ; config the Taker
          ;; :engines (list (gts-google-engine) (gts-google-rpc-engine))
          ;; :engines `(,(gts-google-engine))
-         :engines `(,(gts-bing-engine))
+         :engines `(,(gt-bing-engine))
          ;; :engines `(,(gts-deepl-engine :auth-key (x/deepl-key) :pro nil))
-         :render (gts-buffer-render)))
+         :render (gt-buffer-render)))
 
-  (advice-add 'gts-text :filter-return #'x/text-normalize))
+  (advice-add 'gt-text :filter-return #'x/text-normalize))
 
 ;;; immersive-translate
 ;; (setq immersive-translate-backend 'chatgpt)
