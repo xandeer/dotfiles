@@ -7,3 +7,6 @@ local.el
 .cache
 
 autoloads
+
+eln-cache
+transient
