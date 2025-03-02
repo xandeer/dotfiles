@@ -133,7 +133,7 @@
 ;;; chores
 (require 'x-image)
 (require 'x-mouse)
-(require 'x-wakatime)
+;; (require 'x-wakatime)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)
