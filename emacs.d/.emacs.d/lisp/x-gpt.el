@@ -43,6 +43,7 @@
 
 ;; (setq-default gptel-backend x/gpt--backend-ds)
 ;; (setq-default gptel-model x/gpt--model-ds)
+(setq gptel-include-reasoning nil)
 
 (defun x/gpt-from-anywhere ()
   "Use `gptel' to generate text from anywhere."
