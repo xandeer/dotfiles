@@ -70,19 +70,14 @@
 (require 'x-org-agenda)
 (require 'x-org-capture)
 (require 'x-org-clock)
-;; (require 'x-org-habit)
 (require 'x-org-refile)
-(require 'x-org-publish)
 (require 'x-org-roam)
 
 ;;; languages
 (require 'x-prog)
 (require 'x-clojure)
 (require 'x-elisp)
-;; (require 'x-elixir)
 (require 'x-json)
-(require 'x-kotlin)
-;; (require 'x-racket)
 (require 'x-web)
 (require 'x-swift)
 
@@ -133,7 +128,6 @@
 ;;; chores
 (require 'x-image)
 (require 'x-mouse)
-;; (require 'x-wakatime)
 
 (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
 (when (file-exists-p custom-file)

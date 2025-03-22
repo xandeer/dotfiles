@@ -20,6 +20,7 @@ detect_language_and_voice() {
   # echo "ja-JP-NanamiNeural"
   # el
   if echo "$text" | grep -q '[一-龥]'; then
+    # echo "zh-CN-Xiaochen:DragonHDLatestNeural"
     echo "zh-CN-XiaochenNeural"
     # echo "zh-HK-WanLungNeural"
   else
