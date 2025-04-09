@@ -289,7 +289,6 @@
        ("Sun"       . ?S)
        (:startgroup)
        (,x/home . ?h)
-       (,x/office   . ?o)
        (:startgroup)
        ("NightRunning" . ?n)
        ("MorningRunning" . ?r)
