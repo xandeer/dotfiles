@@ -8,7 +8,7 @@
 (require 'x-gpt-prompts)
 
 ;; (setq x/gpt-git-max-tokens 16384)
-(setq x/gpt-git-max-tokens 8192)
+(setq x/gpt-git-max-tokens 32768)
 
 (defun x/gpt-git-request (prompt buffer position)
   "Make a GPT request for Git-related operations.
@@ -27,7 +27,7 @@ them as the content for the GPT request.
 Returns:
 The result of the `gptel-request` call, which is typically the response from the GPT model."
   (let ((gptel-backend x/gpt--backend-gh)
-        (gptel-model 'gpt-4o)
+        (gptel-model 'openai/gpt-4.1)
         (gptel-max-tokens x/gpt-git-max-tokens))
     (gptel-request (x/gpt-git--get-changes)
       :system prompt

@@ -16,12 +16,13 @@
 ;; github
 (setq x/gpt--gh-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
 (setq x/gpt--backend-gh (gptel-make-azure "github" ;Name, whatever you'd like
-                 :host "models.inference.ai.azure.com"
-                 :endpoint "/chat/completions" ;or equivalent
-                 :stream t                     ;Enable streaming responses
-                 :key #'x/gpt--gh-token          ;API key
-                 :models '(gpt-4o gpt-4o-mini DeepSeek-R1)))
-(setq x/gpt--model-gh 'DeepSeek-R1)
+                          :host "models.github.ai"
+                          :endpoint "/inference/chat/completions" ;or equivalent
+                          :stream t     ;Enable streaming responses
+                          :key #'x/gpt--gh-token ;API key
+                          :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
+                          :models '(openai/gpt-4.1 openai/o4-mini deepseek/DeepSeek-R1)))
+(setq x/gpt--model-gh 'openai/gpt-4.1)
 
 ;; deepseek
 (setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
@@ -40,6 +41,7 @@
 ;; (setq gptel-max-tokens 3000)
 (setq-default gptel-backend x/gpt--backend-gh)
 (setq-default gptel-model x/gpt--model-gh)
+(setq gptel-log-level 'debug)
 
 ;; (setq-default gptel-backend x/gpt--backend-ds)
 ;; (setq-default gptel-model x/gpt--model-ds)
