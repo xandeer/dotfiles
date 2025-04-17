@@ -41,7 +41,7 @@
 ;; (setq gptel-max-tokens 3000)
 (setq-default gptel-backend x/gpt--backend-gh)
 (setq-default gptel-model x/gpt--model-gh)
-(setq gptel-log-level 'debug)
+;; (setq gptel-log-level 'debug)
 
 ;; (setq-default gptel-backend x/gpt--backend-ds)
 ;; (setq-default gptel-model x/gpt--model-ds)
