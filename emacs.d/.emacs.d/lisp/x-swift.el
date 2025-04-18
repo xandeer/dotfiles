@@ -3,6 +3,7 @@
 ;;; Code:
 
 (x/package-use 'swift-mode)
+(x/package-use 'ob-swift)
 (x/package-use 'lsp-sourcekit)
 
 (setq swift-mode:basic-offset 2)

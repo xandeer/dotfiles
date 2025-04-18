@@ -78,6 +78,8 @@ org-mode
     :post (org-edit-src-code))
 (kotlin "#+begin_src kotlin" n> r> n "#+end_src"
         :post (org-edit-src-code))
+(swift "#+begin_src swift" n> r> n "#+end_src"
+        :post (org-edit-src-code))
 (typescript "#+begin_src typescript" n> r> n "#+end_src"
         :post (org-edit-src-code))
 (clojure "#+begin_src clojure" n> r> n "#+end_src"

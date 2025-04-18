@@ -233,6 +233,7 @@
   (add-to-list 'org-babel-load-languages '(clojure . t))
   (add-to-list 'org-babel-load-languages '(plantuml . t))
   (add-to-list 'org-babel-load-languages '(restclient . t))
+  (add-to-list 'org-babel-load-languages '(swift . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
 
   ;; https://tecosaur.github.io/emacs-config/config.html#lsp-support-src
