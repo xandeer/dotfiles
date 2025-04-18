@@ -37,7 +37,7 @@
 ;; https://stackoverflow.com/questions/22107501/set-emacs-to-smart-auto-line-after-a-parentheses-pair
 (with-eval-after-load 'smartparens
   (require 'smartparens-config)
-  (sp-with-modes '(js-mode json-mode web-mode kotlin-mode css-mode typescript-mode)
+  (sp-with-modes '(js-mode json-mode web-mode kotlin-mode css-mode typescript-mode swift-mode)
     (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))
     (sp-local-pair "[" nil :post-handlers '(:add ("||\n[i]" "RET")))
     (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))))
