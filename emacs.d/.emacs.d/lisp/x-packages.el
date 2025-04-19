@@ -172,6 +172,10 @@ Usages:
     flycheck-kotlin
     (ob-kotlin . "zweifisch/ob-kotlin")
 
+    swift-mode
+    ob-swift
+    lsp-sourcekit
+
     nix-mode
     (nushell-mode . "azzamsa/emacs-nushell")
 
