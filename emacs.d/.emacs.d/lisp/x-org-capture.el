@@ -78,8 +78,9 @@
     (beginning-of-buffer)
     (if (search-forward (format-time-string "** %Y") nil t)
         (progn
-          (end-of-line)
-          (newline))
+          ;; before the first sub headline
+          (search-forward "*** ")
+          (beginning-of-line))
       (progn
         (beginning-of-buffer)
         (if (search-forward (format-time-string "* %B %d") nil t)
