@@ -74,6 +74,7 @@ The function expands the given PATH to an absolute path."
     ;; ("l" "Android-lab" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/android-lab/"))))
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
     ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "moon-dust" x/personal-projects-directory))))
+    ("p" "Swift UI Pathway" (lambda () (interactive) (magit-status (expand-file-name "pathway" x/personal-projects-directory))))
     ("r" "Moon Reader" (lambda () (interactive) (magit-status (expand-file-name "moon-reader" x/personal-projects-directory))))
     ;; ("t" "Exercism/typescript" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/typescript/"))))
     ]])
