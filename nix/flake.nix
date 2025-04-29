@@ -20,12 +20,12 @@
 
   inputs = {
     # also use `nix register` to change user flake register in `~/.config/nix/registry.json`:
-    # nix registry add nixpkgs github:nixos/nixpkgs/nixpkgs-24.05-darwin
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    # nix registry add nixpkgs github:nixos/nixpkgs/nixpkgs-24.11-darwin
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
 
     # home-manager, used for managing user configuration
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       # The `follows` keyword in inputs is used for inheritance.
       # Here, `inputs.nixpkgs` of home-manager is kept consistent with the `inputs.nixpkgs` of the current flake,
       # to avoid problems caused by different versions of nixpkgs dependencies.
@@ -33,7 +33,7 @@
     };
 
     darwin = {
-      url = "github:lnl7/nix-darwin";
+      url = "github:nix-darwin/nix-darwin/nix-darwin-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

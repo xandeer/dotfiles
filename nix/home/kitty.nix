@@ -23,6 +23,7 @@
       confirm_os_window_close = 0;
       hide_window_decorations = "no";
     };
-    theme = "Atom One Light";
+    # https://github.com/kovidgoyal/kitty-themes/tree/master/themes
+    themeFile = "AtomOneLight";
   };
 }

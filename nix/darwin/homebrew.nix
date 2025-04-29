@@ -70,11 +70,7 @@
 
       "mint"
 
-      {
-        name = "node@16";
-        link = true;
-        conflicts_with = [ "node" ];
-      }
+      "fnm" # like nvm but written by rust
 
       # reinstall after terminal and shell prepared to inherit PATH environment.
       # brew reinstall emacs-plus@30 --with-xwidgets --with-imagemagick

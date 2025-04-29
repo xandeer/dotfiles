@@ -4,6 +4,8 @@
   home.packages = with pkgs; [
     stow
 
+    kitty-themes
+
     # archives
     zip
     xz
@@ -58,18 +60,17 @@
 
     # javascript & typescript
     # need for ts-ls: typescript lsp
-    deno
-    nodejs
+    # deno
     # nodejs-slim-16_x
-    yarn
+    # yarn
 
     # android-tools
-    gradle
-    jre
+    # gradle
+    # jre
     # openjdk17
     # graalvm17-ce
-    kotlin
-    kotlin-language-server
+    # kotlin
+    # kotlin-language-server
 
     # clojure interpreter
     babashka

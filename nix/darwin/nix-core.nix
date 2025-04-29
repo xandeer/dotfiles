@@ -7,11 +7,10 @@
       max-jobs = lib.mkDefault 8;
       cores = lib.mkDefault 8;
 
-      # Manual optimise storage: nix-store --optimise
-      # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-auto-optimise-store
-      auto-optimise-store = true;
       trusted-users = [ "kevin" ];
     };
+
+    optimise.automatic = true;
 
     gc = {
       automatic = true;
@@ -35,4 +34,6 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+
+  system.stateVersion = 5;
 }
