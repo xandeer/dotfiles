@@ -21,8 +21,8 @@
                           :stream t     ;Enable streaming responses
                           :key #'x/gpt--gh-token ;API key
                           :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
-                          :models '(openai/gpt-4.1 openai/o4-mini deepseek/DeepSeek-R1)))
-(setq x/gpt--model-gh 'openai/gpt-4.1)
+                          :models '(openai/gpt-4.1 openai/o4-mini meta/Llama-4-Maverick-17B-128E-Instruct-FP8 deepseek/DeepSeek-R1)))
+(setq x/gpt--model-gh 'meta/Llama-4-Maverick-17B-128E-Instruct-FP8)
 
 ;; deepseek
 (setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
