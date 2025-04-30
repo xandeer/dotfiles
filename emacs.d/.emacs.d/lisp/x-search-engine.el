@@ -10,6 +10,8 @@
 
 (defengine google "http://www.google.com/search?q=%s" :keybinding "g")
 (defengine grep-app "http://grep.app/search?q=%s" :keybinding "c")
+;; search field doesn't work
+(defengine deepwiki "https://deepwiki.com?search_repo=%s" :keybinding "d")
 (defengine zlib (concat x/zlib-domain "/s/%s?extensions[]=epub") :keybinding "b")
 
 (defengine wiki-en "https://en.wikipedia.org/wiki/%s" :keybinding "w" :browser 'eww)
