@@ -12,6 +12,7 @@
   programs.nushell.extraConfig = ''
     $env.PATH = ([
       "${config.home.homeDirectory}/bin"
+      "${config.home.homeDirectory}/.local/bin"
       "${config.home.homeDirectory}/.nix-profile/bin"
       "${config.home.homeDirectory}/.yarn/bin"
       "${config.home.homeDirectory}/Library/Android/sdk/platform-tools"
@@ -69,6 +70,12 @@
         let width = ((term size).columns | into string)
         ^"oh-my-posh" print primary $"--config=($env.POSH_THEME)" --shell=nu $"--shell-version=($env.POSH_SHELL_VERSION)" $"--execution-time=($cmd_duration)" $"--error=($env.LAST_EXIT_CODE)" $"--terminal-width=($width)" $"--cleared=($clear)"
     }
+
+### completion
+use ~/projects/others/nu_scripts/custom-completions/yarn/yarn-v4-completions.nu *
+use ~/projects/others/nu_scripts/custom-completions/git/git-completions.nu *
+use ~/projects/others/nu_scripts/custom-completions/nix/nix-completions.nu *
+use ~/projects/others/nu_scripts/custom-completions/uv/uv-completions.nu *
   '';
 
   programs.nushell.configFile = {
@@ -157,10 +164,19 @@ let light_theme = {
     shape_vardecl: purple
 }
 
-$env.config = {
-  show_banner: false
-  color_config: $light_theme
+$env.config.show_banner = false
+$env.config.color_config = $light_theme
+
+### hooks
+if $env.config.hooks.env_change == null {
+  $env.config.hooks.env_change = {}
 }
+if $env.config.hooks.env_change.PWD? == null {
+  $env.config.hooks.env_change.PWD = []
+}
+let direnv_hook = (source ~/projects/others/nu_scripts/nu-hooks/nu-hooks/direnv/config.nu)
+# $env.config.hooks.env_change.PWD = $env.config.hooks.env_change.PWD | append $direnv_hook
+$env.config.hooks.pre_prompt = $env.config.hooks.pre_prompt | append $direnv_hook
 '';
   };
 
