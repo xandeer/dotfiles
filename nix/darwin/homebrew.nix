@@ -71,6 +71,7 @@
       "mint"
 
       "fnm" # like nvm but written by rust
+      "uv" # like nvm for python
 
       # reinstall after terminal and shell prepared to inherit PATH environment.
       # brew reinstall emacs-plus@30 --with-xwidgets --with-imagemagick
