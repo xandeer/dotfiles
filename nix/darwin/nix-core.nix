@@ -31,6 +31,7 @@
   };
 
   programs.nix-index.enable = true;
+  programs.direnv.enable = true;
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
