@@ -67,6 +67,7 @@ The function expands the given PATH to an absolute path."
   "Transient for Magit status."
   [["Magit"
     ;; ("c" "Exercism/clojure" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/clojure/"))))
+    ("a" "Alpha" (lambda () (interactive) (magit-status (expand-file-name "alpha" x/personal-projects-directory))))
     ("d" "Dotfiles" (lambda () (interactive) (magit-status (expand-file-name "dotfiles" x/personal-projects-directory))))
     ;; ("e" "Exercism/elixir" (lambda () (interactive) (magit-status (expand-file-name "~/Exercism/elixir/"))))
     ;; ("h" "Heart-music" (lambda () (interactive) (magit-status (expand-file-name "~/projects/personal/heart-music/"))))
