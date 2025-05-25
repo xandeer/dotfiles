@@ -15,6 +15,7 @@
     # project
     git-chglog
     mr
+    # foreman
 
     # utils
     asdf-vm

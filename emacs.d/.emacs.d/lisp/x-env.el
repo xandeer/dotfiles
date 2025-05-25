@@ -8,8 +8,8 @@
         exec-path
         '("/Applications/kitty.app/Contents/MacOS"
           "/Users/kevin/.nix-profile/bin"
+          "/Users/kevin/.local/share/fnm/aliases/default/bin"
           "/Users/kevin/.yarn/bin"
-          "/Users/kevin/Library/Android/sdk/platform-tools"
           "/Users/kevin/bin"
           "/bin"
           "/etc/profiles/per-user/kevin/bin"
