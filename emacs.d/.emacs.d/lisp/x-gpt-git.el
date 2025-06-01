@@ -26,8 +26,8 @@ them as the content for the GPT request.
 
 Returns:
 The result of the `gptel-request` call, which is typically the response from the GPT model."
-  (let ((gptel-backend x/gpt--backend-gh)
-        (gptel-model 'openai/gpt-4.1)
+  (let ((gptel-backend x/gpt-backend)
+        (gptel-model x/gpt-model)
         (gptel-max-tokens x/gpt-git-max-tokens))
     (gptel-request (x/gpt-git--get-changes)
       :system prompt

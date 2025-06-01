@@ -4,6 +4,7 @@ source ~/.config/auth.env
 
 # Default values
 MODEL="openai/gpt-4.1"
+MODEL="xai/grok-3"
 SYSTEM_PROMPT="You are a helpful assistant."
 
 # Function to display usage
@@ -61,4 +62,11 @@ response=$(curl -s -X POST "https://models.github.ai/inference/chat/completions"
     }')
 
 # Extract and print the assistant's reply
-echo "$response" | jq -r '.choices[0].message.content'
+if ! result=$(echo "$response" | jq -r '.choices[0].message.content' 2>/dev/null); then
+  echo "Failed to parse response"
+  echo "$response"
+elif [ "$result" = "null" ]; then
+  echo "$response"
+else
+  echo "$result"
+fi
