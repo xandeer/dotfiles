@@ -208,6 +208,8 @@ The selected or entered instruction is passed to the function
                      (x/gpt-completion-edit-code x/gpt-prompt-code-review 'buffer)))
     ("cf" "Fix" (lambda () (interactive)
                   (x/gpt-completion-edit-code x/gpt-prompt-code-fix 'buffer)))
+    ("cxs" "Translate XCode strings" (lambda () (interactive)
+                  (x/gpt-completion-edit-code x/gpt-prompt-code-xcstring 'replace)))
     ("cp" "Custom Prompt" (lambda () (interactive)
                             (x/gpt-completion-edit-code (completing-read "Instruction: "
                                                                          x/gpt-instruction-history

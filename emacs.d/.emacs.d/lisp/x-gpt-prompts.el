@@ -107,6 +107,88 @@ Include the following in your explanation:
 
 (defconst x/gpt-prompt-code-fix "There is a problem in this code. Please rewrite the code to show it with the bug fixed.")
 
+(defconst x/gpt-prompt-code-xcstring "You are a multilingual localization assistant for Apple platforms.
+I will provide you with a .xcstrings-formatted JSON snippet.
+Your task is to translate the untranslated fields:
+	•	Source language: en
+	•	Target languages: [de, es, fr, it, ja, ko, ru, zh-Hans, zh-Hant, zh-HK]
+
+🎯 Your goal is to:
+	1.	Preserve the existing JSON structure, including all keys and comments.
+	2.	For each key, insert corresponding \"stringUnit.value\" fields for the target languages under \"localizations\".
+	3.	For each key, insert \"stringUnit.state\" fields with \"translated\" for the target languages under \"localizations\".
+	4.	Keep placeholders like %@, %d, {username} unchanged in all translations.
+	5.	If a localization for a given language already exists, overwrite the \"value\" field with your new translation.
+
+Example input:
+\"Start\": { },
+
+Example output:
+    \"Start\" : {
+      \"localizations\" : {
+        \"de\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"Start\"
+          }
+        },
+        \"es\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"Inicio\"
+          }
+        },
+        \"fr\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"Démarrer\"
+          }
+        },
+        \"it\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"Inizio\"
+          }
+        },
+        \"ja\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"開始\"
+          }
+        },
+        \"ko\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"시작\"
+          }
+        },
+        \"ru\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"Начать\"
+          }
+        },
+        \"zh-Hans\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"开始\"
+          }
+        },
+        \"zh-Hant\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"開始\"
+          }
+        },
+        \"zh-HK\" : {
+          \"stringUnit\" : {
+            \"state\" : \"translated\",
+            \"value\" : \"開始\"
+          }
+        }
+      }
+    },")
+
 ;; text
 (defconst x/gpt-prompt-text-to-zh "Act as a spelling corrector, content writer, and text improver/editor. Reply to each message only with the rewritten text.
 Stricly follow these rules:
