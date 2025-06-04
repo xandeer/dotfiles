@@ -119,6 +119,7 @@ Your task is to translate the untranslated fields:
 	3.	For each key, insert \"stringUnit.state\" fields with \"translated\" for the target languages under \"localizations\".
 	4.	Keep placeholders like %@, %d, {username} unchanged in all translations.
 	5.	If a localization for a given language already exists, overwrite the \"value\" field with your new translation.
+  6. Keep indention, the first level has 4 spaces.
 
 Example input:
 \"Start\": { },
