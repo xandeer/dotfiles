@@ -77,6 +77,7 @@
     (wdired-change-to-wdired-mode)
     (replace-string " (z-lib.org)" "")
     (replace-string " (Z-Library)" "")
+    (replace-string "_Z_Library" "")
     (wdired-finish-edit))
 
   (x/define-keys
