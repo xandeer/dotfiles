@@ -3699,6 +3699,22 @@
         "description" : "XCode",
         "manipulators" : [ {
           "from" : {
+            "key_code" : "j",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "j",
+            "modifiers" : [ "left_command" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
             "key_code" : "k",
             "modifiers" : {
               "mandatory" : [ "left_option" ]
@@ -3777,6 +3793,9 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
+            "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
@@ -3799,6 +3818,9 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
+            "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
@@ -3816,6 +3838,9 @@
             "key_code" : "right_arrow"
           } ],
           "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
@@ -3835,6 +3860,9 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
+            "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
             "type" : "frontmost_application_unless",
@@ -3852,6 +3880,9 @@
             "key_code" : "up_arrow"
           } ],
           "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {
@@ -3871,6 +3902,9 @@
             "modifiers" : [ "left_option" ]
           } ],
           "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          }, {
             "type" : "frontmost_application_unless",
             "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
           }, {

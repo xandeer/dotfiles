@@ -197,13 +197,14 @@
 
   {:des "XCode"
    :rules [:xcode
+           [:!Oj :!Cj]
            [:!Ok :!Ck]
            [:!Operiod :!Cperiod]
            [:!Oh :!CSopen_bracket]
            [:!Ol :!CSclose_bracket]]}
 
   {:des "Emacs like"
-   :rules [[:condi :!emacs :!studio]
+   :rules [[:condi :!emacs :!studio :!xcode]
            [:!Ob :!Oleft_arrow]
            [:!Od [:!Oright_arrow :!Odelete_or_backspace]]
            [:!Tf :right_arrow]
