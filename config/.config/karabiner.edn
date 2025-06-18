@@ -198,7 +198,9 @@
   {:des "XCode"
    :rules [:xcode
            [:!Ok :!Ck]
-           [:!Operiod :!Cperiod]]}
+           [:!Operiod :!Cperiod]
+           [:!Oh :!CSopen_bracket]
+           [:!Ol :!CSclose_bracket]]}
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]

@@ -3729,6 +3729,38 @@
             "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
           } ],
           "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "h",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "open_bracket",
+            "modifiers" : [ "left_command", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "l",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "close_bracket",
+            "modifiers" : [ "left_command", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          } ],
+          "type" : "basic"
         } ]
       }, {
         "description" : "Emacs like",
