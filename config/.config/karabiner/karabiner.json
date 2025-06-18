@@ -3758,6 +3758,42 @@
           "type" : "basic"
         }, {
           "from" : {
+            "key_code" : "n",
+            "modifiers" : {
+              "mandatory" : [ "left_control" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "down_arrow"
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
+          }, {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "org.gnu.Emacs" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "p",
+            "modifiers" : {
+              "mandatory" : [ "left_control" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "up_arrow"
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds" ]
+          }, {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "org.gnu.Emacs" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
             "key_code" : "f",
             "modifiers" : {
               "mandatory" : [ "left_option" ]

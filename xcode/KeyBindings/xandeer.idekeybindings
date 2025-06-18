@@ -1172,6 +1172,8 @@
 			<string>moveSubWordBackwardAndModifySelection:</string>
 			<key>^$</key>
 			<string>moveSubWordForwardAndModifySelection:</string>
+			<key>^</key>
+			<string>scrollPageUp:</string>
 			<key>~$B</key>
 			<string>moveSubWordBackwardAndModifySelection:</string>
 			<key>~$F</key>
@@ -1180,6 +1182,12 @@
 			<string>moveDownAndModifySelection:</string>
 			<key>~$P</key>
 			<string>moveUpAndModifySelection:</string>
+			<key>~v</key>
+			<string>pageUp:</string>
+			<key>~</key>
+			<string>pageUp:</string>
+			<key></key>
+			<string>pageUp:</string>
 		</dict>
 		<key>Version</key>
 		<integer>3</integer>

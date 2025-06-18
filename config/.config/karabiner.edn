@@ -26,7 +26,8 @@
   :finder ["com.apple.finder"]
   :preview ["com.apple.Preview"]
   :raycast ["com.raycast.macos"]
-  :studio ["com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds"]}
+  :studio ["com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds"]
+  :xcode ["com.apple.dt.Xcode"]}
  :main
  [{:des "(s-[key]) symbols and numbers"
    :rules [[:condi :s-mode :built-in]
@@ -199,6 +200,8 @@
            [:!Ob :!Oleft_arrow]
            [:!Od [:!Oright_arrow :!Odelete_or_backspace]]
            [:!Tf :right_arrow]
+           [:!Tn :down_arrow]
+           [:!Tp :up_arrow]
            [:!Of :!Oright_arrow]]}
 
   {:des "Use Opt-i to switch input method out of emacs"
