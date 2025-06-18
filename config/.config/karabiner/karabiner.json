@@ -3696,6 +3696,41 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "XCode",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "k",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "k",
+            "modifiers" : [ "left_command" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "period",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "period",
+            "modifiers" : [ "left_command" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "com.apple.dt.Xcode" ]
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "Emacs like",
         "manipulators" : [ {
           "from" : {

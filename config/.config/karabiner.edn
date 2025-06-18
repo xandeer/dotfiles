@@ -136,7 +136,7 @@
 
 
   {:des "launch apps"
-   :rules [;; [:!COSa
+   :rules [ ;; [:!COSa
            ;;  ;; [:open "Android Studio"]
            ;;  ;; [:open "DevEco-Studio"]
            ;;  [:open "Xcode"]
@@ -194,6 +194,11 @@
            ;; read aloud
            [:!Os :!CSu]
            [:!Ox :!COS1]]}
+
+  {:des "XCode"
+   :rules [:xcode
+           [:!Ok :!Ck]
+           [:!Operiod :!Cperiod]]}
 
   {:des "Emacs like"
    :rules [[:condi :!emacs :!studio]
