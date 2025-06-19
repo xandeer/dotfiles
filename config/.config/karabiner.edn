@@ -21,8 +21,9 @@
  { ;; To obtain the app ID: `osascript -e 'id of app "Finder"'`
   :anki ["net.ankiweb.dtop"]
   :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
-  :edge   ["com.microsoft.edgemac.Dev"]
-  :emacs  ["org.gnu.Emacs"]
+  :edge ["com.microsoft.edgemac.Dev"]
+  :emacs ["org.gnu.Emacs"]
+  :dia ["company.thebrowser.dia"]
   :finder ["com.apple.finder"]
   :preview ["com.apple.Preview"]
   :raycast ["com.raycast.macos"]
@@ -194,6 +195,11 @@
            ;; read aloud
            [:!Os :!CSu]
            [:!Ox :!COS1]]}
+
+  {:des "Dia"
+   :rules [:dia
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]]}
 
   {:des "XCode"
    :rules [:xcode

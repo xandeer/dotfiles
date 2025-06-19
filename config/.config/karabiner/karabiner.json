@@ -3696,6 +3696,41 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "Dia",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "l",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "tab",
+            "modifiers" : [ "left_control" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "company.thebrowser.dia" ]
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "h",
+            "modifiers" : {
+              "mandatory" : [ "left_option" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "tab",
+            "modifiers" : [ "left_control", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_if",
+            "bundle_identifiers" : [ "company.thebrowser.dia" ]
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "XCode",
         "manipulators" : [ {
           "from" : {
