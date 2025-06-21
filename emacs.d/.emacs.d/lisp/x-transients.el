@@ -122,6 +122,7 @@
     ("p" "Agenda personal" (lambda () (interactive) (org-agenda nil "p")))
     ("r" "Agenda MoonReader" (lambda () (interactive) (org-agenda nil "r")))
     ("t" "Agenda todo" (lambda () (interactive) (org-agenda nil "t")))
+    ("w" "Agenda HoldLines" (lambda () (interactive) (org-agenda nil "w")))
     ("v" "Agenda list" org-agenda)
     ("H-i" "Consult agenda" consult-org-agenda)]
    ["Mark and register"

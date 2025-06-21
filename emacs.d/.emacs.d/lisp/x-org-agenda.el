@@ -223,51 +223,36 @@ ARG is passed through to `x/org-schedule'."
                 (tags-todo "EMACS+CATEGORY=\"Embark\""
                            ((org-agenda-overriding-header "Embark"))))))
 
+(defun x/create-project-agenda-views (key command-title tag categories)
+  "Create a project-specific agenda command.
+KEY is the key for the command.
+COMMAND-TITLE is the title of the command.
+TAG is the project tag to search for.
+CATEGORIES is a list of sub-category strings."
+  `(,key ,command-title
+       ,(mapcar (lambda (category)
+                  (let ((header (if (string= category "Feat") "Feature" category)))
+                    `(tags-todo ,(format "%s+CATEGORY=\"%s\"" tag category)
+                                ((org-agenda-overriding-header ,header)))))
+                categories)))
+
+(defvar x/project-categories '("Bug" "Feat" "Refactor" "Review" "Chore" "Other")
+  "Default categories for a project.")
+
 ;;; agenda personal
 (add-to-list 'org-agenda-custom-commands
-             '("p" "Personal"
-               ((tags-todo "PERSONAL+CATEGORY=\"Learning\""
-                           ((org-agenda-overriding-header "Learning")))
-                (tags-todo "PERSONAL+CATEGORY=\"Tasks\""
-                           ((org-agenda-overriding-header "Tasks")))
-                (tags-todo "PERSONAL+CATEGORY=\"Review\""
-                           ((org-agenda-overriding-header "Review")))
-                (tags-todo "PERSONAL+CATEGORY=\"Ideas\""
-                           ((org-agenda-overriding-header "Ideas")))
-                (tags-todo "PERSONAL+CATEGORY=\"Habits\""
-                           ((org-agenda-overriding-header "Habits"))))))
+             (x/create-project-agenda-views "p" "Personal" "PERSONAL"
+                                            '("Learning" "Tasks" "Review" "Ideas" "Habits")))
 
-;;; moon dust
 (add-to-list 'org-agenda-custom-commands
-             '("m" "MoonDust"
-               ((tags-todo "MoonDust+CATEGORY=\"Bug\""
-                           ((org-agenda-overriding-header "Bug")))
-                (tags-todo "MoonDust+CATEGORY=\"Feat\""
-                           ((org-agenda-overriding-header "Feature")))
-                (tags-todo "MoonDust+CATEGORY=\"Refactor\""
-                           ((org-agenda-overriding-header "Refactor")))
-                (tags-todo "MoonDust+CATEGORY=\"Review\""
-                           ((org-agenda-overriding-header "Review")))
-                (tags-todo "MoonDust+CATEGORY=\"Other\""
-                           ((org-agenda-overriding-header "Other")))
-                (tags-todo "MoonDust+CATEGORY=\"Chore\""
-                           ((org-agenda-overriding-header "Chore"))))))
-;;; moon reader
+             (x/create-project-agenda-views "m" "MoonDust" "MoonDust" x/project-categories))
+
 (add-to-list 'org-agenda-custom-commands
-             '("r" "MoonReader"
-               ((tags-todo "MoonReader+CATEGORY=\"Bug\""
-                           ((org-agenda-overriding-header "Bug")))
-                (tags-todo "MoonReader+CATEGORY=\"Feat\""
-                           ((org-agenda-overriding-header "Feature")))
-                (tags-todo "MoonReader+CATEGORY=\"Refactor\""
-                           ((org-agenda-overriding-header "Refactor")))
-                (tags-todo "MoonReader+CATEGORY=\"Review\""
-                           ((org-agenda-overriding-header "Review")))
-                (tags-todo "MoonReader+CATEGORY=\"Other\""
-                           ((org-agenda-overriding-header "Other")))
-                (tags-todo "MoonReader+CATEGORY=\"Chore\""
-                           ((org-agenda-overriding-header "Chore"))))))
-;;; agenda book
+             (x/create-project-agenda-views "w" "Hold Lines" "WordPower" x/project-categories))
+
+(add-to-list 'org-agenda-custom-commands
+             (x/create-project-agenda-views "r" "MoonReader" "MoonReader" x/project-categories))
+
 (add-to-list 'org-agenda-custom-commands
              '("b" "Book"
                ((tags-todo ":CATEGORY=\"玫瑰的名字\""
