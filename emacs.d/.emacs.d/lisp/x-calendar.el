@@ -70,5 +70,9 @@
   (define-key org-read-date-minibuffer-local-map (kbd "q") #'minibuffer-keyboard-quit)
   (define-key org-read-date-minibuffer-local-map (kbd "g") #'minibuffer-keyboard-quit))
 
+(x/package-use '(calfw . ("kiwanami/emacs-calfw" :files ("*.el"))))
+(require 'calfw-org)
+(setq calendar-week-start-day 1)
+
 (provide 'x-calendar)
 ;;; x-calendar.el ends here
