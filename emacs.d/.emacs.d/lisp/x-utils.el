@@ -111,5 +111,12 @@ Example:
             (define-key map key command)))
         bindings))
 
+;;; osx
+(defun x/applescript-notify (title message)
+  "Display a macOS notification with TITLE and MESSAGE using AppleScript."
+  (let ((script (format "display notification %S with title %S"
+                        message title)))
+    (start-process "osascript-notify" nil "osascript" "-e" script)))
+
 (provide 'x-utils)
 ;;; x-utils.el ends here

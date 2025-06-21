@@ -69,28 +69,37 @@ Skips capture tasks, projects, and subprojects."
   (interactive)
   (x/clock-in-task-with-id x/working-task-id))
 
-(defvar x--clock-timer nil)
+(defvar x/org-clock--timer nil
+  "Timer object used for custom clock functions.")
 
-(defun x--clock-cancel ()
-  (when (timerp x--clock-timer)
-    (setq x--clock-timer (cancel-timer x--clock-timer))))
+(defun x/org-clock--cancel ()
+  "Cancel the current clock timer and set `x/org-clock--timer' to nil.
+This is a safe wrapper that checks if the timer exists and is valid."
+  (when (timerp x/org-clock--timer)
+    (cancel-timer x/org-clock--timer)
+    (setq x/org-clock--timer nil)))
 
-(defun x--clock-out ()
+(defun x/org-clock--out ()
+  "Notify the user it's time for a break and clock out, or continue with a short clock if declined.
+Sends a notification using AppleScript, prompts the user, and acts accordingly."
+  (x/applescript-notify
+   "It's time to take a rest?"
+   (x/org-clock--normalize-heading))
   (if (y-or-n-p "It's time to take a rest? ")
       (org-clock-out)
-    (x--clock-in 3)))
+    (x/org-clock--in 3)))
 
-(defun x--clock-in (&optional minutes)
+(defun x/org-clock--in (&optional minutes)
   "Max MINUTES while clock in."
   (unless minutes
     (setq minutes 25))
 
-  (x--clock-cancel)
-  (setq x--clock-timer
-        (run-with-timer (* minutes 60) nil #'x--clock-out)))
+  (x/org-clock--cancel)
+  (setq x/org-clock--timer
+        (run-with-timer (* minutes 60) nil #'x/org-clock--out)))
 
-(add-hook 'org-clock-out-hook #'x--clock-cancel)
-(add-hook 'org-clock-in-hook #'x--clock-in)
+(add-hook 'org-clock-out-hook #'x/org-clock--cancel)
+(add-hook 'org-clock-in-hook #'x/org-clock--in)
 (add-hook 'org-clock-out-hook #'bh/clock-out-maybe 'append)
 
 (defcustom x/org-sync-min-clock-duration 1
@@ -109,18 +118,26 @@ Skips capture tasks, projects, and subprojects."
   (when (and org-clock-start-time
              (> (/ (float-time (time-since org-clock-start-time)) 60)
                 x/org-sync-min-clock-duration))
-    (let ((heading (or org-clock-heading "No title"))
-          (exit-code))
+    (let ((exit-code))
       (setq exit-code
             (shell-command
              (format
               "osascript -e 'tell application \"Calendar\" to tell calendar \"%s\" to make new event with properties {summary:\"%s\", start date:date \"%s\", end date:date \"%s\"}'"
               x/org-sync-calendar
-              (titlecase--string (string-trim-left heading "<.*> ") titlecase-style)
+              (x/org-clock--normalize-heading)
               (time-to-calendar-string org-clock-start-time)
               (time-to-calendar-string))))
       (when (not (eq exit-code 0))
         (warn "Failed to sync to Calendar! Command exited with code %d" exit-code)))))
+
+(defun x/org-clock--normalize-heading ()
+  "Return a normalized version of `org-clock-heading`.
+Heading is trimmed of leading punctuation/spaces and converted to titlecase
+according to `titlecase-style`."
+  (let* ((heading (or (and (boundp 'org-clock-heading) org-clock-heading) ""))
+         ;; TRIM-REGEX matches leading <, ., >, and space characters
+         (trimmed-heading (string-trim-left heading "[<.> ]")))
+    (titlecase--string trimmed-heading titlecase-style)))
 
 (add-hook 'org-clock-out-hook #'x/org-clock-sync-to-calendar)
 
