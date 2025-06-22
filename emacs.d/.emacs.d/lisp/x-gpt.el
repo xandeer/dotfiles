@@ -15,7 +15,7 @@
         :models x/gpt--local-models))
 
 ;; github
-(setq x/gpt--gh-models '(openai/gpt-4.1 openai/o4-mini xai/grok-3 meta/Llama-4-Maverick-17B-128E-Instruct-FP8 deepseek/DeepSeek-R1))
+(setq x/gpt--gh-models '(openai/gpt-4.1 openai/gpt-4.1-mini openai/o4-mini xai/grok-3 meta/Llama-4-Maverick-17B-128E-Instruct-FP8 deepseek/DeepSeek-R1))
 (setq x/gpt--gh-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
 (setq x/gpt--backend-gh (gptel-make-azure "github" ;Name, whatever you'd like
                           :host "models.github.ai"
@@ -24,6 +24,8 @@
                           :key #'x/gpt--gh-token ;API key
                           :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
                           :models x/gpt--gh-models))
+
+(setq gptel-api-key (auth-source-pick-first-password :host "api.openai.com" :user "ddxandeer"))
 
 (setq x/gpt-model 'openai/gpt-4.1)
 (setq x/gpt-backend x/gpt--backend-gh)
@@ -96,6 +98,47 @@
   (gptel "#gpt anywhere#" gptel-api-key nil)
   (switch-to-buffer "#gpt anywhere#")
   (delete-other-windows))
+
+;;; Tools
+(gptel-make-tool
+ :function (lambda (buffer)
+             (unless (buffer-live-p (get-buffer buffer))
+               (error "Error: buffer %s is not live." buffer))
+             (with-current-buffer buffer
+               (buffer-substring-no-properties (point-min) (point-max))))
+ :name "read_buffer"
+ :description "Return the contents of an Emacs buffer"
+ :args (list '(:name "buffer"
+                     :type string
+                     :description "The name of the buffer whose contents are to be retrieved"))
+ :category "emacs")
+
+(defvar brave-search-api-key (auth-source-pick-first-password :host "api.search.brave.com" :user "xandeer")
+  "API key for accessing the Brave Search API.")
+
+(defun brave-search-query (query)
+  "Perform a web search using the Brave Search API with the given QUERY."
+  (let ((url-request-method "GET")
+        (url-request-extra-headers `(("X-Subscription-Token" . ,brave-search-api-key)))
+        (url (format "https://api.search.brave.com/res/v1/web/search?q=%s" (url-encode-url query))))
+    (with-current-buffer (url-retrieve-synchronously url)
+      (goto-char (point-min))
+      (when (re-search-forward "^$" nil 'move)
+        (let ((json-object-type 'hash-table)) ; Use hash-table for JSON parsing
+          (json-parse-string (buffer-substring-no-properties (point) (point-max))))))))
+
+(gptel-make-tool
+ :function #'brave-search-query
+ :name "brave_search"
+ :description "Perform a web search using the Brave Search API"
+ :args (list '(:name "query"
+                     :type string
+                     :description "The search query string"))
+ :category "web")
+
+;;; presets
+;; (gptel-make-preset 'explain
+;;   :system x/gpt-prompt-text-explain)
 
 (provide 'x-gpt)
 ;;; x-gpt.el ends here

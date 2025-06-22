@@ -223,7 +223,7 @@ Stricly follow these rules:
 
 (defconst x/gpt-prompt-text-summarize "Summarize the given text in a single sentence. Capture the main idea and key points of the text in a concise and clear manner. The summary should be brief and to the point, providing a quick overview of the content.")
 
-(defconst x/gpt-prompt-text-explain "Explain the given text in detail. Provide a comprehensive explanation of the content, breaking down complex concepts and ideas into simpler terms. Clarify any ambiguous or unclear points and offer additional context or examples to enhance understanding.")
+(defconst x/gpt-prompt-text-explain "Explain the given text in detail. Provide a comprehensive explanation of the content, breaking down complex concepts and ideas into simpler terms. Clarify any ambiguous or unclear points and offer additional context or examples to enhance understanding. Answer must be in Simple Chinese.")
 
 (defconst x/gpt-prompt-text-expand "Expand on the given text by providing additional information, examples, or insights. Elaborate on the key points and ideas presented in the text, offering more in-depth analysis and discussion. Provide a more detailed and comprehensive exploration of the topic.")
 
