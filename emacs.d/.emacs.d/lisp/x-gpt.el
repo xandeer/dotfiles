@@ -50,6 +50,8 @@
         :key x/gpt--ds-token          ;can be a function that returns the key
         :models '(deepseek-chat deepseek-reasoner)))
 
+(gptel-make-gh-copilot "Copilot")
+
 (setq gptel-default-mode 'org-mode)
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
 ;; (setq gptel-max-tokens 3000)
