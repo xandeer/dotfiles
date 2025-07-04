@@ -111,6 +111,12 @@ Example:
             (define-key map key command)))
         bindings))
 
+(defun x/eval-expression-insert (expr)
+  "Eval Emacs Lisp EXPR and insert the result at point."
+  (interactive "sEval and insert: ")
+  (let ((result (eval (read expr))))
+    (insert (format "%S" result))))
+
 ;;; osx
 (defun x/applescript-notify (title message)
   "Display a macOS notification with TITLE and MESSAGE using AppleScript."
