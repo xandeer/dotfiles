@@ -10,4 +10,4 @@ function set_proxy() {
   fi
 }
 
-set_proxy
+# set_proxy
