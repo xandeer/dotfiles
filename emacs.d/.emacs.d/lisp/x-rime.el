@@ -96,5 +96,15 @@
 ;; (remove-hook 'post-command-hook #'x/do-stuff-if-moved-post-command)
 ;; (add-hook 'x/cursor-move-hook #'x/switch-cursor-background)
 
+;; (x/package-use 'sis)
+;; (setq sis-external-ism "im-select")
+;; (sis-ism-lazyman-config
+;;  "com.apple.keylayout.ABC"
+;;  "com.apple.inputmethod.SCIM.Shuangpin")
+;; (sis-global-cursor-color-mode t)
+;; (sis-global-respect-mode t)
+;; (sis-global-context-mode t)
+;; (sis-global-inline-mode t)
+
 (provide 'x-rime)
 ;;; x-rime.el ends here
