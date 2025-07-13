@@ -39,6 +39,9 @@
     load-env $fnm_vars
     ### fnm end ###
 
+    $env.ANTHROPIC_BASE_URL = 'https://anyrouter.top'
+    $env.ANTHROPIC_AUTH_TOKEN = 'sk-BmCHyEqTcEIvdvOQTRwrCAlCC0QuguoWSm3av7sdNG9wQxmg'
+
     $env.NIXPKGS_ALLOW_INSECURE = 1
 
     def nuopen [arg, --raw (-r)] { if $raw { open -r $arg } else { open $arg } }
