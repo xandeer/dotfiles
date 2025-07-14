@@ -77,7 +77,21 @@
     (cider-browse-ns (cider-current-ns)))
 
   (add-hook 'clojure-mode-hook 'cider-mode)
-  (add-hook 'clojurescript-mode-hook 'cider-mode))
+  (add-hook 'clojurescript-mode-hook 'cider-mode)
+
+  (defun my--wrap-nrepl-start-set-path (orig-fn directory cmd on-port-callback)
+  "Add a PATH prefix in front of CMD before starting the nREPL server."
+  (let ((prefix "PATH=/opt/homebrew/bin:$PATH")
+        ;; Split the original cmd: support both string and list
+        (cmd-str (if (listp cmd)
+                     (string-join cmd " ")
+                   cmd))
+        ;; Concatenate a new command with a PATH prefix
+        (new-cmd (concat prefix " " cmd-str)))
+    (funcall orig-fn directory new-cmd on-port-callback)))
+
+  (advice-add 'nrepl-start-server-process
+              :around #'my--wrap-nrepl-start-set-path))
 
 (provide 'x-clojure)
 ;;; x-clojure.el ends here
