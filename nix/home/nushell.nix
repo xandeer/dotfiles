@@ -40,6 +40,7 @@
     ### fnm end ###
 
     $env.ANTHROPIC_BASE_URL = 'https://anyrouter.top'
+    $env.ANTHROPIC_BASE_URL = 'https://pmpjfbhq.cn-nb1.rainapp.top'
     $env.ANTHROPIC_AUTH_TOKEN = 'sk-BmCHyEqTcEIvdvOQTRwrCAlCC0QuguoWSm3av7sdNG9wQxmg'
 
     $env.NIXPKGS_ALLOW_INSECURE = 1
