@@ -74,7 +74,8 @@ Use `lsp''s definitions/references jump."
   :group 'x/web
   (if x/web-mode
       (progn
-        (require 'yarn))))
+        ;; (require 'yarn)
+        (require 'bun))))
 
 (defun x/web-mode-on ()
   "Turn on `x/web-mode'."
