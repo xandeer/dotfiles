@@ -39,10 +39,6 @@
     load-env $fnm_vars
     ### fnm end ###
 
-    $env.ANTHROPIC_BASE_URL = 'https://anyrouter.top'
-    $env.ANTHROPIC_BASE_URL = 'https://pmpjfbhq.cn-nb1.rainapp.top'
-    $env.ANTHROPIC_AUTH_TOKEN = 'sk-BmCHyEqTcEIvdvOQTRwrCAlCC0QuguoWSm3av7sdNG9wQxmg'
-
     $env.NIXPKGS_ALLOW_INSECURE = 1
 
     def nuopen [arg, --raw (-r)] { if $raw { open -r $arg } else { open $arg } }
@@ -91,6 +87,9 @@ if $env.config.hooks.env_change.PWD? == null {
 let direnv_hook = (source ~/projects/others/nu_scripts/nu-hooks/nu-hooks/direnv/config.nu)
 # $env.config.hooks.env_change.PWD = $env.config.hooks.env_change.PWD | append $direnv_hook
 $env.config.hooks.pre_prompt = $env.config.hooks.pre_prompt | append $direnv_hook
+
+### custom env
+source ~/.config/env.nu
   '';
 
   programs.nushell.configFile = {
