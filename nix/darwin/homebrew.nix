@@ -66,7 +66,7 @@
       # "pinentry"
       "clojure/tools/clojure"
 
-      "swift-format"
+      # "swift-format"
 
       "mint"
 
@@ -97,7 +97,7 @@
       # "clashx-pro"    # proxy tool
       # "iina"      # video player
       # "openinterminal-lite"  # open current folder in terminal
-      "syncthing"  # file sync
+      "syncthing-app"  # file sync
       "raycast"   # (HotKey: alt/option + space)search, caculate and run scripts(with many plugins)
       # "iglance"   # beautiful system monitor
       # "eudic"     # 欧路词典
@@ -105,7 +105,7 @@
       "kitty"
       "karabiner-elements"
       "showyedge"
-      "squirrel"
+      "squirrel-app"
       "jordanbaird-ice" # mac menu manager
 
       # "emacs-plus@30 --with-xwidgets --with-imagemagick"
@@ -113,6 +113,7 @@
       # Development
       # "insomnia"  # REST client
       # "wireshark"  # network analyzer
+      "temurin@21" # java21
     ];
   };
 }
