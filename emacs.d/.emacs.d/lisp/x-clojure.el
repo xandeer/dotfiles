@@ -81,7 +81,7 @@
 
   (defun my--wrap-nrepl-start-set-path (orig-fn directory cmd on-port-callback)
   "Add a PATH prefix in front of CMD before starting the nREPL server."
-  (let ((prefix "PATH=/opt/homebrew/bin:$PATH")
+  (let* ((prefix "PATH=/opt/homebrew/bin:$PATH")
         ;; Split the original cmd: support both string and list
         (cmd-str (if (listp cmd)
                      (string-join cmd " ")
