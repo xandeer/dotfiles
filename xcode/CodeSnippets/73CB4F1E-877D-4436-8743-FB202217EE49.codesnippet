@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>IDECodeSnippetCompletionPrefix</key>
-	<string>llg</string>
+	<string>cs</string>
 	<key>IDECodeSnippetCompletionScopes</key>
 	<array>
 		<string>All</string>
 	</array>
 	<key>IDECodeSnippetContents</key>
-	<string>private let logger = Logger(label: &lt;#T##String#&gt;)</string>
+	<string>Container.shared.</string>
 	<key>IDECodeSnippetIdentifier</key>
-	<string>CC816E74-D596-4246-AF7C-06BBD633451F</string>
+	<string>73CB4F1E-877D-4436-8743-FB202217EE49</string>
 	<key>IDECodeSnippetLanguage</key>
 	<string>Xcode.SourceCodeLanguage.Swift</string>
 	<key>IDECodeSnippetSummary</key>
 	<string></string>
 	<key>IDECodeSnippetTitle</key>
-	<string>private let logger = Logger(label: &lt;#T##String#&gt;)</string>
+	<string>Container.shared.</string>
 	<key>IDECodeSnippetUserSnippet</key>
 	<true/>
 	<key>IDECodeSnippetVersion</key>
