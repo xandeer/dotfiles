@@ -136,7 +136,7 @@ Heading is trimmed of leading punctuation/spaces and converted to titlecase
 according to `titlecase-style`."
   (let* ((heading (or (and (boundp 'org-clock-heading) org-clock-heading) ""))
          ;; TRIM-REGEX matches leading <, ., >, and space characters
-         (trimmed-heading (string-trim-left heading "[<.> ]")))
+         (trimmed-heading (string-trim-left heading "<.*> ")))
     (titlecase--string trimmed-heading titlecase-style)))
 
 (add-hook 'org-clock-out-hook #'x/org-clock-sync-to-calendar)
