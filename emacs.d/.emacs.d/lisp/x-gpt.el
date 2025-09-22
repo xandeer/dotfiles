@@ -25,17 +25,29 @@
                           :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
                           :models x/gpt--gh-models))
 
+;; open router
+(setq x/gpt--or-models '(x-ai/grok-4-fast:free deepseek/deepseek-chat-v3.1:free))
+(setq x/gpt--or-token (auth-source-pick-first-password :host "openrouter" :user "gptel"))
+(setq x/gpt--backend-or (gptel-make-openai "OR" ;Any name you want
+                          :host "openrouter.ai"
+                          :endpoint "/api/v1/chat/completions"
+                          :stream t
+                          :key x/gpt--or-token ;can be a function that returns the key
+                          :models x/gpt--or-models))
+
 (setq gptel-api-key (auth-source-pick-first-password :host "api.openai.com" :user "ddxandeer"))
 
-(setq x/gpt-model 'openai/gpt-4.1)
-(setq x/gpt-backend x/gpt--backend-gh)
+(setq x/gpt-model 'x-ai/grok-4-fast:free)
+(setq x/gpt-backend x/gpt--backend-or)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
   (setq x/gpt-backend
         (if (memq x/gpt-model x/gpt--local-models)
             x/gpt--backend-local
-          x/gpt--backend-gh))
+          (if (memq x/gpt-model x/gpt--or-models)
+              x/gpt--backend-or
+            x/gpt--backend-gh)))
   (setq-default gptel-backend x/gpt-backend))
 
 ;; deepseek
