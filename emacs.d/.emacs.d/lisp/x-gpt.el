@@ -15,7 +15,7 @@
         :models x/gpt--local-models))
 
 ;; github
-(setq x/gpt--gh-models '(openai/gpt-4.1 openai/gpt-4.1-mini openai/o4-mini xai/grok-3 meta/Llama-4-Maverick-17B-128E-Instruct-FP8 deepseek/DeepSeek-R1))
+(setq x/gpt--gh-models '(openai/gpt-4.1 openai/gpt-4.1-mini))
 (setq x/gpt--gh-token (auth-source-pick-first-password :host "ai.github.com" :user "xandeer"))
 (setq x/gpt--backend-gh (gptel-make-azure "github" ;Name, whatever you'd like
                           :host "models.github.ai"
@@ -26,7 +26,7 @@
                           :models x/gpt--gh-models))
 
 ;; open router
-(setq x/gpt--or-models '(x-ai/grok-4-fast:free deepseek/deepseek-chat-v3.1:free))
+(setq x/gpt--or-models '(deepseek/deepseek-chat-v3.1:free x-ai/grok-4-fast:free))
 (setq x/gpt--or-token (auth-source-pick-first-password :host "openrouter" :user "gptel"))
 (setq x/gpt--backend-or (gptel-make-openai "OR" ;Any name you want
                           :host "openrouter.ai"
@@ -35,32 +35,30 @@
                           :key x/gpt--or-token ;can be a function that returns the key
                           :models x/gpt--or-models))
 
-(setq gptel-api-key (auth-source-pick-first-password :host "api.openai.com" :user "ddxandeer"))
+;; qiniu
+(setq x/gpt--qn-models '(x-ai/grok-4-fast))
+(setq x/gpt--qn-token (auth-source-pick-first-password :host "qiniu" :user "gptel"))
+(setq x/gpt--backend-qn (gptel-make-openai "QN" ;Any name you want
+                          :host "openai.qiniu.com"
+                          :endpoint "/v1/chat/completions"
+                          :stream t
+                          :key x/gpt--qn-token ;can be a function that returns the key
+                          :models x/gpt--qn-models))
 
-(setq x/gpt-model 'deepseek/deepseek-chat-v3.1:free)
-(setq x/gpt-backend x/gpt--backend-or)
+(setq x/gpt-model 'x-ai/grok-4-fast)
+(setq x/gpt-backend x/gpt--backend-qn)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
   (setq x/gpt-backend
-        (if (memq x/gpt-model x/gpt--local-models)
-            x/gpt--backend-local
+        (if (memq x/gpt-model x/gpt--qn-models)
+            x/gpt--backend-qn
           (if (memq x/gpt-model x/gpt--or-models)
               x/gpt--backend-or
-            x/gpt--backend-gh)))
+            (if (memq x/gpt-model x/gpt--gh-models)
+                x/gpt--backend-gh
+              x/gpt--backend-local))))
   (setq-default gptel-backend x/gpt-backend))
-
-;; deepseek
-(setq x/gpt--ds-token (auth-source-pick-first-password :host "deepseek" :user "ds"))
-;; OPTIONAL configuration
-(setq x/gpt--model-ds "deepseek-reasoner"
-      x/gpt--backend-ds
-      (gptel-make-openai "DeepSeek"     ;Any name you want
-        :host "api.deepseek.com"
-        :endpoint "/chat/completions"
-        :stream t
-        :key x/gpt--ds-token          ;can be a function that returns the key
-        :models '(deepseek-chat deepseek-reasoner)))
 
 (gptel-make-gh-copilot "Copilot")
 
