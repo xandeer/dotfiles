@@ -37,7 +37,7 @@
 
 (setq gptel-api-key (auth-source-pick-first-password :host "api.openai.com" :user "ddxandeer"))
 
-(setq x/gpt-model 'x-ai/grok-4-fast:free)
+(setq x/gpt-model 'deepseek/deepseek-chat-v3.1:free)
 (setq x/gpt-backend x/gpt--backend-or)
 
 (defun x/gpt--match-backend ()
