@@ -4,7 +4,7 @@ source ~/.config/auth.env
 
 # Default values
 MODEL="openai/gpt-4.1"
-MODEL="xai/grok-3"
+# MODEL="xai/grok-3"
 SYSTEM_PROMPT="You are a helpful assistant."
 
 # Function to display usage

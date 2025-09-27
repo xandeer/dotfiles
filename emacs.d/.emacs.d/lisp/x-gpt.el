@@ -35,29 +35,17 @@
                           :key x/gpt--or-token ;can be a function that returns the key
                           :models x/gpt--or-models))
 
-;; qiniu
-(setq x/gpt--qn-models '(x-ai/grok-4-fast))
-(setq x/gpt--qn-token (auth-source-pick-first-password :host "qiniu" :user "gptel"))
-(setq x/gpt--backend-qn (gptel-make-openai "QN" ;Any name you want
-                          :host "openai.qiniu.com"
-                          :endpoint "/v1/chat/completions"
-                          :stream t
-                          :key x/gpt--qn-token ;can be a function that returns the key
-                          :models x/gpt--qn-models))
-
-(setq x/gpt-model 'x-ai/grok-4-fast)
-(setq x/gpt-backend x/gpt--backend-qn)
+(setq x/gpt-model 'x-ai/grok-4-fast:free)
+(setq x/gpt-backend x/gpt--backend-or)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
   (setq x/gpt-backend
-        (if (memq x/gpt-model x/gpt--qn-models)
-            x/gpt--backend-qn
-          (if (memq x/gpt-model x/gpt--or-models)
-              x/gpt--backend-or
-            (if (memq x/gpt-model x/gpt--gh-models)
-                x/gpt--backend-gh
-              x/gpt--backend-local))))
+        (if (memq x/gpt-model x/gpt--or-models)
+            x/gpt--backend-or
+          (if (memq x/gpt-model x/gpt--gh-models)
+              x/gpt--backend-gh
+            x/gpt--backend-local)))
   (setq-default gptel-backend x/gpt-backend))
 
 (gptel-make-gh-copilot "Copilot")
@@ -75,7 +63,7 @@
 
 (defvar x/gpt-model-history
   (mapcar #'symbol-name
-          (append '() x/gpt--local-models x/gpt--gh-models))
+          (append '() x/gpt--local-models x/gpt--gh-models x/gpt--or-models))
   "The history list for ai models.")
 
 (defun x/gpt-switch-model ()
