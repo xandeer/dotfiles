@@ -34,9 +34,18 @@
                           :stream t
                           :key x/gpt--or-token ;can be a function that returns the key
                           :models x/gpt--or-models))
+;; iflow
+(setq x/gpt--iflow-models '(deepseek-v3.1))
+(setq x/gpt--iflow-token (auth-source-pick-first-password :host "iflow" :user "gptel"))
+(setq x/gpt--backend-iflow (gptel-make-openai "iFlow" ;Any name you want
+                          :host "apis.iflow.cn"
+                          :endpoint "/v1/chat/completions"
+                          :stream t
+                          :key x/gpt--iflow-token ;can be a function that returns the key
+                          :models x/gpt--iflow-models))
 
-(setq x/gpt-model 'x-ai/grok-4-fast:free)
-(setq x/gpt-backend x/gpt--backend-or)
+(setq x/gpt-model 'deepseek-v3.1)
+(setq x/gpt-backend x/gpt--backend-iflow)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
