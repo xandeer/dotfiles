@@ -26,7 +26,7 @@
                           :models x/gpt--gh-models))
 
 ;; open router
-(setq x/gpt--or-models '(deepseek/deepseek-chat-v3.1:free x-ai/grok-4-fast:free))
+(setq x/gpt--or-models '(deepseek/deepseek-chat-v3.1:free))
 (setq x/gpt--or-token (auth-source-pick-first-password :host "openrouter" :user "gptel"))
 (setq x/gpt--backend-or (gptel-make-openai "OR" ;Any name you want
                           :host "openrouter.ai"
