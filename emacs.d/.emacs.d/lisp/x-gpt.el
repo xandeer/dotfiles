@@ -25,39 +25,28 @@
                           :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
                           :models x/gpt--gh-models))
 
-;; open router
-(setq x/gpt--or-models '(deepseek/deepseek-chat-v3.1:free))
-(setq x/gpt--or-token (auth-source-pick-first-password :host "openrouter" :user "gptel"))
-(setq x/gpt--backend-or (gptel-make-openai "OR" ;Any name you want
-                          :host "openrouter.ai"
-                          :endpoint "/api/v1/chat/completions"
+;; ali
+(setq x/gpt--ali-models '(qwen3-coder-plus-2025-09-23))
+(setq x/gpt--ali-token (auth-source-pick-first-password :host "ali" :user "gptel"))
+(setq x/gpt--backend-ali (gptel-make-openai "ali" ;Any name you want
+                          :host "dashscope.aliyuncs.com"
+                          :endpoint "/compatible-mode/v1/chat/completions"
                           :stream t
-                          :key x/gpt--or-token ;can be a function that returns the key
-                          :models x/gpt--or-models))
-;; iflow
-(setq x/gpt--iflow-models '(deepseek-v3.1))
-(setq x/gpt--iflow-token (auth-source-pick-first-password :host "iflow" :user "gptel"))
-(setq x/gpt--backend-iflow (gptel-make-openai "iFlow" ;Any name you want
-                          :host "apis.iflow.cn"
-                          :endpoint "/v1/chat/completions"
-                          :stream t
-                          :key x/gpt--iflow-token ;can be a function that returns the key
-                          :models x/gpt--iflow-models))
+                          :key x/gpt--ali-token ;can be a function that returns the key
+                          :models x/gpt--ali-models))
 
-(setq x/gpt-model 'deepseek-v3.1)
-(setq x/gpt-backend x/gpt--backend-iflow)
+(setq x/gpt-model 'qwen3-coder-plus-2025-09-23)
+(setq x/gpt-backend x/gpt--backend-ali)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
   (setq x/gpt-backend
-        (if (memq x/gpt-model x/gpt--or-models)
-            x/gpt--backend-or
+        (if (memq x/gpt-model x/gpt--ali-models)
+            x/gpt--backend-ali
           (if (memq x/gpt-model x/gpt--gh-models)
               x/gpt--backend-gh
             x/gpt--backend-local)))
   (setq-default gptel-backend x/gpt-backend))
-
-(gptel-make-gh-copilot "Copilot")
 
 (setq gptel-default-mode 'org-mode)
 (add-hook 'gptel-post-stream-hook #'gptel-auto-scroll)
@@ -72,7 +61,7 @@
 
 (defvar x/gpt-model-history
   (mapcar #'symbol-name
-          (append '() x/gpt--local-models x/gpt--gh-models x/gpt--or-models))
+          (append '() x/gpt--local-models x/gpt--gh-models x/gpt--ali-models))
   "The history list for ai models.")
 
 (defun x/gpt-switch-model ()
