@@ -250,8 +250,13 @@ CATEGORIES is a list of sub-category strings."
 (add-to-list 'org-agenda-custom-commands
              (x/create-project-agenda-views "w" "Hold Lines" "WordPower" x/project-categories))
 
+;; (add-to-list 'org-agenda-custom-commands
+;;              (x/create-project-agenda-views "r" "MoonReader" "MoonReader" x/project-categories))
 (add-to-list 'org-agenda-custom-commands
-             (x/create-project-agenda-views "r" "MoonReader" "MoonReader" x/project-categories))
+             (x/create-project-agenda-views "r" "Remio" "Remio" x/project-categories))
+
+(add-to-list 'org-agenda-custom-commands
+             (x/create-project-agenda-views "h" "HighKick" "HighKick" x/project-categories))
 
 (add-to-list 'org-agenda-custom-commands
              '("b" "Book"
