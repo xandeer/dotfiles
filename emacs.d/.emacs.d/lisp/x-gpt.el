@@ -35,7 +35,7 @@
                           :key x/gpt--ali-token ;can be a function that returns the key
                           :models x/gpt--ali-models))
 
-(setq x/gpt-model 'qwen3-coder-plus-2025-07-22)
+(setq x/gpt-model 'qwen3-coder-plus-2025-09-23)
 (setq x/gpt-backend x/gpt--backend-ali)
 
 (defun x/gpt--match-backend ()
