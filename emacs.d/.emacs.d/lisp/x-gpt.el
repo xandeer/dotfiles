@@ -26,7 +26,7 @@
                           :models x/gpt--gh-models))
 
 ;; ali
-(setq x/gpt--ali-models '(qwen3-coder-plus-2025-09-23 qwen3-coder-plus-2025-07-22))
+(setq x/gpt--ali-models '(qwen3-coder-plus))
 (setq x/gpt--ali-token (auth-source-pick-first-password :host "ali" :user "gptel"))
 (setq x/gpt--backend-ali (gptel-make-openai "ali" ;Any name you want
                           :host "dashscope.aliyuncs.com"
@@ -35,7 +35,7 @@
                           :key x/gpt--ali-token ;can be a function that returns the key
                           :models x/gpt--ali-models))
 
-(setq x/gpt-model 'qwen3-coder-plus-2025-09-23)
+(setq x/gpt-model 'qwen3-coder-plus)
 (setq x/gpt-backend x/gpt--backend-ali)
 
 (defun x/gpt--match-backend ()
