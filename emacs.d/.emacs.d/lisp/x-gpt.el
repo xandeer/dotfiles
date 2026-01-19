@@ -25,24 +25,24 @@
                           :header `(("Authorization" . ,(concat "Bearer " x/gpt--gh-token)))
                           :models x/gpt--gh-models))
 
-;; ali
-(setq x/gpt--ali-models '(qwen3-coder-plus))
-(setq x/gpt--ali-token (auth-source-pick-first-password :host "ali" :user "gptel"))
-(setq x/gpt--backend-ali (gptel-make-openai "ali" ;Any name you want
-                          :host "dashscope.aliyuncs.com"
-                          :endpoint "/compatible-mode/v1/chat/completions"
+;; ark
+(setq x/gpt--ark-models '(doubao-seed-code-preview-251028))
+(setq x/gpt--ark-token (auth-source-pick-first-password :host "ark" :user "gptel"))
+(setq x/gpt--backend-ark (gptel-make-openai "ark" ;Any name you want
+                          :host "ark.cn-beijing.volces.com"
+                          :endpoint "/api/v3/chat/completions"
                           :stream t
-                          :key x/gpt--ali-token ;can be a function that returns the key
-                          :models x/gpt--ali-models))
+                          :key x/gpt--ark-token
+                          :models x/gpt--ark-models))
 
-(setq x/gpt-model 'qwen3-coder-plus)
-(setq x/gpt-backend x/gpt--backend-ali)
+(setq x/gpt-model 'doubao-seed-code-preview-251028)
+(setq x/gpt-backend x/gpt--backend-ark)
 
 (defun x/gpt--match-backend ()
   "Match backend for `x/gpt-model'."
   (setq x/gpt-backend
-        (if (memq x/gpt-model x/gpt--ali-models)
-            x/gpt--backend-ali
+        (if (memq x/gpt-model x/gpt--ark-models)
+            x/gpt--backend-ark
           (if (memq x/gpt-model x/gpt--gh-models)
               x/gpt--backend-gh
             x/gpt--backend-local)))
@@ -61,7 +61,7 @@
 
 (defvar x/gpt-model-history
   (mapcar #'symbol-name
-          (append '() x/gpt--local-models x/gpt--gh-models x/gpt--ali-models))
+          (append '() x/gpt--local-models x/gpt--gh-models x/gpt--ark-models))
   "The history list for ai models.")
 
 (defun x/gpt-switch-model ()
