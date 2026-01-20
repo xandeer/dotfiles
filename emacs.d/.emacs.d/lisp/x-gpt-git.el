@@ -28,7 +28,8 @@ Returns:
 The result of the `gptel-request` call, which is typically the response from the GPT model."
   (let ((gptel-backend x/gpt-backend)
         (gptel-model x/gpt-model)
-        (gptel-max-tokens x/gpt-git-max-tokens))
+        (gptel-max-tokens x/gpt-git-max-tokens)
+        (gptel--request-params '(:thinking (:type "disabled"))))
     (gptel-request (x/gpt-git--get-changes)
       :system prompt
       :stream t
