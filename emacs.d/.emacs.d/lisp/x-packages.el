@@ -208,6 +208,7 @@ Usages:
     which-key
 
 ;;; tools
+    (pinyinlib . "xlshiz/pinyinlib.el")
     ace-pinyin
     cal-china-x
     ebuku
@@ -229,7 +230,6 @@ Usages:
     org-anki
     password-store
     password-store-otp
-    (pinyinlib . "xlshiz/pinyinlib.el")
     projectile
     posframe
     (rime . ("DogLooksGood/emacs-rime" :files ("Makefile" "*.el" "lib.c")))
