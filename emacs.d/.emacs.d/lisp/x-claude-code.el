@@ -14,31 +14,25 @@
                                 :host "anyrouter.top"
                                 :user "xandeer"))
 
-(defun switch-to-gc ()
+(defun x/switch-to-antigravity (opus-model name)
+  "Switch to antigravity backend with OPUS-MODEL and NAME."
+  (setenv "ANTHROPIC_BASE_URL" "http://localhost:8989/antigravity")
+  (setenv "ANTHROPIC_AUTH_TOKEN" "test")
+  (setenv "ANTHROPIC_MODEL" "opus")
+  (setenv "ANTHROPIC_DEFAULT_MODEL" "opus")
+  (setenv "ANTHROPIC_DEFAULT_OPUS_MODEL" opus-model)
+  (setenv "ANTHROPIC_DEFAULT_HAIKU_MODEL" "gemini-3-flash")
+  (message "Switched to antigravity %s" name))
+
+(defun x/switch-to-gc ()
   "切换到 antigravity claude（gc）。"
   (interactive)
-  ;; 设置环境变量
-  (setenv "ANTHROPIC_BASE_URL" "http://localhost:8989/antigravity")
-  (setenv "ANTHROPIC_AUTH_TOKEN" "test")
-  (setenv "ANTHROPIC_MODEL" "opus")
-  (setenv "ANTHROPIC_DEFAULT_MODEL" "opus")
-  (setenv "ANTHROPIC_DEFAULT_OPUS_MODEL" "claude-opus-4-5-thinking")
-  (setenv "ANTHROPIC_DEFAULT_HAIKU_MODEL" "gemini-3-flash")
-  ;; 输出提示
-  (message "Switched to antigravity claude"))
+  (x/switch-to-antigravity "claude-opus-4-5-thinking" "claude"))
 
-(defun switch-to-gg ()
+(defun x/switch-to-gg ()
   "切换到 antigravity gemini（gg）。"
   (interactive)
-  ;; 设置环境变量
-  (setenv "ANTHROPIC_BASE_URL" "http://localhost:8989/antigravity")
-  (setenv "ANTHROPIC_AUTH_TOKEN" "test")
-  (setenv "ANTHROPIC_MODEL" "opus")
-  (setenv "ANTHROPIC_DEFAULT_MODEL" "opus")
-  (setenv "ANTHROPIC_DEFAULT_OPUS_MODEL" "gemini-3-pro-high")
-  (setenv "ANTHROPIC_DEFAULT_HAIKU_MODEL" "gemini-3-flash")
-  ;; 输出提示
-  (message "Switched to antigravity gemini"))
+  (x/switch-to-antigravity "gemini-3-pro-high" "gemini"))
 
 
 (provide 'x-claude-code)
