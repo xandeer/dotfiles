@@ -9,7 +9,7 @@
 ;;; Code:
 
 (defconst x/rime-translate-keys
-  '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "M-a" "M-e" "M-b" "M-f" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`" "C-i" "C-j" "C-l")
+  '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-k" "C-c" "C-v" "M-v" "M-a" "M-e" "M-b" "M-f" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`" "C-i" "C-j" "C-l")
   "Keys that should be passed through Rime to Emacs.")
 
 (with-eval-after-load 'rime
