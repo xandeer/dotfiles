@@ -246,8 +246,12 @@
   (lambda ()
     (run-with-idle-timer delay nil #'meow-insert)))
 
+(defun x/meow-disable ()
+  "Disable meow-mode for terminal buffers."
+  (meow-mode -1))
+
 (add-hook 'eshell-mode-hook (x/meow-insert-with-timer 0.1))
-(add-hook 'vterm-mode-hook (x/meow-insert-with-timer 0.1))
+(add-hook 'vterm-mode-hook #'x/meow-disable)
 (add-hook 'comint-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'org-mode-hook (x/meow-insert-with-timer 0.1))
 (add-hook 'prog-mode-hook (x/meow-insert-with-timer 0.1))
