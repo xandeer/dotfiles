@@ -8,7 +8,21 @@
 
 ;;; Code:
 
+(defconst x/rime-translate-keys
+  '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "M-a" "M-e" "M-b" "M-f" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`" "C-i" "C-j" "C-l")
+  "Keys that should be passed through Rime to Emacs.")
+
 (with-eval-after-load 'rime
+  (defun x/rime-vterm-translate-p ()
+    "Check if current key should be translated in vterm."
+    (and (derived-mode-p 'vterm-mode)
+         (not (and rime--preedit-overlay (overlay-buffer rime--preedit-overlay)))
+         (let* ((keys (this-command-keys))
+                (desc (key-description keys))
+                (translate-keys (mapcar (lambda (k) (key-description (kbd k)))
+                                        x/rime-translate-keys)))
+           (member desc translate-keys))))
+
   (setq rime-user-data-dir "~/.cache/rime")
   (setq rime-librime-root "~/syncthing/personal/configs/librime")
   (setq rime-emacs-module-header-root "/opt/homebrew/opt/emacs-plus@30/include/")
@@ -17,7 +31,7 @@
   (setq rime-cursor "˰")
   (setq rime-posframe-style 'vertical)
   ;; (setq rime-inline-ascii-trigger 'shift-l)
-  (setq rime-translate-keybindings '("C-f" "C-b" "C-n" "C-p" "C-d" "C-h" "C-a" "C-e" "C-g" "C-v" "M-v" "M-a" "M-e" "M-b" "M-f" "<left>" "<right>" "<up>" "<down>" "<prior>" "<next>" "<delete>" "C-`" "C-i" "C-j" "C-l"))
+  (setq rime-translate-keybindings x/rime-translate-keys)
 
   ;; face
   ;; (set-face-attribute 'rime-default-face nil :foreground "#363737" :background "#e5dfb0")
@@ -37,6 +51,7 @@
           rime-predicate-ace-window-p
           rime-predicate-prog-in-code-p
           rime-predicate-space-after-cc-p
+          x/rime-vterm-translate-p
           x/rime--telega-msg-p))
 
   (define-key rime-mode-map (kbd "M-I") 'rime-force-enable)

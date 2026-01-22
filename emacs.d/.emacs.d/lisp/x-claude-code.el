@@ -34,6 +34,7 @@
   (interactive)
   (x/switch-to-antigravity "gemini-3-pro-high" "gemini"))
 
+(x/switch-to-gg)
 
 (provide 'x-claude-code)
 ;;; x-claude-code.el ends here

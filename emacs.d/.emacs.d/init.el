@@ -88,6 +88,7 @@
 (require 'x-calendar)
 (require 'azure-tts)
 (require 'x-chinese)
+(require 'x-claude-code)
 (require 'x-completion)
 (require 'x-console)
 (require 'x-consult)
