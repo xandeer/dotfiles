@@ -9,6 +9,7 @@
         '("/Applications/kitty.app/Contents/MacOS"
           "/Users/kevin/.nix-profile/bin"
           "/Users/kevin/.local/share/fnm/aliases/default/bin"
+          "/Users/kevin/.local/bin"
           "/Users/kevin/.yarn/bin"
           "/Users/kevin/bin"
           "/bin"
