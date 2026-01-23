@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd ~/temp/gcli2api/
+bash start.sh
