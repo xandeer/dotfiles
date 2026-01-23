@@ -19,10 +19,10 @@ alias grep='rg'
 alias ag='alias | rg'
 alias tn='terminal-notifier -message'
 
-alias l='exa -lFh'
-alias la='exa -lFha'
-alias ldot='exa -ld .*'
-alias ls='exa'
+# alias l='exa -lFh'
+# alias la='exa -lFha'
+# alias ldot='exa -ld .*'
+# alias ls='exa'
 
 alias find='fd'
 
