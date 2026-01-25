@@ -12,7 +12,7 @@ schema:
     朙月拼音＋小鶴雙拼
   dependencies:
     - melt_eng  # 英文输入，作为次翻译器挂载到拼音方案
-    - xklbdz    # 星空两笔单字，作为反查挂载到拼音方案
+    # - xklbdz    # 星空两笔单字，作为反查挂载到拼音方案
 
 switches:
   - name: ascii_mode
@@ -89,12 +89,6 @@ custom_phrase:
   enable_sentence: false   # 禁止造句
   initial_quality: 99      # custom_phrase 的权重应该比 pinyin 和 melt_eng 大
 
-
-# 引入八股文
-grammar:
-  language: zh-hans-t-essay-bgw
-
-
 # 主翻译器，拼音
 translator:
   dictionary: rime_ice          # 挂载词库 rime_ice.dict.yaml
@@ -161,10 +155,10 @@ recognizer:
 
 
 # 反查：星空两笔单字
-xklbdz:
-  dictionary: xklbdz       # xklbdz.dict.yaml
-  prefix: 'L'              # 以 L 开头来反查(doesn't work)
-  enable_completion: true  # 补全提示
+# xklbdz:
+  # dictionary: xklbdz       # xklbdz.dict.yaml
+  # prefix: 'L'              # 以 L 开头来反查(doesn't work)
+  # enable_completion: true  # 补全提示
   # tips: 〔星空〕         # 反查时显示的文字，建议注释掉，否则很多 L 开头的英文单词也会显示这个
 
 

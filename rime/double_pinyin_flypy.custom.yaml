@@ -2,6 +2,8 @@
 patch:
   key_binder/import_preset: default
   punctuator/import_preset: symbols
+  # https://github.com/amzxyz/RIME-LMDG
+  # https://emacs-china.org/t/rime/28508/23
   grammar:
     language: amz-v2n3m1-zh-hans
     collocation_max_length: 5
