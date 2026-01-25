@@ -25,4 +25,5 @@ install:
 		cp -a $(CURDIR)/en_dicts $$dir; \
 		cp -RL $(CURDIR)/*.yaml $$dir; \
 		cp -a $(CURDIR)/$(OS)/*.yaml $$dir; \
+		ln -sf $(CURDIR)/amz-v2n3m1-zh-hans.gram $$dir; \
 	done
