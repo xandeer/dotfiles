@@ -4,6 +4,7 @@
       "Edit",
       "Bash(xcodebuild:*)",
       "Bash(xcode-select:*)",
+      "Bash(/bin/ls:*)",
       "Bash(swift:*)",
       "Bash(rm:*)",
       "Bash(mkdir:*)",
@@ -19,7 +20,10 @@
       "Bash(xcrun simctl install:*)",
       "Bash(xcrun simctl launch:*)",
       "Bash(xcrun simctl spawn:*)",
+      "Bash(xcrun simctl shutdown:*)",
       "Bash(xcrun xcresulttool:*)",
+      "Bash(DEVELOPER_DIR=\"/Applications/Xcode.app/Contents/Developer\" xcodebuild test:*)",
+      "Bash(DEVELOPER_DIR=\"/Applications/Xcode.app/Contents/Developer\" xcodebuild:*)",
       "WebSearch",
       "Bash(xcbeautify:*)",
       "Bash(cat:*)",
@@ -46,9 +50,7 @@
       "Bash(git restore:*)",
       "Bash(git tag:*)",
       "Bash(git rev-parse:*)",
-      "Bash(BUILT_PRODUCTS_DIR=\"/Users/kevin/Library/Developer/Xcode/DerivedData/beta-cacfigedtclxqfhcxgpkkvourxaw/Build/Products/Debug-iphonesimulator\" PRODUCT_NAME=\"beta\" ./configure_alternate_icons.sh)",
-      "Bash(open \"remio://share?text=This%20is%20a%20test%20message\")",
-      "Read(//Users/kevin/Library/Developer/CoreSimulator/Devices/3507EB34-A148-46B4-BA2D-D7B0D41E53EA/data/Containers/Bundle/Application/4A4DD894-2622-4B4A-A3A3-D9047DAC471E/beta.app/**)",
+
       "Bash(/tmp/$lang_keys.txt echo \"=== $lang missing ===\" comm -23 /tmp/zh_keys.txt /tmp/$lang_keys.txt echo \"\" done)",
       "WebFetch(domain:www.volcengine.com)",
       "Skill(superpowers:*)",
@@ -57,10 +59,7 @@
       "WebFetch(domain:www.google.com)",
       "WebFetch(domain:www.baidu.com)",
       "WebFetch(domain:www.bing.com)",
-      "WebFetch(domain:cn.bing.com)",
-      "Bash(/bin/ls:*)",
-      "Bash(DEVELOPER_DIR=\"/Applications/Xcode.app/Contents/Developer\" xcodebuild test:*)",
-      "Bash(DEVELOPER_DIR=\"/Applications/Xcode.app/Contents/Developer\" xcodebuild:*)"
+      "WebFetch(domain:cn.bing.com)"
     ],
     "deny": [],
     "defaultMode": "default"
