@@ -50,7 +50,6 @@
       "Bash(git restore:*)",
       "Bash(git tag:*)",
       "Bash(git rev-parse:*)",
-
       "Bash(/tmp/$lang_keys.txt echo \"=== $lang missing ===\" comm -23 /tmp/zh_keys.txt /tmp/$lang_keys.txt echo \"\" done)",
       "WebFetch(domain:www.volcengine.com)",
       "Skill(superpowers:*)",
@@ -64,7 +63,6 @@
     "deny": [],
     "defaultMode": "default"
   },
-  "model": "opus",
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
