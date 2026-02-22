@@ -207,13 +207,3 @@ fi
 # Then, source plugins and add commands to $PATH
 zplug load
 echo "Zsh plugins loaded."
-
-nix_init=$HOME/.nix-profile/etc/profile.d/nix.sh
-if [ -e $nix_init ]; then . $nix_init; fi # added by Nix installer
-export NIX_PATH="darwin-config=$HOME/.nixpkgs/darwin-configuration.nix:/nix/var/nix/profiles/per-user/root/channels:$HOME/.nix-defexpr/channels"
-
-# export PATH=/opt/homebrew/bin:$HOME/.nix-profile/bin:$PATH
-eval "$(/opt/homebrew/bin/brew shellenv)"
-if [ -f $(brew --prefix)/etc/brew-wrap ];then
-  source $(brew --prefix)/etc/brew-wrap
-fi

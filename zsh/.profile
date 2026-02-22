@@ -12,3 +12,5 @@ if [ -e /Users/kevin/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kevin/.n
 export NIX_PATH="darwin-config=$HOME/.nixpkgs/darwin-configuration.nix:/nix/var/nix/profiles/per-user/root/channels:$HOME/.nix-defexpr/channels"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+eval "$(fnm env)"
