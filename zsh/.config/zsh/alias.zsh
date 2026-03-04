@@ -10,6 +10,8 @@ unalias mv
 unalias rm
 unalias duf
 
+alias ss='skillshare'
+
 alias q='exit'
 
 alias hf='hledger -f ~/projects/personal/notes/hledger-financial.org'
