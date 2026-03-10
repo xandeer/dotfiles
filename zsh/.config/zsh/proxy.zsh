@@ -1,13 +1,11 @@
-#!/usr/bin/env sh
+zsh_config_dir="${ZDOTDIR:-$HOME}/.config/zsh"
+host_name="$(hostname -s 2>/dev/null)"
+host_proxy="$zsh_config_dir/host/$host_name.zsh"
 
-function set_proxy() {
-  local is_termux=$(command -v termux-setup-storage)
-  if test -z "$is_termux"; then
-    export px=http://127.0.0.1:8010
-    export https_proxy=$px
-    export http_proxy=$px
-    export all_proxy=$px
-  fi
-}
+if [[ -r "$host_proxy" ]]; then
+  source "$host_proxy"
+fi
 
-# set_proxy
+unset host_name
+unset host_proxy
+unset zsh_config_dir

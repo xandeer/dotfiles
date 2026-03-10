@@ -1,13 +1,6 @@
 [[ -n ${ZSH_INTERACTIVE_ALIASES_LOADED:-} ]] && return
 typeset -g ZSH_INTERACTIVE_ALIASES_LOADED=1
 
-if [[ $OSTYPE == linux* ]] && zsh_has_command nixos-rebuild; then
-  alias ors='sudo nixos-rebuild switch'
-elif [[ $OSTYPE == darwin* ]] && zsh_has_command darwin-rebuild; then
-  alias ors='darwin-rebuild switch'
-  alias p11='export https_proxy=http://localhost:8010'
-fi
-
 (( $+aliases[cp] )) && unalias cp
 (( $+aliases[mv] )) && unalias mv
 (( $+aliases[rm] )) && unalias rm
