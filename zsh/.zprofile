@@ -8,7 +8,5 @@ if [[ -z ${ZSH_CORE_SOURCE_LOADED:-} && -r "$ZSH_CONFIG_DIR/core/source.zsh" ]];
   source "$ZSH_CONFIG_DIR/core/source.zsh"
 fi
 
-source_dir "$ZSH_CONFIG_DIR/host"
-source_if_exists "$ZSH_CONFIG_DIR/local/overrides.zsh"
-source_if_exists "$ZSH_CONFIG_DIR/plugins/zplug.zsh"
-source_dir "$ZSH_CONFIG_DIR/interactive"
+source_if_exists "$HOME/.profile"
+source_dir "$ZSH_CONFIG_DIR/login"
