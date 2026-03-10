@@ -224,8 +224,8 @@ config_state="$(
   exit 1
 }
 
-[[ "$config_state" == *'shell=/bin/zsh -l'* ]] || {
-  print -u2 "expected kitty to launch zsh as a login shell"
+[[ "$config_state" == *'shell=/etc/profiles/per-user/kevin/bin/nu -l'* ]] || {
+  print -u2 "expected kitty to launch nushell as a login shell"
   exit 1
 }
 
