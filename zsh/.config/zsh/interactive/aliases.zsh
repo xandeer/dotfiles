@@ -30,7 +30,7 @@ alias m='make'
 alias n='npm'
 alias y='yarn'
 
-if zsh_has_command scd; then
+if zsh_has_command scd || (( $+functions[scd] )); then
   alias s='scd'
 fi
 
