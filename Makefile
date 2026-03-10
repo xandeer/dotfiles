@@ -2,7 +2,7 @@
 all: help
 
 # CONFIGS := doom fonts git mr tmux zsh ideavim bin
-CONFIGS := config zsh emacs.d mr bin lein stardict gpg wakatime authinfo ssh npm fly
+CONFIGS := profile config zsh emacs.d mr bin lein stardict gpg wakatime authinfo ssh npm fly
 
 .PHONY: install
 install: ## Install the dotfiles by stow.
