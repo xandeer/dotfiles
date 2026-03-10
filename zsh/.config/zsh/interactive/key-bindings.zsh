@@ -50,7 +50,7 @@ if zsh_has_command fzf; then
   bindkey '^R' fzf-history-widget
 fi
 
-if zplug check "zsh-users/zsh-history-substring-search"; then
+if (( $+functions[history-substring-search-up] && $+functions[history-substring-search-down] )); then
   zmodload zsh/terminfo
 
   [[ -n ${terminfo[kcuu1]:-} ]] && bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -67,11 +67,11 @@ if zplug check "zsh-users/zsh-history-substring-search"; then
   bindkey -M vicmd 'j' history-substring-search-down
 fi
 
-if zplug check "zsh-users/zsh-autosuggestions"; then
+if (( $+widgets[autosuggest-accept] && $+widgets[autosuggest-execute] )); then
   bindkey '^ ' autosuggest-accept
   bindkey '\es' autosuggest-execute
 fi
 
-if zplug check "hchbaw/zce.zsh"; then
+if (( $+widgets[zce] )); then
   bindkey '\eg' zce
 fi

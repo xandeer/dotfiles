@@ -14,16 +14,10 @@ zplug "hchbaw/zce.zsh", from:github, use:zce.zsh
 
 # Supports oh-my-zsh plugins and the like
 zplug "lib/completion",                   from:oh-my-zsh
-zplug "lib/directories",                  from:oh-my-zsh
-zplug "lib/functions",                    from:oh-my-zsh
-zplug "lib/git",                          from:oh-my-zsh
-zplug "lib/history",                      from:oh-my-zsh
 # zplug "lib/theme-and-appearance",         from:oh-my-zsh
-zplug "plugins/common-aliases",           from:oh-my-zsh
 zplug "plugins/zsh_reload",               from:oh-my-zsh
 
 if [[ $OSTYPE = (darwin)* ]]; then
-    zplug "lib/clipboard",                from:oh-my-zsh
     zplug "plugins/osx",                  from:oh-my-zsh
     # zplug "plugins/brew",                 from:oh-my-zsh, if:"(( $+commands[brew] ))"
 fi
@@ -31,16 +25,12 @@ fi
 zplug "plugins/adb",                      from:oh-my-zsh, if:"(( $+commands[adb] ))"
 zplug "plugins/cargo",                    from:oh-my-zsh, if:"(( $+commands[cargo] ))"
 zplug "plugins/colored-man-pages",        from:oh-my-zsh
-zplug "plugins/colorize",                 from:oh-my-zsh
 zplug "plugins/command-not-found",        from:oh-my-zsh, if:"(( $+commands[cnf-lookup] ))"
 # zplug "plugins/emacs",                    from:oh-my-zsh, if:"(( $+commands[emacsclient] ))"
 zplug "plugins/git",                      from:oh-my-zsh, if:"(( $+commands[git] ))"
-zplug "plugins/git-extras",               from:oh-my-zsh, if:"(( $+commands[git] ))"
 # zplug "plugins/git-flow-avh",             from:oh-my-zsh, if:"(( $+commands[git] ))"
-zplug "plugins/gitignore",                from:oh-my-zsh, if:"(( $+commands[git] ))"
 zplug "plugins/golang",                   from:oh-my-zsh, if:"(( $+commands[go] ))"
 # zplug "plugins/gradle",                   from:oh-my-zsh, if:"(( $+commands[gradle] ))"
-zplug "plugins/nvm",                      from:oh-my-zsh, if:"(( $+commands[nvm] ))"
 zplug "plugins/pass",                     from:oh-my-zsh, if:"(( $+commands[pass] ))"
 zplug "plugins/rust",                     from:oh-my-zsh, if:"(( $+commands[rust] ))"
 zplug "plugins/rvm",                      from:oh-my-zsh, if:"(( $+commands[rvm] ))"
@@ -48,7 +38,6 @@ zplug "plugins/sudo",                     from:oh-my-zsh, if:"(( $+commands[sudo
 zplug "plugins/scd",                      from:oh-my-zsh
 export FPATH=$FPATH:$ZPLUG_REPOS/robbyrussell/oh-my-zsh/plugins/scd
 zplug "plugins/systemd",                  from:oh-my-zsh, if:"(( $+commands[systemctl] ))"
-zplug "plugins/yarn",                     from:oh-my-zsh
 
 # Warn you when you run a command that you've set an alias for without
 # using the alias.
