@@ -58,6 +58,7 @@
       "enchant"
       "ffmpeg"
       "im-select"
+      "tmux"
 
       "oven-sh/bun/bun"
 
