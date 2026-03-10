@@ -1,0 +1,56 @@
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+notify = ["/Users/kevin/bin/agent-notify-kitty", "codex"]
+# model_provider = "aicodemirror"
+# preferred_auth_method = "apikey"
+personality = "pragmatic"
+
+[model_providers.any]
+name = "anyrouter"
+base_url = "https://anyrouter.top/v1"
+wire_api = "responses"
+
+[model_providers.aicodemirror]
+name = "aicodemirror"
+base_url = "https://api.aicodemirror.com/api/codex/backend-api/codex"
+wire_api = "responses"
+
+[model_providers.aigocode]
+name = "aigocode"
+base_url = "https://api.aigocode.com"
+wire_api = "responses"
+requires_openai_auth = true
+
+[projects."/Users/kevin/projects/personal/remio"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/stock"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/stock.codex"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/ai-memory"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/dotfiles"]
+trust_level = "trusted"
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/baoyu-cover-image/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/xiaohongshu-cover-generator/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/social-content/SKILL.md"
+enabled = false
+
+[notice]
+hide_rate_limit_model_nudge = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"

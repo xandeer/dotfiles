@@ -79,6 +79,18 @@
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
     "swift-lsp@claude-plugins-official": true
   },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kevin/bin/agent-notify-kitty claude"
+          }
+        ]
+      }
+    ]
+  },
   "language": "简体中文",
   "alwaysThinkingEnabled": true
 }
