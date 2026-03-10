@@ -137,6 +137,29 @@ config_state="$(
   exit 1
 }
 
+rg -Fx 'map cmd+t new_tab_with_cwd' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty cmd+t to open a new tab in the current working directory"
+  exit 1
+}
+
+rg -Fx 'map ctrl+shift+t new_tab_with_cwd' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty ctrl+shift+t to open a new tab in the current working directory"
+  exit 1
+}
+
+if rg -n '^map .+ new_tab($| )' "$kitty_conf" >/dev/null; then
+  print -u2 "expected kitty config to avoid bare new_tab mappings that lose the active cwd"
+  exit 1
+fi
+
+invalid_tab_launches="$(
+  rg -n 'launch .*--type=tab|launch --type=tab' "$kitty_conf" | rg -v -- '--cwd=current' || true
+)"
+if [[ -n "$invalid_tab_launches" ]]; then
+  print -u2 "expected kitty tab launches to include --cwd=current"
+  exit 1
+fi
+
 rg -F 'map cmd+, launch --type=background /bin/zsh -lc' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty config edit shortcut to use a background zsh launcher"
   exit 1
