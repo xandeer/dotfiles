@@ -30,6 +30,8 @@
     # tldr
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
+    nushell
+    oh-my-posh
     # fzf # A command-line fuzzy finder
 
     # aria2 # A lightweight multi-protocol & multi-source command-line download utility
@@ -76,5 +78,6 @@
     # clojure interpreter
     babashka
     leiningen
+    zoxide
   ];
 }
