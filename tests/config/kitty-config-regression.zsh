@@ -10,6 +10,26 @@ kitty_conf="$repo_root/config/.config/kitty/kitty.conf"
   exit 1
 }
 
+if rg -F 'shell_integration no-rc' "$kitty_conf" >/dev/null; then
+  print -u2 "expected kitty shell integration to use the default mode"
+  exit 1
+fi
+
+rg -Fx 'hide_window_decorations titlebar-only' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to hide only the macOS title bar"
+  exit 1
+}
+
+rg -Fx 'window_margin_width 6' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to use a safe window margin for titlebar-only mode"
+  exit 1
+}
+
+rg -Fx 'placement_strategy center' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to center extra cell space"
+  exit 1
+}
+
 config_state="$(
   kitty +runpy 'from kitty.config import load_config; import sys; opts = load_config(sys.argv[1]); print(f"allow_remote_control={opts.allow_remote_control}"); print(f"shell={opts.shell}")' "$kitty_conf"
 )"
