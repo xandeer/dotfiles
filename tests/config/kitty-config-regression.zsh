@@ -36,6 +36,11 @@ rg -Fx 'tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.ta
   exit 1
 }
 
+rg -Fx 'tab_bar_edge top' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to place the tab bar on the top edge"
+  exit 1
+}
+
 rg -Fx 'hide_window_decorations titlebar-only' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty to hide only the macOS title bar"
   exit 1
