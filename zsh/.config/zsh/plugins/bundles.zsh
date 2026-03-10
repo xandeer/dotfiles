@@ -69,5 +69,3 @@ zplug "Aloxaf/fzf-tab", from:github, if:"(( $+commands[fzf] ))"
 
 # A collection of scripts that might be useful to sysadmins.
 # zplug "skx/sysadmin-util"
-
-zplug "~/.config/zsh", from:local, defer:3
