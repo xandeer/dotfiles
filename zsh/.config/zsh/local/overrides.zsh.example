@@ -1,0 +1,2 @@
+# Copy this file to overrides.zsh for machine-local zsh overrides.
+# Keep secrets and one-off experiments out of the tracked host files.
