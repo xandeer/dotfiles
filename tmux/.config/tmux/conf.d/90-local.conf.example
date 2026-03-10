@@ -1,1 +1,6 @@
 # Copy this file to 90-local.conf for machine-only overrides.
+# Keep the real 90-local.conf untracked.
+#
+# Example overrides:
+# set -g status-right '#H %Y-%m-%d %H:%M'
+# set -g @resurrect-dir "$HOME/.tmux/resurrect"
