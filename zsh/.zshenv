@@ -7,3 +7,7 @@ fi
 if [[ -r "$ZSH_CONFIG_DIR/core/source.zsh" ]]; then
   source "$ZSH_CONFIG_DIR/core/source.zsh"
 fi
+
+if [[ -r "$ZSH_CONFIG_DIR/path.zsh" ]]; then
+  source "$ZSH_CONFIG_DIR/path.zsh"
+fi
