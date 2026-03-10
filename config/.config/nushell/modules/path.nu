@@ -11,4 +11,4 @@ $env.PATH = ([
   "/usr/local/bin"
 
   ($env.PATH | split row (char esep))
-] | flatten)
+] | flatten | uniq)
