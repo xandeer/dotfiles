@@ -10,6 +10,8 @@ claude_payload='{"hook_event_name":"Stop","last_assistant_message":"Claude finis
 
 codex_title="$(printf '%s' 'Codex result' | base64 | tr -d '\n')"
 claude_title="$(printf '%s' 'Claude Code result' | base64 | tr -d '\n')"
+codex_marker="$(printf '%s' 'codex' | base64 | tr -d '\n')"
+claude_marker="$(printf '%s' 'claude' | base64 | tr -d '\n')"
 
 codex_output="$(KITTY_WINDOW_ID=1 "$script" codex "$codex_payload")"
 claude_output="$(printf '%s' "$claude_payload" | KITTY_WINDOW_ID=1 "$script" claude)"
@@ -29,8 +31,13 @@ claude_output="$(printf '%s' "$claude_payload" | KITTY_WINDOW_ID=1 "$script" cla
   exit 1
 }
 
-[[ "$codex_output" != *']99;i='* ]] || {
-  print -u2 "expected Codex output to avoid a fixed notification id"
+[[ "$codex_output" == *'i=agent-notify-1-codex'* ]] || {
+  print -u2 "expected Codex output to include a stable per-window notification id"
+  exit 1
+}
+
+[[ "$codex_output" == *'SetUserVar=agent_notify='*"$codex_marker"* ]] || {
+  print -u2 "expected Codex output to set a kitty user var for unread notification state"
   exit 1
 }
 
@@ -49,7 +56,12 @@ claude_output="$(printf '%s' "$claude_payload" | KITTY_WINDOW_ID=1 "$script" cla
   exit 1
 }
 
-[[ "$claude_output" != *']99;i='* ]] || {
-  print -u2 "expected Claude output to avoid a fixed notification id"
+[[ "$claude_output" == *'i=agent-notify-1-claude'* ]] || {
+  print -u2 "expected Claude output to include a stable per-window notification id"
+  exit 1
+}
+
+[[ "$claude_output" == *'SetUserVar=agent_notify='*"$claude_marker"* ]] || {
+  print -u2 "expected Claude output to set a kitty user var for unread notification state"
   exit 1
 }

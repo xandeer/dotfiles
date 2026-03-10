@@ -61,8 +61,23 @@ rg -F 'def on_title_change' "$title_watcher_py" >/dev/null || {
   exit 1
 }
 
+rg -F 'def on_set_user_var' "$title_watcher_py" >/dev/null || {
+  print -u2 "expected kitty title watcher to react to unread-state user vars"
+  exit 1
+}
+
+rg -F 'def on_focus_change' "$title_watcher_py" >/dev/null || {
+  print -u2 "expected kitty title watcher to react to focus changes"
+  exit 1
+}
+
 rg -F 'window.set_window_title' "$title_watcher_py" >/dev/null || {
   print -u2 "expected kitty title watcher to update the visible window title"
+  exit 1
+}
+
+rg -F 'window.set_user_var' "$title_watcher_py" >/dev/null || {
+  print -u2 "expected kitty title watcher to clear unread notification state on focus"
   exit 1
 }
 
@@ -83,7 +98,49 @@ print("worktree={}".format(module.repo_name_for_path(sys.argv[3]) or ""))
 print("plain={}".format(module.repo_name_for_path(sys.argv[4]) or ""))
 print("repo_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5])))
 print("dedup_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[6])))
-print("plain_title={}".format(module.compose_window_title(sys.argv[4], sys.argv[7])))' \
+print("plain_title={}".format(module.compose_window_title(sys.argv[4], sys.argv[7])))
+print("codex_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "codex")))
+print("claude_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "claude")))
+
+class FakeNotificationManager:
+    def __init__(self):
+        self.calls = []
+
+    def handle_notification_cmd(self, channel_id, osc_code, raw):
+        self.calls.append((channel_id, osc_code, raw))
+
+
+class FakeWindow:
+    def __init__(self, window_id, cwd, title):
+        self.id = window_id
+        self.cwd_of_child = cwd
+        self.title = title
+        self.user_vars = {}
+
+    def get_cwd_of_root_child(self):
+        return self.cwd_of_child
+
+    def set_window_title(self, title):
+        self.title = title
+
+    def set_user_var(self, key, value):
+        self.user_vars[key] = value
+
+
+class FakeBoss:
+    pass
+
+
+boss = FakeBoss()
+boss.notification_manager = FakeNotificationManager()
+window = FakeWindow(7, sys.argv[2], "shell")
+module.on_title_change(boss, window, {"title": "shell", "from_child": True})
+module.on_set_user_var(boss, window, {"key": "agent_notify", "value": "codex"})
+print("focus_title_before={}".format(window.title))
+module.on_focus_change(boss, window, {"focused": True})
+print("focus_title_after={}".format(window.title))
+print("focus_user_var={}".format(window.user_vars.get("agent_notify")))
+print("focus_close={}".format(boss.notification_manager.calls[0][2] if boss.notification_manager.calls else ""))' \
     "$title_watcher_py" \
     "$temp_root/repo/src" \
     "$temp_root/worktree/pkg" \
@@ -120,6 +177,36 @@ print -r -- "$watcher_state" | rg -Fx 'dedup_title=repo' >/dev/null || {
 
 print -r -- "$watcher_state" | rg -Fx 'plain_title=nested | shell' >/dev/null || {
   print -u2 "expected kitty title watcher to fall back to directory names outside git repos"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'codex_title=repo | [codex] nvim' >/dev/null || {
+  print -u2 "expected kitty title watcher to add a Codex unread marker to titles"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'claude_title=repo | [claude] nvim' >/dev/null || {
+  print -u2 "expected kitty title watcher to add a Claude unread marker to titles"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'focus_title_before=repo | [codex] shell' >/dev/null || {
+  print -u2 "expected kitty title watcher to show unread state before focus returns"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'focus_title_after=repo | shell' >/dev/null || {
+  print -u2 "expected kitty title watcher to clear unread state when focus returns"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'focus_user_var=None' >/dev/null || {
+  print -u2 "expected kitty title watcher to clear the unread user var on focus"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'focus_close=i=agent-notify-7-codex:p=close;' >/dev/null || {
+  print -u2 "expected kitty title watcher to close the matching system notification on focus"
   exit 1
 }
 
