@@ -76,13 +76,18 @@ rg -F 'def on_focus_change' "$title_watcher_py" >/dev/null || {
   exit 1
 }
 
+rg -F 'def on_tab_bar_dirty' "$title_watcher_py" >/dev/null || {
+  print -u2 "expected kitty title watcher to react to active tab changes"
+  exit 1
+}
+
 rg -F 'window.set_window_title' "$title_watcher_py" >/dev/null || {
   print -u2 "expected kitty title watcher to update the visible window title"
   exit 1
 }
 
 rg -F 'window.set_user_var' "$title_watcher_py" >/dev/null || {
-  print -u2 "expected kitty title watcher to clear unread notification state on focus"
+  print -u2 "expected kitty title watcher to clear unread notification state when it is consumed"
   exit 1
 }
 
@@ -137,16 +142,52 @@ class FakeBoss:
     pass
 
 
+class FakeTab:
+    def __init__(self, windows):
+        self._windows = list(windows)
+
+    def list_windows(self):
+        return list(self._windows)
+
+
+class FakeTabManager:
+    def __init__(self, active_tab):
+        self.active_tab = active_tab
+
+
 boss = FakeBoss()
 boss.notification_manager = FakeNotificationManager()
 window = FakeWindow(7, sys.argv[2], "shell")
+other_window = FakeWindow(8, sys.argv[2], "logs")
+tab_manager = FakeTabManager(FakeTab([other_window]))
+module.on_tab_bar_dirty(boss, other_window, {"tab_manager": tab_manager})
 module.on_title_change(boss, window, {"title": "shell", "from_child": True})
 module.on_set_user_var(boss, window, {"key": "agent_notify", "value": "codex"})
 print("focus_title_before={}".format(window.title))
-module.on_focus_change(boss, window, {"focused": True})
-print("focus_title_after={}".format(window.title))
-print("focus_user_var={}".format(window.user_vars.get("agent_notify")))
-print("focus_close={}".format(boss.notification_manager.calls[0][2] if boss.notification_manager.calls else ""))' \
+module.on_focus_change(boss, other_window, {"focused": True})
+print("other_focus_title_after={}".format(window.title))
+print("other_focus_source_after={}".format(module.notification_source_for_window(window)))
+tab_manager.active_tab = FakeTab([other_window])
+module.on_tab_bar_dirty(boss, window, {"tab_manager": tab_manager})
+print("inactive_tab_title_after={}".format(window.title))
+print("inactive_tab_source_after={}".format(module.notification_source_for_window(window)))
+tab_manager.active_tab = FakeTab([window])
+module.on_tab_bar_dirty(boss, window, {"tab_manager": tab_manager})
+print("active_tab_title_after={}".format(window.title))
+print("active_tab_source_after={}".format(module.notification_source_for_window(window)))
+print("active_tab_user_var={}".format(window.user_vars.get("agent_notify")))
+print("active_tab_close={}".format(boss.notification_manager.calls[0][2] if boss.notification_manager.calls else ""))
+
+sticky_window = FakeWindow(9, sys.argv[2], "build")
+module.on_title_change(boss, sticky_window, {"title": "build", "from_child": True})
+sticky_tab_manager = FakeTabManager(FakeTab([sticky_window]))
+module.on_tab_bar_dirty(boss, sticky_window, {"tab_manager": sticky_tab_manager})
+module.on_set_user_var(boss, sticky_window, {"key": "agent_notify", "value": "claude"})
+print("same_tab_before_dirty={}".format(sticky_window.title))
+sticky_tab_manager.active_tab = FakeTab([sticky_window])
+module.on_tab_bar_dirty(boss, sticky_window, {"tab_manager": sticky_tab_manager})
+print("same_tab_after_dirty={}".format(sticky_window.title))
+print("same_tab_source_after={}".format(module.notification_source_for_window(sticky_window)))' \
     "$title_watcher_py" \
     "$temp_root/repo/src" \
     "$temp_root/worktree/pkg" \
@@ -207,18 +248,58 @@ print -r -- "$watcher_state" | rg -Fx 'focus_title_before=repo | [codex] shell' 
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'focus_title_after=repo | shell' >/dev/null || {
-  print -u2 "expected kitty title watcher to clear unread state when focus returns"
+print -r -- "$watcher_state" | rg -Fx 'other_focus_title_after=repo | [codex] shell' >/dev/null || {
+  print -u2 "expected kitty title watcher to preserve unread state when another tab's window receives focus"
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'focus_user_var=None' >/dev/null || {
-  print -u2 "expected kitty title watcher to clear the unread user var on focus"
+print -r -- "$watcher_state" | rg -Fx 'other_focus_source_after=codex' >/dev/null || {
+  print -u2 "expected kitty title watcher to keep unread source when another tab's window receives focus"
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'focus_close=i=agent-notify-7-codex:p=close;' >/dev/null || {
-  print -u2 "expected kitty title watcher to close the matching system notification on focus"
+print -r -- "$watcher_state" | rg -Fx 'inactive_tab_title_after=repo | [codex] shell' >/dev/null || {
+  print -u2 "expected kitty title watcher to preserve unread state while another tab is active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'inactive_tab_source_after=codex' >/dev/null || {
+  print -u2 "expected kitty title watcher to keep unread source while another tab is active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_title_after=repo | shell' >/dev/null || {
+  print -u2 "expected kitty title watcher to clear unread state when the unread tab becomes active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_source_after=' >/dev/null || {
+  print -u2 "expected kitty title watcher to clear unread source when the unread tab becomes active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_user_var=None' >/dev/null || {
+  print -u2 "expected kitty title watcher to clear the unread user var when the unread tab becomes active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_close=i=agent-notify-7-codex:p=close;' >/dev/null || {
+  print -u2 "expected kitty title watcher to close the matching system notification when the unread tab becomes active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'same_tab_before_dirty=repo | [claude] build' >/dev/null || {
+  print -u2 "expected kitty title watcher to show unread state before a same-tab dirty event"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'same_tab_after_dirty=repo | [claude] build' >/dev/null || {
+  print -u2 "expected kitty title watcher to preserve unread state when the active tab has not changed"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'same_tab_source_after=claude' >/dev/null || {
+  print -u2 "expected kitty title watcher to keep unread source when the active tab has not changed"
   exit 1
 }
 

@@ -4,6 +4,19 @@ set -euo pipefail
 
 agent="${1:-}"
 payload_arg="${2:-}"
+debug_log_file="/tmp/agent-notify-kitty.log"
+
+debug_log() {
+  {
+    printf '%s agent=%s kitty_window_id=%s tty=%s\n' \
+      "$(date '+%Y-%m-%d %H:%M:%S')" \
+      "$agent" \
+      "${KITTY_WINDOW_ID:-}" \
+      "${TTY:-${TERM:-}}"
+  } >>"$debug_log_file" 2>/dev/null || true
+}
+
+debug_log
 
 if [[ -z "${KITTY_WINDOW_ID:-}" ]]; then
   exit 0

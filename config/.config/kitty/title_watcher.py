@@ -8,6 +8,21 @@ AGENT_NOTIFY_VAR = "agent_notify"
 AGENT_SOURCES = {"codex", "claude"}
 LAST_CHILD_TITLE_BY_WINDOW_ID: dict[int, str] = {}
 NOTIFICATION_SOURCE_BY_WINDOW_ID: dict[int, str] = {}
+LAST_ACTIVE_TAB_ID_BY_TAB_MANAGER_ID: dict[int, int] = {}
+DEBUG_LOG_PATH = Path("/tmp/kitty-title-watcher.log")
+
+
+def debug_log(event: str, **fields: object) -> None:
+    parts = [event]
+    for key, value in fields.items():
+        parts.append(f"{key}={value!r}")
+
+    try:
+        DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with DEBUG_LOG_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(" ".join(parts) + "\n")
+    except Exception:
+        return
 
 
 def repo_name_for_path(path: str | None) -> str | None:
@@ -180,6 +195,59 @@ def close_notification_for_window(boss: Boss, window: Window, source: str) -> No
         return
 
 
+def clear_unread_state_for_window(boss: Boss, window: Window) -> None:
+    source = notification_source_for_window(window)
+    if not source:
+        debug_log("clear_unread_skip", window_id=window_id(window))
+        return
+
+    debug_log("clear_unread", window_id=window_id(window), source=source, title=window.title)
+    close_notification_for_window(boss, window, source)
+    window.set_user_var(AGENT_NOTIFY_VAR, None)
+    store_notification_source(window, None)
+    refresh_window_title(window)
+
+
+def windows_in_active_tab(tab_manager: object) -> list[Window]:
+    active_tab = getattr(tab_manager, "active_tab", None)
+    if active_tab is None:
+        return []
+
+    try:
+        return list(active_tab.list_windows())
+    except Exception:
+        return []
+
+
+def record_active_tab_change(tab_manager: object) -> bool:
+    active_tab = getattr(tab_manager, "active_tab", None)
+    if active_tab is None:
+        debug_log("record_active_tab_change_skip", reason="no_active_tab")
+        return False
+
+    tab_manager_id = id(tab_manager)
+    active_tab_id = id(active_tab)
+    previous_active_tab_id = LAST_ACTIVE_TAB_ID_BY_TAB_MANAGER_ID.get(tab_manager_id)
+    LAST_ACTIVE_TAB_ID_BY_TAB_MANAGER_ID[tab_manager_id] = active_tab_id
+
+    if previous_active_tab_id is None:
+        debug_log(
+            "record_active_tab_change_initial",
+            tab_manager_id=tab_manager_id,
+            active_tab_id=active_tab_id,
+        )
+        return False
+
+    debug_log(
+        "record_active_tab_change",
+        tab_manager_id=tab_manager_id,
+        previous_active_tab_id=previous_active_tab_id,
+        active_tab_id=active_tab_id,
+        changed=previous_active_tab_id != active_tab_id,
+    )
+    return previous_active_tab_id != active_tab_id
+
+
 def update_window_title(window: Window, raw_title: str, from_child: bool) -> None:
     if not from_child:
         return
@@ -203,19 +271,45 @@ def on_set_user_var(boss: Boss, window: Window, data: dict[str, Any]) -> None:
     if data.get("key") != AGENT_NOTIFY_VAR:
         return
 
+    debug_log(
+        "on_set_user_var",
+        window_id=window_id(window),
+        key=data.get("key"),
+        value=data.get("value"),
+        title=window.title,
+    )
     store_notification_source(window, data.get("value"))
     refresh_window_title(window)
 
 
 def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    debug_log(
+        "on_focus_change",
+        window_id=window_id(window),
+        focused=bool(data.get("focused")),
+        title=window.title,
+        source=notification_source_for_window(window),
+    )
     if not bool(data.get("focused")):
         return
 
-    source = notification_source_for_window(window)
-    if not source:
+    clear_unread_state_for_window(boss, window)
+
+
+def on_tab_bar_dirty(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    debug_log(
+        "on_tab_bar_dirty",
+        window_id=window_id(window),
+        unread_windows=list(NOTIFICATION_SOURCE_BY_WINDOW_ID.keys()),
+    )
+    del window
+
+    if not NOTIFICATION_SOURCE_BY_WINDOW_ID:
         return
 
-    close_notification_for_window(boss, window, source)
-    window.set_user_var(AGENT_NOTIFY_VAR, None)
-    store_notification_source(window, None)
-    refresh_window_title(window)
+    tab_manager = data.get("tab_manager")
+    if not record_active_tab_change(tab_manager):
+        return
+
+    for active_window in windows_in_active_tab(tab_manager):
+        clear_unread_state_for_window(boss, active_window)
