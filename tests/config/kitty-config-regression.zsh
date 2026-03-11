@@ -106,6 +106,7 @@ print("dedup_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[
 print("plain_title={}".format(module.compose_window_title(sys.argv[4], sys.argv[7])))
 print("codex_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "codex")))
 print("claude_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "claude")))
+print("prompt_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[8])))
 
 class FakeNotificationManager:
     def __init__(self):
@@ -152,7 +153,8 @@ print("focus_close={}".format(boss.notification_manager.calls[0][2] if boss.noti
     "$temp_root/plain/nested" \
     "nvim" \
     "repo" \
-    "shell"
+    "shell" \
+    "~/projects/personal/remio> codex"
 )"
 
 print -r -- "$watcher_state" | rg -Fx 'repo=repo' >/dev/null || {
@@ -192,6 +194,11 @@ print -r -- "$watcher_state" | rg -Fx 'codex_title=repo | [codex] nvim' >/dev/nu
 
 print -r -- "$watcher_state" | rg -Fx 'claude_title=repo | [claude] nvim' >/dev/null || {
   print -u2 "expected kitty title watcher to add a Claude unread marker to titles"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'prompt_title=repo | codex' >/dev/null || {
+  print -u2 "expected kitty title watcher to strip repeated prompt paths ahead of command titles"
   exit 1
 }
 

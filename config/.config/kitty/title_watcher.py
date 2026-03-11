@@ -64,6 +64,26 @@ def strip_notification_marker(title: str) -> str:
     return stripped_title
 
 
+def strip_prompt_path_prefix(title: str) -> str:
+    prompt_prefix, separator, command = title.partition(">")
+    normalized_prefix = prompt_prefix.strip()
+    path_like_prefixes = ("~/", "./", "../", "/")
+
+    if not separator:
+        return title
+    if not normalized_prefix:
+        return title
+    if not (
+        "/" in normalized_prefix
+        or normalized_prefix in {"~", ".", "..", "/"}
+        or normalized_prefix.startswith(path_like_prefixes)
+    ):
+        return title
+
+    stripped_command = command.strip()
+    return stripped_command or title
+
+
 def child_title_from_display_title(path: str | None, title: str) -> str:
     current_title = title.strip()
     label = repo_name_for_path(path) or directory_name_for_path(path)
@@ -73,7 +93,7 @@ def child_title_from_display_title(path: str | None, title: str) -> str:
         if current_title.startswith(prefix):
             current_title = current_title[len(prefix) :]
 
-    return strip_notification_marker(current_title)
+    return strip_prompt_path_prefix(strip_notification_marker(current_title))
 
 
 def compose_window_title(
