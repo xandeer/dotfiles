@@ -4,19 +4,6 @@ set -euo pipefail
 
 agent="${1:-}"
 payload_arg="${2:-}"
-debug_log_file="/tmp/agent-notify-kitty.log"
-
-debug_log() {
-  {
-    printf '%s agent=%s kitty_window_id=%s tty=%s\n' \
-      "$(date '+%Y-%m-%d %H:%M:%S')" \
-      "$agent" \
-      "${KITTY_WINDOW_ID:-}" \
-      "${TTY:-${TERM:-}}"
-  } >>"$debug_log_file" 2>/dev/null || true
-}
-
-debug_log
 
 if [[ -z "${KITTY_WINDOW_ID:-}" ]]; then
   exit 0
@@ -79,10 +66,18 @@ notification_id() {
 emit_user_var() {
   local key="$1"
   local value="$2"
+  local sequence
 
-  printf '\033]1337;SetUserVar=%s=%s\a' \
+  sequence="$(printf '\033]1337;SetUserVar=%s=%s\a' \
     "$key" \
-    "$(encode_text "$value")"
+    "$(encode_text "$value")")"
+
+  if [[ -w /dev/tty ]]; then
+    printf '%s' "$sequence" >/dev/tty
+    return 0
+  fi
+
+  printf '%s' "$sequence"
 }
 
 payload="$(read_payload || true)"

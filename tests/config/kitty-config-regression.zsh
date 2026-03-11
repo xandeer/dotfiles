@@ -5,6 +5,7 @@ set -eu
 repo_root="${0:A:h:h:h}"
 kitty_conf="$repo_root/config/.config/kitty/kitty.conf"
 title_watcher_py="$repo_root/config/.config/kitty/title_watcher.py"
+tab_bar_py="$repo_root/config/.config/kitty/tab_bar.py"
 
 [[ -f "$kitty_conf" ]] || {
   print -u2 "expected repository-managed kitty config at $kitty_conf"
@@ -31,8 +32,8 @@ if rg -F 'shell_integration no-rc' "$kitty_conf" >/dev/null; then
   exit 1
 fi
 
-rg -Fx 'tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{index}: {tab.last_focused_progress_percent}{title}"' "$kitty_conf" >/dev/null || {
-  print -u2 "expected kitty to keep the numbered title template"
+rg -Fx 'tab_title_template "{custom}"' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to use a custom tab title renderer"
   exit 1
 }
 
@@ -61,8 +62,18 @@ rg -Fx 'placement_strategy center' "$kitty_conf" >/dev/null || {
   exit 1
 }
 
+[[ -f "$tab_bar_py" ]] || {
+  print -u2 "expected kitty custom tab title renderer at $tab_bar_py"
+  exit 1
+}
+
 rg -F 'def on_title_change' "$title_watcher_py" >/dev/null || {
   print -u2 "expected kitty title watcher to react to child title changes"
+  exit 1
+}
+
+rg -F 'def draw_title' "$tab_bar_py" >/dev/null || {
+  print -u2 "expected kitty custom tab title renderer to define draw_title"
   exit 1
 }
 
@@ -99,10 +110,15 @@ mkdir -p "$temp_root/repo/.git" "$temp_root/repo/src" "$temp_root/plain/nested" 
 
 watcher_state="$(
   kitty +runpy 'import importlib.util, sys
+import kitty.tab_bar as kitty_tab_bar
 spec = importlib.util.spec_from_file_location("repo_title_watcher", sys.argv[1])
 module = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(module)
+tab_bar_spec = importlib.util.spec_from_file_location("repo_tab_bar", sys.argv[9])
+tab_bar = importlib.util.module_from_spec(tab_bar_spec)
+assert tab_bar_spec.loader is not None
+tab_bar_spec.loader.exec_module(tab_bar)
 print("repo={}".format(module.repo_name_for_path(sys.argv[2]) or ""))
 print("worktree={}".format(module.repo_name_for_path(sys.argv[3]) or ""))
 print("plain={}".format(module.repo_name_for_path(sys.argv[4]) or ""))
@@ -112,6 +128,37 @@ print("plain_title={}".format(module.compose_window_title(sys.argv[4], sys.argv[
 print("codex_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "codex")))
 print("claude_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[5], "claude")))
 print("prompt_title={}".format(module.compose_window_title(sys.argv[2], sys.argv[8])))
+
+class FakeProgress:
+    last_focused_progress_percent = "42%"
+
+
+runtime_fmt = kitty_tab_bar.Formatter
+
+print("custom_plain={}".format(tab_bar.draw_title({
+    "title": "repo | shell",
+    "index": 2,
+    "fmt": runtime_fmt,
+    "bell_symbol": "",
+    "activity_symbol": "",
+    "tab": FakeProgress(),
+})))
+print("custom_unread_ok={}".format(tab_bar.draw_title({
+    "title": "◆ repo | shell",
+    "index": 2,
+    "fmt": runtime_fmt,
+    "bell_symbol": "",
+    "activity_symbol": "",
+    "tab": FakeProgress(),
+}) == f"{runtime_fmt.fg._FFB000}◆ {runtime_fmt.fg.default}2: 42%repo | shell"))
+print("custom_legacy_unread_ok={}".format(tab_bar.draw_title({
+    "title": "[codex] repo | shell",
+    "index": 2,
+    "fmt": runtime_fmt,
+    "bell_symbol": "",
+    "activity_symbol": "",
+    "tab": FakeProgress(),
+}) == f"{runtime_fmt.fg._FFB000}◆ {runtime_fmt.fg.default}2: 42%repo | shell"))
 
 class FakeNotificationManager:
     def __init__(self):
@@ -139,7 +186,9 @@ class FakeWindow:
 
 
 class FakeBoss:
-    pass
+    def __init__(self):
+        self.notification_manager = None
+        self.all_windows = []
 
 
 class FakeTab:
@@ -147,7 +196,7 @@ class FakeTab:
         self._windows = list(windows)
 
     def list_windows(self):
-        return list(self._windows)
+        return [{"id": window.id} for window in self._windows]
 
 
 class FakeTabManager:
@@ -159,6 +208,7 @@ boss = FakeBoss()
 boss.notification_manager = FakeNotificationManager()
 window = FakeWindow(7, sys.argv[2], "shell")
 other_window = FakeWindow(8, sys.argv[2], "logs")
+boss.all_windows = [window, other_window]
 tab_manager = FakeTabManager(FakeTab([other_window]))
 module.on_tab_bar_dirty(boss, other_window, {"tab_manager": tab_manager})
 module.on_title_change(boss, window, {"title": "shell", "from_child": True})
@@ -179,6 +229,7 @@ print("active_tab_user_var={}".format(window.user_vars.get("agent_notify")))
 print("active_tab_close={}".format(boss.notification_manager.calls[0][2] if boss.notification_manager.calls else ""))
 
 sticky_window = FakeWindow(9, sys.argv[2], "build")
+boss.all_windows = [window, other_window, sticky_window]
 module.on_title_change(boss, sticky_window, {"title": "build", "from_child": True})
 sticky_tab_manager = FakeTabManager(FakeTab([sticky_window]))
 module.on_tab_bar_dirty(boss, sticky_window, {"tab_manager": sticky_tab_manager})
@@ -195,7 +246,8 @@ print("same_tab_source_after={}".format(module.notification_source_for_window(st
     "nvim" \
     "repo" \
     "shell" \
-    "~/projects/personal/remio> codex"
+    "~/projects/personal/remio> codex" \
+    "$tab_bar_py"
 )"
 
 print -r -- "$watcher_state" | rg -Fx 'repo=repo' >/dev/null || {
@@ -228,13 +280,13 @@ print -r -- "$watcher_state" | rg -Fx 'plain_title=nested | shell' >/dev/null ||
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'codex_title=repo | [codex] nvim' >/dev/null || {
-  print -u2 "expected kitty title watcher to add a Codex unread marker to titles"
+print -r -- "$watcher_state" | rg -Fx 'codex_title=◆ repo | nvim' >/dev/null || {
+  print -u2 "expected kitty title watcher to add a compact unread marker to titles"
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'claude_title=repo | [claude] nvim' >/dev/null || {
-  print -u2 "expected kitty title watcher to add a Claude unread marker to titles"
+print -r -- "$watcher_state" | rg -Fx 'claude_title=◆ repo | nvim' >/dev/null || {
+  print -u2 "expected kitty title watcher to reuse the same unread marker for Claude titles"
   exit 1
 }
 
@@ -243,12 +295,27 @@ print -r -- "$watcher_state" | rg -Fx 'prompt_title=repo | codex' >/dev/null || 
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'focus_title_before=repo | [codex] shell' >/dev/null || {
+print -r -- "$watcher_state" | rg -Fx 'custom_plain=2: 42%repo | shell' >/dev/null || {
+  print -u2 "expected kitty custom tab title renderer to keep the index, progress, and title ordering under the real kitty formatter"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'custom_unread_ok=True' >/dev/null || {
+  print -u2 "expected kitty custom tab title renderer to place a colored unread marker before the tab index under the real kitty formatter"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'custom_legacy_unread_ok=True' >/dev/null || {
+  print -u2 "expected kitty custom tab title renderer to preserve unread styling for legacy watcher prefixes"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'focus_title_before=◆ repo | shell' >/dev/null || {
   print -u2 "expected kitty title watcher to show unread state before focus returns"
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'other_focus_title_after=repo | [codex] shell' >/dev/null || {
+print -r -- "$watcher_state" | rg -Fx 'other_focus_title_after=◆ repo | shell' >/dev/null || {
   print -u2 "expected kitty title watcher to preserve unread state when another tab's window receives focus"
   exit 1
 }
@@ -258,7 +325,7 @@ print -r -- "$watcher_state" | rg -Fx 'other_focus_source_after=codex' >/dev/nul
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'inactive_tab_title_after=repo | [codex] shell' >/dev/null || {
+print -r -- "$watcher_state" | rg -Fx 'inactive_tab_title_after=◆ repo | shell' >/dev/null || {
   print -u2 "expected kitty title watcher to preserve unread state while another tab is active"
   exit 1
 }
@@ -288,12 +355,12 @@ print -r -- "$watcher_state" | rg -Fx 'active_tab_close=i=agent-notify-7-codex:p
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'same_tab_before_dirty=repo | [claude] build' >/dev/null || {
+print -r -- "$watcher_state" | rg -Fx 'same_tab_before_dirty=◆ repo | build' >/dev/null || {
   print -u2 "expected kitty title watcher to show unread state before a same-tab dirty event"
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'same_tab_after_dirty=repo | [claude] build' >/dev/null || {
+print -r -- "$watcher_state" | rg -Fx 'same_tab_after_dirty=◆ repo | build' >/dev/null || {
   print -u2 "expected kitty title watcher to preserve unread state when the active tab has not changed"
   exit 1
 }
