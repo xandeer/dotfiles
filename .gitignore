@@ -7,3 +7,4 @@ config/.config/github-copilot/versions.json
 .aider*
 .worktrees/
 tmux/.config/tmux/conf.d/90-local.conf
+config/.config/kitty/state/

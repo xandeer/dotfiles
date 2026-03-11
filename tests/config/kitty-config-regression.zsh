@@ -4,11 +4,23 @@ set -eu
 
 repo_root="${0:A:h:h:h}"
 kitty_conf="$repo_root/config/.config/kitty/kitty.conf"
+kitty_session_postprocess="$repo_root/config/.config/kitty/kitty-session-postprocess"
+repo_gitignore="$repo_root/.gitignore"
 title_watcher_py="$repo_root/config/.config/kitty/title_watcher.py"
 tab_bar_py="$repo_root/config/.config/kitty/tab_bar.py"
 
 [[ -f "$kitty_conf" ]] || {
   print -u2 "expected repository-managed kitty config at $kitty_conf"
+  exit 1
+}
+
+[[ -f "$repo_gitignore" ]] || {
+  print -u2 "expected repository .gitignore at $repo_gitignore"
+  exit 1
+}
+
+[[ -f "$kitty_session_postprocess" ]] || {
+  print -u2 "expected repository-managed kitty session postprocess script at $kitty_session_postprocess"
   exit 1
 }
 
@@ -54,6 +66,31 @@ rg -Fx 'window_margin_width 6' "$kitty_conf" >/dev/null || {
 
 rg -Fx 'placement_strategy center' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty to center extra cell space"
+  exit 1
+}
+
+rg -Fx 'exe_search_path /opt/homebrew/bin' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to prepend /opt/homebrew/bin when searching for launch executables"
+  exit 1
+}
+
+rg -Fx 'exe_search_path ~/.local/bin' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to prepend ~/.local/bin when searching for launch executables"
+  exit 1
+}
+
+rg -Fx 'startup_session state/startup.kitty-session' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to load the ignored runtime startup session path by default"
+  exit 1
+}
+
+rg -Fx 'action_alias save_startup_session save_as_session --save-only --use-foreground-process --match state:focused_os_window ~/.config/kitty/state/startup.kitty-session' "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to define a reusable startup session save alias for the focused OS window"
+  exit 1
+}
+
+rg -Fx 'config/.config/kitty/state/' "$repo_gitignore" >/dev/null || {
+  print -u2 "expected runtime kitty state files to be ignored by git"
   exit 1
 }
 
@@ -417,6 +454,25 @@ config_state="$(
   exit 1
 }
 
+mapping_parse_state="$(
+  kitty +runpy 'from kitty.options.utils import ActionAlias, MapType, resolve_aliases_and_parse_actions; alias_def = ActionAlias("save_startup_session", "save_as_session --save-only --use-foreground-process --match state:focused_os_window ~/.config/kitty/state/startup.kitty-session"); mapping = "combine : save_startup_session : launch --type=background /bin/zsh -lc '\''exec ~/.config/kitty/kitty-session-postprocess ~/.config/kitty/state/startup.kitty-session'\''"; print(list(resolve_aliases_and_parse_actions(mapping, {"save_startup_session": [alias_def]}, MapType.MAP)))'
+)"
+
+[[ "$mapping_parse_state" == *"KeyAction('save_as_session'"* ]] || {
+  print -u2 "expected kitty to parse the startup session save alias into a save_as_session action"
+  exit 1
+}
+
+[[ "$mapping_parse_state" == *"state:focused_os_window"* ]] || {
+  print -u2 "expected kitty to preserve the focused OS window match when parsing the startup session save alias"
+  exit 1
+}
+
+[[ "$mapping_parse_state" == *"KeyAction('launch'"* ]] || {
+  print -u2 "expected kitty to parse the startup session postprocess launch action"
+  exit 1
+}
+
 rg -Fx 'map cmd+t new_tab_with_cwd' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty cmd+t to open a new tab in the current working directory"
   exit 1
@@ -426,6 +482,26 @@ rg -Fx 'map ctrl+shift+t new_tab_with_cwd' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty ctrl+shift+t to open a new tab in the current working directory"
   exit 1
 }
+
+rg -Fx "map ctrl+q>s combine : save_startup_session : launch --type=background /bin/zsh -lc 'exec ~/.config/kitty/kitty-session-postprocess ~/.config/kitty/state/startup.kitty-session'" "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty ctrl+q then s to save the focused OS window layout, including the foreground process, and then rewrite codex launches for startup-session restore"
+  exit 1
+}
+
+if rg -F 'map ctrl+q>s combine : save_as_session ' "$kitty_conf" >/dev/null; then
+  print -u2 "expected kitty session save shortcut to call the save action through an alias so combine parsing does not split the match expression"
+  exit 1
+fi
+
+if rg -Fx "map f7>s combine : save_startup_session : launch --type=background /bin/zsh -lc 'exec ~/.config/kitty/kitty-session-postprocess ~/.config/kitty/state/startup.kitty-session'" "$kitty_conf" >/dev/null; then
+  print -u2 "expected kitty session save shortcut to use ctrl+q then s instead of f7 then s"
+  exit 1
+fi
+
+if rg -F 'codex-session-wrapper' "$kitty_conf" >/dev/null; then
+  print -u2 "expected kitty config to avoid stale codex session wrapper references after switching to explicit agent relaunch commands"
+  exit 1
+fi
 
 if rg -n '^map .+ new_tab($| )' "$kitty_conf" >/dev/null; then
   print -u2 "expected kitty config to avoid bare new_tab mappings that lose the active cwd"
