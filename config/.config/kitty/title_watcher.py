@@ -7,9 +7,19 @@ from kitty.window import Window
 AGENT_NOTIFY_VAR = "agent_notify"
 AGENT_SOURCES = {"codex", "claude"}
 UNREAD_MARKER = "◆"
+DEBUG_LOG_PATH = Path("/tmp/kitty-title-watcher.log")
 LAST_CHILD_TITLE_BY_WINDOW_ID: dict[int, str] = {}
 NOTIFICATION_SOURCE_BY_WINDOW_ID: dict[int, str] = {}
 LAST_ACTIVE_TAB_ID_BY_TAB_MANAGER_ID: dict[int, int] = {}
+
+
+def debug_log(message: str) -> None:
+    try:
+        DEBUG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with DEBUG_LOG_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(f"{message}\n")
+    except Exception:
+        return
 
 
 def repo_name_for_path(path: str | None) -> str | None:
@@ -170,15 +180,71 @@ def close_notification_for_window(boss: Boss, window: Window, source: str) -> No
 
     notification_manager = getattr(boss, "notification_manager", None)
     if notification_manager is None:
+        debug_log(
+            f"close skip window={window_id(window)} source={source} reason=no-notification-manager"
+        )
         return
+
+    client_id = notification_id_for_window(window_id(window), source)
+    tracked_notifications = getattr(
+        notification_manager, "in_progress_notification_commands_by_client_id", None
+    )
+    tracked_notification = None
+    if tracked_notifications is not None:
+        tracked_notification = tracked_notifications.get(client_id)
+    debug_log(
+        "close begin "
+        f"window={window_id(window)} source={source} client_id={client_id} "
+        f"tracked={tracked_notification is not None}"
+    )
+
+    if tracked_notification is not None:
+        desktop_integration = getattr(notification_manager, "desktop_integration", None)
+        close_notification = getattr(desktop_integration, "close_notification", None)
+        desktop_notification_id = getattr(
+            tracked_notification, "desktop_notification_id", None
+        )
+        if callable(close_notification) and desktop_notification_id is not None:
+            try:
+                close_succeeded = bool(close_notification(desktop_notification_id))
+            except Exception:
+                close_succeeded = False
+
+            supports_close_events = bool(
+                getattr(desktop_integration, "supports_close_events", False)
+            )
+            debug_log(
+                "close tracked "
+                f"window={window_id(window)} client_id={client_id} "
+                f"desktop_id={desktop_notification_id} "
+                f"supports_close_events={supports_close_events} "
+                f"close_succeeded={close_succeeded}"
+            )
+            if close_succeeded and not supports_close_events:
+                purge_notification = getattr(notification_manager, "purge_notification", None)
+                if callable(purge_notification):
+                    try:
+                        purge_notification(tracked_notification)
+                        debug_log(
+                            f"close purge window={window_id(window)} client_id={client_id}"
+                        )
+                    except Exception:
+                        pass
+            return
 
     try:
         notification_manager.handle_notification_cmd(
             window_id(window),
             99,
-            f"i={notification_id_for_window(window_id(window), source)}:p=close;",
+            f"i={client_id}:p=close;",
+        )
+        debug_log(
+            f"close fallback window={window_id(window)} source={source} client_id={client_id}"
         )
     except Exception:
+        debug_log(
+            f"close fallback-error window={window_id(window)} source={source} client_id={client_id}"
+        )
         return
 
 
@@ -276,7 +342,10 @@ def on_set_user_var(boss: Boss, window: Window, data: dict[str, Any]) -> None:
     if data.get("key") != AGENT_NOTIFY_VAR:
         return
 
-    store_notification_source(window, data.get("value"))
+    source = store_notification_source(window, data.get("value"))
+    debug_log(
+        f"set_user_var window={window_id(window)} value={data.get('value')} source={source}"
+    )
     refresh_window_title(window)
 
 
@@ -284,6 +353,7 @@ def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
     if not bool(data.get("focused")):
         return
 
+    debug_log(f"focus window={window_id(window)}")
     clear_unread_state_for_window(boss, window)
 
 
@@ -298,4 +368,5 @@ def on_tab_bar_dirty(boss: Boss, window: Window, data: dict[str, Any]) -> None:
         return
 
     for active_window in windows_in_active_tab(boss, tab_manager):
+        debug_log(f"tab-active window={window_id(active_window)}")
         clear_unread_state_for_window(boss, active_window)

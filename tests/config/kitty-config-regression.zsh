@@ -163,9 +163,29 @@ print("custom_legacy_unread_ok={}".format(tab_bar.draw_title({
 class FakeNotificationManager:
     def __init__(self):
         self.calls = []
+        self.purged = []
+        self.in_progress_notification_commands_by_client_id = {}
+        self.desktop_integration = type(
+            "FakeDesktopIntegration",
+            (),
+            {
+                "supports_close_events": False,
+                "__init__": lambda self: setattr(self, "close_calls", []),
+                "close_notification": lambda self, desktop_notification_id: self.close_calls.append(desktop_notification_id) or True,
+            },
+        )()
 
     def handle_notification_cmd(self, channel_id, osc_code, raw):
         self.calls.append((channel_id, osc_code, raw))
+
+    def purge_notification(self, cmd):
+        self.purged.append(cmd.identifier)
+
+
+class FakeTrackedNotification:
+    def __init__(self, identifier, desktop_notification_id):
+        self.identifier = identifier
+        self.desktop_notification_id = desktop_notification_id
 
 
 class FakeWindow:
@@ -213,6 +233,7 @@ tab_manager = FakeTabManager(FakeTab([other_window]))
 module.on_tab_bar_dirty(boss, other_window, {"tab_manager": tab_manager})
 module.on_title_change(boss, window, {"title": "shell", "from_child": True})
 module.on_set_user_var(boss, window, {"key": "agent_notify", "value": "codex"})
+boss.notification_manager.in_progress_notification_commands_by_client_id["agent-notify-7-codex"] = FakeTrackedNotification("agent-notify-7-codex", 55)
 print("focus_title_before={}".format(window.title))
 module.on_focus_change(boss, other_window, {"focused": True})
 print("other_focus_title_after={}".format(window.title))
@@ -226,7 +247,9 @@ module.on_tab_bar_dirty(boss, window, {"tab_manager": tab_manager})
 print("active_tab_title_after={}".format(window.title))
 print("active_tab_source_after={}".format(module.notification_source_for_window(window)))
 print("active_tab_user_var={}".format(window.user_vars.get("agent_notify")))
-print("active_tab_close={}".format(boss.notification_manager.calls[0][2] if boss.notification_manager.calls else ""))
+print("active_tab_close_desktop={}".format(",".join(map(str, boss.notification_manager.desktop_integration.close_calls))))
+print("active_tab_purged={}".format(",".join(boss.notification_manager.purged)))
+print("active_tab_handle_close_count={}".format(len(boss.notification_manager.calls)))
 
 sticky_window = FakeWindow(9, sys.argv[2], "build")
 boss.all_windows = [window, other_window, sticky_window]
@@ -350,8 +373,18 @@ print -r -- "$watcher_state" | rg -Fx 'active_tab_user_var=None' >/dev/null || {
   exit 1
 }
 
-print -r -- "$watcher_state" | rg -Fx 'active_tab_close=i=agent-notify-7-codex:p=close;' >/dev/null || {
-  print -u2 "expected kitty title watcher to close the matching system notification when the unread tab becomes active"
+print -r -- "$watcher_state" | rg -Fx 'active_tab_close_desktop=55' >/dev/null || {
+  print -u2 "expected kitty title watcher to close the tracked desktop notification when the unread tab becomes active"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_purged=agent-notify-7-codex' >/dev/null || {
+  print -u2 "expected kitty title watcher to purge the tracked notification after closing it on platforms without close events"
+  exit 1
+}
+
+print -r -- "$watcher_state" | rg -Fx 'active_tab_handle_close_count=0' >/dev/null || {
+  print -u2 "expected kitty title watcher to bypass raw OSC close replay when a tracked desktop notification is available"
   exit 1
 }
 
