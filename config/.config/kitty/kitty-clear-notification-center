@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+set -eu
+
+exit 0

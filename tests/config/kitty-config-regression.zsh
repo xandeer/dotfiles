@@ -5,6 +5,7 @@ set -eu
 repo_root="${0:A:h:h:h}"
 kitty_conf="$repo_root/config/.config/kitty/kitty.conf"
 kitty_session_postprocess="$repo_root/config/.config/kitty/kitty-session-postprocess"
+kitty_clear_notifications="$repo_root/config/.config/kitty/kitty-clear-notification-center"
 repo_gitignore="$repo_root/.gitignore"
 title_watcher_py="$repo_root/config/.config/kitty/title_watcher.py"
 tab_bar_py="$repo_root/config/.config/kitty/tab_bar.py"
@@ -21,6 +22,16 @@ tab_bar_py="$repo_root/config/.config/kitty/tab_bar.py"
 
 [[ -f "$kitty_session_postprocess" ]] || {
   print -u2 "expected repository-managed kitty session postprocess script at $kitty_session_postprocess"
+  exit 1
+}
+
+[[ -f "$kitty_clear_notifications" ]] || {
+  print -u2 "expected repository-managed kitty notification center cleanup script at $kitty_clear_notifications"
+  exit 1
+}
+
+[[ -x "$kitty_clear_notifications" ]] || {
+  print -u2 "expected kitty notification center cleanup script to be executable"
   exit 1
 }
 
@@ -86,6 +97,11 @@ rg -Fx 'startup_session state/startup.kitty-session' "$kitty_conf" >/dev/null ||
 
 rg -Fx 'action_alias save_startup_session save_as_session --save-only --use-foreground-process --match state:focused_os_window ~/.config/kitty/state/startup.kitty-session' "$kitty_conf" >/dev/null || {
   print -u2 "expected kitty to define a reusable startup session save alias for the focused OS window"
+  exit 1
+}
+
+rg -Fx "map ctrl+q>c launch --type=background /bin/zsh -lc 'exec ~/.config/kitty/kitty-clear-notification-center'" "$kitty_conf" >/dev/null || {
+  print -u2 "expected kitty to map ctrl+q>c to the notification center cleanup shortcut"
   exit 1
 }
 
