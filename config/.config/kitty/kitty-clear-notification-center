@@ -3,6 +3,66 @@
 set -eu
 
 osascript <<'APPLESCRIPT'
+on matchingLabel(candidateText, labelList)
+  repeat with labelText in labelList
+    if candidateText is (contents of labelText) then
+      return true
+    end if
+
+    if candidateText starts with (contents of labelText) then
+      return true
+    end if
+
+    if candidateText ends with (contents of labelText) then
+      return true
+    end if
+
+    if candidateText contains (contents of labelText) then
+      return true
+    end if
+  end repeat
+
+  return false
+end matchingLabel
+
+on clickFirstMatchingButton(containerRef, labelList)
+  tell application "System Events"
+    set candidateElements to entire contents of containerRef
+  end tell
+
+  repeat with uiElement in candidateElements
+    try
+      tell application "System Events"
+        if class of uiElement is not button then
+          error number -128
+        end if
+      end tell
+
+      repeat with candidateText in {name of uiElement, description of uiElement, value of uiElement}
+        try
+          set normalizedText to candidateText as text
+          if normalizedText is not "" and my matchingLabel(normalizedText, labelList) then
+            tell application "System Events" to click uiElement
+            return true
+          end if
+        end try
+      end repeat
+    end try
+  end repeat
+
+  return false
+end clickFirstMatchingButton
+
+on clickButtonsByLabel(containerRef, labelList)
+  repeat with labelText in labelList
+    if my clickFirstMatchingButton(containerRef, {contents of labelText}) then
+      return true
+    end if
+  end repeat
+
+  return false
+end clickButtonsByLabel
+
 on toggleNotificationCenter()
   tell application "System Events"
     key code 160 using control down
@@ -11,35 +71,77 @@ end toggleNotificationCenter
 
 on notificationCenterWindow()
   tell application "System Events"
-    tell process "NotificationCenter"
-      if exists window 1 then
-        return window 1
+    repeat with processName in {"NotificationCenter", "Notification Center"}
+      if exists process (contents of processName) then
+        tell process (contents of processName)
+          if exists window 1 then
+            return window 1
+          end if
+        end tell
       end if
-    end tell
+    end repeat
   end tell
 
   return missing value
 end notificationCenterWindow
 
+on waitForNotificationCenter()
+  repeat 10 times
+    set notificationWindow to my notificationCenterWindow()
+    if notificationWindow is not missing value then
+      return notificationWindow
+    end if
+
+    delay 0.1
+  end repeat
+
+  return missing value
+end waitForNotificationCenter
+
 on run
+  set clearLabels to {"Clear", "Clear All", "清除", "全部清除"}
+  set dismissLabels to {"Close", "Dismiss", "关闭", "忽略"}
+
   tell application "System Events"
     if UI elements enabled is false then
       error "System Events UI scripting is disabled."
     end if
   end tell
 
-  toggleNotificationCenter()
-  delay 0.2
+  set notificationWindow to my notificationCenterWindow()
+  if notificationWindow is missing value then
+    my toggleNotificationCenter()
+    set notificationWindow to my waitForNotificationCenter()
+  end if
+
+  if notificationWindow is missing value then
+    return
+  end if
 
   repeat with passIndex from 1 to 8
-    set notificationWindow to notificationCenterWindow()
+    set notificationWindow to my notificationCenterWindow()
     if notificationWindow is missing value then
       exit repeat
     end if
 
-    delay 0.05
+    set passMadeProgress to false
+
+    if my clickButtonsByLabel(notificationWindow, clearLabels) then
+      set passMadeProgress to true
+    else if my clickButtonsByLabel(notificationWindow, dismissLabels) then
+      set passMadeProgress to true
+    end if
+
+    if not passMadeProgress then
+      exit repeat
+    end if
+
+    delay 0.15
   end repeat
 
-  toggleNotificationCenter()
+  set notificationWindow to my notificationCenterWindow()
+  if notificationWindow is not missing value then
+    my toggleNotificationCenter()
+  end if
 end run
 APPLESCRIPT
