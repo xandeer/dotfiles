@@ -10,6 +10,8 @@ claude_payload='{"hook_event_name":"Stop","last_assistant_message":"Claude finis
 
 codex_title="$(printf '%s' 'Codex result' | base64 | tr -d '\n')"
 claude_title="$(printf '%s' 'Claude Code result' | base64 | tr -d '\n')"
+codex_body="$(printf '%s' 'Codex finished with a diff.' | base64 | tr -d '\n')"
+claude_body="$(printf '%s' 'Claude finished the response.' | base64 | tr -d '\n')"
 codex_marker="$(printf '%s' 'codex' | base64 | tr -d '\n')"
 claude_marker="$(printf '%s' 'claude' | base64 | tr -d '\n')"
 
@@ -41,6 +43,21 @@ claude_output="$(printf '%s' "$claude_payload" | KITTY_WINDOW_ID=1 "$script" cla
   exit 1
 }
 
+[[ "$codex_output" == *"p=title;$codex_title"* ]] || {
+  print -u2 "expected Codex output to emit the encoded title payload"
+  exit 1
+}
+
+[[ "$codex_output" == *"p=body;$codex_body"* ]] || {
+  print -u2 "expected Codex output to emit the encoded body payload"
+  exit 1
+}
+
+[[ "$codex_output" == *"p=title;$codex_title"*"p=body;$codex_body"*'SetUserVar=agent_notify='*"$codex_marker"* ]] || {
+  print -u2 "expected Codex output to set unread state only after both OSC 99 payloads"
+  exit 1
+}
+
 [[ "$claude_output" == *$'\e]99;'* ]] || {
   print -u2 "expected Claude output to emit OSC 99"
   exit 1
@@ -63,5 +80,20 @@ claude_output="$(printf '%s' "$claude_payload" | KITTY_WINDOW_ID=1 "$script" cla
 
 [[ "$claude_output" == *'SetUserVar=agent_notify='*"$claude_marker"* ]] || {
   print -u2 "expected Claude output to set a kitty user var for unread notification state"
+  exit 1
+}
+
+[[ "$claude_output" == *"p=title;$claude_title"* ]] || {
+  print -u2 "expected Claude output to emit the encoded title payload"
+  exit 1
+}
+
+[[ "$claude_output" == *"p=body;$claude_body"* ]] || {
+  print -u2 "expected Claude output to emit the encoded body payload"
+  exit 1
+}
+
+[[ "$claude_output" == *"p=title;$claude_title"*"p=body;$claude_body"*'SetUserVar=agent_notify='*"$claude_marker"* ]] || {
+  print -u2 "expected Claude output to set unread state only after both OSC 99 payloads"
   exit 1
 }

@@ -104,11 +104,10 @@ esac
 body="$(normalize_text "$body")"
 body="$(clip_text "${body:-Result is ready.}")"
 
-emit_user_var agent_notify "$agent"
-
 printf '\033]99;i=%s:e=1:d=0:o=unfocused:p=title;%s\033\\' \
   "$(notification_id)" \
   "$(encode_text "$title")"
 printf '\033]99;i=%s:e=1:d=1:o=unfocused:p=body;%s\033\\' \
   "$(notification_id)" \
   "$(encode_text "$body")"
+emit_user_var agent_notify "$agent"
