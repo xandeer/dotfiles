@@ -25,10 +25,19 @@ on matchingLabel(candidateText, labelList)
   return false
 end matchingLabel
 
-on clickFirstMatchingButton(containerRef, labelList)
-  tell application "System Events"
-    set candidateElements to entire contents of containerRef
-  end tell
+on clickFirstMatchingButton(labelList)
+  set notificationWindow to my notificationCenterWindow()
+  if notificationWindow is missing value then
+    return false
+  end if
+
+  try
+    tell application "System Events"
+      set candidateElements to entire contents of notificationWindow
+    end tell
+  on error
+    return false
+  end try
 
   repeat with uiElement in candidateElements
     try
@@ -53,9 +62,9 @@ on clickFirstMatchingButton(containerRef, labelList)
   return false
 end clickFirstMatchingButton
 
-on clickButtonsByLabel(containerRef, labelList)
+on clickButtonsByLabel(labelList)
   repeat with labelText in labelList
-    if my clickFirstMatchingButton(containerRef, {contents of labelText}) then
+    if my clickFirstMatchingButton({contents of labelText}) then
       return true
     end if
   end repeat
@@ -63,19 +72,112 @@ on clickButtonsByLabel(containerRef, labelList)
   return false
 end clickButtonsByLabel
 
-on toggleNotificationCenter()
-  tell application "System Events"
-    key code 160 using control down
-  end tell
-end toggleNotificationCenter
+on clickTopmostNotificationCloseButton()
+  set notificationWindow to my notificationCenterWindow()
+  if notificationWindow is missing value then
+    return false
+  end if
+
+  try
+    tell application "System Events"
+      set windowPosition to position of notificationWindow
+      set windowSize to size of notificationWindow
+      set candidateElements to entire contents of notificationWindow
+    end tell
+  on error
+    return false
+  end try
+
+  set windowTop to item 2 of windowPosition
+  set windowRight to (item 1 of windowPosition) + (item 1 of windowSize)
+  set widgetBoundaryY to windowTop + 600
+  set closeButtonRightEdge to windowRight - 120
+  set bestButton to missing value
+  set bestButtonY to 999999
+
+  repeat with uiElement in candidateElements
+    try
+      tell application "System Events"
+        if class of uiElement is not button then
+          error number -128
+        end if
+
+        set elementPosition to position of uiElement
+        set elementSize to size of uiElement
+      end tell
+
+      set elementX to item 1 of elementPosition
+      set elementY to item 2 of elementPosition
+      set elementWidth to item 1 of elementSize
+      set elementHeight to item 2 of elementSize
+
+      if elementWidth < 18 or elementHeight < 18 then
+        error number -128
+      end if
+
+      if elementWidth > 24 or elementHeight > 24 then
+        error number -128
+      end if
+
+      if elementX < closeButtonRightEdge or elementY > widgetBoundaryY then
+        error number -128
+      end if
+
+      if elementY < bestButtonY then
+        set bestButton to uiElement
+        set bestButtonY to elementY
+      end if
+    end try
+  end repeat
+
+  if bestButton is missing value then
+    return false
+  end if
+
+  tell application "System Events" to click bestButton
+  return true
+end clickTopmostNotificationCloseButton
 
 on notificationCenterWindow()
   tell application "System Events"
     repeat with processName in {"NotificationCenter", "Notification Center"}
       if exists process (contents of processName) then
+        try
+          tell process (contents of processName)
+            if exists window 1 then
+              return window 1
+            end if
+          end tell
+        on error
+          return missing value
+        end try
+      end if
+    end repeat
+  end tell
+
+  return missing value
+end notificationCenterWindow
+
+on notificationCenterToggleMenuBarItem()
+  set toggleLabels to {"Clock", "Date & Time", "Date and Time", "时间", "日期", "时钟"}
+
+  tell application "System Events"
+    repeat with processName in {"ControlCenter", "SystemUIServer"}
+      if exists process (contents of processName) then
         tell process (contents of processName)
-          if exists window 1 then
-            return window 1
+          if exists menu bar 1 then
+            repeat with menuBarItemRef in (menu bar items of menu bar 1)
+              try
+                repeat with candidateText in {name of menuBarItemRef, description of menuBarItemRef, value of menuBarItemRef}
+                  try
+                    set normalizedText to candidateText as text
+                    if normalizedText is not "" and my matchingLabel(normalizedText, toggleLabels) then
+                      return menuBarItemRef
+                    end if
+                  end try
+                end repeat
+              end try
+            end repeat
           end if
         end tell
       end if
@@ -83,7 +185,35 @@ on notificationCenterWindow()
   end tell
 
   return missing value
-end notificationCenterWindow
+end notificationCenterToggleMenuBarItem
+
+on openNotificationCenter()
+  if my notificationCenterWindow() is not missing value then
+    return true
+  end if
+
+  set toggleMenuBarItem to my notificationCenterToggleMenuBarItem()
+  if toggleMenuBarItem is missing value then
+    return false
+  end if
+
+  tell application "System Events" to click toggleMenuBarItem
+  return true
+end openNotificationCenter
+
+on closeNotificationCenter()
+  if my notificationCenterWindow() is missing value then
+    return true
+  end if
+
+  set toggleMenuBarItem to my notificationCenterToggleMenuBarItem()
+  if toggleMenuBarItem is missing value then
+    return false
+  end if
+
+  tell application "System Events" to click toggleMenuBarItem
+  return true
+end closeNotificationCenter
 
 on waitForNotificationCenter()
   repeat 10 times
@@ -101,6 +231,7 @@ end waitForNotificationCenter
 on run
   set clearLabels to {"Clear", "Clear All", "清除", "全部清除"}
   set dismissLabels to {"Close", "Dismiss", "关闭", "忽略"}
+  set closeSettleDelaySeconds to 0.8
 
   tell application "System Events"
     if UI elements enabled is false then
@@ -108,9 +239,15 @@ on run
     end if
   end tell
 
+  set openedNotificationCenter to false
+  set didClearNotification to false
   set notificationWindow to my notificationCenterWindow()
   if notificationWindow is missing value then
-    my toggleNotificationCenter()
+    if not my openNotificationCenter() then
+      return
+    end if
+
+    set openedNotificationCenter to true
     set notificationWindow to my waitForNotificationCenter()
   end if
 
@@ -126,9 +263,11 @@ on run
 
     set passMadeProgress to false
 
-    if my clickButtonsByLabel(notificationWindow, clearLabels) then
+    if my clickTopmostNotificationCloseButton() then
       set passMadeProgress to true
-    else if my clickButtonsByLabel(notificationWindow, dismissLabels) then
+    else if my clickButtonsByLabel(clearLabels) then
+      set passMadeProgress to true
+    else if my clickButtonsByLabel(dismissLabels) then
       set passMadeProgress to true
     end if
 
@@ -136,12 +275,19 @@ on run
       exit repeat
     end if
 
+    set didClearNotification to true
     delay 0.15
   end repeat
 
-  set notificationWindow to my notificationCenterWindow()
-  if notificationWindow is not missing value then
-    my toggleNotificationCenter()
+  if openedNotificationCenter then
+    if didClearNotification then
+      delay closeSettleDelaySeconds
+    end if
+
+    set notificationWindow to my notificationCenterWindow()
+    if notificationWindow is not missing value then
+      my closeNotificationCenter()
+    end if
   end if
 end run
 APPLESCRIPT
