@@ -63,6 +63,19 @@
     "deny": [],
     "defaultMode": "default"
   },
+  "model": "opus",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kevin/bin/agent-notify-kitty claude"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -78,18 +91,6 @@
     "superpowers@superpowers-marketplace": true,
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
     "swift-lsp@claude-plugins-official": true
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/kevin/bin/agent-notify-kitty claude"
-          }
-        ]
-      }
-    ]
   },
   "language": "简体中文",
   "alwaysThinkingEnabled": true
