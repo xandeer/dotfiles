@@ -9,6 +9,7 @@ kitty_clear_notifications="$repo_root/config/.config/kitty/kitty-clear-notificat
 repo_gitignore="$repo_root/.gitignore"
 title_watcher_py="$repo_root/config/.config/kitty/title_watcher.py"
 tab_bar_py="$repo_root/config/.config/kitty/tab_bar.py"
+notifications_py="$repo_root/config/.config/kitty/notifications.py"
 
 [[ -f "$kitty_conf" ]] || {
   print -u2 "expected repository-managed kitty config at $kitty_conf"
@@ -117,6 +118,11 @@ rg -Fx 'config/.config/kitty/state/' "$repo_gitignore" >/dev/null || {
 
 [[ -f "$tab_bar_py" ]] || {
   print -u2 "expected kitty custom tab title renderer at $tab_bar_py"
+  exit 1
+}
+
+[[ -f "$notifications_py" ]] || {
+  print -u2 "expected kitty notification filter script at $notifications_py"
   exit 1
 }
 
@@ -453,6 +459,137 @@ print -r -- "$watcher_state" | rg -Fx 'same_tab_after_dirty=◆ repo | build' >/
 
 print -r -- "$watcher_state" | rg -Fx 'same_tab_source_after=claude' >/dev/null || {
   print -u2 "expected kitty title watcher to keep unread source when the active tab has not changed"
+  exit 1
+}
+
+notification_filter_state="$(
+  kitty +runpy 'import importlib.util, sys
+spec = importlib.util.spec_from_file_location("repo_notifications", sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+spec.loader.exec_module(module)
+
+class FakeUIState:
+    def __init__(self, has_focus, is_visible):
+        self.has_focus = has_focus
+        self.is_visible = is_visible
+
+
+class FakeWindow:
+    def __init__(self, window_id, cwd, title):
+        self.id = window_id
+        self.cwd_of_child = cwd
+        self.title = title
+        self.destroyed = False
+        self.user_vars = {}
+
+    def get_cwd_of_root_child(self):
+        return self.cwd_of_child
+
+    def set_window_title(self, title):
+        self.title = title
+
+    def set_user_var(self, key, value):
+        self.user_vars[key] = value
+
+
+class FakeChannel:
+    windows = {}
+    states = {}
+
+    def window_for_id(self, channel_id):
+        return self.windows.get(channel_id)
+
+    def ui_state(self, channel_id):
+        return self.states[channel_id]
+
+
+class FakeNotification:
+    def __init__(self, title, channel_id):
+        self.title = title
+        self.channel_id = channel_id
+
+
+unfocused_window = FakeWindow(41, sys.argv[2], "repo | codex")
+focused_window = FakeWindow(42, sys.argv[2], "repo | codex")
+FakeChannel.windows = {
+    41: unfocused_window,
+    42: focused_window,
+}
+FakeChannel.states = {
+    41: FakeUIState(False, True),
+    42: FakeUIState(True, True),
+}
+module.Channel = FakeChannel
+
+print("approval_source={}".format(module.notification_source_for_title("Approval requested: /bin/zsh -lc tmpdir")))
+print("other_source={}".format(module.notification_source_for_title("Codex result")))
+print("mark_unfocused={}".format(module.mark_window_unread(41, "codex")))
+print("unfocused_user_var={}".format(unfocused_window.user_vars.get("agent_notify")))
+print("unfocused_title={}".format(unfocused_window.title))
+print("unfocused_source={}".format(module.title_watcher.notification_source_for_window(unfocused_window)))
+print("mark_focused={}".format(module.mark_window_unread(42, "codex")))
+print("focused_user_var={}".format(focused_window.user_vars.get("agent_notify")))
+print("mark_missing_channel={}".format(module.mark_window_unread(0, "codex")))
+module.main(FakeNotification("Approval requested: /bin/zsh -lc tmpdir", 41))
+print("main_user_var={}".format(unfocused_window.user_vars.get("agent_notify")))
+print("main_title={}".format(unfocused_window.title))' \
+    "$notifications_py" \
+    "$temp_root/repo/src"
+)"
+
+print -r -- "$notification_filter_state" | rg -Fx 'approval_source=codex' >/dev/null || {
+  print -u2 "expected kitty notification filter to recognize Codex approval-requested titles"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'other_source=' >/dev/null || {
+  print -u2 "expected kitty notification filter to ignore non-approval notifications"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'mark_unfocused=True' >/dev/null || {
+  print -u2 "expected kitty notification filter to mark unfocused approval windows as unread"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'unfocused_user_var=codex' >/dev/null || {
+  print -u2 "expected kitty notification filter to set the shared unread user var for approval requests"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'unfocused_title=◆ repo | codex' >/dev/null || {
+  print -u2 "expected kitty notification filter to reuse the compact unread marker in window titles"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'unfocused_source=codex' >/dev/null || {
+  print -u2 "expected kitty notification filter to track approval unread state in the title watcher"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'mark_focused=False' >/dev/null || {
+  print -u2 "expected kitty notification filter to avoid marking already-focused windows as unread"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'focused_user_var=None' >/dev/null || {
+  print -u2 "expected kitty notification filter to leave focused windows unchanged"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'mark_missing_channel=False' >/dev/null || {
+  print -u2 "expected kitty notification filter to avoid guessing a window when no channel id is available"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'main_user_var=codex' >/dev/null || {
+  print -u2 "expected kitty notification filter entrypoint to mark approval requests as unread"
+  exit 1
+}
+
+print -r -- "$notification_filter_state" | rg -Fx 'main_title=◆ repo | codex' >/dev/null || {
+  print -u2 "expected kitty notification filter entrypoint to update the visible title for approval requests"
   exit 1
 }
 
