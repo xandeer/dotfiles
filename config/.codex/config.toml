@@ -52,6 +52,10 @@ enabled = false
 path = "/Users/kevin/.agents/skills/social-content/SKILL.md"
 enabled = false
 
+[[skills.config]]
+path = "/Users/kevin/.codex/superpowers/skills/dispatching-parallel-agents/SKILL.md"
+enabled = false
+
 [notice]
 hide_rate_limit_model_nudge = true
 
