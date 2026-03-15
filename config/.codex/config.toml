@@ -56,6 +56,34 @@ enabled = false
 path = "/Users/kevin/.codex/superpowers/skills/dispatching-parallel-agents/SKILL.md"
 enabled = false
 
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-banner-design/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-brand/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-design/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-design-system/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-slides/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-ui-styling/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ui-ux-pro-max/SKILL.md"
+enabled = false
+
 [notice]
 hide_rate_limit_model_nudge = true
 
