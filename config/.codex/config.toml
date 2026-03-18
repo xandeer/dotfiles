@@ -1,5 +1,5 @@
-model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "high"
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
 disable_response_storage = true
 notify = ["/Users/kevin/bin/agent-notify-kitty", "codex"]
 # model_provider = "aicodemirror"
@@ -38,6 +38,9 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/Users/kevin/projects/personal/skills"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/ai-system"]
 trust_level = "trusted"
 
 [[skills.config]]
