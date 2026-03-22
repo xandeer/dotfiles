@@ -1,5 +1,5 @@
 model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "medium"
 disable_response_storage = true
 notify = ["/Users/kevin/bin/agent-notify-kitty", "codex"]
 # model_provider = "aicodemirror"
