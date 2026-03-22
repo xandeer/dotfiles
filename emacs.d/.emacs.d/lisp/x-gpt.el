@@ -35,7 +35,7 @@
                           :key x/gpt--ark-token
                           :models x/gpt--ark-models))
 
-(setq x/gpt-model 'doubao-seed-code-preview-251028)
+(setq x/gpt-model 'doubao-seed-2-0-code-preview-260215)
 (setq x/gpt-backend x/gpt--backend-ark)
 
 (defun x/gpt--match-backend ()
