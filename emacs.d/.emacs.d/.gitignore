@@ -1,0 +1,12 @@
+straight
+var
+tree-sitter
+
+local.el
+
+.cache
+
+autoloads
+
+eln-cache
+transient

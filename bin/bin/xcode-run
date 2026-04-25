@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+osascript -e 'tell application "Xcode"' -e 'set targetProject to active workspace document' -e 'stop targetProject' -e 'run targetProject' -e 'end tell'

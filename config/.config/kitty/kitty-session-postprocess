@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+
+import json
+import re
+import shlex
+import sys
+from pathlib import Path
+
+CODEX_LAUNCH = "launch codex resume --last\n"
+CLAUDE_LAUNCH = "launch claude -c\n"
+
+
+def extract_current_cd(line: str) -> str | None:
+    if not line.startswith("cd "):
+        return None
+    parts = shlex.split(line, comments=False, posix=True)
+    if len(parts) != 2:
+        return None
+    return parts[1]
+
+
+def extract_launch_payload(line: str) -> dict | None:
+    parts = shlex.split(line, comments=False, posix=True)
+    if len(parts) < 2 or parts[0] != "launch":
+        return None
+    if not parts[1].startswith("kitty-unserialize-data="):
+        return None
+    return json.loads(parts[1].removeprefix("kitty-unserialize-data="))
+
+
+def explicit_cwd(cmd: list[str], fallback_cwd: str | None) -> str | None:
+    for index, arg in enumerate(cmd[1:], start=1):
+        if arg in ("-C", "--cd", "--cwd") and index + 1 < len(cmd):
+            return cmd[index + 1]
+        if arg.startswith("--cd="):
+            return arg.split("=", 1)[1]
+        if arg.startswith("--cwd="):
+            return arg.split("=", 1)[1]
+    return fallback_cwd
+
+
+def normalized_shell_launch(line: str) -> tuple[str, str | None] | None:
+    parts = shlex.split(line, comments=False, posix=True)
+    if not parts or parts[0] != "launch":
+        return None
+
+    for index, token in enumerate(parts[1:], start=1):
+        executable = Path(token).name
+        trailing = parts[index + 1 :]
+        if executable == "codex" and trailing == ["resume", "--last"]:
+            return CODEX_LAUNCH, None
+        if executable == "claude" and trailing == ["-c"]:
+            return CLAUDE_LAUNCH, None
+
+    if len(parts) != 4 or parts[:3] != ["launch", "/bin/zsh", "-lc"]:
+        return None
+
+    command = parts[3]
+
+    codex_match = re.fullmatch(r"cd (.+) && exec codex resume --last", command)
+    if codex_match is not None:
+        return CODEX_LAUNCH, shlex.split(codex_match.group(1))[0]
+
+    claude_match = re.fullmatch(r"cd (.+) && exec claude -c", command)
+    if claude_match is not None:
+        return CLAUDE_LAUNCH, shlex.split(claude_match.group(1))[0]
+
+    return None
+
+
+def rewritten_launch(line: str) -> tuple[str, str | None]:
+    normalized = normalized_shell_launch(line)
+    if normalized is not None:
+        return normalized
+
+    payload = extract_launch_payload(line)
+    if payload is None:
+        return line, None
+
+    cmd = payload.get("cmd_at_shell_startup")
+    if not isinstance(cmd, list) or not cmd:
+        return line, None
+    if not all(isinstance(part, str) for part in cmd):
+        return line, None
+
+    executable = Path(cmd[0]).name
+    if executable in {"codex", "codex-session-wrapper"}:
+        return CODEX_LAUNCH, explicit_cwd(cmd, None)
+    elif executable == "claude":
+        return CLAUDE_LAUNCH, explicit_cwd(cmd, None)
+    return line, None
+
+
+def main() -> int:
+    if len(sys.argv) != 2:
+        print("usage: kitty-session-postprocess <session-file>", file=sys.stderr)
+        return 1
+
+    session_path = Path(sys.argv[1])
+    if not session_path.is_file():
+        print(
+            f"kitty-session-postprocess: missing session file: {session_path}",
+            file=sys.stderr,
+        )
+        return 1
+
+    lines = session_path.read_text(encoding="utf-8").splitlines(keepends=True)
+    current_cd: str | None = None
+    current_cd_index: int | None = None
+    rewritten: list[str] = []
+
+    for line in lines:
+        cd = extract_current_cd(line.rstrip("\n"))
+        if cd is not None:
+            current_cd = cd
+            current_cd_index = len(rewritten)
+            rewritten.append(line)
+            continue
+
+        rewritten_line, explicit_agent_cwd = rewritten_launch(line)
+        if explicit_agent_cwd is not None:
+            current_cd = explicit_agent_cwd
+            replacement_cd = f"cd {explicit_agent_cwd}\n"
+            if current_cd_index is None:
+                current_cd_index = len(rewritten)
+                rewritten.append(replacement_cd)
+            else:
+                rewritten[current_cd_index] = replacement_cd
+        rewritten.append(rewritten_line)
+
+    session_path.write_text("".join(rewritten), encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

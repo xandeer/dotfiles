@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  echo "usage: journal-capture \"text\"" >&2
+  echo "   or: printf 'text' | journal-capture" >&2
+}
+
+if [[ $# -gt 0 ]]; then
+  encoded="$(printf '%s' "$*" | base64 | tr -d '\n')"
+elif [[ ! -t 0 ]]; then
+  encoded="$(base64 | tr -d '\n')"
+else
+  usage
+  exit 2
+fi
+
+if [[ -z "$encoded" ]]; then
+  echo "journal-capture: empty content" >&2
+  exit 2
+fi
+
+exec "${EMACSCLIENT:-emacsclient}" \
+  -n \
+  -e "(x/journal-capture-string (base64-decode-string \"$encoded\"))"

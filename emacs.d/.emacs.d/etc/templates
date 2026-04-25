@@ -1,0 +1,124 @@
+;; -*- mode: emacs-lisp -*-
+
+;;; fundamental
+fundamental-mode ;; Available everywhere
+
+;;; prog
+prog-mode
+
+(fixme (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "FIXME ")
+(todo (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "TODO ")
+(bug (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
+(hack (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
+
+;;; lisp
+lisp-mode emacs-lisp-mode ;; Specify multiple modes
+
+(lambda "(lambda (" p ")" n> r> ")")
+(var "(defvar " p "\n  \"" r "\")")
+(const "(defconst " p "\n  \"" r "\")")
+(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" r ")")
+(face "(defface " p " '((t :inherit " p "))\n  \"" r "\")")
+(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" r "-\")")
+(macro "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
+(fun "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
+(let "(let (" p ")" n> r> ")")
+(star "(let* (" p ")" n> r> ")")
+(rec "(letrec (" p ")" n> r> ")")
+(command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive)" n> r> ")")
+(hydra "(defhydra x/hydra-" p
+         " (:exit t :columns 4 :idle 0.3)" n> "\"" p "\"" n> r> ")")
+(file-template ";;; " (buffer-name) " --- " p " -*- lexical-binding: t -*-\n"
+      ";;; Commentary:" n
+      ";;; Code:" n n r n n
+      "(provide '" (file-name-sans-extension (buffer-name)) ")" n
+      ";;; " (buffer-name) " ends here")
+
+;;; eshell
+eshell-mode
+
+(for "for " (p "i") " in " p " { " p " }")
+(while "while { " p " } { " p " }")
+(until "until { " p " } { " p " }")
+(if "if { " p " } { " p " }")
+(if-else "if { " p " } { " p " } { " p " }")
+(unless "unless { " p " } { " p " }")
+(unless-else "unless { " p " } { " p " } { " p " }")
+
+;;; text
+text-mode
+
+(time (format-time-string "<%Y-%m-%d %a %R>" (current-time)))
+(today (format-time-string "%Y-%m-%d"))
+
+(cut "--8<---------------cut here---------------start------------->8---" n r n
+     "--8<---------------cut here---------------end--------------->8---" n)
+(asciibox "+-" (make-string (length str) ?-) "-+" n
+          "| " (s str)                       " |" n
+          "+-" (make-string (length str) ?-) "-+" n)
+(rot13 (p "plain text" text) n "----" n (rot13 text))
+(calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)))
+(version "Build: Update app version to ")
+(chglog "Docs: Update changelog")
+
+;;; org
+org-mode
+
+(ai "#+begin_ai" n> r> n> "#+end_ai")
+(quote "#+begin_quote" n> r> n> "#+end_quote")
+(example "#+begin_example" n> r> n> "#+end_example")
+(center "#+begin_center" n> r> n> "#+end_center")
+(comments "#+begin_comments" n> r> n> "#+end_comments")
+(verse "#+begin_verse" n> r> n> "#+end_verse")
+(src "#+begin_src " p n> r> n> "#+end_src")
+(restclient "#+begin_src restclient" n> r> n> "#+end_src")
+(elisp "#+begin_src emacs-lisp" n> r> n "#+end_src"
+       :post (org-edit-src-code))
+(sh "#+begin_src sh" n> r> n "#+end_src"
+    :post (org-edit-src-code))
+(kotlin "#+begin_src kotlin" n> r> n "#+end_src"
+        :post (org-edit-src-code))
+(swift "#+begin_src swift" n> r> n "#+end_src"
+        :post (org-edit-src-code))
+(typescript "#+begin_src typescript" n> r> n "#+end_src"
+        :post (org-edit-src-code))
+(clojure "#+begin_src clojure" n> r> n "#+end_src"
+         :post (org-edit-src-code))
+(d2lang "#+begin_src d2 :file d2/" p ".png" n> r> n "#+end_src")
+(day (format-time-string "%d(%a)" (current-time)))
+(weekly (format-time-string "*** <%Y-%m-%d %R> W%y %b %U " (current-time)) r
+        n "1. reading:" n "1. watching:" n "1. listen:" n "1. learning:")
+(monthly (format-time-string "*** <%Y-%m-%d %R> M%y %B %m" (current-time)))
+(author "- author :: " r n)
+(from "- from :: " r n)
+(link "- link :: " r n)
+(ahw "#+attr_html: :width 500")
+
+;;; html
+web-mode
+
+(file-template "<!doctype html>" n
+      "<html>" n
+      "<head>" n
+      "  <meta charset=\"utf-8\">" n
+      "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" n
+      "  <title>" p "</title>" n
+      "</head>" n
+      "<body>" n
+      "  <div class=\"container\">" n
+      "    <h1>" p "</h1>" n
+      "    <p>" r "</p>" n
+      "  </div>" n
+      "</body>" n
+      "</html>")
+
+;;; typescript
+typescript-mode
+
+(lambda "(" p ") => " r)
+(ts-ignore "// eslint-disable-next-line @typescript-eslint/ban-ts-comment" n
+           "// @ts-ignore")
+(log "console.log(" r ")")
+(warn "console.warn(" r ")")
+(error "console.error(" r ")")
+(function "function " p "(" p ") " p "{" n r n "}")

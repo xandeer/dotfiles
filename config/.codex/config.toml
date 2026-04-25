@@ -1,0 +1,123 @@
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+# model_provider = "aicodemirror"
+# preferred_auth_method = "apikey"
+personality = "pragmatic"
+
+notify = ["/Users/kevin/.codex/plugins/cache/openai-bundled/computer-use/1.0.750/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
+
+[sandbox_workspace_write]
+exclude_tmpdir_env_var = false  # Allow $TMPDIR
+exclude_slash_tmp = false       # Allow /tmp
+
+[model_providers.any]
+name = "anyrouter"
+base_url = "https://anyrouter.top/v1"
+wire_api = "responses"
+
+[model_providers.aicodemirror]
+name = "aicodemirror"
+base_url = "https://api.aicodemirror.com/api/codex/backend-api/codex"
+wire_api = "responses"
+
+[model_providers.aigocode]
+name = "aigocode"
+base_url = "https://api.aigocode.com"
+wire_api = "responses"
+requires_openai_auth = true
+
+[projects."/Users/kevin/projects/personal/remio"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/stock"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/stock.codex"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/ai-memory"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/skills"]
+trust_level = "trusted"
+
+[projects."/Users/kevin/projects/personal/ai-system"]
+trust_level = "trusted"
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/baoyu-cover-image/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/xiaohongshu-cover-generator/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/social-content/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.codex/superpowers/skills/dispatching-parallel-agents/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-banner-design/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-brand/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-design/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-design-system/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-slides/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ckm-ui-styling/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = "/Users/kevin/.agents/skills/ui-ux-pro-max/SKILL.md"
+enabled = false
+
+[notice]
+hide_rate_limit_model_nudge = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[mcp_servers.figma]
+url = "https://mcp.figma.com/mcp"
+enabled = false
+
+[plugins."github@openai-curated"]
+enabled = false
+
+[plugins."build-ios-apps@openai-curated"]
+enabled = false
+
+[plugins."figma@openai-curated"]
+enabled = false
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[apps.connector_68df038e0ba48191908c8434991bbac2]
+enabled = false
+
+[marketplaces.openai-bundled]
+last_updated = "2026-04-20T04:17:51Z"
+source_type = "local"
+source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"

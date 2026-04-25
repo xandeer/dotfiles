@@ -1,0 +1,281 @@
+{:profiles
+ {:xandeer
+  {:default true
+   :alone 150                   ; hold for .. ms to register single tap
+   :delay 0                     ; time after witch the key press is delayred
+   :held 50                     ; not sure what it's for
+   :sim 50}} ; keys need to be pressed within this threshold to be considered simultaneous
+ :templates {:open "osascript -e 'tell application \"%s\" to activate'"}
+ :simlayers {;; :space-mode  {:key :spacebar}
+             :a-mode      {:key :a}
+             :cl-mode     {:key :caps_lock}
+             :e-mode      {:key :e}
+             :l-mode      {:key :l}
+             :r-mode      {:key :r}
+             :s-mode      {:key :s :modi {:optional [:left_shift :right_shift]}}
+             :v-mode      {:key :v}
+             ;; :w-mode      {:key :w}
+             }
+ :devices {:built-in [{:vendor_id 1452 :product_id 641}]}
+ :applications
+ { ;; To obtain the app ID: `osascript -e 'id of app "Finder"'`
+  :anki ["net.ankiweb.dtop"]
+  :chrome ["com.google.Chrome", "com.google.Chrome.beta"]
+  :edge ["com.microsoft.edgemac.Dev"]
+  :emacs ["org.gnu.Emacs"]
+  :dia ["company.thebrowser.dia"]
+  :finder ["com.apple.finder"]
+  :preview ["com.apple.Preview"]
+  :raycast ["com.raycast.macos"]
+  :studio ["com.google.android.studio", "com.google.android.studio-EAP", "com.huawei.devecostudio.ds"]
+  :xcode ["com.apple.dt.Xcode"]}
+ :main
+ [{:des "(s-[key]) symbols and numbers"
+   :rules [[:condi :s-mode :built-in]
+           [:m          :1]
+           [:comma      :2]
+           [:period     :3]
+           [:j          :4]
+           [:k          :5]
+           [:l          :6]
+           [:u          :7]
+           [:i          :8]
+           [:o          :9]
+           [:p          :0]
+           [:e          :tab]
+           [:a          :period]
+           [:d          :!S9]
+           [:f          :open_bracket]
+           [:g          :close_bracket]
+           ;; [:v          :close_bracket]
+           ;; [:b          :grave_accent_and_tilde]
+           [:y          :equal_sign]
+           [:h          :hyphen]
+           [:n          :backslash]
+           [:semicolon  :!Ssemicolon]
+           [:quote  :grave_accent_and_tilde]
+           ;; [:slash      :period]
+           ;; [:quote      :!Squote]
+           ]}
+
+  {:des "switch joy"
+   :rules [[{:pkey :button16} :!CSi]
+           [{:pkey :button15} :!CTi]]}
+
+  ;; {:des "swap : and ;"
+  ;;  :rules [[:!Ssemicolon :semicolon]
+  ;;          [:#Psemicolon :!Ssemicolon]]}
+
+  {:des "bind command-shift-option-l to lookup(command-ctrl-d)"
+   :rules [[:!CSOl         :!CTd]
+           [:left_command  :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:d             :!CTd ["multitouch_extension_finger_count_total" 1]]
+           [:l             :!CTd ["multitouch_extension_finger_count_total" 1]]]}
+
+  {:des "(a-[key]) symbols"
+   :rules [[:condi :built-in :a-mode]
+           [:m       :!S1]
+           [:comma   :!S2]
+           [:period  :!S3]
+           [:j       :!S4]
+           [:k       :!S5]
+           [:l       :!S6]
+           [:u       :!S7]
+           [:i       :!S8]
+           [:o       :!S9]
+           [:p       :!S0]
+           [:f       :!Sopen_bracket]
+           [:g       :!Sclose_bracket]
+           ;; [:b       :!Sgrave_accent_and_tilde]
+           [:h       :!Shyphen]
+           [:y       :!Sequal_sign]
+           [:n       :!Sbackslash]
+           [:quote  :!Sgrave_accent_and_tilde]]}
+
+  {:des "(e-[key]) mouse"
+   :rules [[:condi :built-in :e-mode]
+           [:u :button1]
+           [:spacebar :button1]
+           [:i :button2]
+           [:h {:mkey {:x -736 :speed 1.5}}]
+           [:l {:mkey {:x 736 :speed 1.5}}]
+           [:j {:mkey {:y 736 :speed 1.5}}]
+           [:k {:mkey {:y -736 :speed 1.5}}]
+           [:n {:mkey {:hwheel 33 :speed 1.2}}]
+           [:period {:mkey {:hwheel -33 :speed 1.2}}]
+           [:m {:mkey {:vwheel 33 :speed 1.2}}]
+           [:comma {:mkey {:vwheel -33 :speed 1.2}}]]}
+
+  {:des "(v-[key]) h to backspace"
+   :rules [[:condi :built-in :v-mode]
+           [:h :delete_or_backspace]
+           [:j :escape]]}
+
+  {:des "(caps_lock-[key]) hjkl to arrow"
+   :rules [[:condi :cl-mode :built-in]
+           ;; [:##caps_lock :left_control nil {:alone :caps_lock}]
+           [:j :down_arrow]
+           [:k :up_arrow]
+           [:h :left_arrow]
+           [:l :right_arrow]]}
+
+  ;; {:des "jsim"
+  ;;  :rules [[[:j :k] :escape]]}
+
+  ;; {:des "(w-[key]) manage windows with raycast and alttab"
+  ;;  :rules [[:condi :built-in :w-mode]
+  ;;          [:grave_accent_and_tilde :!!grave_accent_and_tilde]
+  ;;          [:e :!!e]
+  ;;          [:r :!!r]
+  ;;          [:h :!!h]
+  ;;          [:l :!!l]
+  ;;          [:j :!!j]
+  ;;          [:k :!!k]
+  ;;          [:m :!!m]
+  ;;          [:u :!!u]
+  ;;          [:i :!!i]
+  ;;          [:o :!!o]]}
+
+  {:des "misc"
+   :rules [[:!COSi [:!COSi :return_or_enter]]]}
+
+
+  {:des "launch apps"
+   :rules [ ;; [:!COSa
+           ;;  ;; [:open "Android Studio"]
+           ;;  ;; [:open "DevEco-Studio"]
+           ;;  [:open "Xcode"]
+           ;;  ]
+           ;; [:!COSc [:open "Google Chrome"]]
+           ;; [:!COSe [:open "Emacs"]]
+           ;; [:!COSx [:open "Xcode"]]
+           ;; [:!COSh [:open "Cursor"]]
+           ]}
+
+  {:des "run scripts"
+   :rules [[:!COSperiod "/opt/homebrew/bin/emacsclient -n -e '(x/org-capture-frame)'"]
+           ;; [:!COSp ["osascript ~/syncthing/personal/configs/xandeer-scripts/emacs-gpt.applescript"]]
+           ]}
+
+  {:des "screenshots"
+   :rules [[:!COSw :!CS5]
+           [:!COSr :!CTS4]
+           [:!COSs :!CTS3]]}
+
+  {:des "Anki"
+   :rules [:anki
+           [:d :!COSd]
+           [:m :1]
+           [:comma :2]
+           [:period :3]
+           [:j :4]
+           [:!Ox :!COS1]]}
+
+  {:des "Chrome shortcuts"
+   :rules [:chrome
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]
+           [:!Ox :!COS1]
+           [:!Oj :!Copen_bracket]
+           [:!Ok :!Cclose_bracket]]}
+
+  {:des "Finder shortcuts"
+   :rules [:finder
+           [:!Ox :!COS1]]}
+
+  {:des "Preview shortcuts"
+   :rules [:preview
+           [:!Ox :!COS1]]}
+
+  ;; doesn't work
+  ;; {:des "Raycast shortcuts"
+  ;;  :rules [:raycast
+  ;;          [:Tg :!Cw]]}
+
+  {:des "Edge"
+   :rules [:edge
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]
+           ;; read aloud
+           [:!Os :!CSu]
+           [:!Ox :!COS1]]}
+
+  {:des "Dia"
+   :rules [:dia
+           [:!Ol :!Ttab]
+           [:!Oh :!TStab]]}
+
+  {:des "XCode"
+   :rules [:xcode
+           [:!Oj :!Cj]
+           [:!Ok :!Ck]
+           [:!Operiod :!Cperiod]
+           [:!Oh :!CSopen_bracket]
+           [:!Ol :!CSclose_bracket]]}
+
+  {:des "Emacs like"
+   :rules [[:condi :!emacs :!studio :!xcode]
+           [:!Ob :!Oleft_arrow]
+           [:!Od [:!Oright_arrow :!Odelete_or_backspace]]
+           [:!Tf :right_arrow]
+           [:!Tn :down_arrow]
+           [:!Tp :up_arrow]
+           [:!Of :!Oright_arrow]]}
+
+  {:des "Use Opt-i to switch input method out of emacs"
+   :rules [[:condi :!emacs]
+           [:!Oi :!Cspacebar]]}
+
+  {:des "option to escape if alone"
+   :rules [:built-in
+           [:##left_option :left_option nil {:alone :escape}]
+           [:##right_option :left_option nil {:alone :escape}]]}
+
+  {:des "shift to delete if alone"
+   :rules [:built-in
+           [:##left_shift :left_shift nil {:alone :delete_or_backspace}]
+           [:##right_shift :left_shift nil {:alone :delete_or_backspace}]]}
+
+  {:des "command to enter if alone"
+   :rules [:built-in
+           [:##left_command :left_command nil {:alone :return_or_enter}]
+           [:##right_command :left_command nil {:alone :return_or_enter}]]}
+
+  {:des "spacebar to COS if held"
+   :rules [:built-in
+           [:spacebar :!COleft_shift nil {:alone :spacebar}]]}
+
+  {:des "w to COTS if held"
+   :rules [:built-in
+           [:w :!COTleft_shift nil {:alone :w}]]}
+
+  {:des "g/h to shift if held"
+   :rules [:built-in
+           [:g :left_shift nil {:alone :g}]
+           [:h :left_shift nil {:alone :h}]]}
+
+  {:des "c/f/j to control if held"
+   :rules [:built-in
+           [:c :left_control nil {:alone :c}]
+           [:f :left_control nil {:alone :f}]
+           [:j :left_control nil {:alone :j}]]}
+
+  {:des "d/k/x to option if held"
+   :rules [:built-in
+           [:d :left_option nil {:alone :d}]
+           [:k :left_option nil {:alone :k}]
+           [:x :left_option nil {:alone :x}]]}]}
+
+;; !  | means mandatory
+;; #  | means optional
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; !! | mandatory command + control + optional + shift (hyper)
+;; ## | optional any

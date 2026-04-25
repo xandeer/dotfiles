@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+agent="${1:-}"
+payload_arg="${2:-}"
+
+if [[ -z "${KITTY_WINDOW_ID:-}" ]]; then
+  exit 0
+fi
+
+read_payload() {
+  case "$agent" in
+    codex)
+      printf '%s' "$payload_arg"
+      ;;
+    claude)
+      cat
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+extract_json_field() {
+  local field="$1"
+
+  printf '%s' "$payload" | jq -r "$field // empty" 2>/dev/null || true
+}
+
+normalize_text() {
+  local text="$1"
+
+  text="${text//$'\r'/}"
+  text="${text//$'\n'/ }"
+  text="${text//$'\t'/ }"
+
+  while [[ "$text" == *"  "* ]]; do
+    text="${text//  / }"
+  done
+
+  printf '%s' "$text"
+}
+
+clip_text() {
+  local text="$1"
+  local limit="${2:-240}"
+
+  if (( ${#text} <= limit )); then
+    printf '%s' "$text"
+    return 0
+  fi
+
+  printf '%s...' "${text:0:limit-3}"
+}
+
+encode_text() {
+  printf '%s' "$1" | base64 | tr -d '\n'
+}
+
+notification_id() {
+  printf 'agent-notify-%s-%s' "${KITTY_WINDOW_ID:?}" "$agent"
+}
+
+emit_user_var() {
+  local key="$1"
+  local value="$2"
+  local sequence
+
+  sequence="$(printf '\033]1337;SetUserVar=%s=%s\a' \
+    "$key" \
+    "$(encode_text "$value")")"
+
+  if [[ -w /dev/tty ]]; then
+    printf '%s' "$sequence" >/dev/tty
+    return 0
+  fi
+
+  printf '%s' "$sequence"
+}
+
+payload="$(read_payload || true)"
+[[ -n "$payload" ]] || exit 0
+
+title=""
+body=""
+
+case "$agent" in
+  codex)
+    title="Codex result"
+    body="$(extract_json_field '."last-assistant-message"')"
+    ;;
+  claude)
+    [[ "$(extract_json_field '.hook_event_name')" == "Stop" ]] || exit 0
+    title="Claude Code result"
+    body="$(extract_json_field '.last_assistant_message')"
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+body="$(normalize_text "$body")"
+body="$(clip_text "${body:-Result is ready.}")"
+
+printf '\033]99;i=%s:e=1:d=0:o=unfocused:p=title;%s\033\\' \
+  "$(notification_id)" \
+  "$(encode_text "$title")"
+printf '\033]99;i=%s:e=1:d=1:o=unfocused:p=body;%s\033\\' \
+  "$(notification_id)" \
+  "$(encode_text "$body")"
+emit_user_var agent_notify "$agent"

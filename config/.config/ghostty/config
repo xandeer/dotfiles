@@ -1,0 +1,10 @@
+font-family = "JetBrainsMono Nerd Font Mono"
+# font-family = "Latin Modern Mono"
+font-family = "Sarasa Mono K"
+font-family = "Bookerly"
+font-family = "Weibei SC"
+font-size = 14
+font-thicken = true
+adjust-cell-height = 15%
+
+theme = One Light

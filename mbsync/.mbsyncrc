@@ -1,0 +1,173 @@
+# mbsyncrc based on
+# http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html
+# ACCOUNT INFORMATION
+IMAPAccount kkxandeer-gmail
+# Address to connect to
+Host imap.gmail.com
+User kkxandeer@gmail.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.password-store/google/mb-kkxandeer.gpg"
+AuthMechs LOGIN
+SSLType IMAPS
+SSLVersions TLSv1.2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# THEN WE SPECIFY THE LOCAL AND REMOTE STORAGE
+# - THE REMOTE STORAGE IS WHERE WE GET THE MAIL FROM (E.G., THE
+#   SPECIFICATION OF AN IMAP ACCOUNT)
+# - THE LOCAL STORAGE IS WHERE WE STORE THE EMAIL ON OUR COMPUTER
+
+# REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
+IMAPStore kkxandeer-gmail-remote
+Account kkxandeer-gmail
+
+# LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p ~/.mail/kkxandeer-gmail)
+MaildirStore kkxandeer-gmail-local
+Path ~/.mail/kkxandeer-gmail/
+Inbox ~/.mail/kkxandeer-gmail/INBOX
+# REQUIRED ONLY IF YOU WANT TO DOWNLOAD ALL SUBFOLDERS; SYNCING SLOWS DOWN
+# SubFolders Verbatim
+
+# CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
+#
+# CONNECTIONS ARE SPECIFIED USING PATTERNS, WHICH MATCH REMOTE MAIl
+# FOLDERS. SOME COMMONLY USED PATTERS INCLUDE:
+#
+# 1 "*" TO MATCH EVERYTHING
+# 2 "!DIR" TO EXCLUDE "DIR"
+# 3 "DIR" TO MATCH DIR
+
+Channel kkxandeer-gmail-inbox
+Master :kkxandeer-gmail-remote:
+Slave :kkxandeer-gmail-local:
+Patterns "INBOX"
+Create Both
+Expunge Both
+SyncState *
+
+Channel kkxandeer-gmail-trash
+Master :kkxandeer-gmail-remote:"[Gmail]/Trash"
+Slave :kkxandeer-gmail-local:"[kkxandeer].Trash"
+Create Both
+Expunge Both
+SyncState *
+
+Channel kkxandeer-gmail-sent
+Master :kkxandeer-gmail-remote:"[Gmail]/Sent"
+Slave :kkxandeer-gmail-local:"[kkxandeer].Sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel kkxandeer-gmail-all
+Master :kkxandeer-gmail-remote:"[Gmail]/All Mail"
+Slave :kkxandeer-gmail-local:"[kkxandeer].All Mail"
+Create Both
+Expunge Both
+SyncState *
+
+Channel kkxandeer-gmail-starred
+Master :kkxandeer-gmail-remote:"[Gmail]/Starred"
+Slave :kkxandeer-gmail-local:"[kkxandeer].Starred"
+Create Both
+Expunge Both
+SyncState *
+
+# GROUPS PUT TOGETHER CHANNELS, SO THAT WE CAN INVOKE
+# MBSYNC ON A GROUP TO SYNC ALL CHANNELS
+#
+# FOR INSTANCE: "mbsync gmail" GETS MAIL FROM
+# "gmail-inbox", "gmail-sent", and "gmail-trash"
+#
+Group kkxandeer-gmail
+Channel kkxandeer-gmail-inbox
+Channel kkxandeer-gmail-sent
+Channel kkxandeer-gmail-trash
+Channel kkxandeer-gmail-all
+Channel kkxandeer-gmail-starred
+
+
+# ================================================================================
+
+
+# ACCOUNT INFORMATION
+IMAPAccount dxandeer-gmail
+# Address to connect to
+Host imap.gmail.com
+User dxandeer@gmail.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.password-store/google/mb-dxandeer.gpg"
+AuthMechs LOGIN
+SSLType IMAPS
+SSLVersions TLSv1.2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# THEN WE SPECIFY THE LOCAL AND REMOTE STORAGE
+# - THE REMOTE STORAGE IS WHERE WE GET THE MAIL FROM (E.G., THE
+#   SPECIFICATION OF AN IMAP ACCOUNT)
+# - THE LOCAL STORAGE IS WHERE WE STORE THE EMAIL ON OUR COMPUTER
+
+# REMOTE STORAGE (USE THE IMAP ACCOUNT SPECIFIED ABOVE)
+IMAPStore dxandeer-gmail-remote
+Account dxandeer-gmail
+
+# LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p ~/.mail/dxandeer-gmail)
+MaildirStore dxandeer-gmail-local
+Path ~/.mail/dxandeer-gmail/
+Inbox ~/.mail/dxandeer-gmail/INBOX
+
+# CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
+#
+# CONNECTIONS ARE SPECIFIED USING PATTERNS, WHICH MATCH REMOTE MAIl
+# FOLDERS. SOME COMMONLY USED PATTERS INCLUDE:
+#
+# 1 "*" TO MATCH EVERYTHING
+# 2 "!DIR" TO EXCLUDE "DIR"
+# 3 "DIR" TO MATCH DIR
+
+Channel dxandeer-gmail-inbox
+Master :dxandeer-gmail-remote:
+Slave :dxandeer-gmail-local:
+Patterns "INBOX"
+Create Both
+Expunge Both
+SyncState *
+
+Channel dxandeer-gmail-trash
+Master :dxandeer-gmail-remote:"[Gmail]/Trash"
+Slave :dxandeer-gmail-local:"[dxandeer].Trash"
+Create Both
+Expunge Both
+SyncState *
+
+Channel dxandeer-gmail-sent
+Master :dxandeer-gmail-remote:"[Gmail]/Sent"
+Slave :dxandeer-gmail-local:"[dxandeer].Sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel dxandeer-gmail-all
+Master :dxandeer-gmail-remote:"[Gmail]/All Mail"
+Slave :dxandeer-gmail-local:"[dxandeer].All Mail"
+Create Both
+Expunge Both
+SyncState *
+
+Channel dxandeer-gmail-starred
+Master :dxandeer-gmail-remote:"[Gmail]/Starred"
+Slave :dxandeer-gmail-local:"[dxandeer].Starred"
+Create Both
+Expunge Both
+SyncState *
+
+# GROUPS PUT TOGETHER CHANNELS, SO THAT WE CAN INVOKE
+# MBSYNC ON A GROUP TO SYNC ALL CHANNELS
+#
+# FOR INSTANCE: "mbsync gmail" GETS MAIL FROM
+# "gmail-inbox", "gmail-sent", and "gmail-trash"
+#
+Group dxandeer-gmail
+Channel dxandeer-gmail-inbox
+Channel dxandeer-gmail-sent
+Channel dxandeer-gmail-trash
+Channel dxandeer-gmail-all
+Channel dxandeer-gmail-starred

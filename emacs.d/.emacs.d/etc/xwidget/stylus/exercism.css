@@ -1,0 +1,6 @@
+@media (min-width: 768px) {
+  #page-exercise-show .flex-col-reverse {
+    flex-direction: column-reverse !important;
+  }
+}
+

@@ -1,0 +1,18 @@
+# https://web.archive.org/web/20190923130548/http://dhis2.github.io/2019/06/managing-multiple-repositories/
+
+[DEFAULT]
+jobs = 8
+commit = echo 'skip'
+
+# Personal
+[.password-store]
+checkout = git clone 'git@github.com:xandeer/pass-store.git' '.password-store'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+
+[projects/personal/dotfiles]
+checkout = git clone 'git@github.com:xandeer/dotfiles.git' 'dotfiles'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push
+
+[projects/personal/notes]
+checkout = git clone 'git@github.com:xandeer/notes.git' 'notes'
+commit = [ -n "$(git status --porcelain)" ] && git add --all && git commit -m "$(date +'manual: [%F %a %T]')" ; git push

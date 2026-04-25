@@ -1,0 +1,13 @@
+.readerContent .app_content {
+  max-width: 760px !important;
+}
+
+.readerTopBar,
+.navBarOffset,
+.readerControls_item.download {
+  display: none !important;
+}
+
+.readerControls {
+  margin-left: 398px !important;
+}

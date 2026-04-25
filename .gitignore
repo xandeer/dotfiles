@@ -1,0 +1,10 @@
+.DS_Store
+.uuid
+/etc/
+config/.config/github-copilot/ai
+config/.config/github-copilot/versions.json
+.env
+.aider*
+.worktrees/
+tmux/.config/tmux/conf.d/90-local.conf
+config/.config/kitty/state/
