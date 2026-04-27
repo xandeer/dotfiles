@@ -114,11 +114,14 @@ enabled = false
 [plugins."computer-use@openai-bundled"]
 enabled = true
 
+[plugins."browser-use@openai-bundled"]
+enabled = true
+
 [apps.connector_68df038e0ba48191908c8434991bbac2]
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-04-20T04:17:51Z"
+last_updated = "2026-04-26T07:06:42Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
