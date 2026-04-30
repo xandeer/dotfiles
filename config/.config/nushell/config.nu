@@ -16,6 +16,4 @@ source modules/hooks.nu
 
 source ~/.config/env.nu
 
-$env.ALL_PROXY = 'socks5://localhost:6153'
-
 source modules/aliases.nu
