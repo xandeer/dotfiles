@@ -69,7 +69,7 @@ The function expands the given PATH to an absolute path."
     ("a" "Alpha" (lambda () (interactive) (magit-status (expand-file-name "alpha" x/personal-projects-directory))))
     ("d" "Dotfiles" (lambda () (interactive) (magit-status (expand-file-name "dotfiles" x/personal-projects-directory))))
     ;; ("h" "HighKick" (lambda () (interactive) (magit-status (expand-file-name "HighKick" x/personal-projects-directory))))
-    ("h" "Hermes" (lambda () (interactive) (magit-status (expand-file-name ".hermes" gnus-home-directory))))
+    ("h" "Hermes" (lambda () (interactive) (magit-status (expand-file-name ".hermes" "~/"))))
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
     ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "moon-dust" x/personal-projects-directory))))
     ("p" "PicPin" (lambda () (interactive) (magit-status (expand-file-name "picpin" x/personal-projects-directory))))
