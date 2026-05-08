@@ -16,4 +16,6 @@ if not ($oh_my_posh_init | path exists) {
   oh-my-posh init nu --print | save --force $oh_my_posh_init
 }
 
+$env.HOMEBREW_NO_AUTO_UPDATE = "1"
+
 load-env {}
