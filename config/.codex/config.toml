@@ -114,6 +114,15 @@ enabled = false
 [plugins."computer-use@openai-bundled"]
 enabled = true
 
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
 [plugins."browser-use@openai-bundled"]
 enabled = true
 
@@ -121,9 +130,21 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-04-26T07:06:42Z"
+last_updated = "2026-05-09T02:53:17Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-05-08T10:32:23Z"
+source_type = "local"
+source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+
+[features]
+memories = true
+chronicle = false
+
+[memories]
+no_memories_if_mcp_or_web_search = true
