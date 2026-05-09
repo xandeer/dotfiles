@@ -133,8 +133,19 @@ Usages:
     org-roam
     org-transclusion
     consult-org-roam
-    ;; used for roam
-    emacsql-sqlite-builtin
+    ;; used for roam/forge; these backend features live in the
+    ;; magit/emacsql repo, but some pinned package metadata still names
+    ;; them as separate packages.
+    (emacsql-sqlite . ("magit/emacsql" :files ("emacsql.el"
+                                               "emacsql-compiler.el"
+                                               "emacsql-sqlite-common.el"
+                                               "emacsql-sqlite.el"
+                                               "sqlite")))
+    (emacsql-sqlite-builtin . ("magit/emacsql" :files ("emacsql.el"
+                                                       "emacsql-compiler.el"
+                                                       "emacsql-sqlite-common.el"
+                                                       "emacsql-sqlite-builtin.el")))
+    emacsql
     restclient
 
 ;;; programs

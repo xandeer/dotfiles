@@ -15,7 +15,10 @@
       straight-enable-use-package-integration nil
       straight-check-for-modifications        '(find-when-checking))
 
-(setq warning-suppress-types '((straight)))
+;; Third-party packages can emit noisy native compiler warnings for
+;; optional/runtime-provided functions. Keep startup focused on errors.
+(setq warning-suppress-types '((straight)
+                               (native-compiler)))
 
 (defvar bootstrap-version)
 
