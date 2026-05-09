@@ -279,7 +279,7 @@ else recenter by the current point."
 ;;; selection
 (defcustom x-point-speed-selection-commands
   '(("Navigation")
-    ("a" . beginning-of-line)
+    ("a" . x/smart-beginning-of-line)
     ("e" . end-of-line)
     ("j" . next-line)
     ("k" . previous-line)
@@ -350,8 +350,7 @@ See `x-point-speed-commands' for configuring them."
 
 (defun x-point--selection-beginning-of-line ()
   (interactive)
-  (cond ((equal major-mode 'org-mode) (org-beginning-of-line))
-        (t (x/smart-beginning-of-line))))
+  (x/smart-beginning-of-line))
 
 (defun x-point--selection-end-of-line ()
   (interactive)

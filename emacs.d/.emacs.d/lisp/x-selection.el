@@ -27,8 +27,7 @@
 
 (defun x--selection-beginning-of-line ()
   (interactive)
-  (cond ((equal major-mode 'org-mode) (org-beginning-of-line))
-        (t (x/smart-beginning-of-line))))
+  (x/smart-beginning-of-line))
 
 (defun x--selection-end-of-line ()
   (interactive)
@@ -40,7 +39,7 @@
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map x-point-mode-special-map-base)
     ;; navigation
-    (x-point-define-key map "a" #'beginning-of-line)
+    (x-point-define-key map "a" #'x/smart-beginning-of-line)
     ;; (x-point-define-key map "e" #'end-of-line)
     (x-point-define-key map "d" #'exchange-point-and-mark)
     (x-point-define-key map "f" #'jieba-forward-word)

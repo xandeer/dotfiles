@@ -77,14 +77,43 @@ This will create a new function `x/upcase-word-backward` that calls  `upcase-wor
                '(("C-t" x/transpose-map)))
 
 ;; https://stackoverflow.com/questions/145291/smart-home-in-emacs/145359
-(defun x/smart-beginning-of-line ()
-  "Move point to first non-whitespace character or `beginning-of-line`.
+(defun x/smart-beginning-of-line--org-content-position ()
+  "Return the position of Org heading content, or nil.
 
-Move point to the first non-whitespace character on this line.
-If point was already at that position, move point to beginning of line."
+For journal headings like:
+  *** <2026-05-09 15:56> text
+  *** TODO [#A] <2026-05-09 15:56> text
+  *** TODO [#A] text
+return the position before the effective heading text."
+  (save-excursion
+    (beginning-of-line)
+    (let ((timestamp-re "\\(?:<[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}[^>\n]*>\\|\\[[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}[^]\n]*\\]\\)")
+          (todo-re (regexp-opt (append (bound-and-true-p org-todo-keywords-1)
+                                        '("TODO" "NEXT" "WAITING" "HOLD" "PHONE" "DONE" "CANCELED" "CANCELLED")))))
+      (cond
+       ((looking-at (concat "^[[:space:]]*\\*+ +"
+                            "\\(?:" todo-re " +\\)?"
+                            "\\(?:\\[#.\\] +\\)?"
+                            "\\(?:" timestamp-re " +\\)?"))
+        (match-end 0))
+       ((looking-at (concat "^[[:space:]]*" timestamp-re "[[:space:]]+"))
+        (match-end 0))))))
+
+(defun x/smart-beginning-of-line ()
+  "Move point to a smart beginning position or `beginning-of-line`.
+
+When on an Org heading, move after heading stars, TODO keyword, priority,
+and timestamp.  Otherwise move to the first non-whitespace character.
+If point was already at that position,
+move point to beginning of line."
   (interactive "^")                 ; Use (interactive) in Emacs 22 or older
-  (let ((oldpos (point)))
-    (back-to-indentation)
+  (let ((oldpos (point))
+        (target (or (and (derived-mode-p 'org-mode)
+                         (x/smart-beginning-of-line--org-content-position))
+                    (save-excursion
+                      (back-to-indentation)
+                      (point)))))
+    (goto-char target)
     (and (= oldpos (point))
          (beginning-of-line))))
 
@@ -93,6 +122,12 @@ If point was already at that position, move point to beginning of line."
                  ([remap newline] newline-and-indent)
                  ("M-;" comment-line)
                  ("H-z" undo)))
+
+(with-eval-after-load 'org
+  (x/define-keys org-mode-map
+                 '(("C-a" x/smart-beginning-of-line)
+                   ([remap move-beginning-of-line] x/smart-beginning-of-line)
+                   ([remap org-beginning-of-line] x/smart-beginning-of-line))))
 
 (setq mmm-global-mode 'buffers-with-submode-classes)
 (setq mmm-submode-decoration-level 2)
