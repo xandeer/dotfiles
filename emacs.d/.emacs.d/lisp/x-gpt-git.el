@@ -39,30 +39,18 @@ The result of the `gptel-request` call, which is typically the response from the
 (defun x/gpt-git--get-changes ()
   "Retrieve the cached Git diff and return it as a single string.
 
-This function uses `magit-git-lines' to get the lines of the Git diff
-for the cached changes (staged changes). It then joins these lines into
-a single string with newline characters separating each line.
-
-When called interactively, display the cached Git diff in a buffer.
+This function gets the lines of the Git diff for cached changes
+(staged changes), then joins these lines into a single string with
+newline characters separating each line.
 
 Returns:
   A string containing the cached Git diff."
-  (interactive)
-  (let ((changes (string-join
-                  (if (executable-find "rtk")
-                      (let ((magit-git-executable "rtk"))
-                        (magit-git-lines "proxy" "git" "diff" "--cached"))
-                    (magit-git-lines "diff" "--cached"))
-                  "\n")))
-    (when (called-interactively-p 'interactive)
-      (with-current-buffer (get-buffer-create "*gpt-git-changes*")
-        (let ((inhibit-read-only t))
-          (erase-buffer)
-          (insert changes)
-          (diff-mode)
-          (goto-char (point-min)))
-        (pop-to-buffer (current-buffer))))
-    (message changes)
+  (let* ((default-directory (or (magit-toplevel) default-directory))
+         (changes (string-join
+                   (if (executable-find "rtk")
+                       (process-lines "rtk" "git" "diff" "--cached")
+                     (process-lines "git" "diff" "--cached"))
+                   "\n")))
     changes))
 
 (defun x/gpt-git-generate-commit-message ()
