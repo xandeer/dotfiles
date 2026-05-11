@@ -43,11 +43,27 @@ This function uses `magit-git-lines' to get the lines of the Git diff
 for the cached changes (staged changes). It then joins these lines into
 a single string with newline characters separating each line.
 
+When called interactively, display the cached Git diff in a buffer.
+
 Returns:
   A string containing the cached Git diff."
-  (string-join
-   (magit-git-lines "diff" "--cached")
-   "\n"))
+  (interactive)
+  (let ((changes (string-join
+                  (if (executable-find "rtk")
+                      (let ((magit-git-executable "rtk"))
+                        (magit-git-lines "proxy" "git" "diff" "--cached"))
+                    (magit-git-lines "diff" "--cached"))
+                  "\n")))
+    (when (called-interactively-p 'interactive)
+      (with-current-buffer (get-buffer-create "*gpt-git-changes*")
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (insert changes)
+          (diff-mode)
+          (goto-char (point-min)))
+        (pop-to-buffer (current-buffer))))
+    (message changes)
+    changes))
 
 (defun x/gpt-git-generate-commit-message ()
   "Generate a commit message using GPT.
