@@ -27,7 +27,7 @@
 (defun x/open (path)
   "Send PATH to open."
   (interactive)
-  (shell-command (concat "open " path)))
+  (shell-command (concat "/usr/bin/open " path)))
 
 ;; https://github.com/hlissner/doom-emacs/blob/develop/modules/os/macos/autoload.el
 ;;;###autoload
@@ -41,7 +41,7 @@
                               (dired-get-file-for-visit)
                             (buffer-file-name)))
                  nil t)))
-         (command (format "open %s"
+         (command (format "/usr/bin/open %s"
                           (if app-name
                               (format "-a %s '%s'" (shell-quote-argument app-name) path)
                             (format "'%s'" path)))))
