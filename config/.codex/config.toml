@@ -6,10 +6,9 @@ disable_response_storage = true
 personality = "pragmatic"
 
 notify = ["/Users/kevin/.codex/plugins/cache/openai-bundled/computer-use/1.0.750/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
-
-[sandbox_workspace_write]
-exclude_tmpdir_env_var = false  # Allow $TMPDIR
-exclude_slash_tmp = false       # Allow /tmp
+approval_policy = "on-request"
+approvals_reviewer = "guardian_subagent"
+sandbox_mode = "workspace-write"
 
 [model_providers.any]
 name = "anyrouter"
