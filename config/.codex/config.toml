@@ -7,8 +7,9 @@ personality = "pragmatic"
 
 notify = ["/Users/kevin/.codex/plugins/cache/openai-bundled/computer-use/1.0.750/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
 approval_policy = "on-request"
-approvals_reviewer = "guardian_subagent"
+approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
+plan_mode_reasoning_effort = "xhigh"
 
 [model_providers.any]
 name = "anyrouter"
@@ -129,14 +130,18 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-15T12:59:30Z"
+last_updated = "2026-05-18T04:17:17Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-15T12:32:49Z"
+last_updated = "2026-05-18T03:32:25Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[tui]
+status_line = ["model-with-reasoning", "project-name", "git-branch"]
+status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
@@ -144,6 +149,9 @@ source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/opena
 [features]
 memories = true
 chronicle = false
+terminal_resize_reflow = true
+goals = true
+prevent_idle_sleep = true
 
 [memories]
 no_memories_if_mcp_or_web_search = true
