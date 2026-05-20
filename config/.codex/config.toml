@@ -5,11 +5,12 @@ disable_response_storage = true
 # preferred_auth_method = "apikey"
 personality = "pragmatic"
 
-notify = ["/Users/kevin/.codex/plugins/cache/openai-bundled/computer-use/1.0.750/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 plan_mode_reasoning_effort = "xhigh"
+
+notify = ["/Users/kevin/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
 
 [model_providers.any]
 name = "anyrouter"
@@ -130,12 +131,12 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-18T04:17:17Z"
+last_updated = "2026-05-19T05:56:13Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-18T03:32:25Z"
+last_updated = "2026-05-19T06:32:37Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
