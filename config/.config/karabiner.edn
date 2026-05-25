@@ -62,6 +62,8 @@
    :rules [[{:pkey :button16} :!CSi]
            [{:pkey :button15} :!CTi]]}
 
+  {:des "switch fn"
+   :rules [[:f24 [:fn :vk_none :fn :vk_none]]]}
   ;; {:des "swap : and ;"
   ;;  :rules [[:!Ssemicolon :semicolon]
   ;;          [:#Psemicolon :!Ssemicolon]]}

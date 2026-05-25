@@ -1316,6 +1316,23 @@
           "type" : "basic"
         } ]
       }, {
+        "description" : "switch fn",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "f24"
+          },
+          "to" : [ {
+            "key_code" : "fn"
+          }, {
+            "key_code" : "vk_none"
+          }, {
+            "key_code" : "fn"
+          }, {
+            "key_code" : "vk_none"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
         "description" : "bind command-shift-option-l to lookup(command-ctrl-d)",
         "manipulators" : [ {
           "from" : {
