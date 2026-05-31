@@ -35,7 +35,8 @@
 
 (require 'savehist)
 (x/append-init-hook #'savehist-mode)
-(setq history-length 100)
+(setq history-length 100
+      history-delete-duplicates t)
 
 (add-to-list 'savehist-additional-variables '(kill-ring . 20))
 (add-to-list 'savehist-additional-variables '(regexp-search-ring . 20))
