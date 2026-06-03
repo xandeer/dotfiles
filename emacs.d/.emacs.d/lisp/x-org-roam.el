@@ -189,7 +189,72 @@ If BEG and END are not provided, the function operates on the entire buffer."
 
 (autoload #'org-roam-dailies-goto-previous-note "org-roam" nil t)
 (autoload #'org-roam-dailies-goto-next-note "org-roam" nil t)
+(require 'calendar)
 (require 'transient)
+
+(declare-function org-roam-dailies--capture "org-roam-dailies")
+(declare-function org-roam-dailies--daily-note-p "org-roam-dailies")
+
+(defun x/org-roam-dailies-goto-next-week ()
+  "Find the daily-note one week after the current one."
+  (interactive)
+  (org-roam-dailies-goto-next-note 7))
+
+(defun x/org-roam-dailies-goto-previous-week ()
+  "Find the daily-note one week before the current one."
+  (interactive)
+  (org-roam-dailies-goto-previous-note 7))
+
+(defun x/org-roam-dailies--current-date ()
+  "Return the current daily-note date as (MONTH DAY YEAR)."
+  (require 'org-roam-dailies)
+  (unless (org-roam-dailies--daily-note-p)
+    (user-error "Not in a daily-note"))
+  (let* ((parsed (org-parse-time-string
+                  (file-name-base (buffer-file-name (buffer-base-buffer)))))
+         (day (nth 3 parsed))
+         (month (nth 4 parsed))
+         (year (nth 5 parsed)))
+    (unless (and day month year)
+      (user-error "Can't parse current daily-note date"))
+    (list month day year)))
+
+(defun x/org-roam-dailies--shift-date-by-months (date months)
+  "Return DATE shifted by MONTHS calendar months.
+DATE is a (MONTH DAY YEAR) list.  Clamp the day to the last valid
+day of the target month."
+  (let* ((month (nth 0 date))
+         (day (nth 1 date))
+         (year (nth 2 date))
+         (month-index (+ (1- month) months))
+         (target-year (+ year (floor month-index 12)))
+         (target-month (1+ (mod month-index 12)))
+         (target-day (min day (calendar-last-day-of-month target-month target-year))))
+    (list target-month target-day target-year)))
+
+(defun x/org-roam-dailies--goto-date (date)
+  "Go to the Org-roam daily note for DATE.
+DATE is a (MONTH DAY YEAR) list."
+  (require 'org-roam-dailies)
+  (org-roam-dailies--capture
+   (encode-time 0 0 0 (nth 1 date) (nth 0 date) (nth 2 date))
+   t))
+
+(defun x/org-roam-dailies-goto-next-month ()
+  "Find the daily-note one month after the current one."
+  (interactive)
+  (x/org-roam-dailies--goto-date
+   (x/org-roam-dailies--shift-date-by-months
+    (x/org-roam-dailies--current-date)
+    1)))
+
+(defun x/org-roam-dailies-goto-previous-month ()
+  "Find the daily-note one month before the current one."
+  (interactive)
+  (x/org-roam-dailies--goto-date
+   (x/org-roam-dailies--shift-date-by-months
+    (x/org-roam-dailies--current-date)
+    -1)))
 
 (transient-define-prefix x/transient-roam ()
   "Transient for Org Roam."
@@ -207,6 +272,10 @@ If BEG and END are not provided, the function operates on the entire buffer."
     ("." "Dailies goto today" org-roam-dailies-goto-today :transient t)
     ("j" "Dailies next" org-roam-dailies-goto-next-note :transient t)
     ("k" "Dailies previous" org-roam-dailies-goto-previous-note :transient t)
+    ("J" "Dailies next week" x/org-roam-dailies-goto-next-week :transient t)
+    ("K" "Dailies previous week" x/org-roam-dailies-goto-previous-week :transient t)
+    ("M-j" "Dailies next month" x/org-roam-dailies-goto-next-month :transient t)
+    ("M-k" "Dailies previous month" x/org-roam-dailies-goto-previous-month :transient t)
     ("6" "Insert journal in 2026" (lambda () (interactive) (x--insert-journal-in-year 6)))
     ("m" "Migrate journal" x--migrate-journal :transient t)]
    ["Anki"
