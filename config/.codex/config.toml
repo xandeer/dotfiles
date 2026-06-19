@@ -117,12 +117,12 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_nod
 NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex"
 CODEX_HOME = "/Users/kevin/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "89809670b247cbaffbc4f87d9fa9742a9038c0f4a06fb822d7f85ff19bf24215"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "eb55d24cf065cd5311af6f99b16bade2b7a670790ff2db9accf60d012dd55dd1"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.609.71450"
+BROWSER_USE_CODEX_APP_VERSION = "26.611.62324"
 CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
 [plugins."github@openai-curated"]
@@ -143,17 +143,17 @@ enabled = true
 [plugins."presentations@openai-primary-runtime"]
 enabled = true
 
-[plugins."browser@openai-bundled"]
+[plugins."pdf@openai-primary-runtime"]
 enabled = true
 
-[plugins."pdf@openai-primary-runtime"]
+[plugins."browser@openai-bundled"]
 enabled = true
 
 [apps.connector_68df038e0ba48191908c8434991bbac2]
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-06-16T08:16:45Z"
+last_updated = "2026-06-18T08:14:56Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
