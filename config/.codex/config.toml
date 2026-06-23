@@ -1,5 +1,5 @@
 model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "low"
 disable_response_storage = true
 # model_provider = "aicodemirror"
 # preferred_auth_method = "apikey"
@@ -149,16 +149,19 @@ enabled = true
 [plugins."browser@openai-bundled"]
 enabled = true
 
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
 [apps.connector_68df038e0ba48191908c8434991bbac2]
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-06-21T14:55:05Z"
+last_updated = "2026-06-22T13:31:42Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-06-20T04:32:57Z"
+last_updated = "2026-06-23T02:33:03Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
@@ -187,6 +190,7 @@ usePointerCursors = true
 dictationDictionary = []
 preventSleepWhileRunning = true
 keepRemoteControlAwakeWhilePluggedIn = true
+show-context-window-usage = true
 
 [desktop.open-in-target-preferences]
 global = "emacs"
