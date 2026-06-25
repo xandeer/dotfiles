@@ -156,7 +156,7 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-06-24T06:50:16Z"
+last_updated = "2026-06-25T00:31:24Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -193,7 +193,8 @@ keepRemoteControlAwakeWhilePluggedIn = true
 show-context-window-usage = true
 
 [desktop.open-in-target-preferences]
-global = "emacs"
+global = "xcode"
 
 [desktop.open-in-target-preferences.perPath]
 "/Users/kevin/projects/personal/notes" = "emacs"
+"/Users/kevin/projects/personal/remio" = "xcode"
