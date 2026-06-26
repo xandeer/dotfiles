@@ -1,7 +1,7 @@
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 disable_response_storage = true
-# model_provider = "aicodemirror"
+# model_provider = "any"
 # preferred_auth_method = "apikey"
 personality = "pragmatic"
 
@@ -117,12 +117,12 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_nod
 NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex"
 CODEX_HOME = "/Users/kevin/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "5504c0782b5c86b7dd08314045b9843e973a230e1be8f7e2e0ba3716fc63c55e"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "47e4e79498666e677abe0583e69522464d31b5b5f28db65052a91c9cbd3281e9"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.616.81150"
+BROWSER_USE_CODEX_APP_VERSION = "26.623.30605"
 CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
 [plugins."github@openai-curated"]
@@ -156,7 +156,7 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-06-25T00:31:24Z"
+last_updated = "2026-06-26T01:04:46Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -191,6 +191,7 @@ dictationDictionary = []
 preventSleepWhileRunning = true
 keepRemoteControlAwakeWhilePluggedIn = true
 show-context-window-usage = true
+followUpQueueMode = "queue"
 
 [desktop.open-in-target-preferences]
 global = "xcode"
