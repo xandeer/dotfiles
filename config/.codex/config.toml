@@ -164,7 +164,7 @@ source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-06-24T05:33:17Z"
+last_updated = "2026-07-01T03:46:01Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
