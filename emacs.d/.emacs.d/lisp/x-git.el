@@ -73,7 +73,7 @@ The function expands the given PATH to an absolute path."
     ("n" "Notes" (lambda () (interactive) (magit-status (expand-file-name org-directory))))
     ("m" "Moon Dust" (lambda () (interactive) (magit-status (expand-file-name "moon-dust" x/personal-projects-directory))))
     ("p" "PicPin" (lambda () (interactive) (magit-status (expand-file-name "picpin" x/personal-projects-directory))))
-    ("r" "Remio" (lambda () (interactive) (magit-status (expand-file-name "remio" x/personal-projects-directory))))
+    ("r" "RemSpark" (lambda () (interactive) (magit-status (expand-file-name "RemSpark" x/personal-projects-directory))))
     ]])
 
 (global-set-key (kbd "H-m") #'x/transient-magit-status)
