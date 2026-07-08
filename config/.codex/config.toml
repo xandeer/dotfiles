@@ -11,6 +11,7 @@ sandbox_mode = "workspace-write"
 plan_mode_reasoning_effort = "xhigh"
 
 notify = ["/Users/kevin/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
+service_tier = "priority"
 
 [model_providers.any]
 name = "anyrouter"
