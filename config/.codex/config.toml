@@ -55,6 +55,9 @@ trust_level = "trusted"
 [projects."/Users/kevin/Documents/Codex/2026-06-27/ru"]
 trust_level = "trusted"
 
+[projects."/Users/kevin/projects/personal/RemSpark"]
+trust_level = "trusted"
+
 [[skills.config]]
 path = "/Users/kevin/.agents/skills/baoyu-cover-image/SKILL.md"
 enabled = false
@@ -159,7 +162,7 @@ enabled = true
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-07-07T02:36:33Z"
+last_updated = "2026-07-07T03:18:01Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
