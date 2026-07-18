@@ -1,4 +1,4 @@
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "low"
 disable_response_storage = true
 # model_provider = "any"
@@ -130,13 +130,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex"
 CODEX_HOME = "/Users/kevin/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,89b6b07b3c7e2344f20d65930fb27b3f418aace8bc62d7abb2a97a2291ffec39"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "330cfa6875d3acd34ed3d321d03e97c0dd9ee3c1855467f2600215089f2d8279,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.715.21316"
+BROWSER_USE_CODEX_APP_VERSION = "26.715.31251"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.computer-use]
@@ -169,9 +169,6 @@ enabled = true
 [plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
-[plugins."sites@openai-bundled"]
-enabled = true
-
 [plugins."visualize@openai-bundled"]
 enabled = true
 
@@ -185,7 +182,7 @@ enabled = false
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-07-17T02:14:58Z"
+last_updated = "2026-07-18T03:29:26Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -234,5 +231,5 @@ global = "xcode"
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,89b6b07b3c7e2344f20d65930fb27b3f418aace8bc62d7abb2a97a2291ffec39"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "330cfa6875d3acd34ed3d321d03e97c0dd9ee3c1855467f2600215089f2d8279,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex"
