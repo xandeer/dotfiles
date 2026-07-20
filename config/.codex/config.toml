@@ -109,6 +109,10 @@ enabled = false
 path = "/Users/kevin/.agents/skills/ui-ux-pro-max/SKILL.md"
 enabled = false
 
+[[skills.config]]
+name = "figma:figma-code-connect"
+enabled = false
+
 [notice]
 hide_rate_limit_model_nudge = true
 
@@ -224,6 +228,8 @@ followUpQueueMode = "queue"
 dock-icon-preference = "codex-system"
 conversationDetailMode = "STEPS_COMMANDS"
 enabled-reasoning-efforts = ["low", "medium", "high", "xhigh", "ultra", "max"]
+show-ultra-in-model-picker-slider = true
+mac-menu-bar-enabled = false
 
 [desktop.open-in-target-preferences]
 global = "xcode"
