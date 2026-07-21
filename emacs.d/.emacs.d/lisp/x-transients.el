@@ -146,14 +146,20 @@
 (transient-define-prefix x/transient-global-group ()
   "Transient for global actions."
   [["Clock"
-    ("i" "In last" org-clock-in-last)
+    ("i" "In last" (lambda ()
+                       (interactive)
+                       (x/open "remspark://trackingAction?action=resume")))
     ("g" "In organization" x/clock-in-organization-task)
     ("w" "In working" x/clock-in-working-task)
     ("r" "In reading" x/clock-in-reading-task)
     ("n" "In noting" x/clock-in-noting-task)
-    ("l" "Out" org-clock-out)
+    ("l" "Out" (lambda ()
+                  (interactive)
+                  (x/open "remspark://trackingAction?action=pause")))
     ("j" "Goto current" org-clock-goto)
-    ("k" "Done current" x/org-done-current)]
+    ("k" "Done current" (lambda ()
+                           (interactive)
+                           (x/open "remspark://trackingAction?action=complete")))]
    ["Mics"
     ("f" "Focus lines" consult-focus-lines)
     ("o" "Consult outline" consult-outline)
