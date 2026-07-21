@@ -4,9 +4,9 @@
 
 **Goal:** Route the existing `In last`, `Out`, and `Done current` Transient shortcuts to RemSpark's resume, pause, and complete URL actions without changing their keys or labels.
 
-**Architecture:** Keep the change inside `x/transient-global-group` and reuse the existing autoloaded `x/open` helper. Each affected suffix becomes an interactive lambda with one fixed RemSpark URL, while a batch Emacs regression invokes the actual runtime suffix commands and captures their opened URLs.
+**Architecture:** Keep the change inside `x/transient-global-group` and reuse the existing `x/start-process` helper, which is loaded before `x-transients`. Each affected suffix becomes an interactive lambda that dispatches `/usr/bin/open` and one fixed RemSpark URL as separate `make-process` argv elements. A batch Emacs regression invokes the actual runtime suffix commands through the real helper and captures the resulting `make-process :command` values.
 
-**Tech Stack:** Emacs Lisp, Transient, macOS `open`, zsh regression script
+**Tech Stack:** Emacs Lisp, Transient, `make-process`, macOS `open`, zsh regression script
 
 ---
 
@@ -20,17 +20,19 @@
 
 Create an executable zsh script that:
 
-- Loads `x-transients.el` in batch Emacs with minimal `consult` and key-definition stubs.
-- Defines a capturing `x/open` stub.
+- Loads the real `x-start-process.el` and `x-transients.el` in batch Emacs with minimal compatibility stubs.
+- Stubs `make-process` and `set-process-sentinel`, captures each real `:command` plist value, and rejects any fallback through the shell-based open helper.
 - Uses `transient-get-suffix` to retrieve the runtime suffix command for `i`, `l`, and `k`.
 - Invokes each actual suffix command interactively.
-- Prints each key, unchanged description, and captured URL.
+- Prints each key, unchanged description, argv count, executable, and URL.
+- Asserts that exactly three process dispatches occur.
 - Asserts these exact lines:
 
 ```text
-i|In last|remspark://trackingAction?action=resume
-l|Out|remspark://trackingAction?action=pause
-k|Done current|remspark://trackingAction?action=complete
+i|In last|2|/usr/bin/open|remspark://trackingAction?action=resume
+l|Out|2|/usr/bin/open|remspark://trackingAction?action=pause
+k|Done current|2|/usr/bin/open|remspark://trackingAction?action=complete
+dispatch-count|3
 ```
 
 **Step 2: Make the test executable**
@@ -51,7 +53,7 @@ Run:
 zsh /Users/kevin/projects/personal/dotfiles/tests/config/emacs-remspark-tracking-actions-regression.zsh
 ```
 
-Expected: FAIL because the three suffixes still invoke the Org clock commands and therefore do not call the capturing `x/open` stub.
+Expected: FAIL because the three suffixes still invoke the Org clock commands and therefore do not produce the required `make-process :command` argv values.
 
 ### Task 2: Replace the three Transient handlers
 
@@ -66,19 +68,19 @@ Replace only the commands for `i`, `l`, and `k`:
 ```emacs-lisp
 ("i" "In last" (lambda ()
                    (interactive)
-                   (x/open "remspark://trackingAction?action=resume")))
+                   (x/start-process "/usr/bin/open remspark://trackingAction?action=resume")))
 ```
 
 ```emacs-lisp
 ("l" "Out" (lambda ()
               (interactive)
-              (x/open "remspark://trackingAction?action=pause")))
+              (x/start-process "/usr/bin/open remspark://trackingAction?action=pause")))
 ```
 
 ```emacs-lisp
 ("k" "Done current" (lambda ()
                        (interactive)
-                       (x/open "remspark://trackingAction?action=complete")))
+                       (x/start-process "/usr/bin/open remspark://trackingAction?action=complete")))
 ```
 
 Leave the keys, descriptions, and `g`, `w`, `r`, `n`, and `j` suffixes unchanged.
@@ -91,7 +93,7 @@ Run:
 zsh /Users/kevin/projects/personal/dotfiles/tests/config/emacs-remspark-tracking-actions-regression.zsh
 ```
 
-Expected: PASS with all three runtime suffix mappings matching their expected URLs and labels.
+Expected: PASS with all three runtime suffix mappings producing exactly two argv elements—`/usr/bin/open` and the expected URL—while retaining their labels.
 
 ### Task 3: Verify the focused Emacs configuration change
 
