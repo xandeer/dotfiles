@@ -148,18 +148,18 @@
   [["Clock"
     ("i" "In last" (lambda ()
                        (interactive)
-                       (x/start-process "/usr/bin/open remspark://trackingAction?action=resume")))
+                       (x/start-process "/usr/bin/open -g remspark://trackingAction?action=resume")))
     ("g" "In organization" x/clock-in-organization-task)
     ("w" "In working" x/clock-in-working-task)
     ("r" "In reading" x/clock-in-reading-task)
     ("n" "In noting" x/clock-in-noting-task)
     ("l" "Out" (lambda ()
                   (interactive)
-                  (x/start-process "/usr/bin/open remspark://trackingAction?action=pause")))
+                  (x/start-process "/usr/bin/open -g remspark://trackingAction?action=pause")))
     ("j" "Goto current" org-clock-goto)
     ("k" "Done current" (lambda ()
                            (interactive)
-                           (x/start-process "/usr/bin/open remspark://trackingAction?action=complete")))]
+                           (x/start-process "/usr/bin/open -g remspark://trackingAction?action=complete")))]
    ["Mics"
     ("f" "Focus lines" consult-focus-lines)
     ("o" "Consult outline" consult-outline)
