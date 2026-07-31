@@ -26,7 +26,7 @@
                           :models x/gpt--gh-models))
 
 ;; ark
-(setq x/gpt--ark-models '(doubao-seed-2-0-code-preview-260215))
+(setq x/gpt--ark-models '(glm-5-2-260617))
 (setq x/gpt--ark-token (auth-source-pick-first-password :host "ark" :user "gptel"))
 (setq x/gpt--backend-ark (gptel-make-openai "ark" ;Any name you want
                           :host "ark.cn-beijing.volces.com"
