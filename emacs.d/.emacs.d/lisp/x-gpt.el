@@ -45,7 +45,7 @@
                           :key x/gpt--nvidia-token
                           :models x/gpt--nvidia-models))
 
-(setq x/gpt-model 'doubao-seed-2-0-code-preview-260215)
+(setq x/gpt-model 'glm-5-2-260617)
 (setq x/gpt-backend x/gpt--backend-ark)
 
 (defun x/gpt--match-backend ()
