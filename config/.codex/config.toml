@@ -8,35 +8,16 @@ personality = "pragmatic"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
-plan_mode_reasoning_effort = "xhigh"
 
 notify = ["/Users/kevin/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/Users\\/kevin\\/bin\\/agent-notify-kitty\",\"codex\"]"]
 service_tier = "default"
 
-[model_providers.any]
-name = "anyrouter"
-base_url = "https://anyrouter.top/v1"
-wire_api = "responses"
+# 允许 Codex 读取较完整的 AGENTS.md
+project_doc_max_bytes = 65536
 
-[model_providers.aicodemirror]
-name = "aicodemirror"
-base_url = "https://api.aicodemirror.com/api/codex/backend-api/codex"
-wire_api = "responses"
-
-[model_providers.aigocode]
-name = "aigocode"
-base_url = "https://api.aigocode.com"
-wire_api = "responses"
-requires_openai_auth = true
-
-[projects."/Users/kevin/projects/personal/remio"]
-trust_level = "trusted"
-
-[projects."/Users/kevin/projects/personal/stock"]
-trust_level = "trusted"
-
-[projects."/Users/kevin/projects/personal/stock.codex"]
-trust_level = "trusted"
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 6
 
 [projects."/Users/kevin/projects/personal/ai-memory"]
 trust_level = "trusted"
@@ -65,52 +46,14 @@ trust_level = "trusted"
 [projects."/Users/kevin/Documents/Codex/2026-07-15/cs"]
 trust_level = "trusted"
 
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/baoyu-cover-image/SKILL.md"
-enabled = false
+[projects."/Users/kevin/projects/others"]
+trust_level = "trusted"
 
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/xiaohongshu-cover-generator/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/social-content/SKILL.md"
-enabled = false
+[projects."/Users/kevin/projects/personal/Remim"]
+trust_level = "trusted"
 
 [[skills.config]]
 path = "/Users/kevin/.codex/superpowers/skills/dispatching-parallel-agents/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-banner-design/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-brand/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-design/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-design-system/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-slides/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ckm-ui-styling/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = "/Users/kevin/.agents/skills/ui-ux-pro-max/SKILL.md"
-enabled = false
-
-[[skills.config]]
-name = "figma:figma-code-connect"
 enabled = false
 
 [notice]
@@ -118,10 +61,6 @@ hide_rate_limit_model_nudge = true
 
 [notice.model_migrations]
 "gpt-5.3-codex" = "gpt-5.4"
-
-[mcp_servers.figma]
-url = "https://mcp.figma.com/mcp"
-enabled = false
 
 [mcp_servers.node_repl]
 args = []
@@ -182,6 +121,18 @@ enabled = true
 [plugins."browser@openai-bundled"]
 enabled = true
 
+[plugins."ponytail@ponytail"]
+enabled = true
+
+[plugins."caveman@caveman"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
 [apps.connector_68df038e0ba48191908c8434991bbac2]
 enabled = false
 
@@ -189,7 +140,7 @@ enabled = false
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-01T02:19:06Z"
+last_updated = "2026-08-03T04:35:15Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -197,6 +148,18 @@ source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 last_updated = "2026-08-02T19:33:05Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.ponytail]
+last_updated = "2026-08-03T04:57:35Z"
+last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+
+[marketplaces.caveman]
+last_updated = "2026-08-03T12:10:15Z"
+last_revision = "fcf7663366c217dc8f334a11028de52ed950ceab"
+source_type = "git"
+source = "https://github.com/JuliusBrussee/caveman.git"
 
 [tui]
 status_line = ["model-with-reasoning", "project-name", "git-branch"]
@@ -230,15 +193,26 @@ conversationDetailMode = "STEPS_COMMANDS"
 enabled-reasoning-efforts = ["low", "medium", "high", "xhigh", "ultra", "max"]
 show-ultra-in-model-picker-slider = false
 mac-menu-bar-enabled = false
+git-pull-request-merge-method = "squash"
 
 [desktop.open-in-target-preferences]
 global = "xcode"
 
 [desktop.open-in-target-preferences.perPath]
 "/Users/kevin/projects/personal/notes" = "emacs"
-"/Users/kevin/projects/personal/remio" = "xcode"
 
 [shell_environment_policy.set]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "028a14b6eaa6d98dac2aae00764345ab9f244801ed8493d42b9af3be5575006e,f204d340535055781952b10ed396de20b842f00a19e430852f7e121ad1ce91f6"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex"
+
+[hooks.state]
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7a6e70ef"
