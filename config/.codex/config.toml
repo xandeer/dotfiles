@@ -156,8 +156,8 @@ source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
 [marketplaces.caveman]
-last_updated = "2026-08-03T12:10:15Z"
-last_revision = "fcf7663366c217dc8f334a11028de52ed950ceab"
+last_updated = "2026-08-04T21:39:06Z"
+last_revision = "ec83e5bace4c20484d704dea21e12fc4eb94e9aa"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
