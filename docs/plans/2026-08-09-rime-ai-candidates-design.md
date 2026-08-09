@@ -7,7 +7,7 @@ Add cloud-assisted candidates and independent local ranking to Rime on macOS. Th
 ## Confirmed behavior
 
 - Target macOS and Squirrel 1.1.2 only.
-- Enable the feature in every normal text field. Secure text fields never send requests.
+- Enable the feature in every normal text field. Fields that enable macOS Secure Event Input never send requests.
 - Use a user-configured OpenAI-compatible endpoint and model.
 - Read the API key from macOS Keychain; never store it in YAML, Git, logs, or command arguments.
 - Use both recent Rime commits and text around the macOS insertion point as context when available.
@@ -119,7 +119,8 @@ Requests do not stream and do not retry. This keeps cancellation, cost, and orde
 
 - Missing configuration, missing Keychain access, timeout, network failure, rate limiting, invalid JSON, or invalid candidate text produces no AI candidate. Ordinary Rime behavior remains intact.
 - Any edit, selection movement, schema switch, focus change, commit, or cancellation makes an older response ineligible even if task cancellation races with completion.
-- Secure input fields never collect context or start a request.
+- Secure Event Input immediately clears recent AI context and prevents the secure commit from entering later requests.
+- Detection uses macOS's public, global Secure Event Input signal. A custom password control that fails to enable that signal cannot be identified through the public per-client InputMethodKit API; the first version does not add Accessibility heuristics to guess around a broken control.
 - If an application does not expose surrounding text through InputMethodKit, the request falls back to Rime input, candidates, and recent commit history. The first version does not request Accessibility permission as a workaround.
 - Request and response bodies and bearer tokens are never logged. Diagnostics may record only status categories, timing, and generation identifiers.
 
