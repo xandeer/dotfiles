@@ -51,11 +51,12 @@ The live network result always outranks the learned table. Learned entries parti
 
 ### Configuration and storage
 
-`~/Library/Rime/ai.yaml` contains only non-secret configuration:
+The existing `squirrel.custom.yaml` contains only the non-secret AI configuration, reusing Squirrel's current `SquirrelConfig` reader:
 
 ```yaml
-endpoint: https://example.com/v1/chat/completions
-model: example-model
+patch:
+  ai/endpoint: https://example.com/v1/chat/completions
+  ai/model: example-model
 ```
 
 The endpoint must be HTTPS and must not contain embedded credentials. Debounce, timeout, context bounds, and candidate-count bounds remain fixed implementation constants until a real need to tune them appears.
