@@ -102,6 +102,18 @@ def require_order(text, first, second, message)
   abort message unless first_index && second_index && first_index < second_index
 end
 
+def before_marker(text, marker, label)
+  index = text.index(marker)
+  abort "missing #{label}" unless index
+  text[0...index]
+end
+
+def require_configuration_guard(text, reader_call, label)
+  escaped_call = Regexp.escape(reader_call)
+  guard = /guard(?:(?!\belse\s*\{)[\s\S])*?#{escaped_call}\s*==\s*configuration(?:(?!\belse\s*\{)[\s\S])*?\belse\s*\{\s*(?:self\.)?invalidateAICandidate\(clearProperties:\s*true\)\s*return\s*\}/
+  abort "#{label} must compare and clear the complete runtime configuration in one guard" unless text.match?(guard)
+end
+
 # Fail here on the unmodified controller: this proves RED is a missing bridge,
 # not a broken harness or checkout error.
 schedule = method(source, "scheduleAICandidate")
@@ -112,6 +124,89 @@ owns = method(source, "ownsAICandidate")
 prefix_utf16 = method(source, "aiPrefixUTF16")
 suffix_utf16 = method(source, "aiSuffixUTF16")
 response_delegate = block_after(source, /\bclass\s+SquirrelAIURLSessionDelegate\b/, "AI URLSession delegate")
+
+configuration_declaration = source.match(
+  /\bstruct\s+([A-Za-z_][A-Za-z0-9_]*AI[A-Za-z0-9_]*Configuration)\s*:\s*Equatable\s*\{/
+)
+abort "missing comparable AI runtime configuration" unless configuration_declaration
+configuration_type = configuration_declaration[1]
+configuration = block_after(
+  source,
+  /\bstruct\s+#{Regexp.escape(configuration_type)}\s*:\s*Equatable\s*\{/,
+  "#{configuration_type} declaration"
+)
+{
+  enabled: /\blet\s+enabled\s*:\s*Bool\b/,
+  endpoint: /\blet\s+endpoint\s*:\s*URL\b/,
+  model: /\blet\s+model\s*:\s*String\b/,
+  instructions: /\blet\s+instructions\s*:\s*String\b/,
+}.each do |name, pattern|
+  require_match(configuration, pattern, "runtime configuration must capture #{name}")
+end
+
+reader_declaration = source.match(
+  /\bfunc\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*\)\s*->\s*#{Regexp.escape(configuration_type)}\?\s*\{/
+)
+abort "missing AI runtime configuration reader" unless reader_declaration
+configuration_reader_name = reader_declaration[1]
+configuration_reader = method(source, configuration_reader_name)
+timer = block_after(
+  schedule,
+  /Timer\.scheduledTimer\(withTimeInterval:\s*0\.3,\s*repeats:\s*false/,
+  "AI debounce timer"
+)
+timer_before_keychain = before_marker(timer, "aiKeychainQueue.async", "Keychain queue inside AI timer")
+keychain = block_after(
+  timer,
+  /aiKeychainQueue\.async\s*\{\s*\[weak self\]/,
+  "AI Keychain callback"
+)
+post_keychain_main = block_after(
+  keychain,
+  /DispatchQueue\.main\.async\s*\{\s*\[weak self\]/,
+  "post-Keychain main callback"
+)
+post_keychain_before_task = before_marker(
+  post_keychain_main,
+  "let task",
+  "URLSession task creation after Keychain"
+)
+apply_before_publish = before_marker(apply, "rimeAPI.set_property", "AI property publication")
+
+require_match(
+  configuration_reader,
+  /getBool\("ai\/enabled"\)\s*\?\?\s*true/,
+  "ai/enabled must default to true only when absent"
+)
+require_match(
+  configuration_reader,
+  /guard\s+enabled\s+else\s*\{\s*return\s+nil\s*\}/,
+  "explicit ai/enabled false must stop configuration before cloud fields"
+)
+require_match(
+  configuration_reader,
+  /getString\("ai\/instructions"\)\s*\?\?\s*""/,
+  "missing ai/instructions must default to empty"
+)
+require_match(
+  configuration_reader,
+  /SquirrelAI\.instructions\(/,
+  "ai/instructions must be normalized by the reviewed core"
+)
+require_order(
+  configuration_reader,
+  'getBool("ai/enabled")',
+  "guard enabled else",
+  "enabled value must be checked before cloud configuration"
+)
+%w[ai/endpoint ai/model ai/instructions].each do |path|
+  require_order(
+    configuration_reader,
+    "guard enabled else",
+    "getString(\"#{path}\")",
+    "explicit disable must be handled before reading #{path}"
+  )
+end
 
 %w[Foundation Carbon InputMethodKit].each do |framework|
   require_match(source, /^import #{Regexp.escape(framework)}(?:\.[A-Za-z0-9_]+)?$/, "missing import #{framework}")
@@ -149,15 +244,59 @@ require_match(response_delegate, /response\.url\s*==\s*pending\.expectedURL/, "e
 require_match(response_delegate, /200\.\.<300/, "expected HTTP 2xx gate")
 
 require_match(schedule, /Timer\.scheduledTimer\(withTimeInterval:\s*0\.3,\s*repeats:\s*false/, "expected a nonrepeating 0.3-second debounce timer")
-require_match(schedule, /NSApp\.squirrelAppDelegate\.config\?\.getString\("ai\/endpoint"\)/, "expected existing config reader for ai/endpoint")
-require_match(schedule, /NSApp\.squirrelAppDelegate\.config\?\.getString\("ai\/model"\)/, "expected existing config reader for ai/model")
-require_match(schedule, /SquirrelAI\.endpoint\(/, "expected endpoint validation in the scheduler")
+require_match(configuration_reader, /NSApp\.squirrelAppDelegate\.config\?\.getString\("ai\/endpoint"\)/, "expected existing config reader for ai/endpoint")
+require_match(configuration_reader, /NSApp\.squirrelAppDelegate\.config\?\.getString\("ai\/model"\)/, "expected existing config reader for ai/model")
+require_match(configuration_reader, /SquirrelAI\.endpoint\(/, "expected endpoint validation in the runtime configuration reader")
 require_match(schedule, /IsSecureEventInputEnabled\(\)/, "expected secure-input gate in the scheduler")
 require_match(schedule, /aiHistory\.beginNormalComposition\(\)/, "expected explicit normal-composition history reset")
 require_match(schedule, /SquirrelAI\.readAPIKey\(\)/, "expected Keychain read through the reviewed core")
 require_match(schedule, /aiKeychainQueue\.async\s*\{\s*\[weak self\]/, "expected weak background Keychain callback")
 require_match(schedule, /DispatchQueue\.main\.async\s*\{\s*\[weak self\]/, "expected weak return to main queue")
 require_match(schedule, /SquirrelAI\.request\(/, "expected reviewed request builder")
+require_match(
+  schedule,
+  /guard\s+let\s+configuration\s*=\s*#{Regexp.escape(configuration_reader_name)}\(\)\s*else\s*\{\s*invalidateAICandidate\(clearProperties:\s*true\)\s*return\s*\}/,
+  "disabled or invalid runtime configuration must invalidate, clear, and return"
+)
+reject_match(
+  schedule,
+  /(?:getBool|getString)\("ai\//,
+  "schedule must access ai/* only through the runtime configuration reader"
+)
+require_order(
+  schedule,
+  "IsSecureEventInputEnabled()",
+  "#{configuration_reader_name}()",
+  "secure-input handling must precede runtime configuration"
+)
+%w[get_input Timer.scheduledTimer SquirrelAI.readAPIKey SquirrelAI.request].each do |cloud_work|
+  require_order(
+    schedule,
+    "#{configuration_reader_name}()",
+    cloud_work,
+    "runtime configuration gate must precede #{cloud_work}"
+  )
+end
+require_configuration_guard(
+  timer_before_keychain,
+  "self.#{configuration_reader_name}()",
+  "timer boundary"
+)
+require_configuration_guard(
+  post_keychain_before_task,
+  "self.#{configuration_reader_name}()",
+  "post-Keychain boundary"
+)
+require_match(
+  post_keychain_before_task,
+  /SquirrelAI\.request\(\s*endpoint:\s*configuration\.endpoint,\s*key:\s*key,\s*model:\s*configuration\.model,\s*instructions:\s*configuration\.instructions,\s*snapshot:\s*snapshot\s*\)/,
+  "request endpoint, model, and instructions must come from the captured configuration"
+)
+require_match(
+  schedule,
+  /applyAICandidate\(candidate,\s*snapshot:\s*snapshot,\s*configuration:\s*configuration\)/,
+  "response must carry its captured runtime configuration to apply"
+)
 
 %w[selectedRange markedRange length].each do |api|
   require_match(source, /client\.#{api}\(\)/, "expected IMK client.#{api}() API")
@@ -184,6 +323,22 @@ if schedule.scan(/guard self\.ownsAICandidate\(snapshot\) else \{ return \}/).co
   abort "timer and Keychain return must silently drop stale snapshots"
 end
 require_match(apply, /guard ownsAICandidate\(snapshot\) else \{ return \}/, "apply must silently drop a stale snapshot")
+require_match(
+  apply,
+  /configuration:\s*#{Regexp.escape(configuration_type)}/,
+  "apply must receive the captured runtime configuration"
+)
+require_configuration_guard(
+  apply_before_publish,
+  "#{configuration_reader_name}()",
+  "apply boundary"
+)
+require_order(
+  apply,
+  "#{configuration_reader_name}()",
+  "set_property",
+  "apply must recheck full runtime configuration before publishing any property"
+)
 secure_positions = schedule.enum_for(:scan, /IsSecureEventInputEnabled\(\)/).map { Regexp.last_match.begin(0) }
 ownership_positions = schedule.enum_for(:scan, /guard self\.ownsAICandidate\(snapshot\) else \{ return \}/).map { Regexp.last_match.begin(0) }
 unless secure_positions.length >= 3 &&

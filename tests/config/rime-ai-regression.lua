@@ -296,10 +296,69 @@ for index, original in ipairs(deep) do
 end
 assert_originals_once(bounded, deep, 1)
 
-local temp_dir = os.tmpname()
-os.remove(temp_dir)
-local mkdir_ok = os.execute("mkdir " .. string.format("%q", temp_dir))
-assert(mkdir_ok == true or mkdir_ok == 0, "failed to create temporary Rime user directory")
+local real_execute = os.execute
+local real_popen = io.popen
+local real_open = io.open
+local real_rename = os.rename
+
+local function shell_quote(value)
+    return "'" .. tostring(value):gsub("'", "'\"'\"'") .. "'"
+end
+
+local mktemp_command_prefix = "/usr/bin/mktemp -q "
+local function assert_mktemp_command(command)
+    command = tostring(command)
+    assert(command:sub(1, #mktemp_command_prefix) == mktemp_command_prefix,
+        "atomic temp creation must use the absolute /usr/bin/mktemp -q prefix")
+end
+
+local function command_succeeded(result)
+    return result == true or result == 0
+end
+
+local function run_command(command, message)
+    local result = real_execute(command)
+    assert(command_succeeded(result), message or ("command failed: " .. command))
+end
+
+local function assert_file_absent(path, message)
+    local file = real_open(path, "r")
+    if file then
+        file:close()
+        error(message or ("unexpected file: " .. path))
+    end
+end
+
+local temp_seed = os.tmpname()
+os.remove(temp_seed)
+local shell_tmpdir = assert(os.getenv("TMPDIR"), "TMPDIR is required for shell-expansion sentinels")
+assert(shell_tmpdir:sub(-1) == "/", "TMPDIR must end with a slash")
+local temp_token = assert(temp_seed:match("([^/]+)$"), "temporary seed must have a basename")
+local dollar_sentinel_name = "rime-ai-dollar-sentinel-" .. temp_token
+local backtick_sentinel_name = "rime-ai-backtick-sentinel-" .. temp_token
+local dollar_sentinel_path = shell_tmpdir .. dollar_sentinel_name
+local backtick_sentinel_path = shell_tmpdir .. backtick_sentinel_name
+os.remove(dollar_sentinel_path)
+os.remove(backtick_sentinel_path)
+local temp_dir = temp_seed .. " Rime's AI weights " ..
+    "$(touch${IFS}${TMPDIR}" .. dollar_sentinel_name .. ") " ..
+    "`touch${IFS}${TMPDIR}" .. backtick_sentinel_name .. "`"
+assert(temp_dir:find(" ", 1, true), "temporary Rime directory must contain a space")
+assert(temp_dir:find("'", 1, true), "temporary Rime directory must contain a single quote")
+assert(temp_dir:find("$(", 1, true),
+    "temporary Rime directory must contain literal command-substitution syntax")
+assert(temp_dir:find("`", 1, true), "temporary Rime directory must contain literal backticks")
+run_command("/bin/mkdir " .. shell_quote(temp_dir), "failed to create temporary Rime user directory")
+assert_file_absent(dollar_sentinel_path, "dollar command substitution must stay literal")
+assert_file_absent(backtick_sentinel_path, "backtick command substitution must stay literal")
+local created_dirs = {temp_dir}
+
+local function make_directory(path)
+    run_command("/bin/mkdir " .. shell_quote(path), "failed to create fault-injection directory")
+    created_dirs[#created_dirs + 1] = path
+    return path
+end
+
 local weights_path = temp_dir .. "/ai_weights.tsv"
 rime_api = {
     get_user_data_dir = function()
@@ -308,7 +367,7 @@ rime_api = {
 }
 
 local function read_file(path)
-    local file = io.open(path, "r")
+    local file = real_open(path, "r")
     if not file then
         return nil
     end
@@ -318,9 +377,57 @@ local function read_file(path)
 end
 
 local function write_file(path, contents)
-    local file = assert(io.open(path, "w"))
+    local file = assert(real_open(path, "w"))
     assert(file:write(contents))
     assert(file:close())
+end
+
+local command_output_serial = 0
+local function command_output(command)
+    command_output_serial = command_output_serial + 1
+    local output_path = temp_dir .. "/.test-command-output." .. command_output_serial
+    os.remove(output_path)
+    local result = real_execute(command .. " > " .. shell_quote(output_path))
+    if not command_succeeded(result) then
+        os.remove(output_path)
+        return nil
+    end
+    local output = read_file(output_path)
+    os.remove(output_path)
+    return output
+end
+
+local function file_mode(path)
+    local output = command_output("/usr/bin/stat -f %Lp " .. shell_quote(path))
+    return output and output:match("^(%d+)\n?$") or nil
+end
+
+local function set_file_mode(path, mode)
+    run_command("/bin/chmod " .. mode .. " " .. shell_quote(path),
+        "failed to set fixture permissions")
+end
+
+local function ai_temp_files(directory)
+    local command = table.concat({
+        "/usr/bin/find",
+        shell_quote(directory),
+        "-maxdepth 1 -type f -name",
+        shell_quote("ai_weights.tsv.tmp*"),
+        "-print",
+    }, " ")
+    local output = assert(command_output(command), "failed to list atomic temp files")
+    local paths = {}
+    for path in output:gmatch("[^\n]+") do
+        paths[#paths + 1] = path
+    end
+    return paths
+end
+
+local function assert_no_ai_temp_files(directory, message)
+    local paths = ai_temp_files(directory)
+    same(#paths, 0, message or "atomic write must leave no temporary files")
+    same(read_file(directory .. "/ai_weights.tsv.tmp"), nil,
+        "atomic write must never fall back to a fixed .tmp path")
 end
 
 local function exact_rows(text, schema_id, input, candidate_text)
@@ -340,10 +447,46 @@ end
 local selected_segment = {start = 2, _end = 6, status = "selected"}
 local selected_candidate = candidate("ai", 2, 6, "chosen correction")
 local learn_env, learn_context = env("xxcodeyy", selected_segment, "test_schema")
+local legacy_contents = "test_schema\tseed\tlegacy\t1\t1\n"
+write_file(weights_path, legacy_contents)
+set_file_mode(weights_path, "0644")
+same(file_mode(weights_path), "644", "fixture must begin with broad permissions under umask 022")
 ai_learned_translator.init(learn_env)
+same(file_mode(weights_path), "600", "translator init must secure an existing learned TSV")
 same(learn_context.select_notifier.slots[1].group, 0, "select notifier group")
 same(learn_context.commit_notifier.slots[1].group, 0, "commit notifier group")
 same(learn_context.update_notifier.slots[1].group, 0, "update notifier group")
+
+local renamed_temp_basenames = {}
+local renamed_temp_seen = {}
+local atomic_temp_open_count = 0
+local successful_mktemp_commands = {}
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        successful_mktemp_commands[#successful_mktemp_commands + 1] = tostring(command)
+    end
+    return real_popen(command, mode)
+end
+io.open = function(path, mode)
+    if type(path) == "string" and path:match("/ai_weights%.tsv%.tmp%..+$") then
+        atomic_temp_open_count = atomic_temp_open_count + 1
+        same(mode, "r+", "mktemp output must be opened without truncating or recreating it")
+    end
+    return real_open(path, mode)
+end
+os.rename = function(source, destination)
+    if destination == weights_path and source ~= destination then
+        local basename = source:match("/([^/]+)$")
+        assert(basename and basename:match("^ai_weights%.tsv%.tmp%..+$"),
+            "atomic source must use a unique ai_weights.tsv.tmp.* basename")
+        same(file_mode(source), "600", "atomic source must be mode 0600 before rename")
+        assert(not renamed_temp_seen[basename], "atomic temp basename must be unique per write")
+        renamed_temp_seen[basename] = true
+        renamed_temp_basenames[#renamed_temp_basenames + 1] = basename
+    end
+    return real_rename(source, destination)
+end
 
 learn_context.properties._ai_generation = ""
 learn_context.selected_candidate = selected_candidate
@@ -356,11 +499,13 @@ learn_context.select_notifier:emit(learn_context, function()
     selected_candidate.text = "wrong late value"
     learn_env.engine.schema.schema_id = "wrong_schema"
 end)
-same(read_file(weights_path), nil, "selection must not persist before commit")
+same(read_file(weights_path), legacy_contents,
+    "selection must preserve legacy contents and not persist before commit")
 learn_context.input = "xxcodeyy"
 learn_context.update_notifier:emit(learn_context)
 learn_context.commit_notifier:emit(learn_context)
 local learned = read_file(weights_path)
+same(file_mode(weights_path), "600", "committed learned TSV must remain mode 0600")
 local learned_count, learned_weight = exact_rows(learned, "test_schema", "code", "chosen correction")
 same(learned_count, 1, "group 0 snapshot exact row count")
 same(learned_weight, 1, "group 0 snapshot weight")
@@ -390,6 +535,14 @@ local native_count, native_weight = exact_rows(read_file(weights_path),
     "test_schema", "native", "native correction")
 same(native_count, 1, "native correction exact row count")
 same(native_weight, 1, "native candidate selected under a live generation must be learned")
+io.popen = real_popen
+io.open = real_open
+os.rename = real_rename
+assert(#renamed_temp_basenames >= 3, "expected several independent atomic learning writes")
+same(atomic_temp_open_count, #renamed_temp_basenames,
+    "each renamed temp file must be opened exactly once in r+ mode")
+same(#successful_mktemp_commands, #renamed_temp_basenames,
+    "each successful atomic write must invoke absolute /usr/bin/mktemp -q once")
 
 local function assert_aborted_selection_not_written(candidate_text, abort)
     learn_context.input = "code"
@@ -483,6 +636,416 @@ for _, invalid_quality in ipairs({false, "not-a-number"}) do
         "missing or non-numeric initial quality must use a safe baseline")
 end
 
+local fault_serial = 0
+local function storage_case(label, mode)
+    fault_serial = fault_serial + 1
+    local directory = make_directory(temp_dir .. "/" .. label .. " " .. fault_serial)
+    local path = directory .. "/ai_weights.tsv"
+    local original = "test_schema\tfault-input\tpreserved\t1\t1\n"
+    write_file(path, original)
+    set_file_mode(path, mode or "0600")
+    rime_api.get_user_data_dir = function()
+        return directory
+    end
+    local case_env, case_context = env("fault-input",
+        {start = 0, _end = 11, status = "selected"}, "test_schema")
+    ai_learned_translator.init(case_env)
+    return {
+        directory = directory,
+        path = path,
+        original = original,
+        env = case_env,
+        context = case_context,
+    }
+end
+
+local function trigger_learning(case, text)
+    local case_context = case.context
+    case_context.input = "fault-input"
+    case_context.composition.segment = {start = 0, _end = 11, status = "selected"}
+    case_context.properties._ai_generation = "fault-generation"
+    case_context.selected_candidate = candidate("ai", 0, 11, text)
+    case_context.select_notifier:emit(case_context)
+    case_context.commit_notifier:emit(case_context)
+end
+
+local function assert_storage_preserved(case, message)
+    same(read_file(case.path), case.original, message .. " must preserve the target")
+    assert_no_ai_temp_files(case.directory, message .. " must clean every temp file")
+end
+
+local function is_case_temp(case, path)
+    return type(path) == "string" and path:sub(1, #case.directory + 1) == case.directory .. "/" and
+        path:match("/ai_weights%.tsv%.tmp%..+$") ~= nil
+end
+
+-- Creating the lexicon from scratch must also preserve mktemp's 0600 mode.
+local new_file_directory = make_directory(temp_dir .. "/new learned file")
+local new_file_path = new_file_directory .. "/ai_weights.tsv"
+rime_api.get_user_data_dir = function()
+    return new_file_directory
+end
+local new_file_env, new_file_context = env("fault-input",
+    {start = 0, _end = 11, status = "selected"}, "test_schema")
+ai_learned_translator.init(new_file_env)
+local new_file_case = {
+    directory = new_file_directory,
+    path = new_file_path,
+    env = new_file_env,
+    context = new_file_context,
+}
+local new_file_open_count, new_file_rename_count = 0, 0
+io.open = function(path, mode)
+    if is_case_temp(new_file_case, path) then
+        new_file_open_count = new_file_open_count + 1
+        same(mode, "r+", "new lexicon temp must use only r+ mode")
+    end
+    return real_open(path, mode)
+end
+os.rename = function(source, destination)
+    if destination == new_file_path and source ~= destination then
+        new_file_rename_count = new_file_rename_count + 1
+        assert(is_case_temp(new_file_case, source),
+            "new lexicon must use a unique ai_weights.tsv.tmp.* source")
+        same(file_mode(source), "600", "new lexicon source must be mode 0600 before rename")
+    end
+    return real_rename(source, destination)
+end
+trigger_learning(new_file_case, "brand-new learned choice")
+io.open = real_open
+os.rename = real_rename
+same(new_file_open_count, 1, "new lexicon must open exactly one unique temp")
+same(new_file_rename_count, 1, "new lexicon must atomically rename exactly once")
+same(file_mode(new_file_path), "600", "newly committed learned TSV must be mode 0600")
+local new_file_count, new_file_weight = exact_rows(read_file(new_file_path),
+    "test_schema", "fault-input", "brand-new learned choice")
+same(new_file_count, 1, "new learned TSV exact row count")
+same(new_file_weight, 1, "new learned TSV initial weight")
+assert_no_ai_temp_files(new_file_directory, "new lexicon commit")
+ai_learned_translator.fini(new_file_env)
+
+-- A chmod failure is a fail-closed storage boundary for this translator instance.
+local chmod_directory = make_directory(temp_dir .. "/chmod failure")
+local chmod_path = chmod_directory .. "/ai_weights.tsv"
+local chmod_original = "test_schema\tfault-input\tmust-not-be-read\t9\t9\n"
+write_file(chmod_path, chmod_original)
+set_file_mode(chmod_path, "0644")
+rime_api.get_user_data_dir = function()
+    return chmod_directory
+end
+local chmod_env, chmod_context = env("fault-input",
+    {start = 0, _end = 11, status = "selected"}, "test_schema")
+local chmod_commands = {}
+os.execute = function(command)
+    if tostring(command):find("chmod", 1, true) then
+        chmod_commands[#chmod_commands + 1] = tostring(command)
+        return nil, "exit", 1
+    end
+    return real_execute(command)
+end
+ai_learned_translator.init(chmod_env)
+os.execute = real_execute
+assert(#chmod_commands > 0, "translator init must try to secure an existing learned TSV")
+for _, command in ipairs(chmod_commands) do
+    assert(command:sub(1, #"/bin/chmod 600 ") == "/bin/chmod 600 ",
+        "learned TSV chmod must use the absolute /bin/chmod 600 prefix")
+end
+same(file_mode(chmod_path), "644", "mocked chmod failure must leave fixture mode unchanged")
+
+local disabled_accesses = 0
+local disabled_mktemp_attempts = 0
+io.open = function(path, mode)
+    if type(path) == "string" and path:sub(1, #chmod_directory + 1) == chmod_directory .. "/" then
+        disabled_accesses = disabled_accesses + 1
+        return nil, "disabled storage must not open files"
+    end
+    return real_open(path, mode)
+end
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        disabled_mktemp_attempts = disabled_mktemp_attempts + 1
+        return nil, "disabled storage must not create temp files"
+    end
+    return real_popen(command, mode)
+end
+yielded = {}
+ai_learned_translator.func("fault-input", {start = 0, _end = 11}, chmod_env)
+same(#yielded, 0, "disabled learned storage must yield no candidates")
+local chmod_case = {
+    directory = chmod_directory,
+    path = chmod_path,
+    original = chmod_original,
+    env = chmod_env,
+    context = chmod_context,
+}
+trigger_learning(chmod_case, "must-not-be-written")
+io.open = real_open
+io.popen = real_popen
+same(disabled_accesses, 0, "disabled learned storage must not read or write its target")
+same(disabled_mktemp_attempts, 0, "disabled learned storage must not attempt an atomic write")
+same(read_file(chmod_path), chmod_original, "disabled learned storage must preserve its target")
+same(file_mode(chmod_path), "644", "disabled storage must not retry chmod behind the env boundary")
+assert_no_ai_temp_files(chmod_directory, "disabled learned storage")
+local live_during_storage_failure = run_filter(originals, {
+    _ai_candidate = "chosen",
+    _ai_input = "code",
+    _ai_generation = "storage-failure",
+})
+assert(rawequal(live_during_storage_failure[1], originals[3]),
+    "live AI candidate filtering must survive learned-storage failure")
+ai_learned_translator.fini(chmod_env)
+
+-- A chmod failure disables only that env; a fresh healthy env must still read and write securely.
+local healthy_case = storage_case("healthy after chmod failure")
+yielded = {}
+ai_learned_translator.func("fault-input", {start = 0, _end = 11}, healthy_case.env)
+same(#yielded, 1, "fresh env after chmod failure must read its learned TSV")
+same(yielded[1].text, "preserved", "fresh env learned candidate text")
+local healthy_mktemp_calls = 0
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        healthy_mktemp_calls = healthy_mktemp_calls + 1
+    end
+    return real_popen(command, mode)
+end
+trigger_learning(healthy_case, "healthy-after-chmod-failure")
+io.popen = real_popen
+same(healthy_mktemp_calls, 1, "fresh env must perform one secure atomic write")
+same(file_mode(healthy_case.path), "600", "fresh env target must remain mode 0600")
+local healthy_count, healthy_weight = exact_rows(read_file(healthy_case.path),
+    "test_schema", "fault-input", "healthy-after-chmod-failure")
+same(healthy_count, 1, "fresh env learned write exact row count")
+same(healthy_weight, 1, "fresh env learned write initial weight")
+assert_no_ai_temp_files(healthy_case.directory, "fresh env after chmod failure")
+ai_learned_translator.fini(healthy_case.env)
+
+-- mktemp failure must not fall back to a predictable filename.
+local mktemp_case = storage_case("mktemp failure")
+local mktemp_calls, fallback_write_attempts = 0, 0
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        mktemp_calls = mktemp_calls + 1
+        return nil, "mock mktemp failure"
+    end
+    return real_popen(command, mode)
+end
+io.open = function(path, mode)
+    if type(path) == "string" and path:sub(1, #mktemp_case.directory + 1) ==
+        mktemp_case.directory .. "/" and mode ~= "r" then
+        fallback_write_attempts = fallback_write_attempts + 1
+    end
+    return real_open(path, mode)
+end
+trigger_learning(mktemp_case, "mktemp-must-fail")
+io.popen = real_popen
+io.open = real_open
+assert(mktemp_calls > 0, "atomic writer must use mktemp for an unpredictable basename")
+same(fallback_write_attempts, 0, "mktemp failure must not use an unsafe write fallback")
+assert_storage_preserved(mktemp_case, "mktemp failure")
+ai_learned_translator.fini(mktemp_case.env)
+
+-- Treat an unexpected mktemp result as untrusted; never open or rename it.
+local invalid_path_case = storage_case("invalid mktemp path")
+local invalid_path = temp_dir .. "/unsafe mktemp result"
+os.remove(invalid_path)
+local invalid_popen_calls, invalid_first_line_reads, invalid_open_attempts = 0, 0, 0
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        invalid_popen_calls = invalid_popen_calls + 1
+        return {
+            read = function(_, format)
+                if format == "*l" then
+                    invalid_first_line_reads = invalid_first_line_reads + 1
+                    return invalid_path
+                end
+                if format == "*a" then
+                    return ""
+                end
+                error("unexpected mktemp pipe read format: " .. tostring(format))
+            end,
+            close = function()
+                return true
+            end,
+        }
+    end
+    return real_popen(command, mode)
+end
+io.open = function(path, mode)
+    if path == invalid_path then
+        invalid_open_attempts = invalid_open_attempts + 1
+    end
+    return real_open(path, mode)
+end
+trigger_learning(invalid_path_case, "invalid-path-must-fail")
+io.popen = real_popen
+io.open = real_open
+assert(invalid_popen_calls > 0, "invalid-path test must intercept mktemp")
+assert(invalid_first_line_reads > 0, "atomic writer must read the mktemp path as one line")
+same(invalid_open_attempts, 0, "writer must reject a mktemp path outside its validated template")
+same(read_file(invalid_path), nil, "invalid mktemp result must never be created")
+assert_storage_preserved(invalid_path_case, "invalid mktemp path")
+ai_learned_translator.fini(invalid_path_case.env)
+
+-- A path can match the template and still be unsafe if its file is not the empty mktemp result.
+local nonempty_case = storage_case("nonempty mktemp file")
+local nonempty_path = nonempty_case.directory .. "/ai_weights.tsv.tmp.STALE-output"
+write_file(nonempty_path, "unexpected preexisting contents\n")
+set_file_mode(nonempty_path, "0600")
+local nonempty_popen_calls, nonempty_first_line_reads = 0, 0
+local nonempty_open_count, nonempty_write_attempts = 0, 0
+io.popen = function(command, mode)
+    if tostring(command):find("mktemp", 1, true) then
+        assert_mktemp_command(command)
+        nonempty_popen_calls = nonempty_popen_calls + 1
+        return {
+            read = function(_, format)
+                if format == "*l" then
+                    nonempty_first_line_reads = nonempty_first_line_reads + 1
+                    return nonempty_path
+                end
+                if format == "*a" then
+                    return ""
+                end
+                error("unexpected mktemp pipe read format: " .. tostring(format))
+            end,
+            close = function()
+                return true
+            end,
+        }
+    end
+    return real_popen(command, mode)
+end
+io.open = function(path, mode)
+    if path == nonempty_path then
+        nonempty_open_count = nonempty_open_count + 1
+        same(mode, "r+", "nonempty mktemp result must be inspected without truncation")
+        local backing = assert(real_open(path, mode))
+        return {
+            seek = function(_, ...)
+                return backing:seek(...)
+            end,
+            write = function(_, ...)
+                nonempty_write_attempts = nonempty_write_attempts + 1
+                return backing:write(...)
+            end,
+            close = function()
+                return backing:close()
+            end,
+        }
+    end
+    return real_open(path, mode)
+end
+trigger_learning(nonempty_case, "nonempty-must-fail")
+io.popen = real_popen
+io.open = real_open
+assert(nonempty_popen_calls > 0, "nonempty test must intercept mktemp")
+assert(nonempty_first_line_reads > 0, "nonempty test must return the mktemp path as one line")
+same(nonempty_open_count, 1, "writer must inspect the nonempty mktemp result exactly once")
+same(nonempty_write_attempts, 0, "writer must reject a nonempty mktemp result before writing")
+assert_storage_preserved(nonempty_case, "nonempty mktemp result")
+ai_learned_translator.fini(nonempty_case.env)
+
+-- Each I/O boundary must preserve the old target and clean the unique temp file.
+local open_failure_case = storage_case("open failure")
+local temp_open_attempts, unsafe_open_modes = 0, 0
+io.open = function(path, mode)
+    if is_case_temp(open_failure_case, path) then
+        if mode == "r+" then
+            temp_open_attempts = temp_open_attempts + 1
+            return nil, "mock temp open failure"
+        end
+        unsafe_open_modes = unsafe_open_modes + 1
+        return nil, "unsafe temp open mode"
+    end
+    return real_open(path, mode)
+end
+trigger_learning(open_failure_case, "open-must-fail")
+io.open = real_open
+assert(temp_open_attempts > 0, "open failure test must intercept the unique temp file")
+same(unsafe_open_modes, 0, "atomic writer must not fall back to w or w+ after r+ open failure")
+assert_storage_preserved(open_failure_case, "temp open failure")
+ai_learned_translator.fini(open_failure_case.env)
+
+local write_failure_case = storage_case("write failure")
+local temp_write_attempts, unsafe_write_open_modes = 0, 0
+io.open = function(path, mode)
+    if is_case_temp(write_failure_case, path) and mode == "r+" then
+        local backing = assert(real_open(path, mode))
+        return {
+            seek = function(_, ...)
+                return backing:seek(...)
+            end,
+            write = function()
+                temp_write_attempts = temp_write_attempts + 1
+                return nil, "mock temp write failure"
+            end,
+            close = function()
+                return backing:close()
+            end,
+        }
+    elseif is_case_temp(write_failure_case, path) then
+        unsafe_write_open_modes = unsafe_write_open_modes + 1
+        return nil, "unsafe temp open mode"
+    end
+    return real_open(path, mode)
+end
+trigger_learning(write_failure_case, "write-must-fail")
+io.open = real_open
+assert(temp_write_attempts > 0, "write failure test must intercept a temp write")
+same(unsafe_write_open_modes, 0, "temp write path must use only r+ mode")
+assert_storage_preserved(write_failure_case, "temp write failure")
+ai_learned_translator.fini(write_failure_case.env)
+
+local close_failure_case = storage_case("close failure")
+local temp_close_attempts, unsafe_close_open_modes = 0, 0
+io.open = function(path, mode)
+    if is_case_temp(close_failure_case, path) and mode == "r+" then
+        local backing = assert(real_open(path, mode))
+        return {
+            seek = function(_, ...)
+                return backing:seek(...)
+            end,
+            write = function(_, ...)
+                return backing:write(...)
+            end,
+            close = function()
+                temp_close_attempts = temp_close_attempts + 1
+                assert(backing:close())
+                return nil, "mock temp close failure"
+            end,
+        }
+    elseif is_case_temp(close_failure_case, path) then
+        unsafe_close_open_modes = unsafe_close_open_modes + 1
+        return nil, "unsafe temp open mode"
+    end
+    return real_open(path, mode)
+end
+trigger_learning(close_failure_case, "close-must-fail")
+io.open = real_open
+assert(temp_close_attempts > 0, "close failure test must intercept temp close")
+same(unsafe_close_open_modes, 0, "temp close path must use only r+ mode")
+assert_storage_preserved(close_failure_case, "temp close failure")
+ai_learned_translator.fini(close_failure_case.env)
+
+local rename_failure_case = storage_case("rename failure")
+local temp_rename_attempts = 0
+os.rename = function(source, destination)
+    if destination == rename_failure_case.path and source ~= destination then
+        temp_rename_attempts = temp_rename_attempts + 1
+        return nil, "mock atomic rename failure"
+    end
+    return real_rename(source, destination)
+end
+trigger_learning(rename_failure_case, "rename-must-fail")
+os.rename = real_rename
+assert(temp_rename_attempts > 0, "rename failure test must intercept the atomic replace")
+assert_storage_preserved(rename_failure_case, "atomic rename failure")
+ai_learned_translator.fini(rename_failure_case.env)
+
 ai_learned_translator.fini(learn_env)
 for _, event in ipairs({
     learn_context.select_notifier,
@@ -494,7 +1057,17 @@ for _, event in ipairs({
     end
 end
 
-os.remove(weights_path)
-local rmdir_ok = os.execute("rmdir " .. string.format("%q", temp_dir))
-assert(rmdir_ok == true or rmdir_ok == 0, "failed to remove temporary Rime user directory")
+os.remove(invalid_path)
+for index = #created_dirs, 1, -1 do
+    local directory = created_dirs[index]
+    os.remove(directory .. "/ai_weights.tsv")
+    os.remove(directory .. "/ai_weights.tsv.tmp")
+    assert_no_ai_temp_files(directory, "successful regression cleanup")
+    run_command("/bin/rmdir " .. shell_quote(directory),
+        "failed to remove temporary Rime user directory")
+end
+assert_file_absent(dollar_sentinel_path,
+    "dollar command substitution must remain literal across every shell command")
+assert_file_absent(backtick_sentinel_path,
+    "backtick command substitution must remain literal across every shell command")
 print("Rime AI regression OK")

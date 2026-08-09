@@ -87,6 +87,12 @@ patch = YAML.load_file(squirrel_path).fetch("patch")
 unless patch["ai/endpoint"] == "" && patch["ai/model"] == ""
   abort "expected empty ai/endpoint and ai/model in squirrel.custom.yaml patch"
 end
+unless patch["ai/enabled"] == true
+  abort "expected ai/enabled to default to true in squirrel.custom.yaml patch"
+end
+unless patch["ai/instructions"] == ""
+  abort "expected ai/instructions to default to an empty string in squirrel.custom.yaml patch"
+end
 RUBY
 
 ruby - "$ai_readme" <<'RUBY'
@@ -112,8 +118,24 @@ summary = readme[/## Roll back or upgrade.*\z/m] or abort "expected rollback sum
 abort "rollback summary must describe restored-bundle registration" unless
   %w[--register-input-source --enable-input-source --select-input-source].all? { |flag| summary.include?(flag) }
 abort "rollback summary must not depend on postinstall" if summary.include?("postinstall")
+
+%w[ai/enabled ai/instructions 0600].each do |runtime_contract|
+  abort "expected README runtime contract: #{runtime_contract}" unless readme.include?(runtime_contract)
+end
+abort "README must include a multiline ai/instructions |- YAML example" unless
+  readme.match?(/ai\/instructions:\s*\|-\s*\n[ \t]+\S[^\n]*\n[ \t]+\S[^\n]*(?:\n|\z)/)
+
+[
+  'Changing `ai/enabled` or `ai/instructions` requires only `--reload`; it does not require rebuilding Squirrel.',
+  '`ai/instructions` cannot override the mandatory request/response protocol.',
+  'Changing the mandatory Swift protocol behavior still requires regenerating the patches and rebuilding Squirrel.',
+].each do |runtime_statement|
+  abort "expected explicit README statement: #{runtime_statement}" unless readme.include?(runtime_statement)
+end
 RUBY
 
+(
+umask 022
 ruby -rfiddle - "$repo_root/rime/rime.lua" "$ai_harness" <<'RUBY'
 core = Fiddle::Handle.new(
   "/Library/Input Methods/Squirrel.app/Contents/Frameworks/librime.1.dylib",
@@ -167,3 +189,4 @@ ensure
   close.call(state)
 end
 RUBY
+)
