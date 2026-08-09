@@ -85,9 +85,17 @@ Set the complete HTTPS Chat Completions URL and non-secret model name in `$repo_
 
 ```yaml
 patch:
+  ai/enabled: true
   ai/endpoint: "https://YOUR-ENDPOINT.example/v1/chat/completions"
   ai/model: "YOUR-MODEL"
+  ai/instructions: |-
+    Prefer concise candidates appropriate for the surrounding text.
+    Preserve names and technical terms when they are already correct.
 ```
+
+`ai/enabled` is the global switch for every app using Squirrel. Set it to `false` to prevent new AI requests after reload; this does not retract a request that was already sent. `ai/instructions` is optional runtime guidance inserted before the mandatory built-in protocol postamble. Leave it as `""` for the default behavior. `ai/instructions` cannot override the mandatory request/response protocol.
+
+Changing `ai/enabled` or `ai/instructions` requires only `--reload`; it does not require rebuilding Squirrel. Endpoint and model changes use the same reload path. Changing the mandatory Swift protocol behavior still requires regenerating the patches and rebuilding Squirrel. Configuration changes take effect on reload, not through a promised live file watcher.
 
 From that same dotfiles checkout, install the Rime files and ask Squirrel to reload/deploy them. Do not use the top-level `make rime` target from a worktree.
 
@@ -115,7 +123,7 @@ Delete only this key with:
   -s im.rime.inputmethod.Squirrel.ai
 ```
 
-Learned AI choices are kept in `~/Library/Rime/ai_weights.tsv`; it is runtime data and is not tracked. Deleting that file resets only AI learning.
+Learned AI choices are kept in `~/Library/Rime/ai_weights.tsv`; it is runtime data and is not tracked. Existing storage is tightened to mode `0600` when the learned translator starts, and new atomic files are created at mode `0600`. If private storage cannot be secured or written, learning fails closed for that translator instance without disabling live AI candidate ordering. Deleting the file resets only AI learning.
 
 ## Roll back or upgrade
 

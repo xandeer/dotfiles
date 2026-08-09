@@ -6,6 +6,8 @@ patch:
 
   ai/endpoint: ""
   ai/model: ""
+  ai/enabled: true
+  ai/instructions: ""
 
   show_notifications_when: appropriate          # 状态通知，适当，也可设为全开（always）全关（never）
 

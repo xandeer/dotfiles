@@ -724,6 +724,89 @@ same(new_file_weight, 1, "new learned TSV initial weight")
 assert_no_ai_temp_files(new_file_directory, "new lexicon commit")
 ai_learned_translator.fini(new_file_env)
 
+-- Existing storage must be a regular non-symlink file before chmod can touch it.
+local directory_target_parent = make_directory(temp_dir .. "/directory target")
+local directory_target_path = make_directory(directory_target_parent .. "/ai_weights.tsv")
+same(file_mode(directory_target_path), "755", "directory target fixture mode")
+rime_api.get_user_data_dir = function()
+    return directory_target_parent
+end
+local directory_target_env = env("fault-input",
+    {start = 0, _end = 11, status = "selected"}, "test_schema")
+local directory_target_chmods = 0
+os.execute = function(command)
+    if tostring(command):find("chmod", 1, true) then
+        directory_target_chmods = directory_target_chmods + 1
+    end
+    return real_execute(command)
+end
+ai_learned_translator.init(directory_target_env)
+os.execute = real_execute
+same(directory_target_chmods, 0, "directory storage target must be rejected before chmod")
+same(file_mode(directory_target_path), "755", "directory storage target mode must stay unchanged")
+yielded = {}
+ai_learned_translator.func("fault-input", {start = 0, _end = 11}, directory_target_env)
+same(#yielded, 0, "directory storage target must disable learned candidates")
+ai_learned_translator.fini(directory_target_env)
+
+local symlink_target_directory = make_directory(temp_dir .. "/symlink target")
+local symlink_weights_path = symlink_target_directory .. "/ai_weights.tsv"
+local innocent_target_path = symlink_target_directory .. "/innocent.tsv"
+local innocent_contents = "must remain untouched\n"
+write_file(innocent_target_path, innocent_contents)
+set_file_mode(innocent_target_path, "0644")
+run_command("/bin/ln -s " .. shell_quote(innocent_target_path) .. " " ..
+    shell_quote(symlink_weights_path), "failed to create learned-storage symlink fixture")
+rime_api.get_user_data_dir = function()
+    return symlink_target_directory
+end
+local symlink_target_env = env("fault-input",
+    {start = 0, _end = 11, status = "selected"}, "test_schema")
+local symlink_target_chmods = 0
+os.execute = function(command)
+    if tostring(command):find("chmod", 1, true) then
+        symlink_target_chmods = symlink_target_chmods + 1
+    end
+    return real_execute(command)
+end
+ai_learned_translator.init(symlink_target_env)
+os.execute = real_execute
+same(symlink_target_chmods, 0, "symlink storage target must be rejected before chmod")
+same(file_mode(innocent_target_path), "644", "symlink target mode must stay unchanged")
+same(read_file(innocent_target_path), innocent_contents, "symlink target contents must stay unchanged")
+yielded = {}
+ai_learned_translator.func("fault-input", {start = 0, _end = 11}, symlink_target_env)
+same(#yielded, 0, "symlink storage target must disable learned candidates")
+ai_learned_translator.fini(symlink_target_env)
+os.remove(symlink_weights_path)
+os.remove(innocent_target_path)
+
+local fifo_target_directory = make_directory(temp_dir .. "/fifo target")
+local fifo_target_path = fifo_target_directory .. "/ai_weights.tsv"
+run_command("/usr/bin/mkfifo " .. shell_quote(fifo_target_path),
+    "failed to create learned-storage FIFO fixture")
+rime_api.get_user_data_dir = function()
+    return fifo_target_directory
+end
+local fifo_target_env = env("fault-input",
+    {start = 0, _end = 11, status = "selected"}, "test_schema")
+local fifo_open_attempts = 0
+io.open = function(path, mode)
+    if path == fifo_target_path then
+        fifo_open_attempts = fifo_open_attempts + 1
+        return nil, "special storage target must be rejected before open"
+    end
+    return real_open(path, mode)
+end
+ai_learned_translator.init(fifo_target_env)
+io.open = real_open
+same(fifo_open_attempts, 0, "FIFO storage target must be rejected before io.open")
+yielded = {}
+ai_learned_translator.func("fault-input", {start = 0, _end = 11}, fifo_target_env)
+same(#yielded, 0, "FIFO storage target must disable learned candidates")
+ai_learned_translator.fini(fifo_target_env)
+os.remove(fifo_target_path)
+
 -- A chmod failure is a fail-closed storage boundary for this translator instance.
 local chmod_directory = make_directory(temp_dir .. "/chmod failure")
 local chmod_path = chmod_directory .. "/ai_weights.tsv"

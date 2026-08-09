@@ -286,7 +286,77 @@ end
 -------------------------------------------------------------
 -- AI candidate ordering and the small learned correction lexicon.
 local function ai_weights_path()
-    return rime_api.get_user_data_dir() .. "/ai_weights.tsv"
+    local directory = rime_api.get_user_data_dir()
+    if type(directory) ~= "string" then
+        return nil
+    end
+    return directory .. "/ai_weights.tsv"
+end
+
+local function ai_valid_path(path)
+    return type(path) == "string" and path:sub(1, 1) == "/" and
+        not path:find("\0", 1, true) and not path:find("\r", 1, true) and
+        not path:find("\n", 1, true)
+end
+
+local function ai_shell_quote(value)
+    return "'" .. value:gsub("'", "'\"'\"'") .. "'"
+end
+
+local function ai_command_succeeded(result)
+    return result == true or result == 0
+end
+
+local function ai_read_pipe(pipe, format)
+    -- Squirrel signals can interrupt a pipe read; retry only macOS EINTR (4).
+    for _ = 1, 32 do
+        local value, _, error_code = pipe:read(format)
+        if value ~= nil or error_code ~= 4 then
+            return value
+        end
+    end
+    return nil
+end
+
+local function ai_storage_kind(path)
+    -- macOS stat uses lstat semantics by default, so symbolic links stay visible.
+    local pipe = io.popen("/usr/bin/stat -f %p " .. ai_shell_quote(path) .. " 2>/dev/null", "r")
+    if pipe then
+        local mode = ai_read_pipe(pipe, "*l")
+        local extra = ai_read_pipe(pipe, "*a")
+        local close_result = pipe:close()
+        if extra == "" and ai_command_succeeded(close_result) then
+            if type(mode) == "string" and mode:match("^10[0-7][0-7][0-7][0-7]$") then
+                return "regular"
+            end
+            return "special"
+        end
+    end
+    -- A same-path rename distinguishes a missing file without opening FIFOs/devices.
+    return os.rename(path, path) and "special" or "missing"
+end
+
+local function ai_prepare_storage(path)
+    if not ai_valid_path(path) then
+        return false
+    end
+
+    local kind = ai_storage_kind(path)
+    if kind == "missing" then
+        return true
+    end
+    if kind ~= "regular" then
+        return false
+    end
+    return ai_command_succeeded(os.execute("/bin/chmod 600 " .. ai_shell_quote(path)))
+end
+
+local function ai_ensure_storage(env)
+    if env.ai_storage_ready == nil then
+        env.ai_weights_path = ai_weights_path()
+        env.ai_storage_ready = ai_prepare_storage(env.ai_weights_path)
+    end
+    return env.ai_storage_ready
 end
 
 local function ai_valid_field(value)
@@ -332,13 +402,44 @@ local function ai_row_key(row)
     return row.schema_id .. "\0" .. row.input .. "\0" .. row.text
 end
 
-local function ai_write_learning(pending)
+local function ai_create_temporary(path)
+    local prefix = path .. ".tmp."
+    local pipe = io.popen("/usr/bin/mktemp -q " .. ai_shell_quote(prefix .. "XXXXXX"), "r")
+    if not pipe then
+        return nil
+    end
+
+    local temporary = ai_read_pipe(pipe, "*l")
+    local extra = ai_read_pipe(pipe, "*a")
+    local close_result = pipe:close()
+    if temporary == nil and type(extra) == "string" then
+        temporary = extra:match("^([^\r\n]+)\n?$")
+        if temporary then
+            extra = ""
+        end
+    end
+    local suffix = type(temporary) == "string" and temporary:sub(#prefix + 1) or ""
+    local valid = type(temporary) == "string" and temporary:sub(1, #prefix) == prefix and
+        suffix:match("^[A-Za-z0-9_-]+$") ~= nil
+    if not valid then
+        return nil
+    end
+    if extra ~= "" or not ai_command_succeeded(close_result) then
+        os.remove(temporary)
+        return nil
+    end
+    return temporary
+end
+
+local function ai_write_learning(path, pending)
+    if not ai_valid_path(path) then
+        return false
+    end
     if not ai_valid_field(pending.schema_id) or not ai_valid_field(pending.input) or
         not ai_valid_field(pending.text) then
         return false
     end
 
-    local path = ai_weights_path()
     local rows, read_ok = ai_read_rows(path)
     if not read_ok then
         return false
@@ -380,9 +481,20 @@ local function ai_write_learning(pending)
         return left.text < right.text
     end)
 
-    local temporary = path .. ".tmp"
-    local file = io.open(temporary, "w")
+    local temporary = ai_create_temporary(path)
+    if not temporary then
+        return false
+    end
+    local file = io.open(temporary, "r+")
     if not file then
+        os.remove(temporary)
+        return false
+    end
+    local end_position = file:seek("end")
+    local start_position = end_position == 0 and file:seek("set", 0) or nil
+    if end_position ~= 0 or start_position ~= 0 then
+        file:close()
+        os.remove(temporary)
         return false
     end
     local write_ok = true
@@ -422,8 +534,13 @@ ai_learned_translator = {}
 
 function ai_learned_translator.init(env)
     local context = env.engine.context
+    ai_ensure_storage(env)
     env.ai_connections = {
         context.select_notifier:connect(function(current)
+            if not env.ai_storage_ready then
+                env.ai_pending = nil
+                return
+            end
             local segment = current.composition:empty() and nil or current.composition:back()
             local candidate = current:get_selected_candidate()
             local genuine = candidate and candidate:get_genuine() or nil
@@ -460,8 +577,9 @@ function ai_learned_translator.init(env)
         context.commit_notifier:connect(function()
             local pending = env.ai_pending
             env.ai_pending = nil
-            if pending then
-                ai_write_learning(pending)
+            if pending and env.ai_storage_ready and
+                not ai_write_learning(env.ai_weights_path, pending) then
+                env.ai_storage_ready = false
             end
         end, 0),
         context.update_notifier:connect(function(current)
@@ -483,8 +601,12 @@ function ai_learned_translator.init(env)
 end
 
 function ai_learned_translator.func(input, seg, env)
-    local rows = ai_read_rows(ai_weights_path())
-    if not rows then
+    if not ai_ensure_storage(env) then
+        return
+    end
+    local rows, read_ok = ai_read_rows(env.ai_weights_path)
+    if not read_ok then
+        env.ai_storage_ready = false
         return
     end
     local schema_id = tostring(env.engine.schema.schema_id or "")
@@ -517,6 +639,8 @@ function ai_learned_translator.fini(env)
     end
     env.ai_connections = nil
     env.ai_pending = nil
+    env.ai_weights_path = nil
+    env.ai_storage_ready = nil
 end
 
 function ai_candidate_filter(input, env)
