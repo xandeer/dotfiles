@@ -245,6 +245,9 @@ deinit_body = block_after(source, /\bdeinit\s*\{/, "deinit")
 require_match(deinit_body, /invalidateAICandidate\(clearProperties:\s*true\)/, "deinit must invalidate AI state")
 require_match(deinit_body, /aiURLSession\.invalidateAndCancel\(\)/, "deinit must invalidate the URLSession")
 
+cancel_composition = block_after(source, /\boverride\s+func\s+cancelComposition\s*\(/, "cancelComposition override")
+require_order(cancel_composition, "invalidateAICandidate(clearProperties: true)", "super.cancelComposition()", "cancelComposition must invalidate AI before forwarding to IMK")
+
 commit = method(source, "commit")
 require_match(commit, /IsSecureEventInputEnabled\(\)/, "commit must sample secure-input state")
 require_match(commit, /aiHistory\.recordCommit\(string,\s*secure:/, "commit must record only through secure history")

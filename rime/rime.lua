@@ -290,7 +290,7 @@ local function ai_weights_path()
 end
 
 local function ai_valid_field(value)
-    return type(value) == "string" and not value:find("[\t\r\n]")
+    return type(value) == "string" and value ~= "" and not value:find("[\t\r\n]")
 end
 
 local function ai_read_rows(path)
@@ -313,7 +313,8 @@ local function ai_read_rows(path)
         local schema_id, input, text, raw_weight, raw_time =
             line:match("^([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)$")
         local weight, last_used = tonumber(raw_weight), tonumber(raw_time)
-        if schema_id and weight and last_used and
+        if ai_valid_field(schema_id) and ai_valid_field(input) and ai_valid_field(text) and
+            weight and last_used and
             weight >= 0 and weight < math.huge and last_used >= 0 and last_used < math.huge then
             rows[#rows + 1] = {
                 schema_id = schema_id,
@@ -333,8 +334,7 @@ end
 
 local function ai_write_learning(pending)
     if not ai_valid_field(pending.schema_id) or not ai_valid_field(pending.input) or
-        not ai_valid_field(pending.text) or pending.schema_id == "" or
-        pending.input == "" or pending.text == "" then
+        not ai_valid_field(pending.text) then
         return false
     end
 

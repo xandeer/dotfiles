@@ -440,6 +440,9 @@ write_file(weights_path, table.concat({
     "test_schema\tcode\tbad-weight\tnope\t1",
     "test_schema\tcode\tnegative-weight\t-1\t1",
     "test_schema\tcode\tnegative-time\t1\t-1",
+    "\tcode\tempty-schema\t9\t9",
+    "test_schema\t\tempty-input\t9\t9",
+    "test_schema\tcode\t\t9\t9",
     "test_schema\tcode\tbad\textra\t1\t1",
     "test_schema\tcode\tbad\rtext\t1\t1",
     "test_schema\tcode\tbroken\nfield\t1\t1",
@@ -461,6 +464,16 @@ for _, value in ipairs(yielded) do
 end
 assert(yielded[1].quality > yielded[2].quality, "learned quality must preserve weight ordering")
 same(yielded[2].quality, yielded[3].quality, "equal weights must receive equal quality boosts")
+
+for _, invalid_key in ipairs({
+    {name = "empty schema", schema_id = "", input = "code"},
+    {name = "empty input", schema_id = "test_schema", input = ""},
+}) do
+    local invalid_env = env(invalid_key.input, {start = 0, _end = 4}, invalid_key.schema_id)
+    yielded = {}
+    ai_learned_translator.func(invalid_key.input, {start = 0, _end = 4}, invalid_env)
+    same(#yielded, 0, invalid_key.name .. " learned row must be ignored")
+end
 
 for _, invalid_quality in ipairs({false, "not-a-number"}) do
     local safe_quality_env = env("code", {start = 0, _end = 4}, "test_schema", invalid_quality)

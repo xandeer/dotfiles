@@ -8,6 +8,7 @@ others_dict="$repo_root/rime/cn_dicts/others.dict.yaml"
 melt_eng_dict="$repo_root/rime/melt_eng.dict.yaml"
 squirrel="$repo_root/rime/darwin/squirrel.custom.yaml"
 ai_harness="$repo_root/tests/config/rime-ai-regression.lua"
+ai_readme="$repo_root/rime/squirrel-ai/README.md"
 
 reject_match() {
   local pattern="$1" file="$2" message="$3" rg_status=0
@@ -32,6 +33,11 @@ for config_file in "$schema" "$others_dict" "$melt_eng_dict" "$squirrel" "$ai_ha
     exit 1
   }
 done
+
+[[ -f "$ai_readme" ]] || {
+  print -u2 "expected Squirrel AI README at $ai_readme"
+  exit 1
+}
 
 reject_match '^[[:space:]]*-[[:space:]]*lua_filter@reduce_english_filter([[:space:]]|$)' "$schema" \
   "expected active lua_filter@reduce_english_filter to be removed"
@@ -81,6 +87,31 @@ patch = YAML.load_file(squirrel_path).fetch("patch")
 unless patch["ai/endpoint"] == "" && patch["ai/model"] == ""
   abort "expected empty ai/endpoint and ai/model in squirrel.custom.yaml patch"
 end
+RUBY
+
+ruby - "$ai_readme" <<'RUBY'
+readme = File.read(ARGV.fetch(0))
+recovery = readme[/If `ditto`.*?\n## Configure Rime and Keychain/m] or
+  abort "expected self-contained Squirrel rollback section"
+
+[
+  'restored_executable="$installed_app/Contents/MacOS/Squirrel"',
+  'console_user="$(/usr/bin/stat -f%Su /dev/console)"',
+  '/usr/bin/sudo -u "$console_user" /usr/bin/killall Squirrel >/dev/null 2>&1 || true',
+  '"$restored_executable" --register-input-source',
+  '/usr/bin/sudo -u "$console_user" "$restored_executable" --enable-input-source',
+  '/usr/bin/sudo -u "$console_user" "$restored_executable" --select-input-source',
+].each do |command|
+  abort "expected self-contained rollback command: #{command}" unless recovery.include?(command)
+end
+
+abort "rollback must not depend on a temporary source checkout" if
+  recovery.include?("squirrel_checkout") || recovery.include?("scripts/postinstall")
+
+summary = readme[/## Roll back or upgrade.*\z/m] or abort "expected rollback summary"
+abort "rollback summary must describe restored-bundle registration" unless
+  %w[--register-input-source --enable-input-source --select-input-source].all? { |flag| summary.include?(flag) }
+abort "rollback summary must not depend on postinstall" if summary.include?("postinstall")
 RUBY
 
 ruby -rfiddle - "$repo_root/rime/rime.lua" "$ai_harness" <<'RUBY'

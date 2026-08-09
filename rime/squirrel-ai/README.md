@@ -62,7 +62,6 @@ If `ditto`, the targeted ownership repair, or postinstall fails, preserve the fa
 
 ```zsh
 set -eu
-squirrel_checkout="/absolute/path/to/the/patched/squirrel"
 installed_app="/Library/Input Methods/Squirrel.app"
 backup_app="$HOME/Library/Application Support/Squirrel AI Backups/squirrel-backup.RECORDED/Squirrel.app"
 test -x "$backup_app/Contents/MacOS/Squirrel"
@@ -71,10 +70,13 @@ if [[ -e "$installed_app" ]]; then
   sudo mv "$installed_app" "$failed_root/Squirrel.app"
 fi
 sudo mv "$backup_app" "$installed_app"
-(
-  cd "$squirrel_checkout"
-  DSTROOT="/Library/Input Methods" RIME_NO_PREBUILD=1 /bin/bash scripts/postinstall
-)
+restored_executable="$installed_app/Contents/MacOS/Squirrel"
+test -x "$restored_executable"
+console_user="$(/usr/bin/stat -f%Su /dev/console)"
+/usr/bin/sudo -u "$console_user" /usr/bin/killall Squirrel >/dev/null 2>&1 || true
+"$restored_executable" --register-input-source
+/usr/bin/sudo -u "$console_user" "$restored_executable" --enable-input-source
+/usr/bin/sudo -u "$console_user" "$restored_executable" --select-input-source
 ```
 
 ## Configure Rime and Keychain
@@ -117,6 +119,6 @@ Learned AI choices are kept in `~/Library/Rime/ai_weights.tsv`; it is runtime da
 
 ## Roll back or upgrade
 
-For rollback, move the current exact `/Library/Input Methods/Squirrel.app` aside, move the recorded persistent backup `Squirrel.app` back to that exact path, then rerun the upstream postinstall command above and reload Squirrel. Do not broadly delete or `chown` anything under `/Library/Input Methods`.
+For rollback, move the current exact `/Library/Input Methods/Squirrel.app` aside, move the recorded persistent backup `Squirrel.app` back to that exact path, then use its executable to stop the old process and run `--register-input-source`, `--enable-input-source`, and `--select-input-source` as shown above. Do not broadly delete or `chown` anything under `/Library/Input Methods`.
 
 For a Squirrel upgrade, start from a clean checkout of the new tag, apply these two patches with `git am`, resolve and review any conflicts, rerun the core and bridge regressions, and rebuild. Never assume the 1.1.2 patches are compatible with another release.

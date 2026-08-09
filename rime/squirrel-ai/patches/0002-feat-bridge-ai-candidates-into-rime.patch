@@ -1,14 +1,14 @@
-From 775097baa9bc4074068ba1e02763e6e5c354b621 Mon Sep 17 00:00:00 2001
+From c556c0dae89fdafae4ba09cec6ac45af35bcfb7e Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 20:28:55 +0800
 Subject: [PATCH 2/2] feat: bridge ai candidates into rime
 
 ---
- sources/SquirrelInputController.swift | 345 +++++++++++++++++++++++++-
- 1 file changed, 341 insertions(+), 4 deletions(-)
+ sources/SquirrelInputController.swift | 350 +++++++++++++++++++++++++-
+ 1 file changed, 346 insertions(+), 4 deletions(-)
 
 diff --git a/sources/SquirrelInputController.swift b/sources/SquirrelInputController.swift
-index bad53d9..85a8657 100644
+index bad53d9..20137df 100644
 --- a/sources/SquirrelInputController.swift
 +++ b/sources/SquirrelInputController.swift
 @@ -5,8 +5,97 @@
@@ -190,7 +190,19 @@ index bad53d9..85a8657 100644
      self.client ?= sender as? IMKTextInput
      // print("[DEBUG] commitComposition: \(sender ?? "nil")")
      //  commit raw input
-@@ -276,6 +391,8 @@ final class SquirrelInputController: IMKInputController {
+@@ -225,6 +340,11 @@ final class SquirrelInputController: IMKInputController {
+     }
+   }
+ 
++  override func cancelComposition() {
++    invalidateAICandidate(clearProperties: true)
++    super.cancelComposition()
++  }
++
+   override func menu() -> NSMenu! {
+     let deploy = NSMenuItem(title: NSLocalizedString("Deploy", comment: "Menu item"), action: #selector(deploy), keyEquivalent: "`")
+     deploy.target = self
+@@ -276,6 +396,8 @@ final class SquirrelInputController: IMKInputController {
    }
  
    deinit {
@@ -199,7 +211,7 @@ index bad53d9..85a8657 100644
      destroySession()
    }
  }
-@@ -288,7 +405,9 @@ private extension SquirrelInputController {
+@@ -288,7 +410,9 @@ private extension SquirrelInputController {
      if chordKeyCount > 0 && session != 0 {
        // simulate key-ups
        for i in 0..<chordKeyCount {
@@ -209,7 +221,7 @@ index bad53d9..85a8657 100644
          if handled {
            processedKeys = true
          }
-@@ -334,6 +453,7 @@ private extension SquirrelInputController {
+@@ -334,6 +458,7 @@ private extension SquirrelInputController {
    }
  
    func createSession() {
@@ -217,7 +229,7 @@ index bad53d9..85a8657 100644
      let app = client?.bundleIdentifier() ?? {
        SquirrelInputController.unknownAppCnt &+= 1
        return "UnknownApp\(SquirrelInputController.unknownAppCnt)"
-@@ -361,6 +481,7 @@ private extension SquirrelInputController {
+@@ -361,6 +486,7 @@ private extension SquirrelInputController {
    }
  
    func destroySession() {
@@ -225,7 +237,7 @@ index bad53d9..85a8657 100644
      // print("[DEBUG] destroySession:")
      if session != 0 {
        _ = rimeAPI.destroy_session(session)
-@@ -383,7 +504,9 @@ private extension SquirrelInputController {
+@@ -383,7 +509,9 @@ private extension SquirrelInputController {
        }
      }
  
@@ -235,7 +247,7 @@ index bad53d9..85a8657 100644
      // print("[DEBUG] rime_keycode: \(rimeKeycode), rime_modifiers: \(rimeModifiers), handled = \(handled)")
  
      // TODO add special key event postprocessing here
-@@ -423,8 +546,214 @@ private extension SquirrelInputController {
+@@ -423,8 +551,214 @@ private extension SquirrelInputController {
      }
    }
  
@@ -451,7 +463,7 @@ index bad53d9..85a8657 100644
      // print("[DEBUG] rimeUpdate")
      rimeConsumeCommittedText()
  
-@@ -520,6 +849,7 @@ private extension SquirrelInputController {
+@@ -520,6 +854,7 @@ private extension SquirrelInputController {
          candidates.append(candidate.text.map { String(cString: $0) } ?? "")
          comments.append(candidate.comment.map { String(cString: $0) } ?? "")
        }
@@ -459,7 +471,7 @@ index bad53d9..85a8657 100644
        var labels = [String]()
        // swiftlint:disable identifier_name
        if let select_keys = ctx.menu.select_keys {
-@@ -539,12 +869,19 @@ private extension SquirrelInputController {
+@@ -539,12 +874,19 @@ private extension SquirrelInputController {
                  candidates: candidates, comments: comments, labels: labels, highlighted: Int(ctx.menu.highlighted_candidate_index),
                  page: page, lastPage: lastPage)
        _ = rimeAPI.free_context(&ctx)
