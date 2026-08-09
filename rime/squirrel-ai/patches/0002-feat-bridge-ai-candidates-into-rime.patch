@@ -1,17 +1,17 @@
-From c556c0dae89fdafae4ba09cec6ac45af35bcfb7e Mon Sep 17 00:00:00 2001
+From 733e0a84b411b6f8635c2792d2368af0ec950cff Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 20:28:55 +0800
 Subject: [PATCH 2/2] feat: bridge ai candidates into rime
 
 ---
- sources/SquirrelInputController.swift | 350 +++++++++++++++++++++++++-
- 1 file changed, 346 insertions(+), 4 deletions(-)
+ sources/SquirrelInputController.swift | 387 +++++++++++++++++++++++++-
+ 1 file changed, 383 insertions(+), 4 deletions(-)
 
 diff --git a/sources/SquirrelInputController.swift b/sources/SquirrelInputController.swift
-index bad53d9..20137df 100644
+index bad53d9..eaea202 100644
 --- a/sources/SquirrelInputController.swift
 +++ b/sources/SquirrelInputController.swift
-@@ -5,8 +5,97 @@
+@@ -5,8 +5,104 @@
  //  Created by Leo Liu on 5/7/24.
  //
  
@@ -106,10 +106,17 @@ index bad53d9..20137df 100644
 +  }
 +}
 +
++private struct SquirrelAIRuntimeConfiguration: Equatable {
++  let enabled: Bool
++  let endpoint: URL
++  let model: String
++  let instructions: String
++}
++
  final class SquirrelInputController: IMKInputController {
    private static let keyRollOver = 50
    private static var unknownAppCnt: UInt = 0
-@@ -28,6 +117,27 @@ final class SquirrelInputController: IMKInputController {
+@@ -28,6 +124,27 @@ final class SquirrelInputController: IMKInputController {
    private var chordTimer: Timer?
    private var chordDuration: TimeInterval = 0
    private var currentApp: String = ""
@@ -137,7 +144,7 @@ index bad53d9..20137df 100644
  
    // swiftlint:disable:next cyclomatic_complexity
    override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
-@@ -126,7 +236,9 @@ final class SquirrelInputController: IMKInputController {
+@@ -126,7 +243,9 @@ final class SquirrelInputController: IMKInputController {
    }
  
    func selectCandidate(_ index: Int) -> Bool {
@@ -147,7 +154,7 @@ index bad53d9..20137df 100644
      if success {
        rimeUpdate()
      }
-@@ -135,15 +247,15 @@ final class SquirrelInputController: IMKInputController {
+@@ -135,15 +254,15 @@ final class SquirrelInputController: IMKInputController {
  
    // swiftlint:disable:next identifier_name
    func page(up: Bool) -> Bool {
@@ -166,7 +173,7 @@ index bad53d9..20137df 100644
      let currentCaretPos = rimeAPI.get_caret_pos(session)
      guard let input = rimeAPI.get_input(session) else { return false }
      if forward {
-@@ -168,6 +280,7 @@ final class SquirrelInputController: IMKInputController {
+@@ -168,6 +287,7 @@ final class SquirrelInputController: IMKInputController {
    }
  
    override func activateServer(_ sender: Any!) {
@@ -174,7 +181,7 @@ index bad53d9..20137df 100644
      self.client ?= sender as? IMKTextInput
      // print("[DEBUG] activateServer:")
      var keyboardLayout = NSApp.squirrelAppDelegate.config?.getString("keyboard_layout") ?? ""
-@@ -192,6 +305,7 @@ final class SquirrelInputController: IMKInputController {
+@@ -192,6 +312,7 @@ final class SquirrelInputController: IMKInputController {
    }
  
    override func deactivateServer(_ sender: Any!) {
@@ -182,7 +189,7 @@ index bad53d9..20137df 100644
      // print("[DEBUG] deactivateServer: \(sender ?? "nil")")
      hidePalettes()
      commitComposition(sender)
-@@ -214,6 +328,7 @@ final class SquirrelInputController: IMKInputController {
+@@ -214,6 +335,7 @@ final class SquirrelInputController: IMKInputController {
     to clean up if that is necessary.
     */
    override func commitComposition(_ sender: Any!) {
@@ -190,7 +197,7 @@ index bad53d9..20137df 100644
      self.client ?= sender as? IMKTextInput
      // print("[DEBUG] commitComposition: \(sender ?? "nil")")
      //  commit raw input
-@@ -225,6 +340,11 @@ final class SquirrelInputController: IMKInputController {
+@@ -225,6 +347,11 @@ final class SquirrelInputController: IMKInputController {
      }
    }
  
@@ -202,7 +209,7 @@ index bad53d9..20137df 100644
    override func menu() -> NSMenu! {
      let deploy = NSMenuItem(title: NSLocalizedString("Deploy", comment: "Menu item"), action: #selector(deploy), keyEquivalent: "`")
      deploy.target = self
-@@ -276,6 +396,8 @@ final class SquirrelInputController: IMKInputController {
+@@ -276,6 +403,8 @@ final class SquirrelInputController: IMKInputController {
    }
  
    deinit {
@@ -211,7 +218,7 @@ index bad53d9..20137df 100644
      destroySession()
    }
  }
-@@ -288,7 +410,9 @@ private extension SquirrelInputController {
+@@ -288,7 +417,9 @@ private extension SquirrelInputController {
      if chordKeyCount > 0 && session != 0 {
        // simulate key-ups
        for i in 0..<chordKeyCount {
@@ -221,7 +228,7 @@ index bad53d9..20137df 100644
          if handled {
            processedKeys = true
          }
-@@ -334,6 +458,7 @@ private extension SquirrelInputController {
+@@ -334,6 +465,7 @@ private extension SquirrelInputController {
    }
  
    func createSession() {
@@ -229,7 +236,7 @@ index bad53d9..20137df 100644
      let app = client?.bundleIdentifier() ?? {
        SquirrelInputController.unknownAppCnt &+= 1
        return "UnknownApp\(SquirrelInputController.unknownAppCnt)"
-@@ -361,6 +486,7 @@ private extension SquirrelInputController {
+@@ -361,6 +493,7 @@ private extension SquirrelInputController {
    }
  
    func destroySession() {
@@ -237,7 +244,7 @@ index bad53d9..20137df 100644
      // print("[DEBUG] destroySession:")
      if session != 0 {
        _ = rimeAPI.destroy_session(session)
-@@ -383,7 +509,9 @@ private extension SquirrelInputController {
+@@ -383,7 +516,9 @@ private extension SquirrelInputController {
        }
      }
  
@@ -247,7 +254,7 @@ index bad53d9..20137df 100644
      // print("[DEBUG] rime_keycode: \(rimeKeycode), rime_modifiers: \(rimeModifiers), handled = \(handled)")
  
      // TODO add special key event postprocessing here
-@@ -423,8 +551,214 @@ private extension SquirrelInputController {
+@@ -423,8 +558,244 @@ private extension SquirrelInputController {
      }
    }
  
@@ -341,6 +348,25 @@ index bad53d9..20137df 100644
 +    )
 +  }
 +
++  func currentAIRuntimeConfiguration() -> SquirrelAIRuntimeConfiguration? {
++    let enabled = NSApp.squirrelAppDelegate.config?.getBool("ai/enabled") ?? true
++    guard enabled else { return nil }
++    guard let endpointText = NSApp.squirrelAppDelegate.config?.getString("ai/endpoint"),
++          let endpoint = SquirrelAI.endpoint(endpointText),
++          let model = NSApp.squirrelAppDelegate.config?.getString("ai/model"),
++          !model.isEmpty,
++          model == model.trimmingCharacters(in: .whitespacesAndNewlines),
++          let instructions = SquirrelAI.instructions(
++            NSApp.squirrelAppDelegate.config?.getString("ai/instructions") ?? ""
++          ) else { return nil }
++    return SquirrelAIRuntimeConfiguration(
++      enabled: enabled,
++      endpoint: endpoint,
++      model: model,
++      instructions: instructions
++    )
++  }
++
 +  func scheduleAICandidate() {
 +    guard session != 0, rimeAPI.find_session(session) else {
 +      invalidateAICandidate(clearProperties: true)
@@ -351,12 +377,11 @@ index bad53d9..20137df 100644
 +      invalidateAICandidate(clearProperties: true)
 +      return
 +    }
-+    guard let endpointText = NSApp.squirrelAppDelegate.config?.getString("ai/endpoint"),
-+          let endpoint = SquirrelAI.endpoint(endpointText),
-+          let model = NSApp.squirrelAppDelegate.config?.getString("ai/model"),
-+          !model.isEmpty,
-+          model == model.trimmingCharacters(in: .whitespacesAndNewlines),
-+          let inputPointer = rimeAPI.get_input(session) else {
++    guard let configuration = currentAIRuntimeConfiguration() else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    guard let inputPointer = rimeAPI.get_input(session) else {
 +      invalidateAICandidate(clearProperties: true)
 +      return
 +    }
@@ -389,8 +414,7 @@ index bad53d9..20137df 100644
 +      guard self.ownsAICandidate(snapshot) else { return }
 +      self.aiDebounceTimer = nil
 +      guard self.currentAISnapshot(generation: snapshot.generation) == snapshot,
-+            NSApp.squirrelAppDelegate.config?.getString("ai/endpoint") == endpointText,
-+            NSApp.squirrelAppDelegate.config?.getString("ai/model") == model else {
++            self.currentAIRuntimeConfiguration() == configuration else {
 +        self.invalidateAICandidate(clearProperties: true)
 +        return
 +      }
@@ -408,9 +432,14 @@ index bad53d9..20137df 100644
 +          guard self.ownsAICandidate(snapshot) else { return }
 +          guard let key,
 +                self.currentAISnapshot(generation: snapshot.generation) == snapshot,
-+                NSApp.squirrelAppDelegate.config?.getString("ai/endpoint") == endpointText,
-+                NSApp.squirrelAppDelegate.config?.getString("ai/model") == model,
-+                let request = SquirrelAI.request(endpoint: endpoint, key: key, model: model, snapshot: snapshot),
++                self.currentAIRuntimeConfiguration() == configuration,
++                let request = SquirrelAI.request(
++                  endpoint: configuration.endpoint,
++                  key: key,
++                  model: configuration.model,
++                  instructions: configuration.instructions,
++                  snapshot: snapshot
++                ),
 +                let requestURL = request.url else {
 +            self.invalidateAICandidate(clearProperties: true)
 +            return
@@ -423,7 +452,7 @@ index bad53d9..20137df 100644
 +                  data.count <= 65_536,
 +                  let candidate = SquirrelAI.parseCandidate(from: data) else { return }
 +            DispatchQueue.main.async { [weak self] in
-+              self?.applyAICandidate(candidate, snapshot: snapshot)
++              self?.applyAICandidate(candidate, snapshot: snapshot, configuration: configuration)
 +            }
 +          }
 +          self.aiTask = task
@@ -433,13 +462,21 @@ index bad53d9..20137df 100644
 +    }
 +  }
 +
-+  func applyAICandidate(_ candidate: String, snapshot: SquirrelAISnapshot) {
++  func applyAICandidate(
++    _ candidate: String,
++    snapshot: SquirrelAISnapshot,
++    configuration: SquirrelAIRuntimeConfiguration
++  ) {
 +    if IsSecureEventInputEnabled() {
 +      aiHistory.observeSecureInput()
 +      invalidateAICandidate(clearProperties: true)
 +      return
 +    }
 +    guard ownsAICandidate(snapshot) else { return }
++    guard currentAIRuntimeConfiguration() == configuration else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
 +    guard session != 0,
 +          rimeAPI.find_session(session),
 +          currentAISnapshot(generation: snapshot.generation) == snapshot else {
@@ -463,7 +500,7 @@ index bad53d9..20137df 100644
      // print("[DEBUG] rimeUpdate")
      rimeConsumeCommittedText()
  
-@@ -520,6 +854,7 @@ private extension SquirrelInputController {
+@@ -520,6 +891,7 @@ private extension SquirrelInputController {
          candidates.append(candidate.text.map { String(cString: $0) } ?? "")
          comments.append(candidate.comment.map { String(cString: $0) } ?? "")
        }
@@ -471,7 +508,7 @@ index bad53d9..20137df 100644
        var labels = [String]()
        // swiftlint:disable identifier_name
        if let select_keys = ctx.menu.select_keys {
-@@ -539,12 +874,19 @@ private extension SquirrelInputController {
+@@ -539,12 +911,19 @@ private extension SquirrelInputController {
                  candidates: candidates, comments: comments, labels: labels, highlighted: Int(ctx.menu.highlighted_candidate_index),
                  page: page, lastPage: lastPage)
        _ = rimeAPI.free_context(&ctx)
