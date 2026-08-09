@@ -106,7 +106,7 @@
       "kitty"
       "karabiner-elements"
       "showyedge"
-      "squirrel-app"
+      # "squirrel-app"
       "jordanbaird-ice" # mac menu manager
 
       # "emacs-plus@30 --with-xwidgets --with-imagemagick"
