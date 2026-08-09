@@ -1,0 +1,484 @@
+From 775097baa9bc4074068ba1e02763e6e5c354b621 Mon Sep 17 00:00:00 2001
+From: Kevin Du <kkxandeer@gmail.com>
+Date: Sun, 9 Aug 2026 20:28:55 +0800
+Subject: [PATCH 2/2] feat: bridge ai candidates into rime
+
+---
+ sources/SquirrelInputController.swift | 345 +++++++++++++++++++++++++-
+ 1 file changed, 341 insertions(+), 4 deletions(-)
+
+diff --git a/sources/SquirrelInputController.swift b/sources/SquirrelInputController.swift
+index bad53d9..85a8657 100644
+--- a/sources/SquirrelInputController.swift
++++ b/sources/SquirrelInputController.swift
+@@ -5,8 +5,97 @@
+ //  Created by Leo Liu on 5/7/24.
+ //
+ 
++import Carbon
++import Foundation
+ import InputMethodKit
+ 
++private final class SquirrelAIURLSessionDelegate: NSObject, URLSessionDataDelegate {
++  private struct Pending {
++    let expectedURL: URL
++    let completion: (Data?) -> Void
++    var data = Data()
++  }
++
++  private let lock = NSLock()
++  private var responses: [Int: Pending] = [:]
++
++  func register(
++    _ dataTask: URLSessionDataTask,
++    expectedURL: URL,
++    completion: @escaping (Data?) -> Void
++  ) {
++    lock.lock()
++    responses[dataTask.taskIdentifier] = Pending(expectedURL: expectedURL, completion: completion)
++    lock.unlock()
++  }
++
++  func urlSession(
++    _: URLSession,
++    task _: URLSessionTask,
++    willPerformHTTPRedirection _: HTTPURLResponse,
++    newRequest _: URLRequest,
++    completionHandler: @escaping (URLRequest?) -> Void
++  ) {
++    completionHandler(nil)
++  }
++
++  func urlSession(
++    _: URLSession,
++    dataTask: URLSessionDataTask,
++    didReceive response: URLResponse,
++    completionHandler: @escaping (URLSession.ResponseDisposition) -> Void
++  ) {
++    lock.lock()
++    let pending = responses[dataTask.taskIdentifier]
++    let allowed = pending.map {
++      guard let response = response as? HTTPURLResponse else { return false }
++      return response.url == $0.expectedURL && (200..<300).contains(response.statusCode)
++    } ?? false
++    if !allowed {
++      responses.removeValue(forKey: dataTask.taskIdentifier)
++    }
++    lock.unlock()
++    completionHandler(allowed ? .allow : .cancel)
++  }
++
++  func urlSession(_: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
++    var shouldCancel = false
++    lock.lock()
++    if var pending = responses[dataTask.taskIdentifier] {
++      if data.count <= 65_536 - pending.data.count {
++        pending.data.append(data)
++        responses[dataTask.taskIdentifier] = pending
++      } else {
++        responses.removeValue(forKey: dataTask.taskIdentifier)
++        shouldCancel = true
++      }
++    }
++    lock.unlock()
++    if shouldCancel {
++      dataTask.cancel()
++    }
++  }
++
++  func urlSession(
++    _: URLSession,
++    task: URLSessionTask,
++    didCompleteWithError error: Error?
++  ) {
++    lock.lock()
++    let pending = responses.removeValue(forKey: task.taskIdentifier)
++    lock.unlock()
++    guard let pending,
++          error == nil,
++          let response = task.response as? HTTPURLResponse,
++          response.url == pending.expectedURL,
++          (200..<300).contains(response.statusCode) else {
++      pending?.completion(nil)
++      return
++    }
++    pending.completion(pending.data)
++  }
++}
++
+ final class SquirrelInputController: IMKInputController {
+   private static let keyRollOver = 50
+   private static var unknownAppCnt: UInt = 0
+@@ -28,6 +117,27 @@ final class SquirrelInputController: IMKInputController {
+   private var chordTimer: Timer?
+   private var chordDuration: TimeInterval = 0
+   private var currentApp: String = ""
++  private var aiDebounceTimer: Timer?
++  private let aiResponseDelegate = SquirrelAIURLSessionDelegate()
++  private lazy var aiURLSession: URLSession = {
++    let configuration = URLSessionConfiguration.ephemeral
++    configuration.timeoutIntervalForRequest = 4
++    configuration.timeoutIntervalForResource = 4
++    configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
++    configuration.httpShouldSetCookies = false
++    return URLSession(
++      configuration: configuration,
++      delegate: aiResponseDelegate,
++      delegateQueue: nil
++    )
++  }()
++  private var aiTask: URLSessionDataTask?
++  private var aiGeneration: UInt64 = 0
++  private var aiSnapshot: SquirrelAISnapshot?
++  private var aiHistory = SquirrelAIHistory()
++  private var aiCandidates: [String] = []
++  private var aiCandidatePublished: Bool = false
++  private let aiKeychainQueue = DispatchQueue(label: "im.rime.inputmethod.Squirrel.ai-keychain", qos: .utility)
+ 
+   // swiftlint:disable:next cyclomatic_complexity
+   override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
+@@ -126,7 +236,9 @@ final class SquirrelInputController: IMKInputController {
+   }
+ 
+   func selectCandidate(_ index: Int) -> Bool {
++    invalidateAICandidate(clearProperties: false)
+     let success = rimeAPI.select_candidate_on_current_page(session, index)
++    clearAICandidateProperties()
+     if success {
+       rimeUpdate()
+     }
+@@ -135,15 +247,15 @@ final class SquirrelInputController: IMKInputController {
+ 
+   // swiftlint:disable:next identifier_name
+   func page(up: Bool) -> Bool {
++    invalidateAICandidate(clearProperties: true)
+     var handled = false
+     handled = rimeAPI.change_page(session, up)
+-    if handled {
+-      rimeUpdate()
+-    }
++    rimeUpdate(scheduleAI: false)
+     return handled
+   }
+ 
+   func moveCaret(forward: Bool) -> Bool {
++    invalidateAICandidate(clearProperties: true)
+     let currentCaretPos = rimeAPI.get_caret_pos(session)
+     guard let input = rimeAPI.get_input(session) else { return false }
+     if forward {
+@@ -168,6 +280,7 @@ final class SquirrelInputController: IMKInputController {
+   }
+ 
+   override func activateServer(_ sender: Any!) {
++    invalidateAICandidate(clearProperties: true)
+     self.client ?= sender as? IMKTextInput
+     // print("[DEBUG] activateServer:")
+     var keyboardLayout = NSApp.squirrelAppDelegate.config?.getString("keyboard_layout") ?? ""
+@@ -192,6 +305,7 @@ final class SquirrelInputController: IMKInputController {
+   }
+ 
+   override func deactivateServer(_ sender: Any!) {
++    invalidateAICandidate(clearProperties: true)
+     // print("[DEBUG] deactivateServer: \(sender ?? "nil")")
+     hidePalettes()
+     commitComposition(sender)
+@@ -214,6 +328,7 @@ final class SquirrelInputController: IMKInputController {
+    to clean up if that is necessary.
+    */
+   override func commitComposition(_ sender: Any!) {
++    invalidateAICandidate(clearProperties: true)
+     self.client ?= sender as? IMKTextInput
+     // print("[DEBUG] commitComposition: \(sender ?? "nil")")
+     //  commit raw input
+@@ -276,6 +391,8 @@ final class SquirrelInputController: IMKInputController {
+   }
+ 
+   deinit {
++    invalidateAICandidate(clearProperties: true)
++    aiURLSession.invalidateAndCancel()
+     destroySession()
+   }
+ }
+@@ -288,7 +405,9 @@ private extension SquirrelInputController {
+     if chordKeyCount > 0 && session != 0 {
+       // simulate key-ups
+       for i in 0..<chordKeyCount {
++        invalidateAICandidate(clearProperties: false)
+         let handled = rimeAPI.process_key(session, Int32(chordKeyCodes[i]), Int32(chordModifiers[i] | kReleaseMask.rawValue))
++        clearAICandidateProperties()
+         if handled {
+           processedKeys = true
+         }
+@@ -334,6 +453,7 @@ private extension SquirrelInputController {
+   }
+ 
+   func createSession() {
++    invalidateAICandidate(clearProperties: true)
+     let app = client?.bundleIdentifier() ?? {
+       SquirrelInputController.unknownAppCnt &+= 1
+       return "UnknownApp\(SquirrelInputController.unknownAppCnt)"
+@@ -361,6 +481,7 @@ private extension SquirrelInputController {
+   }
+ 
+   func destroySession() {
++    invalidateAICandidate(clearProperties: true)
+     // print("[DEBUG] destroySession:")
+     if session != 0 {
+       _ = rimeAPI.destroy_session(session)
+@@ -383,7 +504,9 @@ private extension SquirrelInputController {
+       }
+     }
+ 
++    invalidateAICandidate(clearProperties: false)
+     let handled = rimeAPI.process_key(session, Int32(rimeKeycode), Int32(rimeModifiers))
++    clearAICandidateProperties()
+     // print("[DEBUG] rime_keycode: \(rimeKeycode), rime_modifiers: \(rimeModifiers), handled = \(handled)")
+ 
+     // TODO add special key event postprocessing here
+@@ -423,8 +546,214 @@ private extension SquirrelInputController {
+     }
+   }
+ 
++  func clearAICandidateProperties() {
++    let wasPublished = aiCandidatePublished
++    aiCandidatePublished = false
++    guard session != 0, rimeAPI.find_session(session) else { return }
++    _ = rimeAPI.set_property(session, "_ai_candidate", "")
++    _ = rimeAPI.set_property(session, "_ai_input", "")
++    _ = rimeAPI.set_property(session, "_ai_generation", "")
++    if wasPublished {
++      let refresh = rimeAPI.get_option(session, "_ai_refresh")
++      rimeAPI.set_option(session, "_ai_refresh", !refresh)
++    }
++  }
++
++  func invalidateAICandidate(clearProperties: Bool) {
++    aiGeneration &+= 1
++    aiDebounceTimer?.invalidate()
++    aiDebounceTimer = nil
++    aiTask?.cancel()
++    aiTask = nil
++    aiSnapshot = nil
++    if clearProperties {
++      clearAICandidateProperties()
++    }
++  }
++
++  func ownsAICandidate(_ snapshot: SquirrelAISnapshot) -> Bool {
++    aiGeneration == snapshot.generation && aiSnapshot == snapshot
++  }
++
++  func aiPrefixUTF16(_ value: String) -> String {
++    let value = value as NSString
++    var length = min(value.length, 128)
++    if length < value.length,
++       length > 0,
++       (0xD800...0xDBFF).contains(Int(value.character(at: length - 1))) {
++      length -= 1
++    }
++    return value.substring(with: NSRange(location: 0, length: length))
++  }
++
++  func aiSuffixUTF16(_ value: String) -> String {
++    let value = value as NSString
++    var location = max(0, value.length - 128)
++    if location > 0,
++       location < value.length,
++       (0xDC00...0xDFFF).contains(Int(value.character(at: location))) {
++      location += 1
++    }
++    return value.substring(with: NSRange(location: location, length: value.length - location))
++  }
++
++  func currentAISnapshot(generation: UInt64) -> SquirrelAISnapshot? {
++    guard session != 0,
++          rimeAPI.find_session(session),
++          let client,
++          let inputPointer = rimeAPI.get_input(session) else { return nil }
++    let input = String(cString: inputPointer)
++    guard !input.isEmpty, input.count <= 64 else { return nil }
++
++    let selectedRange = client.selectedRange()
++    let markedRange = client.markedRange()
++    let documentLength = client.length()
++    var surroundingBefore = ""
++    var surroundingAfter = ""
++    if let ranges = SquirrelAI.surroundingRanges(
++      documentUTF16Length: documentLength,
++      markedRange: markedRange,
++      selectedRange: selectedRange
++    ),
++      let before = client.attributedSubstring(from: ranges.before)?.string,
++      let after = client.attributedSubstring(from: ranges.after)?.string {
++      surroundingBefore = aiSuffixUTF16(before)
++      surroundingAfter = aiPrefixUTF16(after)
++    }
++
++    return SquirrelAISnapshot(
++      session: UInt64(session),
++      generation: generation,
++      schema: schemaId,
++      input: input,
++      caret: Int(rimeAPI.get_caret_pos(session)),
++      clientID: client.uniqueClientIdentifierString(),
++      appID: currentApp,
++      candidates: aiCandidates.prefix(8).map { String($0.prefix(64)) },
++      recentCommits: aiHistory.commits,
++      surroundingBefore: surroundingBefore,
++      surroundingAfter: surroundingAfter
++    )
++  }
++
++  func scheduleAICandidate() {
++    guard session != 0, rimeAPI.find_session(session) else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    if IsSecureEventInputEnabled() {
++      aiHistory.observeSecureInput()
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    guard let endpointText = NSApp.squirrelAppDelegate.config?.getString("ai/endpoint"),
++          let endpoint = SquirrelAI.endpoint(endpointText),
++          let model = NSApp.squirrelAppDelegate.config?.getString("ai/model"),
++          !model.isEmpty,
++          model == model.trimmingCharacters(in: .whitespacesAndNewlines),
++          let inputPointer = rimeAPI.get_input(session) else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    let input = String(cString: inputPointer)
++    guard !input.isEmpty, input.count <= 64 else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++
++    aiHistory.beginNormalComposition()
++    if let snapshot = aiSnapshot,
++       currentAISnapshot(generation: snapshot.generation) == snapshot,
++       aiDebounceTimer?.isValid == true || aiTask?.state == .running {
++      return
++    }
++
++    invalidateAICandidate(clearProperties: false)
++    guard let snapshot = currentAISnapshot(generation: aiGeneration) else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    aiSnapshot = snapshot
++    aiDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
++      guard let self else { return }
++      if IsSecureEventInputEnabled() {
++        self.aiHistory.observeSecureInput()
++        self.invalidateAICandidate(clearProperties: true)
++        return
++      }
++      guard self.ownsAICandidate(snapshot) else { return }
++      self.aiDebounceTimer = nil
++      guard self.currentAISnapshot(generation: snapshot.generation) == snapshot,
++            NSApp.squirrelAppDelegate.config?.getString("ai/endpoint") == endpointText,
++            NSApp.squirrelAppDelegate.config?.getString("ai/model") == model else {
++        self.invalidateAICandidate(clearProperties: true)
++        return
++      }
++
++      self.aiKeychainQueue.async { [weak self] in
++        guard self != nil else { return }
++        let key = SquirrelAI.readAPIKey()
++        DispatchQueue.main.async { [weak self] in
++          guard let self else { return }
++          if IsSecureEventInputEnabled() {
++            self.aiHistory.observeSecureInput()
++            self.invalidateAICandidate(clearProperties: true)
++            return
++          }
++          guard self.ownsAICandidate(snapshot) else { return }
++          guard let key,
++                self.currentAISnapshot(generation: snapshot.generation) == snapshot,
++                NSApp.squirrelAppDelegate.config?.getString("ai/endpoint") == endpointText,
++                NSApp.squirrelAppDelegate.config?.getString("ai/model") == model,
++                let request = SquirrelAI.request(endpoint: endpoint, key: key, model: model, snapshot: snapshot),
++                let requestURL = request.url else {
++            self.invalidateAICandidate(clearProperties: true)
++            return
++          }
++
++          let task = self.aiURLSession.dataTask(with: request)
++          self.aiResponseDelegate.register(task, expectedURL: requestURL) { [weak self] data in
++            guard self != nil,
++                  let data,
++                  data.count <= 65_536,
++                  let candidate = SquirrelAI.parseCandidate(from: data) else { return }
++            DispatchQueue.main.async { [weak self] in
++              self?.applyAICandidate(candidate, snapshot: snapshot)
++            }
++          }
++          self.aiTask = task
++          task.resume()
++        }
++      }
++    }
++  }
++
++  func applyAICandidate(_ candidate: String, snapshot: SquirrelAISnapshot) {
++    if IsSecureEventInputEnabled() {
++      aiHistory.observeSecureInput()
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++    guard ownsAICandidate(snapshot) else { return }
++    guard session != 0,
++          rimeAPI.find_session(session),
++          currentAISnapshot(generation: snapshot.generation) == snapshot else {
++      invalidateAICandidate(clearProperties: true)
++      return
++    }
++
++    aiTask = nil
++    _ = rimeAPI.set_property(session, "_ai_candidate", candidate)
++    _ = rimeAPI.set_property(session, "_ai_input", snapshot.input)
++    _ = rimeAPI.set_property(session, "_ai_generation", String(snapshot.generation))
++    let refresh = rimeAPI.get_option(session, "_ai_refresh")
++    rimeAPI.set_option(session, "_ai_refresh", !refresh)
++    aiCandidatePublished = true
++    rimeUpdate(scheduleAI: false)
++  }
++
+   // swiftlint:disable:next cyclomatic_complexity
+-  func rimeUpdate() {
++  func rimeUpdate(scheduleAI: Bool = true) {
+     // print("[DEBUG] rimeUpdate")
+     rimeConsumeCommittedText()
+ 
+@@ -520,6 +849,7 @@ private extension SquirrelInputController {
+         candidates.append(candidate.text.map { String(cString: $0) } ?? "")
+         comments.append(candidate.comment.map { String(cString: $0) } ?? "")
+       }
++      aiCandidates = candidates
+       var labels = [String]()
+       // swiftlint:disable identifier_name
+       if let select_keys = ctx.menu.select_keys {
+@@ -539,12 +869,19 @@ private extension SquirrelInputController {
+                 candidates: candidates, comments: comments, labels: labels, highlighted: Int(ctx.menu.highlighted_candidate_index),
+                 page: page, lastPage: lastPage)
+       _ = rimeAPI.free_context(&ctx)
++      if scheduleAI {
++        scheduleAICandidate()
++      }
+     } else {
++      aiCandidates.removeAll()
++      invalidateAICandidate(clearProperties: true)
+       hidePalettes()
+     }
+   }
+ 
+   func commit(string: String) {
++    let secure = IsSecureEventInputEnabled()
++    aiHistory.recordCommit(string, secure: secure)
+     guard let client = client else { return }
+     // print("[DEBUG] commitString: \(string)")
+     client.insertText(string, replacementRange: .empty)
+-- 
+2.54.0
+
