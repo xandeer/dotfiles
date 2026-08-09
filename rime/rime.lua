@@ -284,3 +284,280 @@ function unicode(input, seg, env)
     end
 end
 -------------------------------------------------------------
+-- AI candidate ordering and the small learned correction lexicon.
+local function ai_weights_path()
+    return rime_api.get_user_data_dir() .. "/ai_weights.tsv"
+end
+
+local function ai_valid_field(value)
+    return type(value) == "string" and not value:find("[\t\r\n]")
+end
+
+local function ai_read_rows(path)
+    -- ponytail: whole-file TSV is intentional for a small personal lexicon; use a DB only after measured growth makes this slow.
+    local file = io.open(path, "r")
+    if not file then
+        if os.rename(path, path) then
+            return nil, false
+        end
+        return {}, true
+    end
+    local contents = file:read("*a")
+    local closed = file:close()
+    if contents == nil or not closed then
+        return nil, false
+    end
+
+    local rows = {}
+    for line in (contents .. "\n"):gmatch("(.-)\n") do
+        local schema_id, input, text, raw_weight, raw_time =
+            line:match("^([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)\t([^\t\r\n]*)$")
+        local weight, last_used = tonumber(raw_weight), tonumber(raw_time)
+        if schema_id and weight and last_used and
+            weight >= 0 and weight < math.huge and last_used >= 0 and last_used < math.huge then
+            rows[#rows + 1] = {
+                schema_id = schema_id,
+                input = input,
+                text = text,
+                weight = weight,
+                last_used = last_used,
+            }
+        end
+    end
+    return rows, true
+end
+
+local function ai_row_key(row)
+    return row.schema_id .. "\0" .. row.input .. "\0" .. row.text
+end
+
+local function ai_write_learning(pending)
+    if not ai_valid_field(pending.schema_id) or not ai_valid_field(pending.input) or
+        not ai_valid_field(pending.text) or pending.schema_id == "" or
+        pending.input == "" or pending.text == "" then
+        return false
+    end
+
+    local path = ai_weights_path()
+    local rows, read_ok = ai_read_rows(path)
+    if not read_ok then
+        return false
+    end
+
+    local merged = {}
+    for _, row in ipairs(rows) do
+        local key = ai_row_key(row)
+        local previous = merged[key]
+        if not previous or row.weight > previous.weight or
+            (row.weight == previous.weight and row.last_used > previous.last_used) then
+            merged[key] = row
+        end
+    end
+
+    local key = ai_row_key(pending)
+    local row = merged[key] or {
+        schema_id = pending.schema_id,
+        input = pending.input,
+        text = pending.text,
+        weight = 0,
+        last_used = 0,
+    }
+    row.weight = math.min(row.weight + 1, 1000000)
+    row.last_used = os.time()
+    merged[key] = row
+
+    rows = {}
+    for _, value in pairs(merged) do
+        rows[#rows + 1] = value
+    end
+    table.sort(rows, function(left, right)
+        if left.schema_id ~= right.schema_id then
+            return left.schema_id < right.schema_id
+        end
+        if left.input ~= right.input then
+            return left.input < right.input
+        end
+        return left.text < right.text
+    end)
+
+    local temporary = path .. ".tmp"
+    local file = io.open(temporary, "w")
+    if not file then
+        return false
+    end
+    local write_ok = true
+    for _, value in ipairs(rows) do
+        if not file:write(table.concat({
+            value.schema_id,
+            value.input,
+            value.text,
+            tostring(value.weight),
+            tostring(value.last_used),
+        }, "\t"), "\n") then
+            write_ok = false
+            break
+        end
+    end
+    local close_ok = file:close()
+    if not write_ok or not close_ok then
+        os.remove(temporary)
+        return false
+    end
+    local rename_ok = os.rename(temporary, path)
+    if not rename_ok then
+        os.remove(temporary)
+        return false
+    end
+    return true
+end
+
+local function ai_segment_is_selected(segment)
+    local status = tostring(segment.status):lower()
+    return status == "2" or status == "3" or
+        status:find("selected", 1, true) ~= nil or
+        status:find("confirmed", 1, true) ~= nil
+end
+
+ai_learned_translator = {}
+
+function ai_learned_translator.init(env)
+    local context = env.engine.context
+    env.ai_connections = {
+        context.select_notifier:connect(function(current)
+            local segment = current.composition:empty() and nil or current.composition:back()
+            local candidate = current:get_selected_candidate()
+            local genuine = candidate and candidate:get_genuine() or nil
+            if not segment or not genuine then
+                env.ai_pending = nil
+                return
+            end
+
+            local candidate_type = tostring(genuine.type or "")
+            local generation = current:get_property("_ai_generation") or ""
+            if generation == "" and candidate_type ~= "ai" and candidate_type ~= "ai_learned" then
+                env.ai_pending = nil
+                return
+            end
+
+            local full_input = tostring(current.input or "")
+            local start_pos, end_pos = tonumber(segment.start), tonumber(segment._end)
+            local schema_id = tostring(env.engine.schema.schema_id or "")
+            local text = tostring(genuine.text or "")
+            if not start_pos or not end_pos or start_pos < 0 or end_pos < start_pos then
+                env.ai_pending = nil
+                return
+            end
+            env.ai_pending = {
+                full_input = full_input,
+                start = start_pos,
+                _end = end_pos,
+                schema_id = schema_id,
+                input = full_input:sub(start_pos + 1, end_pos),
+                type = candidate_type,
+                text = text,
+            }
+        end, 0),
+        context.commit_notifier:connect(function()
+            local pending = env.ai_pending
+            env.ai_pending = nil
+            if pending then
+                ai_write_learning(pending)
+            end
+        end, 0),
+        context.update_notifier:connect(function(current)
+            local pending = env.ai_pending
+            if not pending then
+                return
+            end
+            if current.composition:empty() or tostring(current.input or "") ~= pending.full_input then
+                env.ai_pending = nil
+                return
+            end
+            local segment = current.composition:back()
+            if segment and tonumber(segment.start) == pending.start and
+                tonumber(segment._end) == pending._end and not ai_segment_is_selected(segment) then
+                env.ai_pending = nil
+            end
+        end, 0),
+    }
+end
+
+function ai_learned_translator.func(input, seg, env)
+    local rows = ai_read_rows(ai_weights_path())
+    if not rows then
+        return
+    end
+    local schema_id = tostring(env.engine.schema.schema_id or "")
+    local baseline = tonumber(env.engine.schema.config:get_double("translator/initial_quality")) or 1
+    local matching = {}
+    for _, row in ipairs(rows) do
+        if row.schema_id == schema_id and row.input == input then
+            matching[#matching + 1] = row
+        end
+    end
+    table.sort(matching, function(left, right)
+        if left.weight ~= right.weight then
+            return left.weight > right.weight
+        end
+        if left.last_used ~= right.last_used then
+            return left.last_used > right.last_used
+        end
+        return left.text < right.text
+    end)
+    for _, row in ipairs(matching) do
+        local candidate = Candidate("ai_learned", seg.start, seg._end, row.text, "AI")
+        candidate.quality = baseline + math.min(row.weight, 100) / 1000
+        yield(candidate)
+    end
+end
+
+function ai_learned_translator.fini(env)
+    for _, connection in ipairs(env.ai_connections or {}) do
+        connection:disconnect()
+    end
+    env.ai_connections = nil
+    env.ai_pending = nil
+end
+
+function ai_candidate_filter(input, env)
+    local context = env.engine.context
+    local text = context:get_property("_ai_candidate") or ""
+    local ai_input = context:get_property("_ai_input") or ""
+    local generation = context:get_property("_ai_generation") or ""
+    local segment = context.composition:empty() and nil or context.composition:back()
+    if text == "" or ai_input ~= context.input or generation == "" or not segment then
+        for candidate in input:iter() do
+            yield(candidate)
+        end
+        return
+    end
+
+    local iterator, state = input:iter()
+    local buffered, match_index = {}, nil
+    -- ponytail: scan only the candidates sent to AI; raise this bound only if unseen deep duplicates are measured.
+    for index = 1, 8 do
+        local candidate = iterator(state)
+        if not candidate then
+            break
+        end
+        buffered[#buffered + 1] = candidate
+        if not match_index and candidate.text == text then
+            match_index = index
+        end
+    end
+
+    if match_index then
+        yield(buffered[match_index])
+    else
+        yield(Candidate("ai", segment.start, segment._end, text, "AI"))
+    end
+    for index, candidate in ipairs(buffered) do
+        if index ~= match_index then
+            yield(candidate)
+        end
+    end
+    for candidate in iterator, state do
+        yield(candidate)
+    end
+end
+-------------------------------------------------------------

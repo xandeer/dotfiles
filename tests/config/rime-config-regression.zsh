@@ -6,6 +6,8 @@ repo_root="${0:A:h:h:h}"
 schema="$repo_root/rime/double_pinyin_flypy.schema.yaml"
 others_dict="$repo_root/rime/cn_dicts/others.dict.yaml"
 melt_eng_dict="$repo_root/rime/melt_eng.dict.yaml"
+squirrel="$repo_root/rime/darwin/squirrel.custom.yaml"
+ai_harness="$repo_root/tests/config/rime-ai-regression.lua"
 
 reject_match() {
   local pattern="$1" file="$2" message="$3" rg_status=0
@@ -24,7 +26,7 @@ reject_match() {
   esac
 }
 
-for config_file in "$schema" "$others_dict" "$melt_eng_dict"; do
+for config_file in "$schema" "$others_dict" "$melt_eng_dict" "$squirrel" "$ai_harness"; do
   [[ -f "$config_file" ]] || {
     print -u2 "expected Rime config at $config_file"
     exit 1
@@ -54,3 +56,83 @@ done
 
 reject_match '^[[:space:]]*-[[:space:]]*en_dicts/cn_en([[:space:]]|$)' "$melt_eng_dict" \
   "expected active en_dicts/cn_en import to be removed"
+
+reject_match '(?i)(api[_-]?key|authorization[[:space:]]*:[[:space:]]*bearer|sk-[[:alnum:]_-]{8,})' "$squirrel" \
+  "expected Squirrel AI config to contain no API key or bearer secret"
+
+ruby -ryaml - "$schema" "$squirrel" <<'RUBY'
+schema_path, squirrel_path = ARGV
+schema = YAML.load_file(schema_path)
+engine = schema.fetch("engine")
+translators = engine.fetch("translators")
+filters = engine.fetch("filters")
+
+script_index = translators.index("script_translator")
+unless script_index && translators[script_index + 1] == "lua_translator@ai_learned_translator"
+  abort "expected lua_translator@ai_learned_translator immediately after script_translator"
+end
+
+uniquifier_index = filters.index("uniquifier")
+unless uniquifier_index&.positive? && filters[uniquifier_index - 1] == "lua_filter@ai_candidate_filter"
+  abort "expected lua_filter@ai_candidate_filter immediately before uniquifier"
+end
+
+patch = YAML.load_file(squirrel_path).fetch("patch")
+unless patch["ai/endpoint"] == "" && patch["ai/model"] == ""
+  abort "expected empty ai/endpoint and ai/model in squirrel.custom.yaml patch"
+end
+RUBY
+
+ruby -rfiddle - "$repo_root/rime/rime.lua" "$ai_harness" <<'RUBY'
+core = Fiddle::Handle.new(
+  "/Library/Input Methods/Squirrel.app/Contents/Frameworks/librime.1.dylib",
+  Fiddle::RTLD_GLOBAL | Fiddle::RTLD_LAZY
+)
+lua = Fiddle::Handle.new(
+  "/Library/Input Methods/Squirrel.app/Contents/Frameworks/rime-plugins/librime-lua.dylib",
+  Fiddle::RTLD_LAZY
+)
+
+function = ->(name, arguments, result) {
+  Fiddle::Function.new(lua[name], arguments, result)
+}
+new_state = function.call("luaL_newstate", [], Fiddle::TYPE_VOIDP)
+open_libs = function.call("luaL_openlibs", [Fiddle::TYPE_VOIDP], Fiddle::TYPE_VOID)
+load_file = function.call(
+  "luaL_loadfilex",
+  [Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP],
+  Fiddle::TYPE_INT
+)
+protected_call = function.call(
+  "lua_pcallk",
+  [Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT, Fiddle::TYPE_INT, Fiddle::TYPE_INT,
+   Fiddle::TYPE_INTPTR_T, Fiddle::TYPE_VOIDP],
+  Fiddle::TYPE_INT
+)
+to_string = function.call(
+  "lua_tolstring",
+  [Fiddle::TYPE_VOIDP, Fiddle::TYPE_INT, Fiddle::TYPE_VOIDP],
+  Fiddle::TYPE_VOIDP
+)
+close = function.call("lua_close", [Fiddle::TYPE_VOIDP], Fiddle::TYPE_VOID)
+
+state = new_state.call
+abort "failed to create bundled Lua state" if state.to_i.zero?
+
+begin
+  open_libs.call(state)
+  ARGV.each do |path|
+    status = load_file.call(state, path, 0)
+    if status.zero?
+      status = protected_call.call(state, 0, 0, 0, 0, 0)
+    end
+    next if status.zero?
+
+    pointer = to_string.call(state, -1, 0)
+    message = pointer.to_i.zero? ? "unknown Lua error" : Fiddle::Pointer.new(pointer).to_s
+    abort "#{path}: #{message}"
+  end
+ensure
+  close.call(state)
+end
+RUBY
