@@ -1,4 +1,4 @@
-From 733e0a84b411b6f8635c2792d2368af0ec950cff Mon Sep 17 00:00:00 2001
+From 28017dcd2cd6e974dcf29f8ba591c9d541bda947 Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 20:28:55 +0800
 Subject: [PATCH 2/2] feat: bridge ai candidates into rime

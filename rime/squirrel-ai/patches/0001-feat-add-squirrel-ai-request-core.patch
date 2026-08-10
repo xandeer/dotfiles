@@ -1,12 +1,12 @@
-From 0afad6da9cc2b0ce1dae5c2de84a338e5ac65c2d Mon Sep 17 00:00:00 2001
+From ef76a2560ae13c3e12b60203e51a21c2225f57ff Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 19:37:08 +0800
 Subject: [PATCH 1/2] feat: add squirrel ai request core
 
 ---
  Squirrel.xcodeproj/project.pbxproj |   4 +
- sources/SquirrelAI.swift           | 234 +++++++++++++++++++++++++++++
- 2 files changed, 238 insertions(+)
+ sources/SquirrelAI.swift           | 240 +++++++++++++++++++++++++++++
+ 2 files changed, 244 insertions(+)
  create mode 100644 sources/SquirrelAI.swift
 
 diff --git a/Squirrel.xcodeproj/project.pbxproj b/Squirrel.xcodeproj/project.pbxproj
@@ -47,10 +47,10 @@ index becf3ce..dada38d 100644
  				B38E9B952BEAFEFD0036ABEF /* SquirrelInputController.swift in Sources */,
 diff --git a/sources/SquirrelAI.swift b/sources/SquirrelAI.swift
 new file mode 100644
-index 0000000..2f8f6c6
+index 0000000..971399c
 --- /dev/null
 +++ b/sources/SquirrelAI.swift
-@@ -0,0 +1,234 @@
+@@ -0,0 +1,240 @@
 +import Foundation
 +import LocalAuthentication
 +import Security
@@ -184,6 +184,7 @@ index 0000000..2f8f6c6
 +              ),
 +              SquirrelAIMessage(role: "user", content: prompt),
 +            ],
++            thinking: SquirrelAIThinking(type: "disabled"),
 +            stream: false
 +          )) else { return nil }
 +
@@ -262,9 +263,14 @@ index 0000000..2f8f6c6
 +  let content: String
 +}
 +
++private struct SquirrelAIThinking: Encodable {
++  let type: String
++}
++
 +private struct SquirrelAIRequest: Encodable {
 +  let model: String
 +  let messages: [SquirrelAIMessage]
++  let thinking: SquirrelAIThinking
 +  let stream: Bool
 +}
 +
