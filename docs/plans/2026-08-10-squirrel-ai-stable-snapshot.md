@@ -75,4 +75,3 @@ contract regression, git format-patch, Xcode Release build.
 5. In a non-secure editor, type a harmless composition and stop. Confirm the
    request crosses the debounce boundary and an `_ai_refresh` publication occurs
    without inspecting input, candidates, request, or response values.
-

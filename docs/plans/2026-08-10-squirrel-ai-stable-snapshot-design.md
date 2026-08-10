@@ -60,4 +60,3 @@ Use test-driven development:
 6. Build and verify a Release bundle, install only the exact Squirrel app, then
    confirm a harmless stationary composition reaches the network/publication
    lifecycle without inspecting sensitive values.
-
