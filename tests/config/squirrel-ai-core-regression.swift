@@ -300,8 +300,16 @@ private func testRequestBuilder() {
   let body = request.httpBody!
   expect(!String(data: body, encoding: .utf8)!.contains(key), "API key must not enter JSON body")
   let json = try! JSONSerialization.jsonObject(with: body) as! [String: Any]
+  expectEqual(
+    Set(json.keys),
+    Set(["model", "messages", "thinking", "stream"]),
+    "request body contains only the reviewed protocol fields"
+  )
   expectEqual(json["model"] as? String, model, "configured model")
   expectEqual(json["stream"] as? Bool, false, "streaming is disabled")
+  let thinking = json["thinking"] as? [String: Any]
+  expectEqual(Set(thinking?.keys.map { $0 } ?? []), Set(["type"]), "thinking has only its type")
+  expectEqual(thinking?["type"] as? String, "disabled", "thinking is disabled")
   let messages = json["messages"] as! [[String: Any]]
   expectEqual(messages.count, 2, "system and user messages")
   expectEqual(messages[0]["role"] as? String, "system", "system role")
