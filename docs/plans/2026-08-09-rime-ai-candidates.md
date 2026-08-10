@@ -252,7 +252,7 @@ Expected: checkout 和 submodules clean，HEAD 为 Squirrel 1.1.2。
 - endpoint：只允许 HTTPS、有 host、无 embedded user/password；
 - request：Bearer 只在 header，key 不在 JSON body，body 含 model/messages/`stream: false`；
 - parser：正常 outer/inner JSON；empty choices、nil、Markdown fence、空值、换行、control、超过 64 characters 均拒绝；
-- stale gate：generation、session、schema、input、caret、client ID、app ID、候选或周边文本任一改变即不匹配；
+- stale gate：generation、session、schema、input、caret、app ID、候选或周边文本任一改变即不匹配；
 - secure history：观察到 secure 后立即清空；随后到达的 delayed secure commit 不记录；下一次明确的 normal composition 从空 history 重新开始；
 - 用随机不存在 service 验证 Keychain missing 会返回 nil 且不弹 UI。
 
@@ -379,7 +379,7 @@ NSApp.squirrelAppDelegate.config?.getString("ai/model")
 没有 endpoint/model、没有 active session、空 input 或 secure event input 时直接退出。snapshot 至少包含：
 
 - session ID、generation、schema、raw input、caret；
-- `client.uniqueClientIdentifierString()` 与 controller 已有的 `currentApp`（来源是 `client.bundleIdentifier()`）；
+- controller 已有的稳定 `currentApp`（来源是 `client.bundleIdentifier()`）；不要调用每次都会生成新值的 `client.uniqueClientIdentifierString()`；
 - 当前前 8 个候选文本，每项最多 64 characters；
 - 最近 5 次 commit，每项最多 128 characters；
 - marked range 外、前后各最多 128 UTF-16 units 的 surrounding text。
@@ -397,13 +397,13 @@ client.attributedSubstring(from: range)?.string
 
 **Step 4: 后台读 Keychain 并异步发送**
 
-Keychain 查询放 dedicated serial queue。结果回主线程再检查 generation/client/session/secure 状态；仍有效才创建 ephemeral `URLSession` task。固定 4 秒 timeout、无 retry、无 stream，并用一个最小 `URLSessionTaskDelegate` 拒绝所有 redirect；用户必须配置最终 URL。
+Keychain 查询放 dedicated serial queue。结果回主线程再检查 generation/snapshot/session/secure 状态；仍有效才创建 ephemeral `URLSession` task。固定 4 秒 timeout、无 retry、无 stream，并用一个最小 `URLSessionTaskDelegate` 拒绝所有 redirect；用户必须配置最终 URL。
 
 HTTP 完成后要求最终 response 仍是配置 URL、HTTP 2xx 且 body 不超过 64 KiB；只把 status category 或已验证 candidate 送回主线程。绝不输出请求、响应、上下文或 Authorization header。
 
 **Step 5: 主线程执行完整 stale gate 并刷新**
 
-完成回调 weak capture controller，并重新检查：controller 存活、generation、`find_session`、session、schema、input、caret、client ID、app ID、候选、surrounding text 和 secure state。
+完成回调 weak capture controller，并重新检查：controller 存活、generation、`find_session`、session、schema、input、caret、app ID、候选、surrounding text 和 secure state。
 
 通过后：
 

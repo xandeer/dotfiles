@@ -110,7 +110,7 @@ Requests do not stream and do not retry. This keeps cancellation, cost, and orde
 2. A composition change clears the previous live AI result, increments a generation token, cancels the previous task, and schedules a 300 ms timer.
 3. When the timer fires, Squirrel snapshots the session, schema, input, caret, candidates, recent commits, and available surrounding text.
 4. `URLSession` sends the request without blocking the input method thread.
-5. Completion returns to the main thread. Squirrel compares every identity field and drops a stale result.
+5. Completion returns to the main thread. Squirrel compares every stable snapshot and ownership field and drops a stale result.
 6. A valid result is stored in Rime context properties together with its input and generation. Squirrel toggles a transient refresh option and invokes its normal candidate update.
 7. The Lua filter validates the metadata, yields the AI candidate first, deduplicates it, and passes through the remaining candidates.
 8. Commit or cancellation clears the transient result. A committed selection updates the independent learned table.
