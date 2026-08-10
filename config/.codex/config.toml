@@ -141,24 +141,24 @@ enabled = false
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-07T13:14:40Z"
+last_updated = "2026-08-10T02:33:08Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-08-06T03:32:53Z"
+last_updated = "2026-08-10T02:35:29Z"
 source_type = "local"
 source = "/Users/kevin/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [marketplaces.ponytail]
-last_updated = "2026-08-03T04:57:35Z"
-last_revision = "16f29800fd2681bdf24f3eb4ccffe38be3baec6b"
+last_updated = "2026-08-09T13:42:38Z"
+last_revision = "2ed6c52c9d7e5e56942508591085fd45dea277d3"
 source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
 [marketplaces.caveman]
-last_updated = "2026-08-08T03:18:33Z"
-last_revision = "14d4f2e21a16b573373ca24698cd6bd3db75bf52"
+last_updated = "2026-08-09T13:42:25Z"
+last_revision = "11ddc0c9813c8f75365cd5be2f753df08712f154"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 

@@ -84,8 +84,22 @@ unless uniquifier_index&.positive? && filters[uniquifier_index - 1] == "lua_filt
 end
 
 patch = YAML.load_file(squirrel_path).fetch("patch")
-unless patch["ai/endpoint"] == "" && patch["ai/model"] == ""
-  abort "expected empty ai/endpoint and ai/model in squirrel.custom.yaml patch"
+endpoint = patch.fetch("ai/endpoint")
+model = patch.fetch("ai/model")
+unless endpoint.is_a?(String) && model.is_a?(String) && endpoint.empty? == model.empty?
+  abort "expected ai/endpoint and ai/model to be strings configured together"
+end
+unless endpoint.empty?
+  require "uri"
+  begin
+    uri = URI.parse(endpoint)
+  rescue URI::InvalidURIError
+    abort "expected ai/endpoint to be a valid HTTPS URL"
+  end
+  unless uri.is_a?(URI::HTTPS) && uri.host && !uri.host.empty? &&
+      uri.user.nil? && uri.password.nil? && model == model.strip && !model.empty?
+    abort "expected a credential-free HTTPS ai/endpoint and non-empty trimmed ai/model"
+  end
 end
 unless patch["ai/enabled"] == true
   abort "expected ai/enabled to default to true in squirrel.custom.yaml patch"
