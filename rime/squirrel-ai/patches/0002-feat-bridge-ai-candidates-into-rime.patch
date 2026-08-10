@@ -1,14 +1,14 @@
-From 733e0a84b411b6f8635c2792d2368af0ec950cff Mon Sep 17 00:00:00 2001
+From 08572c151464be456eb7f86cc3440ed6d1b7f18d Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 20:28:55 +0800
 Subject: [PATCH 2/2] feat: bridge ai candidates into rime
 
 ---
- sources/SquirrelInputController.swift | 387 +++++++++++++++++++++++++-
- 1 file changed, 383 insertions(+), 4 deletions(-)
+ sources/SquirrelInputController.swift | 386 +++++++++++++++++++++++++-
+ 1 file changed, 382 insertions(+), 4 deletions(-)
 
 diff --git a/sources/SquirrelInputController.swift b/sources/SquirrelInputController.swift
-index bad53d9..eaea202 100644
+index bad53d9..8fce4bf 100644
 --- a/sources/SquirrelInputController.swift
 +++ b/sources/SquirrelInputController.swift
 @@ -5,8 +5,104 @@
@@ -254,7 +254,7 @@ index bad53d9..eaea202 100644
      // print("[DEBUG] rime_keycode: \(rimeKeycode), rime_modifiers: \(rimeModifiers), handled = \(handled)")
  
      // TODO add special key event postprocessing here
-@@ -423,8 +558,244 @@ private extension SquirrelInputController {
+@@ -423,8 +558,243 @@ private extension SquirrelInputController {
      }
    }
  
@@ -339,7 +339,6 @@ index bad53d9..eaea202 100644
 +      schema: schemaId,
 +      input: input,
 +      caret: Int(rimeAPI.get_caret_pos(session)),
-+      clientID: client.uniqueClientIdentifierString(),
 +      appID: currentApp,
 +      candidates: aiCandidates.prefix(8).map { String($0.prefix(64)) },
 +      recentCommits: aiHistory.commits,
@@ -500,7 +499,7 @@ index bad53d9..eaea202 100644
      // print("[DEBUG] rimeUpdate")
      rimeConsumeCommittedText()
  
-@@ -520,6 +891,7 @@ private extension SquirrelInputController {
+@@ -520,6 +890,7 @@ private extension SquirrelInputController {
          candidates.append(candidate.text.map { String(cString: $0) } ?? "")
          comments.append(candidate.comment.map { String(cString: $0) } ?? "")
        }
@@ -508,7 +507,7 @@ index bad53d9..eaea202 100644
        var labels = [String]()
        // swiftlint:disable identifier_name
        if let select_keys = ctx.menu.select_keys {
-@@ -539,12 +911,19 @@ private extension SquirrelInputController {
+@@ -539,12 +910,19 @@ private extension SquirrelInputController {
                  candidates: candidates, comments: comments, labels: labels, highlighted: Int(ctx.menu.highlighted_candidate_index),
                  page: page, lastPage: lastPage)
        _ = rimeAPI.free_context(&ctx)

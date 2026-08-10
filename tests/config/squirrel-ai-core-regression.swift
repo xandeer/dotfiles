@@ -23,7 +23,6 @@ private func snapshot(
   schema: String = "luna_pinyin_simp",
   input: String = "nihao",
   caret: Int = 5,
-  clientID: String = "client-1",
   appID: String = "com.example.Editor",
   candidates: [String] = ["你好", "拟好"],
   recentCommits: [String] = ["早上好"],
@@ -36,7 +35,6 @@ private func snapshot(
     schema: schema,
     input: input,
     caret: caret,
-    clientID: clientID,
     appID: appID,
     candidates: candidates,
     recentCommits: recentCommits,
@@ -70,9 +68,13 @@ private func systemMessage(instructions: String, key: String = "test-key-DO-NOT-
   return messages[0]["content"] as? String
 }
 
-private func testSnapshotEqualityIsTheStaleGate() {
+private func testSnapshotEqualityUsesStableStaleGateFields() {
   let current = snapshot()
   expectEqual(current, snapshot(), "identical snapshots")
+  expect(
+    !Mirror(reflecting: current).children.contains(where: { $0.label == "clientID" }),
+    "snapshot must not retain an unstable IMK client identifier"
+  )
 
   let stale = [
     snapshot(session: 9),
@@ -80,7 +82,6 @@ private func testSnapshotEqualityIsTheStaleGate() {
     snapshot(schema: "other"),
     snapshot(input: "other"),
     snapshot(caret: 4),
-    snapshot(clientID: "client-2"),
     snapshot(appID: "com.example.Other"),
     snapshot(candidates: ["您好"]),
     snapshot(recentCommits: ["晚上好"]),
@@ -88,7 +89,7 @@ private func testSnapshotEqualityIsTheStaleGate() {
     snapshot(surroundingAfter: "changed"),
   ]
   for changed in stale {
-    expect(changed != current, "every snapshot field must participate in equality")
+    expect(changed != current, "every stable snapshot field must participate in equality")
   }
 }
 
@@ -300,8 +301,16 @@ private func testRequestBuilder() {
   let body = request.httpBody!
   expect(!String(data: body, encoding: .utf8)!.contains(key), "API key must not enter JSON body")
   let json = try! JSONSerialization.jsonObject(with: body) as! [String: Any]
+  expectEqual(
+    Set(json.keys),
+    Set(["model", "messages", "thinking", "stream"]),
+    "request body contains only the reviewed protocol fields"
+  )
   expectEqual(json["model"] as? String, model, "configured model")
   expectEqual(json["stream"] as? Bool, false, "streaming is disabled")
+  let thinking = json["thinking"] as? [String: Any]
+  expectEqual(Set(thinking?.keys.map { $0 } ?? []), Set(["type"]), "thinking has only its type")
+  expectEqual(thinking?["type"] as? String, "disabled", "thinking is disabled")
   let messages = json["messages"] as! [[String: Any]]
   expectEqual(messages.count, 2, "system and user messages")
   expectEqual(messages[0]["role"] as? String, "system", "system role")
@@ -517,7 +526,7 @@ private func testMissingKeychainItemDoesNotPrompt() {
 @main
 private enum SquirrelAICoreRegression {
   static func main() {
-    testSnapshotEqualityIsTheStaleGate()
+    testSnapshotEqualityUsesStableStaleGateFields()
     testSurroundingRanges()
     testEndpointValidation()
     testInstructionValidation()
