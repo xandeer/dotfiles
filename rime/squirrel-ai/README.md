@@ -89,8 +89,8 @@ patch:
   ai/endpoint: "https://YOUR-ENDPOINT.example/v1/chat/completions"
   ai/model: "YOUR-MODEL"
   ai/instructions: |-
-    Prefer concise candidates appropriate for the surrounding text.
-    Preserve names and technical terms when they are already correct.
+    优先纠正输入错误，并选择最符合前后文的简体中文候选。
+    保留已经正确的人名、专有名词和技术术语。
 ```
 
 `ai/enabled` is the global switch for every app using Squirrel. Set it to `false` to prevent new AI requests after reload; this does not retract a request that was already sent. `ai/instructions` is optional runtime guidance inserted before the mandatory built-in protocol postamble. Leave it as `""` for the default behavior. `ai/instructions` cannot override the mandatory request/response protocol.
