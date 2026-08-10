@@ -1,12 +1,12 @@
-From ef76a2560ae13c3e12b60203e51a21c2225f57ff Mon Sep 17 00:00:00 2001
+From d369d816f4b9b9aa3a34bafa9217d90b5debf1ce Mon Sep 17 00:00:00 2001
 From: Kevin Du <kkxandeer@gmail.com>
 Date: Sun, 9 Aug 2026 19:37:08 +0800
 Subject: [PATCH 1/2] feat: add squirrel ai request core
 
 ---
  Squirrel.xcodeproj/project.pbxproj |   4 +
- sources/SquirrelAI.swift           | 240 +++++++++++++++++++++++++++++
- 2 files changed, 244 insertions(+)
+ sources/SquirrelAI.swift           | 239 +++++++++++++++++++++++++++++
+ 2 files changed, 243 insertions(+)
  create mode 100644 sources/SquirrelAI.swift
 
 diff --git a/Squirrel.xcodeproj/project.pbxproj b/Squirrel.xcodeproj/project.pbxproj
@@ -47,10 +47,10 @@ index becf3ce..dada38d 100644
  				B38E9B952BEAFEFD0036ABEF /* SquirrelInputController.swift in Sources */,
 diff --git a/sources/SquirrelAI.swift b/sources/SquirrelAI.swift
 new file mode 100644
-index 0000000..971399c
+index 0000000..e159688
 --- /dev/null
 +++ b/sources/SquirrelAI.swift
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,239 @@
 +import Foundation
 +import LocalAuthentication
 +import Security
@@ -61,7 +61,6 @@ index 0000000..971399c
 +  let schema: String
 +  let input: String
 +  let caret: Int
-+  let clientID: String
 +  let appID: String
 +  let candidates: [String]
 +  let recentCommits: [String]
