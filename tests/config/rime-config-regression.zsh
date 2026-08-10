@@ -119,6 +119,10 @@ end
   "优先选择已有候选",
   "不翻译、不扩写、不润色",
   "无法确定时",
+  "补回漏字仅限原始输入和上下文明确支持且不引入新语义",
+  "不添加用户原意之外的信息",
+  "除非原始输入编码与上下文均有充分证据表明存在错误",
+  "否则原样保留人名、专有名词、技术术语、新词",
 ].each do |requirement|
   abort "expected ai/instructions correction rule: #{requirement}" unless
     instructions.include?(requirement)
@@ -152,8 +156,19 @@ abort "rollback summary must not depend on postinstall" if summary.include?("pos
 %w[ai/enabled ai/instructions 0600].each do |runtime_contract|
   abort "expected README runtime contract: #{runtime_contract}" unless readme.include?(runtime_contract)
 end
-abort "README must include a multiline ai/instructions |- YAML example" unless
-  readme.match?(/ai\/instructions:\s*\|-\s*\n[ \t]+\S[^\n]*\n[ \t]+\S[^\n]*(?:\n|\z)/)
+instructions_example = readme[
+  /ai\/instructions:\s*\|-\s*\n((?:[ \t]+\S[^\n]*(?:\n|\z))+)/,
+  1,
+] or abort "README must include a multiline ai/instructions |- YAML example"
+instructions_example_lines = instructions_example.lines.map(&:strip)
+
+[
+  '除非上下文明确表明有误，否则原样保留人名、专有名词和技术术语。',
+  '只纠正错误，不扩写、不润色；无法确定时，保留最贴近原输入的结果。',
+].each do |example_boundary|
+  abort "expected README ai/instructions example boundary: #{example_boundary}" unless
+    instructions_example_lines.include?(example_boundary)
+end
 
 [
   'Changing `ai/enabled` or `ai/instructions` requires only `--reload`; it does not require rebuilding Squirrel.',
