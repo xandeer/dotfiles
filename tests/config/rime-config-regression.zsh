@@ -104,8 +104,24 @@ end
 unless patch["ai/enabled"] == true
   abort "expected ai/enabled to default to true in squirrel.custom.yaml patch"
 end
-unless patch["ai/instructions"] == ""
-  abort "expected ai/instructions to default to an empty string in squirrel.custom.yaml patch"
+instructions = patch.fetch("ai/instructions")
+unless instructions.is_a?(String) && !instructions.empty? &&
+    instructions == instructions.strip && instructions.length <= 4_096
+  abort "expected non-empty normalized ai/instructions within the runtime limit"
+end
+
+[
+  "简体中文输入法",
+  "前后鼻音混淆",
+  "按键顺序颠倒",
+  "相邻按键误触",
+  "漏键和多键",
+  "优先选择已有候选",
+  "不翻译、不扩写、不润色",
+  "无法确定时",
+].each do |requirement|
+  abort "expected ai/instructions correction rule: #{requirement}" unless
+    instructions.include?(requirement)
 end
 RUBY
 
