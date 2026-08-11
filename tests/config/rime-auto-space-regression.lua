@@ -1,4 +1,5 @@
 assert(type(auto_space_filter) == "function", "missing production auto_space_filter")
+assert(type(select_character) == "function", "missing production select_character")
 
 local function same(actual, expected, message)
     assert(actual == expected, string.format(
@@ -474,5 +475,578 @@ local history_failure_source = candidate("phrase", 0, 4, "Rime")
 assert_pass_through(function()
     error("injected commit history failure")
 end, history_failure_source, "throwing commit history back")
+
+local function processor_candidate(kind, display, genuine_behavior)
+    local value = {
+        type = kind,
+        text = display,
+    }
+    function value:get_genuine()
+        if genuine_behavior == "throw" then
+            error("injected selected get_genuine failure")
+        elseif genuine_behavior == "nil" then
+            return nil
+        elseif genuine_behavior == "noncandidate" then
+            return "not a candidate"
+        end
+        return genuine_behavior
+    end
+    return value
+end
+
+local function processor_segment(selected)
+    local value = {}
+    function value:get_selected_candidate()
+        return selected
+    end
+    return value
+end
+
+local function processor_segmentation(segments)
+    local value = {
+        size = #segments,
+        requested_indices = {},
+    }
+    function value:empty()
+        return self.size == 0
+    end
+    function value:get_at(index)
+        self.requested_indices[#self.requested_indices + 1] = index
+        return segments[index + 1]
+    end
+    return value
+end
+
+local function processor_composition(segmentation)
+    local value = {}
+    function value:empty()
+        return segmentation:empty()
+    end
+    function value:toSegmentation()
+        return segmentation
+    end
+    return value
+end
+
+local function composition_with(first_selected, second_selected)
+    local segments = {processor_segment(first_selected)}
+    if second_selected ~= nil then
+        segments[#segments + 1] = processor_segment(second_selected)
+    end
+    local segmentation = processor_segmentation(segments)
+    return processor_composition(segmentation), segmentation
+end
+
+local function processor_key(representation)
+    local value = {}
+    function value:repr()
+        return representation
+    end
+    return value
+end
+
+local function run_select_character(representation, commit_text, composition)
+    local commits = {}
+    local clear_count = 0
+    local config = {}
+    function config:get_string(path)
+        if path == "key_binder/select_first_character" then
+            return "Control+j"
+        elseif path == "key_binder/select_last_character" then
+            return "Control+l"
+        end
+        return nil
+    end
+
+    local context = {composition = composition}
+    function context:get_commit_text()
+        return commit_text
+    end
+    function context:clear()
+        clear_count = clear_count + 1
+    end
+
+    local engine = {
+        context = context,
+        schema = {config = config},
+    }
+    function engine:commit_text(text)
+        commits[#commits + 1] = text
+    end
+
+    local ok, result = pcall(
+        select_character,
+        processor_key(representation),
+        {engine = engine}
+    )
+    assert(ok, "select_character must fail closed: " .. tostring(result))
+    return {
+        result = result,
+        commits = commits,
+        clear_count = clear_count,
+    }
+end
+
+local function assert_accepted(outcome, expected, message)
+    same(outcome.result, 1, message .. " return value")
+    same(#outcome.commits, 1, message .. " commit count")
+    same(outcome.commits[1], expected, message)
+    same(outcome.clear_count, 1, message .. " clear count")
+end
+
+local genuine_for_selection = candidate(
+    "phrase", 0, 4, "与显示文本刻意不同", "", 1
+)
+
+for _, case in ipairs({
+    {key = "Control+j", expected = " R", name = "Ctrl+J must preserve automatic prefix"},
+    {key = "Control+l", expected = " e", name = "Ctrl+L must preserve automatic prefix"},
+}) do
+    local selected = processor_candidate(
+        "auto_space", " Rime", genuine_for_selection
+    )
+    local composition, segmentation = composition_with(selected)
+    local outcome = run_select_character(case.key, " Rime", composition)
+    assert_accepted(outcome, case.expected, case.name)
+    same(#segmentation.requested_indices, 1,
+        case.name .. " segmentation lookup count")
+    same(segmentation.requested_indices[1], 0,
+        case.name .. " must inspect zero-based first segment")
+end
+
+for _, case in ipairs({
+    {key = "Control+j", expected = " R", name = "multi-segment Ctrl+J"},
+    {key = "Control+l", expected = " 法", name = "multi-segment Ctrl+L"},
+}) do
+    local first_selected = processor_candidate(
+        "auto_space", " Rime", genuine_for_selection
+    )
+    local active_second_selected = processor_candidate(
+        "phrase", "输入法", genuine_for_selection
+    )
+    local composition, segmentation = composition_with(
+        first_selected, active_second_selected
+    )
+    local outcome = run_select_character(
+        case.key, " Rime输入法", composition
+    )
+    assert_accepted(outcome, case.expected,
+        case.name .. " must preserve automatic prefix")
+    same(#segmentation.requested_indices, 1,
+        case.name .. " segmentation lookup count")
+    same(segmentation.requested_indices[1], 0,
+        case.name .. " must inspect first segment when the second is active")
+end
+
+local function assert_old_selection(
+        message, commit_text, composition_factory, first_expected, last_expected)
+    for _, case in ipairs({
+        {key = "Control+j", expected = first_expected, label = "Ctrl+J"},
+        {key = "Control+l", expected = last_expected, label = "Ctrl+L"},
+    }) do
+        local outcome = run_select_character(
+            case.key, commit_text, composition_factory()
+        )
+        assert_accepted(outcome, case.expected,
+            message .. " " .. case.label .. " must retain old behavior")
+    end
+end
+
+local function valid_selection_composition(kind, display, genuine_behavior)
+    local selected = processor_candidate(kind, display, genuine_behavior)
+    return composition_with(selected)
+end
+
+assert_old_selection(
+    "non-auto-space candidate", " Rime",
+    function()
+        return valid_selection_composition(
+            "phrase", " Rime", genuine_for_selection
+        )
+    end,
+    " ", "e"
+)
+
+assert_old_selection(
+    "zero-leading-space display", "Rime",
+    function()
+        return valid_selection_composition(
+            "auto_space", "Rime", genuine_for_selection
+        )
+    end,
+    "R", "e"
+)
+
+assert_old_selection(
+    "multiple-leading-space display", "  Rime",
+    function()
+        return valid_selection_composition(
+            "auto_space", "  Rime", genuine_for_selection
+        )
+    end,
+    " ", "e"
+)
+
+assert_old_selection(
+    "full commit without exact selected display prefix", " X Rime",
+    function()
+        return valid_selection_composition(
+            "auto_space", " Rime", genuine_for_selection
+        )
+    end,
+    " ", "e"
+)
+
+for _, failure in ipairs({
+    {
+        name = "missing composition",
+        composition = function()
+            return nil
+        end,
+    },
+    {
+        name = "missing composition empty API",
+        composition = function()
+            local segmentation = processor_segmentation({
+                processor_segment(processor_candidate(
+                    "auto_space", " Rime", genuine_for_selection
+                )),
+            })
+            return {
+                toSegmentation = function()
+                    return segmentation
+                end,
+            }
+        end,
+    },
+    {
+        name = "throwing composition empty API",
+        composition = function()
+            local composition = select(1, valid_selection_composition(
+                "auto_space", " Rime", genuine_for_selection
+            ))
+            function composition:empty()
+                error("injected composition empty failure")
+            end
+            return composition
+        end,
+    },
+    {
+        name = "indeterminate composition empty state",
+        composition = function()
+            local composition = select(1, valid_selection_composition(
+                "auto_space", " Rime", genuine_for_selection
+            ))
+            function composition:empty()
+                return nil
+            end
+            return composition
+        end,
+    },
+    {
+        name = "empty composition",
+        composition = function()
+            local composition = select(1, valid_selection_composition(
+                "auto_space", " Rime", genuine_for_selection
+            ))
+            function composition:empty()
+                return true
+            end
+            return composition
+        end,
+    },
+    {
+        name = "missing toSegmentation API",
+        composition = function()
+            return {empty = function() return false end}
+        end,
+    },
+    {
+        name = "throwing toSegmentation API",
+        composition = function()
+            return {
+                empty = function() return false end,
+                toSegmentation = function()
+                    error("injected toSegmentation failure")
+                end,
+            }
+        end,
+    },
+    {
+        name = "nil segmentation",
+        composition = function()
+            return {
+                empty = function() return false end,
+                toSegmentation = function() return nil end,
+            }
+        end,
+    },
+    {
+        name = "missing segmentation empty API",
+        composition = function()
+            local segment = processor_segment(processor_candidate(
+                "auto_space", " Rime", genuine_for_selection
+            ))
+            local segmentation = {
+                size = 1,
+                get_at = function(_, index)
+                    return index == 0 and segment or nil
+                end,
+            }
+            return {
+                empty = function() return false end,
+                toSegmentation = function() return segmentation end,
+            }
+        end,
+    },
+    {
+        name = "throwing segmentation empty API",
+        composition = function()
+            local segmentation = processor_segmentation({
+                processor_segment(processor_candidate(
+                    "auto_space", " Rime", genuine_for_selection
+                )),
+            })
+            function segmentation:empty()
+                error("injected segmentation empty failure")
+            end
+            return {
+                empty = function() return false end,
+                toSegmentation = function() return segmentation end,
+            }
+        end,
+    },
+    {
+        name = "indeterminate segmentation empty state",
+        composition = function()
+            local segmentation = processor_segmentation({
+                processor_segment(processor_candidate(
+                    "auto_space", " Rime", genuine_for_selection
+                )),
+            })
+            function segmentation:empty()
+                return nil
+            end
+            return {
+                empty = function() return false end,
+                toSegmentation = function() return segmentation end,
+            }
+        end,
+    },
+    {
+        name = "empty segmentation",
+        composition = function()
+            local segmentation = processor_segmentation({})
+            return {
+                empty = function() return false end,
+                toSegmentation = function() return segmentation end,
+            }
+        end,
+    },
+    {
+        name = "missing segmentation get_at API",
+        composition = function()
+            local segmentation = {
+                size = 1,
+                empty = function() return false end,
+            }
+            return processor_composition(segmentation)
+        end,
+    },
+    {
+        name = "throwing segmentation get_at API",
+        composition = function()
+            local segmentation = {
+                size = 1,
+                empty = function() return false end,
+                get_at = function()
+                    error("injected get_at failure")
+                end,
+            }
+            return processor_composition(segmentation)
+        end,
+    },
+    {
+        name = "absent first segment",
+        composition = function()
+            local segmentation = {
+                size = 1,
+                empty = function() return false end,
+                get_at = function() return nil end,
+            }
+            return processor_composition(segmentation)
+        end,
+    },
+    {
+        name = "missing segment selected-candidate API",
+        composition = function()
+            return processor_composition(processor_segmentation({{}}))
+        end,
+    },
+    {
+        name = "throwing segment selected-candidate API",
+        composition = function()
+            local segment = {}
+            function segment:get_selected_candidate()
+                error("injected selected-candidate failure")
+            end
+            return processor_composition(processor_segmentation({segment}))
+        end,
+    },
+    {
+        name = "first segment without selected candidate",
+        composition = function()
+            return processor_composition(processor_segmentation({
+                processor_segment(nil),
+            }))
+        end,
+    },
+    {
+        name = "selected get_genuine returns nil",
+        composition = function()
+            return valid_selection_composition(
+                "auto_space", " Rime", "nil"
+            )
+        end,
+    },
+    {
+        name = "selected get_genuine throws",
+        composition = function()
+            return valid_selection_composition(
+                "auto_space", " Rime", "throw"
+            )
+        end,
+    },
+    {
+        name = "selected get_genuine returns noncandidate",
+        composition = function()
+            return valid_selection_composition(
+                "auto_space", " Rime", "noncandidate"
+            )
+        end,
+    },
+    {
+        name = "selected type property throws",
+        composition = function()
+            local selected = {
+                text = " Rime",
+                get_genuine = function() return genuine_for_selection end,
+            }
+            setmetatable(selected, {
+                __index = function(_, key)
+                    if key == "type" then
+                        error("injected selected type failure")
+                    end
+                end,
+            })
+            return composition_with(selected)
+        end,
+    },
+    {
+        name = "selected text property throws",
+        composition = function()
+            local selected = {
+                type = "auto_space",
+                get_genuine = function() return genuine_for_selection end,
+            }
+            setmetatable(selected, {
+                __index = function(_, key)
+                    if key == "text" then
+                        error("injected selected text failure")
+                    end
+                end,
+            })
+            return composition_with(selected)
+        end,
+    },
+}) do
+    assert_old_selection(
+        failure.name, " Rime", failure.composition, " ", "e"
+    )
+end
+
+local unrelated_composition = select(1, valid_selection_composition(
+    "auto_space", " Rime", genuine_for_selection
+))
+local unrelated = run_select_character(
+    "Control+x", " Rime", unrelated_composition
+)
+same(unrelated.result, 2, "unrelated key return value")
+same(#unrelated.commits, 0, "unrelated key commit count")
+same(unrelated.clear_count, 0, "unrelated key clear count")
+
+local unrelated_reads = {
+    key_repr = 0,
+    commit_text = 0,
+    composition = 0,
+    proof_api = 0,
+    commit = 0,
+    clear = 0,
+}
+local guarded_composition = {}
+function guarded_composition:empty()
+    unrelated_reads.proof_api = unrelated_reads.proof_api + 1
+    return true
+end
+function guarded_composition:toSegmentation()
+    unrelated_reads.proof_api = unrelated_reads.proof_api + 1
+    error("unrelated key must not traverse segmentation")
+end
+
+local guarded_context = {}
+function guarded_context:get_commit_text()
+    unrelated_reads.commit_text = unrelated_reads.commit_text + 1
+    return " Rime"
+end
+function guarded_context:clear()
+    unrelated_reads.clear = unrelated_reads.clear + 1
+end
+setmetatable(guarded_context, {
+    __index = function(_, key)
+        if key == "composition" then
+            unrelated_reads.composition = unrelated_reads.composition + 1
+            return guarded_composition
+        end
+    end,
+})
+
+local guarded_config = {}
+function guarded_config:get_string(path)
+    if path == "key_binder/select_first_character" then
+        return "Control+j"
+    elseif path == "key_binder/select_last_character" then
+        return "Control+l"
+    end
+    return nil
+end
+
+local guarded_engine = {
+    context = guarded_context,
+    schema = {config = guarded_config},
+}
+function guarded_engine:commit_text()
+    unrelated_reads.commit = unrelated_reads.commit + 1
+end
+
+local guarded_key = {}
+function guarded_key:repr()
+    unrelated_reads.key_repr = unrelated_reads.key_repr + 1
+    return "Control+x"
+end
+
+local guarded_ok, guarded_result = pcall(
+    select_character,
+    guarded_key,
+    {engine = guarded_engine}
+)
+assert(guarded_ok,
+    "unrelated key must not fail: " .. tostring(guarded_result))
+same(guarded_result, 2, "guarded unrelated key return value")
+same(unrelated_reads.commit, 0, "guarded unrelated key commit count")
+same(unrelated_reads.clear, 0, "guarded unrelated key clear count")
+same(unrelated_reads.key_repr, 1, "unrelated key repr read count")
+same(unrelated_reads.commit_text, 0, "unrelated key commit-text read count")
+same(unrelated_reads.composition, 0, "unrelated key composition read count")
+same(unrelated_reads.proof_api, 0, "unrelated key proof-API call count")
 
 print("Rime auto-space regression OK")

@@ -266,26 +266,89 @@ function auto_space_filter(input, env)
     end
 end
 
+local function auto_space_prefix(context, commit_text)
+    local proof_ok, prefix = pcall(function()
+        if type(commit_text) ~= "string" then
+            return ""
+        end
+
+        local composition = context.composition
+        local composition_type = type(composition)
+        if composition_type ~= "table" and composition_type ~= "userdata" then
+            return ""
+        end
+        if composition:empty() ~= false then
+            return ""
+        end
+
+        local segmentation = composition:toSegmentation()
+        local segmentation_type = type(segmentation)
+        if segmentation_type ~= "table" and segmentation_type ~= "userdata" then
+            return ""
+        end
+        if segmentation:empty() ~= false then
+            return ""
+        end
+
+        local first_segment = segmentation:get_at(0)
+        local segment_type = type(first_segment)
+        if segment_type ~= "table" and segment_type ~= "userdata" then
+            return ""
+        end
+
+        local selected = first_segment:get_selected_candidate()
+        local selected_type = type(selected)
+        if selected_type ~= "table" and selected_type ~= "userdata" then
+            return ""
+        end
+
+        local candidate_type = selected.type
+        local display = selected.text
+        if candidate_type ~= "auto_space" or type(display) ~= "string" or
+            display:sub(1, 1) ~= " " or display:sub(2, 2) == " " or
+            commit_text:sub(1, #display) ~= display then
+            return ""
+        end
+
+        local genuine = selected:get_genuine()
+        local genuine_type = type(genuine)
+        if genuine_type ~= "table" and genuine_type ~= "userdata" then
+            return ""
+        end
+
+        return " "
+    end)
+
+    return proof_ok and prefix or ""
+end
+
 function select_character(key, env)
     local engine = env.engine
     local context = engine.context
-    local commit_text = context:get_commit_text()
     local config = engine.schema.config
 
     -- local first_key = config:get_string('key_binder/select_first_character') or 'bracketleft'
     -- local last_key = config:get_string('key_binder/select_last_character') or 'bracketright'
     local first_key = config:get_string('key_binder/select_first_character')
     local last_key = config:get_string('key_binder/select_last_character')
+    local key_repr = key:repr()
+    if key_repr ~= first_key and key_repr ~= last_key then
+        return 2 -- kNoop
+    end
 
-    if (key:repr() == first_key and commit_text ~= "") then
-        engine:commit_text(first_character(commit_text))
+    local commit_text = context:get_commit_text()
+    local prefix = auto_space_prefix(context, commit_text)
+    local selectable_text = prefix == "" and commit_text or commit_text:sub(2)
+
+    if (key_repr == first_key and selectable_text ~= "") then
+        engine:commit_text(prefix .. first_character(selectable_text))
         context:clear()
 
         return 1 -- kAccepted
     end
 
-    if (key:repr() == last_key and commit_text ~= "") then
-        engine:commit_text(last_character(commit_text))
+    if (key_repr == last_key and selectable_text ~= "") then
+        engine:commit_text(prefix .. last_character(selectable_text))
         context:clear()
 
         return 1 -- kAccepted
