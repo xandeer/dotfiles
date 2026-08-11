@@ -118,6 +118,154 @@ local function last_character(s)
     return utf8_sub(s, -1, -1)
 end
 
+local function boundary_codepoint(text, from_end)
+    if type(text) ~= "string" or text == "" then
+        return nil
+    end
+    local offset_ok, offset = pcall(utf8.offset, text, from_end and -1 or 1)
+    if not offset_ok or not offset then
+        return nil
+    end
+    local code_ok, codepoint = pcall(utf8.codepoint, text, offset, offset)
+    return code_ok and codepoint or nil
+end
+
+local function is_ascii_letter(codepoint)
+    return codepoint and
+        ((codepoint >= 0x41 and codepoint <= 0x5A) or
+         (codepoint >= 0x61 and codepoint <= 0x7A))
+end
+
+local function is_han(codepoint)
+    return codepoint and
+        ((codepoint >= 0x3400 and codepoint <= 0x4DBF) or
+         (codepoint >= 0x4E00 and codepoint <= 0x9FFF) or
+         (codepoint >= 0xF900 and codepoint <= 0xFAFF) or
+         (codepoint >= 0x20000 and codepoint <= 0x2FA1F) or
+         (codepoint >= 0x30000 and codepoint <= 0x3347F))
+end
+
+local function needs_auto_space(left, right)
+    return (is_han(left) and is_ascii_letter(right)) or
+        (is_ascii_letter(left) and is_han(right))
+end
+
+local terminal_candidate_types = {
+    Sentence = true,
+    Phrase = true,
+    Simple = true,
+    Other = true,
+}
+
+local wrapper_candidate_types = {
+    Shadow = true,
+    Uniquified = true,
+}
+
+local function ultimate_genuine(candidate)
+    local current = candidate
+    local seen = {}
+
+    for depth = 0, 16 do
+        local current_type = type(current)
+        if (current_type ~= "table" and current_type ~= "userdata") or seen[current] then
+            return nil
+        end
+        seen[current] = true
+
+        local dynamic_ok, dynamic_type = pcall(function()
+            return current:get_dynamic_type()
+        end)
+        if not dynamic_ok or type(dynamic_type) ~= "string" then
+            return nil
+        end
+        if terminal_candidate_types[dynamic_type] then
+            return current
+        end
+        if not wrapper_candidate_types[dynamic_type] or depth == 16 then
+            return nil
+        end
+
+        local genuine_ok, next_candidate = pcall(function()
+            return current:get_genuine()
+        end)
+        local next_type = type(next_candidate)
+        if not genuine_ok or
+            (next_type ~= "table" and next_type ~= "userdata") then
+            return nil
+        end
+        current = next_candidate
+    end
+
+    return nil
+end
+
+local function same_candidate_span(final, genuine)
+    local final_start = tonumber(final.start)
+    local final_end = tonumber(final._end)
+    local genuine_start = tonumber(genuine.start)
+    local genuine_end = tonumber(genuine._end)
+    return final_start ~= nil and final_end ~= nil and
+        genuine_start ~= nil and genuine_end ~= nil and
+        final_start == genuine_start and final_end == genuine_end
+end
+
+local function committed_history_boundary(env)
+    local history_ok, record_type, record_text = pcall(function()
+        local record = env.engine.context.commit_history:back()
+        if record == nil then
+            return nil, nil
+        end
+        return record.type, record.text
+    end)
+    if not history_ok or type(record_type) ~= "string" or record_type == "" or
+        record_type == "thru" or record_type == "raw" or
+        type(record_text) ~= "string" or record_text == "" then
+        return nil
+    end
+    return boundary_codepoint(record_text, true)
+end
+
+function auto_space_filter(input, env)
+    local left = committed_history_boundary(env)
+
+    for candidate in input:iter() do
+        local text = type(candidate.text) == "string" and candidate.text or ""
+        local display_comment = type(candidate.comment) == "string" and
+            candidate.comment or ""
+        local right = boundary_codepoint(text, false)
+        local should_wrap = tonumber(candidate.start) == 0 and
+            tostring(candidate.type or "") ~= "auto_space" and
+            needs_auto_space(left, right)
+
+        if should_wrap then
+            local genuine = ultimate_genuine(candidate)
+            local genuine_comment = genuine and
+                type(genuine.comment) == "string" and genuine.comment or ""
+
+            if genuine and same_candidate_span(candidate, genuine) and
+                not (display_comment == "" and genuine_comment ~= "") then
+                local wrap_ok, wrapped = pcall(
+                    ShadowCandidate,
+                    genuine,
+                    "auto_space",
+                    " " .. text,
+                    display_comment
+                )
+                if wrap_ok and wrapped then
+                    yield(wrapped)
+                else
+                    yield(candidate)
+                end
+            else
+                yield(candidate)
+            end
+        else
+            yield(candidate)
+        end
+    end
+end
+
 function select_character(key, env)
     local engine = env.engine
     local context = engine.context

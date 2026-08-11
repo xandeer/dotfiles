@@ -7,6 +7,7 @@ schema="$repo_root/rime/double_pinyin_flypy.schema.yaml"
 others_dict="$repo_root/rime/cn_dicts/others.dict.yaml"
 melt_eng_dict="$repo_root/rime/melt_eng.dict.yaml"
 squirrel="$repo_root/rime/darwin/squirrel.custom.yaml"
+auto_space_harness="$repo_root/tests/config/rime-auto-space-regression.lua"
 ai_harness="$repo_root/tests/config/rime-ai-regression.lua"
 ai_readme="$repo_root/rime/squirrel-ai/README.md"
 
@@ -27,7 +28,8 @@ reject_match() {
   esac
 }
 
-for config_file in "$schema" "$others_dict" "$melt_eng_dict" "$squirrel" "$ai_harness"; do
+for config_file in "$schema" "$others_dict" "$melt_eng_dict" "$squirrel" \
+    "$auto_space_harness" "$ai_harness"; do
   [[ -f "$config_file" ]] || {
     print -u2 "expected Rime config at $config_file"
     exit 1
@@ -181,7 +183,10 @@ RUBY
 
 (
 umask 022
-ruby -rfiddle - "$repo_root/rime/rime.lua" "$ai_harness" <<'RUBY'
+ruby -rfiddle - \
+  "$repo_root/rime/rime.lua" \
+  "$auto_space_harness" \
+  "$ai_harness" <<'RUBY'
 core = Fiddle::Handle.new(
   "/Library/Input Methods/Squirrel.app/Contents/Frameworks/librime.1.dylib",
   Fiddle::RTLD_GLOBAL | Fiddle::RTLD_LAZY
@@ -214,24 +219,27 @@ to_string = function.call(
 )
 close = function.call("lua_close", [Fiddle::TYPE_VOIDP], Fiddle::TYPE_VOID)
 
-state = new_state.call
-abort "failed to create bundled Lua state" if state.to_i.zero?
+production, *harnesses = ARGV
+harnesses.each do |harness|
+  state = new_state.call
+  abort "failed to create bundled Lua state" if state.to_i.zero?
 
-begin
-  open_libs.call(state)
-  ARGV.each do |path|
-    status = load_file.call(state, path, 0)
-    if status.zero?
-      status = protected_call.call(state, 0, 0, 0, 0, 0)
+  begin
+    open_libs.call(state)
+    [production, harness].each do |path|
+      status = load_file.call(state, path, 0)
+      if status.zero?
+        status = protected_call.call(state, 0, 0, 0, 0, 0)
+      end
+      next if status.zero?
+
+      pointer = to_string.call(state, -1, 0)
+      message = pointer.to_i.zero? ? "unknown Lua error" : Fiddle::Pointer.new(pointer).to_s
+      abort "#{path}: #{message}"
     end
-    next if status.zero?
-
-    pointer = to_string.call(state, -1, 0)
-    message = pointer.to_i.zero? ? "unknown Lua error" : Fiddle::Pointer.new(pointer).to_s
-    abort "#{path}: #{message}"
+  ensure
+    close.call(state)
   end
-ensure
-  close.call(state)
 end
 RUBY
 )

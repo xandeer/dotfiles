@@ -4,7 +4,7 @@
 
 **Goal:** 在中文模式的连续 Rime 候选提交之间，仅对 Han ↔ ASCII 字母边界自动补一个半角空格，同时保持数字、标点、已有空白、AI 学习和用户词典语义不变。
 
-**Architecture:** 新增最终 `auto_space_filter`，读取 `commit_history:latest_text()` 并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在 `uniquifier` 之后，先有界、带循环检测地归一到最底层 genuine candidate，再只增加一层 `ShadowCandidate`；无法无损证明 genuine、span 或 comment 时原样通过。`select_character` 从 composition 的首 segment 识别 `auto_space` 类型并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
+**Architecture:** 新增最终 `auto_space_filter`，恰好一次读取 `commit_history:back()` 的 `type/text`，只接受非空且非 `thru`/`raw` 的候选提交记录，并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在 `uniquifier` 之后，通过 `get_dynamic_type()` 区分 `Shadow`/`Uniquified` wrapper 与 `Sentence`/`Phrase`/`Simple`/`Other` 终态，再有界、带循环检测地归一到最底层 genuine candidate，并只增加一层 `ShadowCandidate`；无法无损证明 typed history、dynamic type、genuine、span 或 comment 时原样通过。`select_character` 从 composition 的首 segment 识别 `auto_space` 类型并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
 
 **Tech Stack:** Rime/Squirrel 1.16、librime-lua、Lua 5.4 `utf8`、YAML、zsh、Ruby/Psych/Fiddle、GNU Make、Git。
 
@@ -58,7 +58,8 @@ local function same(actual, expected, message)
     ))
 end
 
-local function candidate(kind, start_pos, end_pos, text, comment, quality)
+local function candidate(kind, start_pos, end_pos, text, comment, quality, dynamic_type)
+    local native_dynamic_type = dynamic_type or "Simple"
     local value = {
         type = kind,
         start = start_pos,
@@ -70,10 +71,13 @@ local function candidate(kind, start_pos, end_pos, text, comment, quality)
     function value:get_genuine()
         return self
     end
+    function value:get_dynamic_type()
+        return native_dynamic_type
+    end
     return value
 end
 
-local function wrapper(kind, text, comment, source, start_pos, end_pos)
+local function wrapper(dynamic_type, kind, text, comment, source, start_pos, end_pos)
     local value = {
         type = kind,
         start = start_pos or source.start,
@@ -85,23 +89,29 @@ local function wrapper(kind, text, comment, source, start_pos, end_pos)
     function value:get_genuine()
         return source
     end
+    function value:get_dynamic_type()
+        return dynamic_type
+    end
     return value
 end
 ```
 
-Mock 的 `get_genuine()` 每次只解一层，不能递归返回 ultimate，否则会掩盖生产代码的嵌套 Shadow 缺陷。
+Wrapper mock 的 `get_genuine()` 每次只解一层，不能递归返回 ultimate，否则会掩盖生产代码的嵌套 Shadow 缺陷。`dynamic_type` 必须独立于逻辑候选 `type`，wrapper 分别使用 `Shadow` 或 `Uniquified`，base 默认使用终态 `Simple`/`Phrase`。
+
+librime-lua 每次返回 C++ `shared_ptr<Candidate>` 都创建新的 Lua userdata，且 Candidate metatable 没有 `__eq`，所以生产代码不能用 `==` 或 `rawequal` 判断 genuine 固定点。增加一个 native-like 终态 fixture：它的 `get_dynamic_type()` 返回终态，但 `get_genuine()` 返回新的终态 alias（另一个 fixture 可抛错）；断言 filter 完全不调用终态的 `get_genuine()`。
 
 再实现：
 
-- `ShadowCandidate(source, kind, text, comment)`，记录每次构造参数并返回一层 `wrapper`；
+- `ShadowCandidate(source, kind, text, comment)`，记录每次构造参数并返回一层 dynamic type 为 `Shadow` 的 `wrapper`；
 - `stream(values)`，返回与现有 AI harness 相同的 `(iterator, state)`；
 - `yield(value)`，记录输出顺序；
-- `commit_history:latest_text()` 与 `run_auto_filter(history, candidates)`；
+- `commit_history:back()` 返回带 `type/text` 的记录，`run_auto_filter(history, candidates)` 统计其恰好读取一次；
+- `commit_history:latest_text()` 的 mock 必须抛错或返回误导边界，并断言生产 filter 从不读取它；
 - 可构造固定深度链、循环、抛错和 `nil` 返回的 genuine fixtures。
 
 ### Step 2: 写边界矩阵
 
-为以下正例断言输出文本：
+为以下正例断言输出文本（历史均使用非 `thru`/`raw` 的候选记录）：
 
 ```text
 中文 + Rime -> " Rime"
@@ -109,6 +119,8 @@ Mock 的 `get_genuine()` 每次只解一层，不能递归返回 ultimate，否�
 Rime + 输入法 -> " 输入法"
 rime + 输入法 -> " 输入法"
 ```
+
+另以 `A/Z/a/z` 冻结 ASCII 大小写字母的两个端点，并以 `@/[`、反引号、`{` 冻结相邻非字母，两种边界方向均覆盖。
 
 逐一覆盖这些 Han 范围的两个端点：
 
@@ -127,7 +139,11 @@ U+30000–U+3347F
 - 空历史、空候选、历史或候选非法 UTF-8；
 - `candidate.start ~= 0`；
 - 已有 `type == "auto_space"`；
-- 候选数量与顺序不变。
+- 候选数量与顺序不变；
+- 默认历史使用合理的候选记录类型，任意非空非保留类型仍触发规则；
+- 直接 ASCII 记录 `thru` 和 Han↔ASCII 两方向的 `raw` 记录都原样通过；
+- `back()` 抛错、返回空记录，或记录 `type/text` 访问抛错/值非法时 fail closed；
+- 每次 filter 调用恰好读取一次 `back()`，且绝不读取 `latest_text()`。
 
 ### Step 3: 写 ultimate genuine 与 fail-closed 矩阵
 
@@ -138,10 +154,10 @@ local ultimate = candidate(
     "ai_learned", 0, 4, "ultimate-text", "ultimate-comment", 1.7
 )
 local simplified = wrapper(
-    "simplified", "intermediate-text", "intermediate-comment", ultimate
+    "Shadow", "simplified", "intermediate-text", "intermediate-comment", ultimate
 )
 local final = wrapper(
-    "uniquified", "Rime Display", "final-comment", simplified
+    "Uniquified", "uniquified", "Rime Display", "final-comment", simplified
 )
 
 local output = run_auto_filter("中文", {final})[1]
@@ -162,6 +178,7 @@ assert(rawequal(output:get_genuine(), ultimate),
 
 冻结最多 16 次 wrapper transition 的契约：16 层成功，17 层原样通过。以下情况均不得抛错且必须返回原对象：
 
+- `get_dynamic_type()` 抛错、返回 `nil`、非字符串或未知类型；
 - genuine 链循环；
 - `get_genuine()` 抛错、返回 `nil` 或非候选；
 - genuine 与 final 的 `start/_end` 不同；
@@ -203,7 +220,9 @@ Ruby 端使用 `production, *harnesses = ARGV`，为每个 harness 分别执行�
 learn_context.input = "code"
 learn_context.composition.segment = {start = 0, _end = 4, status = "selected"}
 local ultimate = candidate("ai_learned", 0, 4, "spaced correction")
-local final = wrapper("uniquified", "Chosen Display", "final-comment", ultimate)
+local final = wrapper(
+    "Uniquified", "uniquified", "Chosen Display", "final-comment", ultimate
+)
 local spaced = run_auto_filter("中文", {final})[1]
 
 same(spaced.type, "auto_space", "AI integration must exercise auto spacing")
@@ -252,11 +271,19 @@ rime-auto-space-regression.lua: missing production auto_space_filter
 
 不要在 RED 状态提交。
 
+首次实现后的 native binding 审查确认：`get_genuine()` 即使返回同一个 C++ candidate，也会生成新的 Lua userdata，因此旧的 Lua identity 固定点永远不能成立。先把终态 mock 改为每次 `get_genuine()` 返回 fresh alias，并在修改生产解包逻辑前捕获第二个 RED：
+
+```text
+terminal dynamic type must resolve without calling get_genuine: expected "0", got "17"
+```
+
 ## Task 2: 实现最终候选自动空格 filter
 
 **Files:**
 
 - Modify: `rime/rime.lua`
+- Modify: `docs/plans/2026-08-11-rime-auto-spacing-design.md`
+- Modify: `docs/plans/2026-08-11-rime-auto-spacing.md`
 - Test: `tests/config/rime-auto-space-regression.lua`
 - Test: `tests/config/rime-ai-regression.lua`
 
@@ -300,29 +327,51 @@ end
 
 ### Step 2: 增加有界 genuine 归一
 
-实现最多 16 次 transition，并要求最后由 `get_genuine()` 返回自身来证明固定点：
+实现最多 16 次 wrapper transition。由于 librime-lua 会为同一个 C++ candidate 创建新的 userdata，禁止用 Lua identity 证明固定点；改为白名单 dynamic type，终态直接返回，只有 `Shadow`/`Uniquified` 才调用 `get_genuine()`。`seen` 仍用于 mock identity 循环检测，深度上限处理 native alias 无法用 identity 检测的防御边界：
 
 ```lua
+local terminal_candidate_types = {
+    Sentence = true,
+    Phrase = true,
+    Simple = true,
+    Other = true,
+}
+
+local wrapper_candidate_types = {
+    Shadow = true,
+    Uniquified = true,
+}
+
 local function ultimate_genuine(candidate)
     local current = candidate
     local seen = {}
 
     for depth = 0, 16 do
-        if current == nil or seen[current] then
+        local current_type = type(current)
+        if (current_type ~= "table" and current_type ~= "userdata") or seen[current] then
             return nil
         end
         seen[current] = true
 
-        local ok, next_candidate = pcall(function()
-            return current:get_genuine()
+        local dynamic_ok, dynamic_type = pcall(function()
+            return current:get_dynamic_type()
         end)
-        if not ok or next_candidate == nil then
+        if not dynamic_ok or type(dynamic_type) ~= "string" then
             return nil
         end
-        if next_candidate == current then
+        if terminal_candidate_types[dynamic_type] then
             return current
         end
-        if depth == 16 then
+        if not wrapper_candidate_types[dynamic_type] or depth == 16 then
+            return nil
+        end
+
+        local genuine_ok, next_candidate = pcall(function()
+            return current:get_genuine()
+        end)
+        local next_type = type(next_candidate)
+        if not genuine_ok or
+            (next_type ~= "table" and next_type ~= "userdata") then
             return nil
         end
         current = next_candidate
@@ -351,14 +400,29 @@ end
 生产函数按此数据流实现：
 
 ```lua
-function auto_space_filter(input, env)
-    local history_ok, history_text = pcall(function()
-        return env.engine.context.commit_history:latest_text()
+local function committed_history_boundary(env)
+    local history_ok, record_type, record_text = pcall(function()
+        local record = env.engine.context.commit_history:back()
+        if record == nil then
+            return nil, nil
+        end
+        return record.type, record.text
     end)
-    local left = history_ok and boundary_codepoint(history_text, true) or nil
+    if not history_ok or type(record_type) ~= "string" or record_type == "" or
+        record_type == "thru" or record_type == "raw" or
+        type(record_text) ~= "string" or record_text == "" then
+        return nil
+    end
+    return boundary_codepoint(record_text, true)
+end
+
+function auto_space_filter(input, env)
+    local left = committed_history_boundary(env)
 
     for candidate in input:iter() do
         local text = type(candidate.text) == "string" and candidate.text or ""
+        local display_comment = type(candidate.comment) == "string" and
+            candidate.comment or ""
         local right = boundary_codepoint(text, false)
         local should_wrap = tonumber(candidate.start) == 0 and
             tostring(candidate.type or "") ~= "auto_space" and
@@ -366,8 +430,6 @@ function auto_space_filter(input, env)
 
         if should_wrap then
             local genuine = ultimate_genuine(candidate)
-            local display_comment = type(candidate.comment) == "string" and
-                candidate.comment or ""
             local genuine_comment = genuine and
                 type(genuine.comment) == "string" and genuine.comment or ""
 
@@ -395,7 +457,7 @@ function auto_space_filter(input, env)
 end
 ```
 
-不要传或依赖第 5 个 `inherit_comment` 参数；当前 librime-lua 接收但不透传它。
+不要回退读取 `latest_text()`，因为它只保留 `back().text`、会丢失 `thru`/`raw` 来源。不要传或依赖第 5 个 `inherit_comment` 参数；当前 librime-lua 接收但不透传它。
 
 ### Step 4: 运行 GREEN
 
@@ -419,7 +481,9 @@ Run:
 ```zsh
 set -eu
 git diff --check
-git add rime/rime.lua \
+git add docs/plans/2026-08-11-rime-auto-spacing-design.md \
+  docs/plans/2026-08-11-rime-auto-spacing.md \
+  rime/rime.lua \
   tests/config/rime-auto-space-regression.lua \
   tests/config/rime-ai-regression.lua \
   tests/config/rime-config-regression.zsh
@@ -605,6 +669,8 @@ end
 
 不要要求 `display == " " .. genuine.text`；简繁 display 可以与 genuine 不同。
 
+保守边界：当前 `select_character` 用 `engine:commit_text()` 提交 `Ctrl+J/L` 结果，librime 将它记为 `raw`。因此后续候选故意不自动补空格。若 Task 4 或未来变更要保留这种跨提交空格，必须显式保留可验证的候选来源；不得放宽 Task 1–2 的 `raw` 排除。
+
 ### Step 5: 验证 GREEN 并提交
 
 Run:
@@ -660,7 +726,7 @@ Expected:
 请求 reviewer 对照设计文档检查：
 
 - filter 确实位于 `uniquifier` 后；
-- genuine 循环/超深/span/comment 冲突全部原样通过；
+- dynamic type 异常/未知，以及 genuine 循环/超深/span/comment 冲突全部原样通过；
 - wrapper source 是 ultimate，display/comment 来自 final；
 - AI TSV 永不保存前导空格；
 - `select_character` 使用首 segment，而不是活动末 segment；
@@ -811,8 +877,9 @@ make -C rime install
 在普通文本输入框中逐项验证：
 
 ```text
-一个 -> harness -> 来     = 一个 harness 来
-Rime -> 输入法           = Rime 输入法
+一个 -> 候选 harness -> 候选来 = 一个 harness 来
+候选 Rime -> 候选输入法       = Rime 输入法
+直接键入 R -> 候选输入法    = R输入法
 第 -> 3次                = 第3次
 中文 -> 手动空格 -> Rime = 中文 Rime
 中文，-> Rime            = 中文，Rime
@@ -822,6 +889,7 @@ Rime -> 输入法           = Rime 输入法
 另测：
 
 - `Ctrl+J/L` 的单 segment 与已确认首 segment + 活动第二 segment；
+- `Ctrl+J/L` 上屏后的下一候选不自动补空格，因为 `engine:commit_text()` 产生 `raw` 记录；
 - 回车、退格后的空历史；
 - 简繁切换候选的 display/comment；
 - 普通字典、melt_eng、自定义短语、`ai`、`ai_learned` 候选；

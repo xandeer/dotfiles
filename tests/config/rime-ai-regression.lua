@@ -1,4 +1,5 @@
 assert(type(ai_candidate_filter) == "function", "missing production ai_candidate_filter")
+assert(type(auto_space_filter) == "function", "missing production auto_space_filter")
 assert(type(ai_learned_translator) == "table", "missing production ai_learned_translator")
 assert(type(ai_learned_translator.init) == "function", "missing ai_learned_translator.init")
 assert(type(ai_learned_translator.func) == "function", "missing ai_learned_translator.func")
@@ -9,25 +10,49 @@ local function same(actual, expected, message)
         ": expected " .. tostring(expected) .. ", got " .. tostring(actual))
 end
 
-local function candidate(kind, start_pos, end_pos, text)
+local function candidate(kind, start_pos, end_pos, text, comment, quality, dynamic_type)
+    local native_dynamic_type = dynamic_type or "Simple"
     local value = {
         type = kind,
         start = start_pos,
         _end = end_pos,
         text = text,
-        comment = "",
-        quality = 0,
+        comment = comment or "",
+        quality = quality or 0,
     }
     function value:get_genuine()
         return self
     end
+    function value:get_dynamic_type()
+        return native_dynamic_type
+    end
     return value
 end
 
-Candidate = function(kind, start_pos, end_pos, text, comment)
-    local value = candidate(kind, start_pos, end_pos, text)
-    value.comment = comment
+local function wrapper(dynamic_type, kind, text, comment, source, start_pos, end_pos)
+    local value = {
+        type = kind,
+        start = start_pos or source.start,
+        _end = end_pos or source._end,
+        text = text,
+        comment = comment or "",
+        quality = source.quality,
+    }
+    function value:get_genuine()
+        return source
+    end
+    function value:get_dynamic_type()
+        return dynamic_type
+    end
     return value
+end
+
+ShadowCandidate = function(source, kind, text, comment)
+    return wrapper("Shadow", kind, text, comment, source)
+end
+
+Candidate = function(kind, start_pos, end_pos, text, comment)
+    return candidate(kind, start_pos, end_pos, text, comment)
 end
 
 local yielded = nil
@@ -55,6 +80,34 @@ local function stream(values)
             end, state
         end,
     }
+end
+
+local function run_auto_filter(history, values)
+    local back_reads = 0
+    local latest_text_reads = 0
+    local commit_history = {}
+    function commit_history:back()
+        back_reads = back_reads + 1
+        return {type = "phrase", text = history}
+    end
+    function commit_history:latest_text()
+        latest_text_reads = latest_text_reads + 1
+        error("latest_text must not be consulted")
+    end
+    local filter_env = {
+        engine = {
+            context = {
+                commit_history = commit_history,
+            },
+        },
+    }
+    yielded = {}
+    incoming_reads = 0
+    reads_before_first_yield = nil
+    auto_space_filter(stream(values), filter_env)
+    same(latest_text_reads, 0, "auto filter latest_text read count")
+    same(back_reads, 1, "auto filter history back read count")
+    return yielded
 end
 
 local function composition(segment)
@@ -524,6 +577,33 @@ learned_count, learned_weight = exact_rows(read_file(weights_path),
     "test_schema", "code", "chosen correction")
 same(learned_count, 1, "incremented learned key row count")
 same(learned_weight, 2, "committing a learned candidate must increment its independent weight")
+
+learn_context.input = "code"
+learn_context.composition.segment = {start = 0, _end = 4, status = "selected"}
+local spaced_ultimate = candidate("ai_learned", 0, 4, "spaced correction")
+local spaced_final = wrapper(
+    "Uniquified", "uniquified", "Chosen Display", "final-comment", spaced_ultimate
+)
+local spaced = run_auto_filter("中文", {spaced_final})[1]
+same(spaced.type, "auto_space", "AI integration must exercise auto spacing")
+same(spaced.text, " Chosen Display", "AI integration spaced display")
+assert(rawequal(spaced:get_genuine(), spaced_ultimate),
+    "AI integration must expose ultimate genuine")
+
+learn_context.selected_candidate = spaced
+learn_context.properties._ai_generation = ""
+learn_context.select_notifier:emit(learn_context)
+learn_context.commit_notifier:emit(learn_context)
+local spaced_count, spaced_weight = exact_rows(
+    read_file(weights_path), "test_schema", "code", "spaced correction"
+)
+same(spaced_count, 1, "AI learning must persist ultimate genuine text")
+same(spaced_weight, 1, "AI learning ultimate genuine weight")
+
+local spaced_display_count = exact_rows(
+    read_file(weights_path), "test_schema", "code", " Chosen Display"
+)
+same(spaced_display_count, 0, "spaced display text must not enter AI learning")
 
 learn_context.input = "native"
 learn_context.composition.segment = {start = 0, _end = 6, status = "selected"}
