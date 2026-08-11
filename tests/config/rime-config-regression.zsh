@@ -91,9 +91,11 @@ space_index = filters.index(space_name)
 unless filters.count(ai_name) == 1 &&
     filters.count(unique_name) == 1 &&
     filters.count(space_name) == 1 &&
-    unique_index == ai_index.to_i + 1 &&
-    space_index == unique_index.to_i + 1
-  abort "expected filters to contain exactly ai_candidate_filter -> uniquifier -> auto_space_filter"
+    ai_index && space_index && unique_index &&
+    space_index == ai_index + 1 &&
+    unique_index == space_index + 1 &&
+    unique_index == filters.length - 1
+  abort "expected filters to end with exactly ai_candidate_filter -> auto_space_filter -> uniquifier"
 end
 
 patch = YAML.load_file(squirrel_path).fetch("patch")

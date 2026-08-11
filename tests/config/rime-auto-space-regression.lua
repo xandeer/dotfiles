@@ -47,6 +47,51 @@ local function wrapper(dynamic_type, kind, text, comment, source, start_pos, end
     return value
 end
 
+local function is_candidate(value)
+    local value_type = type(value)
+    return value_type == "table" or value_type == "userdata"
+end
+
+local function unpack_shadow_once(value)
+    if is_candidate(value) and value:get_dynamic_type() == "Shadow" then
+        return value:get_genuine()
+    end
+    return value
+end
+
+local function uniquified(kind, text, comment, source)
+    local value = {
+        type = kind,
+        start = source.start,
+        _end = source._end,
+        text = text ~= "" and text or source.text,
+        comment = comment ~= "" and comment or source.comment,
+        quality = source.quality,
+        items = {source},
+    }
+    function value:get_dynamic_type()
+        return "Uniquified"
+    end
+    function value:append(item)
+        self.items[#self.items + 1] = item
+        if self.quality < item.quality then
+            self.quality = item.quality
+        end
+        return true
+    end
+    function value:get_genuine()
+        return unpack_shadow_once(self.items[1])
+    end
+    function value:get_genuines()
+        local genuines = {}
+        for index, item in ipairs(self.items) do
+            genuines[index] = unpack_shadow_once(item)
+        end
+        return genuines
+    end
+    return value
+end
+
 local shadow_calls = {}
 local shadow_mode = "normal"
 ShadowCandidate = function(source, kind, text, comment, ...)
@@ -61,23 +106,55 @@ ShadowCandidate = function(source, kind, text, comment, ...)
         error("injected ShadowCandidate failure")
     elseif shadow_mode == "nil" then
         return nil
+    elseif shadow_mode == "noncandidate" then
+        return "not a candidate"
     end
     return wrapper("Shadow", kind, text, comment, source)
 end
 
-local yielded = nil
-yield = function(value)
-    yielded[#yielded + 1] = value
+local uniquified_calls = {}
+local uniquified_mode = "normal"
+UniquifiedCandidate = function(source, kind, text, comment, ...)
+    uniquified_calls[#uniquified_calls + 1] = {
+        source = source,
+        kind = kind,
+        text = text,
+        comment = comment,
+        extra_count = select("#", ...),
+    }
+    local mode = uniquified_mode
+    if type(mode) == "table" then
+        mode = table.remove(mode, 1) or "normal"
+    end
+    if mode == "throw" then
+        error("injected UniquifiedCandidate failure")
+    elseif mode == "nil" then
+        return nil
+    elseif mode == "noncandidate" then
+        return "not a candidate"
+    end
+    return uniquified(kind, text or "", comment or "", source)
 end
 
-local function stream(values)
+local yielded = nil
+local yield_sink = nil
+yield = function(value)
+    assert(type(yield_sink) == "function", "missing active yield sink")
+    return yield_sink(value)
+end
+
+local function stream(values, events)
     local state = {index = 0, values = values}
     return {
         iter = function()
             return function(current)
                 assert(current == state, "translation iterator state must be forwarded")
                 current.index = current.index + 1
-                return current.values[current.index]
+                local value = current.values[current.index]
+                if value ~= nil and events then
+                    events[#events + 1] = "inner:" .. tostring(value.text)
+                end
+                return value
             end, state
         end,
     }
@@ -115,11 +192,110 @@ local function run_auto_filter(history, candidates)
 
     yielded = {}
     shadow_calls = {}
+    uniquified_calls = {}
+    local previous_sink = yield_sink
+    yield_sink = function(value)
+        yielded[#yielded + 1] = value
+    end
     local ok, failure = pcall(auto_space_filter, stream(candidates), env)
+    yield_sink = previous_sink
     assert(ok, "auto_space_filter must fail closed: " .. tostring(failure))
     same(latest_text_reads, 0, "commit history latest_text read count")
     same(back_reads, 1, "commit history back read count")
     return yielded
+end
+
+local function auto_filter_translation(history, candidates, events)
+    local back_reads = 0
+    local latest_text_reads = 0
+    local commit_history = {}
+    function commit_history:back()
+        back_reads = back_reads + 1
+        return history_record("phrase", history)
+    end
+    function commit_history:latest_text()
+        latest_text_reads = latest_text_reads + 1
+        error("latest_text must not be consulted")
+    end
+    local env = {
+        engine = {
+            context = {
+                commit_history = commit_history,
+            },
+        },
+    }
+
+    shadow_calls = {}
+    uniquified_calls = {}
+    local coroutine_handle = coroutine.create(function()
+        auto_space_filter(stream(candidates, events), env)
+    end)
+    local iterator_state = {}
+    local translation = {
+        iter = function()
+            return function(current)
+                assert(current == iterator_state,
+                    "auto-filter iterator state must be forwarded")
+                if coroutine.status(coroutine_handle) == "dead" then
+                    return nil
+                end
+                local previous_sink = yield_sink
+                yield_sink = function(value)
+                    events[#events + 1] = "outer:" .. tostring(value.text)
+                    return coroutine.yield(value)
+                end
+                local ok, value = coroutine.resume(coroutine_handle)
+                yield_sink = previous_sink
+                assert(ok, "lazy auto_space_filter failed: " .. tostring(value))
+                return value
+            end, iterator_state
+        end,
+    }
+    local function verify_history_reads()
+        same(latest_text_reads, 0, "lazy filter latest_text read count")
+        same(back_reads, 1, "lazy filter history back read count")
+    end
+    return translation, verify_history_reads
+end
+
+local function run_spacing_pipeline(history, candidates)
+    local events = {}
+    local translation, verify_history_reads = auto_filter_translation(
+        history, candidates, events
+    )
+    local menu = {}
+    local iterator, state = translation:iter()
+    while true do
+        local next_candidate = iterator(state)
+        if next_candidate == nil then
+            break
+        end
+
+        local previous_index = nil
+        for index, previous in ipairs(menu) do
+            if previous.text == next_candidate.text then
+                previous_index = index
+                break
+            end
+        end
+
+        if previous_index == nil then
+            menu[#menu + 1] = next_candidate
+            events[#events + 1] = "menu:" .. tostring(next_candidate.text)
+        else
+            local previous = menu[previous_index]
+            if previous:get_dynamic_type() == "Uniquified" then
+                previous:append(next_candidate)
+            else
+                previous = uniquified("uniquified", "", "", previous)
+                previous:append(next_candidate)
+                menu[previous_index] = previous
+            end
+            events[#events + 1] = "duplicate:" .. tostring(next_candidate.text)
+        end
+    end
+    verify_history_reads()
+    return menu, events
 end
 
 local function assert_pass_through(history, value, message)
@@ -127,6 +303,8 @@ local function assert_pass_through(history, value, message)
     same(#output, 1, (message or "pass-through") .. " output count")
     assert(rawequal(output[1], value), (message or "candidate") ..
         " must pass through by identity")
+    same(#uniquified_calls, 0,
+        (message or "pass-through") .. " UniquifiedCandidate calls")
     same(#shadow_calls, 0, (message or "pass-through") .. " ShadowCandidate calls")
 end
 
@@ -136,10 +314,142 @@ local function assert_spaced(history, text, message)
     same(#output, 1, message .. " output count")
     same(output[1].type, "auto_space", message .. " candidate type")
     same(output[1].text, " " .. text, message .. " candidate text")
+    same(output[1]:get_dynamic_type(), "Uniquified",
+        message .. " first spaced candidate dynamic type")
     assert(rawequal(output[1]:get_genuine(), original),
         message .. " wrapper must expose the original candidate")
-    same(#shadow_calls, 1, message .. " ShadowCandidate calls")
+    same(#output[1]:get_genuines(), 1, message .. " genuine count")
+    same(#uniquified_calls, 1, message .. " UniquifiedCandidate calls")
+    same(#shadow_calls, 0, message .. " ShadowCandidate calls")
 end
+
+local function assert_spaced_deduplication(count, message)
+    local originals = {}
+    for index = 1, count do
+        originals[index] = candidate(
+            "phrase", 0, 4, "Rime", "comment-" .. index, index
+        )
+    end
+
+    local menu, events = run_spacing_pipeline("中文", originals)
+    same(#menu, 1, message .. " menu count")
+    local final = menu[1]
+    same(final.type, "auto_space", message .. " logical type")
+    same(final:get_dynamic_type(), "Uniquified", message .. " dynamic type")
+    same(final.text, " Rime", message .. " display text")
+    same(final.comment, "comment-1", message .. " first display comment")
+    same(final.quality, count, message .. " maximum quality")
+    same(#final.items, count, message .. " stored item count")
+    assert(rawequal(final.items[1], originals[1]),
+        message .. " first item must be the first ultimate candidate")
+
+    for index = 2, count do
+        local item = final.items[index]
+        same(item:get_dynamic_type(), "Shadow",
+            message .. " later item " .. index .. " dynamic type")
+        assert(rawequal(item:get_genuine(), originals[index]),
+            message .. " later item " .. index .. " must wrap its ultimate once")
+    end
+
+    local genuines = final:get_genuines()
+    same(#genuines, count, message .. " genuine count")
+    for index, original in ipairs(originals) do
+        assert(rawequal(genuines[index], original),
+            message .. " flat genuine order " .. index)
+    end
+    assert(rawequal(final:get_genuine(), originals[1]),
+        message .. " first genuine")
+    same(#uniquified_calls, 1, message .. " seed constructor count")
+    same(#shadow_calls, count - 1, message .. " later ShadowCandidate count")
+    return final, events, originals
+end
+
+local two_deduped, two_events = assert_spaced_deduplication(
+    2, "two identical spaced candidates"
+)
+same(table.concat(two_events, "|"), table.concat({
+    "inner:Rime",
+    "outer: Rime",
+    "menu: Rime",
+    "inner:Rime",
+    "outer: Rime",
+    "duplicate: Rime",
+}, "|"), "lazy filter/Menu event order")
+
+local three_deduped = assert_spaced_deduplication(
+    3, "three identical spaced candidates"
+)
+
+local interleaved_first = candidate("phrase", 0, 4, "Rime", "first", 3)
+local interleaved_other = candidate("phrase", 0, 4, ",other", "other", 2)
+local interleaved_second = candidate("phrase", 0, 4, "Rime", "second", 1)
+local interleaved_third = candidate("phrase", 0, 4, "Rime", "third", 0)
+local interleaved_menu = run_spacing_pipeline("中文", {
+    interleaved_first,
+    interleaved_other,
+    interleaved_second,
+    interleaved_third,
+})
+same(#interleaved_menu, 2, "interleaved duplicate menu count")
+same(interleaved_menu[1].type, "auto_space", "interleaved duplicate logical type")
+same(interleaved_menu[1]:get_dynamic_type(), "Uniquified",
+    "interleaved duplicate dynamic type")
+same(#interleaved_menu[1]:get_genuines(), 3,
+    "interleaved duplicate genuine count")
+local interleaved_genuines = interleaved_menu[1]:get_genuines()
+for index, expected in ipairs({
+    interleaved_first,
+    interleaved_second,
+    interleaved_third,
+}) do
+    assert(rawequal(interleaved_genuines[index], expected),
+        "interleaved duplicate flat genuine order " .. index)
+end
+assert(rawequal(interleaved_menu[2], interleaved_other),
+    "interleaved nonduplicate must preserve order and identity")
+
+local distinct_first = candidate("phrase", 0, 4, "Rime", "first", 2)
+local distinct_second = candidate("phrase", 0, 4, "Alpha", "second", 1)
+local distinct_menu = run_spacing_pipeline("中文", {distinct_first, distinct_second})
+same(#distinct_menu, 2, "distinct spaced text menu count")
+for index, expected_text in ipairs({" Rime", " Alpha"}) do
+    same(distinct_menu[index].type, "auto_space",
+        "distinct spaced text " .. index .. " logical type")
+    same(distinct_menu[index]:get_dynamic_type(), "Uniquified",
+        "distinct spaced text " .. index .. " dynamic type")
+    same(distinct_menu[index].text, expected_text,
+        "distinct spaced text " .. index .. " display")
+end
+same(#uniquified_calls, 2, "distinct spaced text seed count")
+same(#shadow_calls, 0, "distinct spaced text ShadowCandidate count")
+
+local plain_first = candidate("phrase", 0, 4, "年", "first", 2)
+local plain_second = candidate("phrase", 0, 4, "年", "second", 1)
+local plain_menu = run_spacing_pipeline("2026", {plain_first, plain_second})
+same(#plain_menu, 1, "non-spacing duplicate menu count")
+same(plain_menu[1].type, "uniquified", "non-spacing builtin logical type")
+same(plain_menu[1]:get_dynamic_type(), "Uniquified",
+    "non-spacing builtin dynamic type")
+local plain_genuines = plain_menu[1]:get_genuines()
+assert(rawequal(plain_genuines[1], plain_first),
+    "non-spacing first genuine")
+assert(rawequal(plain_genuines[2], plain_second),
+    "non-spacing second genuine")
+same(#uniquified_calls, 0, "non-spacing auto seed count")
+same(#shadow_calls, 0, "non-spacing auto ShadowCandidate count")
+
+local natural_space = candidate("phrase", 0, 4, " Rime", "natural", 2)
+local colliding_plain = candidate("phrase", 0, 4, "Rime", "plain", 1)
+local collision_menu = run_spacing_pipeline("中文", {natural_space, colliding_plain})
+same(#collision_menu, 2, "natural leading-space collision menu count")
+assert(rawequal(collision_menu[1], natural_space),
+    "natural leading-space candidate must remain first and unchanged")
+assert(rawequal(collision_menu[2], colliding_plain),
+    "colliding auto-space target must fail closed unspaced")
+same(collision_menu[1].text, " Rime", "natural leading-space display")
+same(collision_menu[2].text, "Rime", "collision fallback display")
+same(#uniquified_calls, 0, "natural collision seed count")
+same(#shadow_calls, 0, "natural collision ShadowCandidate count")
 
 local terminal_get_genuine_calls = 0
 local function fresh_terminal_alias()
@@ -157,7 +467,7 @@ same(terminal_get_genuine_calls, 0,
     "terminal dynamic type must resolve without calling get_genuine")
 same(native_terminal_output.type, "auto_space", "native-like terminal must be wrapped")
 assert(rawequal(native_terminal_output:get_genuine(), native_terminal),
-    "native-like terminal must remain the ShadowCandidate source")
+    "native-like terminal must remain the UniquifiedCandidate source")
 
 for _, terminal_type in ipairs({"Sentence", "Phrase", "Other"}) do
     local terminal_calls = 0
@@ -263,9 +573,12 @@ same(#ordered, 3, "filter must preserve candidate count")
 assert(rawequal(ordered[1]:get_genuine(), first), "first candidate order")
 assert(rawequal(ordered[2], second), "second candidate order and identity")
 assert(rawequal(ordered[3]:get_genuine(), third), "third candidate order")
-same(#shadow_calls, 2, "only boundary candidates should be wrapped")
-assert(rawequal(shadow_calls[1].source, first), "first ShadowCandidate source order")
-assert(rawequal(shadow_calls[2].source, third), "second ShadowCandidate source order")
+same(#uniquified_calls, 2, "only boundary candidates should be seeded")
+same(#shadow_calls, 0, "distinct boundary candidates need no ShadowCandidate")
+assert(rawequal(uniquified_calls[1].source, first),
+    "first UniquifiedCandidate source order")
+assert(rawequal(uniquified_calls[2].source, third),
+    "second UniquifiedCandidate source order")
 
 local ultimate = candidate(
     "ai_learned", 0, 4, "ultimate-text", "ultimate-comment", 1.7
@@ -278,14 +591,14 @@ local final = wrapper(
 )
 
 local output = run_auto_filter("中文", {final})[1]
-local call = shadow_calls[1]
-same(call.source, ultimate, "ShadowCandidate source must be ultimate genuine")
-same(call.kind, "auto_space", "ShadowCandidate type")
+local call = uniquified_calls[1]
+same(call.source, ultimate, "UniquifiedCandidate source must be ultimate genuine")
+same(call.kind, "auto_space", "UniquifiedCandidate type")
 same(call.text, " Rime Display", "spacing must use final display text")
 same(call.comment, "final-comment", "spacing must use final display comment")
-same(call.extra_count, 0, "ShadowCandidate must receive exactly four arguments")
+same(call.extra_count, 0, "UniquifiedCandidate must receive exactly four arguments")
 assert(rawequal(output:get_genuine(), ultimate),
-    "final ShadowCandidate must expose ultimate genuine")
+    "final UniquifiedCandidate must expose ultimate genuine")
 
 local mutating_ultimate = candidate("phrase", 0, 4, "ultimate", "", 1)
 local mutating_final = candidate(
@@ -455,20 +768,50 @@ for _, invalid_history in ipairs({
         invalid_history.name)
 end
 
-local shadow_failure_source = candidate("phrase", 0, 4, "Rime")
-shadow_mode = "throw"
-local shadow_throw_output = run_auto_filter("中文", {shadow_failure_source})
-same(#shadow_throw_output, 1, "throwing ShadowCandidate output count")
-assert(rawequal(shadow_throw_output[1], shadow_failure_source),
-    "throwing ShadowCandidate must pass through original")
-same(#shadow_calls, 1, "throwing ShadowCandidate call count")
+for _, mode in ipairs({"throw", "nil", "noncandidate"}) do
+    local source = candidate("phrase", 0, 4, "Rime")
+    uniquified_mode = mode
+    local output = run_auto_filter("中文", {source})
+    same(#output, 1, mode .. " UniquifiedCandidate output count")
+    assert(rawequal(output[1], source),
+        mode .. " UniquifiedCandidate must pass through original")
+    same(#uniquified_calls, 1, mode .. " UniquifiedCandidate call count")
+    same(#shadow_calls, 0, mode .. " seed failure ShadowCandidate call count")
+end
+uniquified_mode = "normal"
 
-shadow_mode = "nil"
-local shadow_nil_output = run_auto_filter("中文", {shadow_failure_source})
-same(#shadow_nil_output, 1, "nil ShadowCandidate output count")
-assert(rawequal(shadow_nil_output[1], shadow_failure_source),
-    "nil ShadowCandidate must pass through original")
-same(#shadow_calls, 1, "nil ShadowCandidate call count")
+for _, mode in ipairs({"throw", "nil", "noncandidate"}) do
+    local first_source = candidate("phrase", 0, 4, "Rime", "first")
+    local later_source = candidate("phrase", 0, 4, "Rime", "later")
+    uniquified_mode = {mode, "normal"}
+    local output = run_auto_filter("中文", {first_source, later_source})
+    same(#output, 2, mode .. " failed seed duplicate output count")
+    assert(rawequal(output[1], first_source),
+        mode .. " failed seed first original")
+    assert(rawequal(output[2], later_source),
+        mode .. " failed seed must block later duplicate spacing")
+    same(#uniquified_calls, 1,
+        mode .. " failed seed must not retry the target text")
+    same(#shadow_calls, 0,
+        mode .. " failed seed duplicate ShadowCandidate count")
+end
+uniquified_mode = "normal"
+
+for _, mode in ipairs({"throw", "nil", "noncandidate"}) do
+    local first_source = candidate("phrase", 0, 4, "Rime", "first")
+    local later_source = candidate("phrase", 0, 4, "Rime", "later")
+    shadow_mode = mode
+    local output = run_auto_filter("中文", {first_source, later_source})
+    same(#output, 2, mode .. " ShadowCandidate output count")
+    same(output[1]:get_dynamic_type(), "Uniquified",
+        mode .. " ShadowCandidate must retain the first seed")
+    assert(rawequal(output[1]:get_genuine(), first_source),
+        mode .. " ShadowCandidate first seed genuine")
+    assert(rawequal(output[2], later_source),
+        mode .. " ShadowCandidate must pass through later original")
+    same(#uniquified_calls, 1, mode .. " ShadowCandidate seed count")
+    same(#shadow_calls, 1, mode .. " ShadowCandidate call count")
+end
 shadow_mode = "normal"
 
 local history_failure_source = candidate("phrase", 0, 4, "Rime")
@@ -597,6 +940,20 @@ end
 local genuine_for_selection = candidate(
     "phrase", 0, 4, "与显示文本刻意不同", "", 1
 )
+
+for _, case in ipairs({
+    {key = "Control+j", expected = " R", name = "deduplicated Ctrl+J"},
+    {key = "Control+l", expected = " e", name = "deduplicated Ctrl+L"},
+}) do
+    local composition, segmentation = composition_with(two_deduped)
+    local outcome = run_select_character(case.key, " Rime", composition)
+    assert_accepted(outcome, case.expected,
+        case.name .. " must consume the simulated final-uniquifier result")
+    same(#segmentation.requested_indices, 1,
+        case.name .. " segmentation lookup count")
+    same(segmentation.requested_indices[1], 0,
+        case.name .. " first segment index")
+end
 
 for _, case in ipairs({
     {key = "Control+j", expected = " R", name = "Ctrl+J must preserve automatic prefix"},

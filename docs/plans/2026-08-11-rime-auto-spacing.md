@@ -4,7 +4,7 @@
 
 **Goal:** 在中文模式的连续 Rime 候选提交之间，仅对 Han ↔ ASCII 字母边界自动补一个半角空格，同时保持数字、标点、已有空白、AI 学习和用户词典语义不变。
 
-**Architecture:** 新增最终 `auto_space_filter`，恰好一次读取 `commit_history:back()` 的 `type/text`，只接受非空且非 `thru`/`raw` 的候选提交记录，并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在 `uniquifier` 之后，通过 `get_dynamic_type()` 区分 `Shadow`/`Uniquified` wrapper 与 `Sentence`/`Phrase`/`Simple`/`Other` 终态，再有界、带循环检测地归一到最底层 genuine candidate，并只增加一层 `ShadowCandidate`；无法无损证明 typed history、dynamic type、genuine、span 或 comment 时原样通过。`select_character` 从 composition 的首 segment 识别 `auto_space` 类型并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
+**Architecture:** 新增 `auto_space_filter`，恰好一次读取 `commit_history:back()` 的 `type/text`，只接受非空且非 `thru`/`raw` 的候选提交记录，并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在简繁转换和 AI 之后、绝对最后的内建 `uniquifier` 之前；它通过 `get_dynamic_type()` 有界归一到 ultimate genuine，按实际输出文本记录 `auto`/`other` 来源，为每种首次安全加空格文本输出逻辑类型 `auto_space` 的 `UniquifiedCandidate` 种子，为后续同文本项输出一层 `ShadowCandidate`。最终内建去重器因而只 append 到已有种子，保留 `auto_space` 类型和扁平 ultimate genuine 列表。无法无损证明 typed history、dynamic type、genuine、span、comment 或输出来源时原样通过。`select_character` 从 composition 的首 segment 识别最终去重候选仍保留的 `auto_space` 逻辑类型，并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
 
 **Tech Stack:** Rime/Squirrel 1.16、librime-lua、Lua 5.4 `utf8`、YAML、zsh、Ruby/Psych/Fiddle、GNU Make、Git。
 
@@ -103,6 +103,7 @@ librime-lua 每次返回 C++ `shared_ptr<Candidate>` 都创建新的 Lua userdat
 再实现：
 
 - `ShadowCandidate(source, kind, text, comment)`，记录每次构造参数并返回一层 dynamic type 为 `Shadow` 的 `wrapper`；
+- `UniquifiedCandidate(source, kind, text, comment)`，dynamic type 为 `Uniquified`、逻辑类型为传入的 `kind`，完整模拟 `items`、`append`、最大 quality、首项 display/comment fallback，以及只解一层 Shadow 的 `get_genuine()`/`get_genuines()`；
 - `stream(values)`，返回与现有 AI harness 相同的 `(iterator, state)`；
 - `yield(value)`，记录输出顺序；
 - `commit_history:back()` 返回带 `type/text` 的记录，`run_auto_filter(history, candidates)` 统计其恰好读取一次；
@@ -145,6 +146,18 @@ U+30000–U+3347F
 - `back()` 抛错、返回空记录，或记录 `type/text` 访问抛错/值非法时 fail closed；
 - 每次 filter 调用恰好读取一次 `back()`，且绝不读取 `latest_text()`。
 
+再增加一个严格的下游内建去重器/共享 Menu 模型：候选以 Lua 惰性迭代器的实际先后顺序进入外层，Menu 先保存外层输出，去重器再以精确文本查找共享 Menu 中的第一个匹配项。若旧项 dynamic type 已为 `Uniquified`，直接 append；否则以逻辑类型 `uniquified` 的新候选替换旧项后 append。这个模型不能退化为对 eager Lua array 的普通去重。
+
+用该模型覆盖：
+
+- 2 个、3 个及交错出现的同文本加空格候选，每种最终文本只剩一项，位置由首次出现决定；
+- 最终逻辑类型 `auto_space`、dynamic type `Uniquified`，第一项为 ultimate1，后续自动重复项为非嵌套 Uniquified 的单层 Shadow，`get_genuine()` 为 ultimate1，`get_genuines()` 为扁平 ultimate1…n；
+- 首次 display/comment 保留，quality 为所有聚合项最大值；
+- 两种不同加空格文本各自建种，非加空格重复项保持内建行为；
+- 自然前导空格候选先出现时，后续冲突目标以未加空格原候选 fail closed；
+- `UniquifiedCandidate` 与 `ShadowCandidate` 构造抛错、返回 `nil` 或非 candidate，且种子失败后同目标文本在当前 coroutine 中不得重试加空格；
+- `Ctrl+J/L` 和 AI 学习必须消费模拟最终去重后的实际候选，不得继续使用手工构造的单层 Shadow 代替。
+
 ### Step 3: 写 ultimate genuine 与 fail-closed 矩阵
 
 构造最终 display 与 genuine 元数据故意不同的链：
@@ -161,14 +174,14 @@ local final = wrapper(
 )
 
 local output = run_auto_filter("中文", {final})[1]
-local call = shadow_calls[1]
+local call = uniquified_calls[1]
 
-same(call.source, ultimate, "ShadowCandidate source must be ultimate genuine")
-same(call.kind, "auto_space", "ShadowCandidate type")
+same(call.source, ultimate, "UniquifiedCandidate source must be ultimate genuine")
+same(call.kind, "auto_space", "UniquifiedCandidate type")
 same(call.text, " Rime Display", "spacing must use final display text")
 same(call.comment, "final-comment", "spacing must use final display comment")
 assert(rawequal(output:get_genuine(), ultimate),
-    "final ShadowCandidate must expose ultimate genuine")
+    "final UniquifiedCandidate must expose ultimate genuine")
 ```
 
 另断言边界分类使用 final display，而不是 ultimate text：
@@ -183,7 +196,7 @@ assert(rawequal(output:get_genuine(), ultimate),
 - `get_genuine()` 抛错、返回 `nil` 或非候选；
 - genuine 与 final 的 `start/_end` 不同；
 - final comment 为空但 genuine comment 非空；
-- `ShadowCandidate` 构造抛错或返回 `nil`。
+- `UniquifiedCandidate`/`ShadowCandidate` 构造抛错、返回 `nil` 或非 candidate。
 
 ### Step 4: 把 harness 接入 bundled Lua，且隔离 Lua state
 
@@ -214,7 +227,7 @@ Ruby 端使用 `production, *harnesses = ARGV`，为每个 harness 分别执行�
 
 ### Step 5: 把 AI 学习测试接到生产 filter 输出
 
-在 `tests/config/rime-ai-regression.lua` 中加入同样的单层 `ShadowCandidate` mock 和 `run_auto_filter` helper。在现有第二次 `ai_learned` 增量断言之后新增一个 `start == 0` 场景；该条件必须满足生产 filter 的首 segment 契约：
+在 `tests/config/rime-ai-regression.lua` 中加入同样的 `UniquifiedCandidate`、单层 `ShadowCandidate` 和下游惰性去重/Menu mock。在现有第二次 `ai_learned` 增量断言之后新增一个 `start == 0` 场景；该条件必须满足生产 filter 的首 segment 契约，并使用两个最终 display 相同、ultimate 不同的候选：
 
 ```lua
 learn_context.input = "code"
@@ -223,10 +236,19 @@ local ultimate = candidate("ai_learned", 0, 4, "spaced correction")
 local final = wrapper(
     "Uniquified", "uniquified", "Chosen Display", "final-comment", ultimate
 )
-local spaced = run_auto_filter("中文", {final})[1]
+local duplicate_ultimate = candidate(
+    "ai_learned", 0, 4, "spaced correction duplicate"
+)
+local duplicate_final = wrapper(
+    "Uniquified", "uniquified", "Chosen Display", "duplicate-comment",
+    duplicate_ultimate
+)
+local spaced = run_spacing_pipeline("中文", {final, duplicate_final})[1]
 
 same(spaced.type, "auto_space", "AI integration must exercise auto spacing")
 same(spaced.text, " Chosen Display", "AI integration spaced display")
+same(spaced:get_dynamic_type(), "Uniquified",
+    "AI integration post-uniquifier dynamic type")
 assert(rawequal(spaced:get_genuine(), ultimate),
     "AI integration must expose ultimate genuine")
 
@@ -277,7 +299,7 @@ rime-auto-space-regression.lua: missing production auto_space_filter
 terminal dynamic type must resolve without calling get_genuine: expected "0", got "17"
 ```
 
-## Task 2: 实现最终候选自动空格 filter
+## Task 2: 实现最终去重前的自动空格 filter
 
 **Files:**
 
@@ -416,8 +438,21 @@ local function committed_history_boundary(env)
     return boundary_codepoint(record_text, true)
 end
 
+local function is_candidate_value(value)
+    local value_type = type(value)
+    return value_type == "table" or value_type == "userdata"
+end
+
 function auto_space_filter(input, env)
     local left = committed_history_boundary(env)
+    local output_provenance = {}
+
+    local function yield_other(candidate, text)
+        if output_provenance[text] == nil then
+            output_provenance[text] = "other"
+        end
+        yield(candidate)
+    end
 
     for candidate in input:iter() do
         local text = type(candidate.text) == "string" and candidate.text or ""
@@ -435,29 +470,50 @@ function auto_space_filter(input, env)
 
             if genuine and same_candidate_span(candidate, genuine) and
                 not (display_comment == "" and genuine_comment ~= "") then
-                local wrap_ok, wrapped = pcall(
-                    ShadowCandidate,
-                    genuine,
-                    "auto_space",
-                    " " .. text,
-                    display_comment
-                )
-                if wrap_ok and wrapped then
-                    yield(wrapped)
+                local spaced = " " .. text
+                local provenance = output_provenance[spaced]
+                if provenance == "other" then
+                    yield_other(candidate, text)
+                elseif provenance == nil then
+                    local seed_ok, seed = pcall(
+                        UniquifiedCandidate,
+                        genuine,
+                        "auto_space",
+                        spaced,
+                        display_comment
+                    )
+                    if seed_ok and is_candidate_value(seed) then
+                        output_provenance[spaced] = "auto"
+                        yield(seed)
+                    else
+                        output_provenance[spaced] = "other"
+                        yield_other(candidate, text)
+                    end
                 else
-                    yield(candidate)
+                    local wrap_ok, wrapped = pcall(
+                        ShadowCandidate,
+                        genuine,
+                        "auto_space",
+                        spaced,
+                        display_comment
+                    )
+                    if wrap_ok and is_candidate_value(wrapped) then
+                        yield(wrapped)
+                    else
+                        yield_other(candidate, text)
+                    end
                 end
             else
-                yield(candidate)
+                yield_other(candidate, text)
             end
         else
-            yield(candidate)
+            yield_other(candidate, text)
         end
     end
 end
 ```
 
-不要回退读取 `latest_text()`，因为它只保留 `back().text`、会丢失 `thru`/`raw` 来源。不要传或依赖第 5 个 `inherit_comment` 参数；当前 librime-lua 接收但不透传它。
+不要回退读取 `latest_text()`，因为它只保留 `back().text`、会丢失 `thru`/`raw` 来源。只有构造成功的种子才标记 `auto`；种子失败后必须把目标 `spaced` 标记为 `other`，防止后续重复项产生混合文本。不要传或依赖 `ShadowCandidate` 的第 5 个 `inherit_comment` 参数；当前 librime-lua 接收但不透传它。
 
 ### Step 4: 运行 GREEN
 
@@ -491,16 +547,18 @@ git diff --cached --check
 git commit -m "feat(rime): add automatic spacing filter"
 ```
 
-## Task 3: 以 RED/GREEN 注册最终 filter 顺序
+## Task 3: 以 RED/GREEN 注册最终去重顺序
 
 **Files:**
 
 - Modify: `tests/config/rime-config-regression.zsh`
 - Modify: `rime/double_pinyin_flypy.schema.yaml`
 
+必须保持内建 `uniquifier` 最后：Menu 保存外层 filter 已输出的候选，而 `UniquifiedTranslation` 在外层 Lua 迭代器继续时惰性用内层下一候选文本查找该共享 Menu。`uniquifier -> auto_space_filter` 会让 Menu 保存 `" Rime"`、内层却比较 `"Rime"`，因而泄漏重复候选。模拟 Menu 只是 Lua 契约验证，Task 6/7 仍必须用真实重复候选会话验证原生惰性行为。
+
 ### Step 1: 先收紧配置断言
 
-把当前两项相邻断言替换为严格、唯一的三项链：
+把当前两项相邻断言替换为严格、唯一的三项尾链，并要求 `uniquifier` 为绝对最后一项：
 
 ```ruby
 ai_name = "lua_filter@ai_candidate_filter"
@@ -514,9 +572,11 @@ space_index = filters.index(space_name)
 unless filters.count(ai_name) == 1 &&
     filters.count(unique_name) == 1 &&
     filters.count(space_name) == 1 &&
-    unique_index == ai_index.to_i + 1 &&
-    space_index == unique_index.to_i + 1
-  abort "expected filters to contain exactly ai_candidate_filter -> uniquifier -> auto_space_filter"
+    ai_index && space_index && unique_index &&
+    space_index == ai_index + 1 &&
+    unique_index == space_index + 1 &&
+    unique_index == filters.length - 1
+  abort "expected filters to end with exactly ai_candidate_filter -> auto_space_filter -> uniquifier"
 end
 ```
 
@@ -531,10 +591,10 @@ Run:
 Expected:
 
 ```text
-expected filters to contain exactly ai_candidate_filter -> uniquifier -> auto_space_filter
+expected filters to end with exactly ai_candidate_filter -> auto_space_filter -> uniquifier
 ```
 
-### Step 3: 注册最终 filter
+### Step 3: 注册最终去重器
 
 把 schema 调整为：
 
@@ -543,8 +603,8 @@ expected filters to contain exactly ai_candidate_filter -> uniquifier -> auto_sp
     - simplifier@emoji
     - simplifier@traditionalize
     - lua_filter@ai_candidate_filter
-    - uniquifier
     - lua_filter@auto_space_filter
+    - uniquifier
 ```
 
 ### Step 4: 验证 GREEN 并提交
@@ -601,6 +661,8 @@ Control+l + " Rime" -> " e"
 Control+j + " Rime输入法" -> " R"
 Control+l + " Rime输入法" -> " 法"
 ```
+
+除了故障注入所需的手工 processor candidate，必须额外把 Task 1 共享 Menu 模型实际聚合后的 logical `auto_space`/dynamic `Uniquified` 候选送入 `select_character`，冻结 `Ctrl+J/L` 能消费真实下游形状，而不是只在合成单层 Shadow 上通过。
 
 每个 accepted 分支恰好调用一次 `context:clear()`。以下情况保持旧逻辑：
 
@@ -725,9 +787,11 @@ Expected:
 
 请求 reviewer 对照设计文档检查：
 
-- filter 确实位于 `uniquifier` 后；
+- filter 确实位于 `uniquifier` 前，且 `uniquifier` 是绝对最后一项；
 - dynamic type 异常/未知，以及 genuine 循环/超深/span/comment 冲突全部原样通过；
-- wrapper source 是 ultimate，display/comment 来自 final；
+- 每种加空格文本的首项是 logical `auto_space`/dynamic `Uniquified` 种子，后续项是 source 为 ultimate 的单层 Shadow，display/comment 来自 final；
+- 共享 Menu 惰性模型保留首次出现位置和 display/comment、最大 quality、扁平 `get_genuines()` 顺序，并覆盖自然前导空格先出现的冲突；
+- 种子失败会阻断同 coroutine 后续同目标文本加空格，只有成功种子标记 `auto`；
 - AI TSV 永不保存前导空格；
 - `select_character` 使用首 segment，而不是活动末 segment；
 - 没有把 mock 或 deploy 结果表述为真实用户词典证明。
@@ -822,7 +886,7 @@ Expected:
 - 日志检查将 `rg` 的 0/1/>1 分开处理，只有 exit 1 表示没有目标错误模式；
 - 若 deployer 本身非 0，则即使日志没有匹配也视为失败。
 
-这一步只证明已安装的 Squirrel deployer 能编译 schema 和数据。Lua 语法/逻辑由 bundled-Lua harness 证明；这里不证明 filter 被真实 session 执行，也不证明 commit history、Shadow 解包、用户词典学习或宿主应用光标语义。
+这一步只证明已安装的 Squirrel deployer 能编译 schema 和数据。Lua 语法/逻辑由 bundled-Lua harness 证明；这里不证明 filter 被真实 session 执行，也不证明原生 Menu 惰性去重、commit history、`UniquifiedCandidate`/Shadow 解包、用户词典学习或宿主应用光标语义。Task 6/7 必须保留真实重复候选会话的专项验收，不得用 mocked Menu 结果替代。
 
 保留最后打印的精确 `native_root` 路径到本任务结束，便于检查日志；不要用 broad glob 重新解析它，也不要把它替换成当前用户 HOME。
 
@@ -893,6 +957,8 @@ make -C rime install
 - 回车、退格后的空历史；
 - 简繁切换候选的 display/comment；
 - 普通字典、melt_eng、自定义短语、`ai`、`ai_learned` 候选；
+- 同一最终加空格文本由 2 个、3 个及交错候选来源产生时，Menu 每种文本只显示一项，位置保持首次出现顺序；
+- 在上述真实去重结果上执行 `Ctrl+J/L` 与 AI 学习，确认前缀保留且 TSV 不写入排版空格；
 - 候选顺序无肉眼可见退化。
 
 鼠标移动光标、粘贴、切换应用和宿主应用自行修改文本不在保证范围；如实记录，不把它们算作回归失败或已覆盖功能。

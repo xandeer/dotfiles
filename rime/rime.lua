@@ -210,6 +210,11 @@ local function same_candidate_span(final, genuine)
         final_start == genuine_start and final_end == genuine_end
 end
 
+local function is_candidate_value(value)
+    local value_type = type(value)
+    return value_type == "table" or value_type == "userdata"
+end
+
 local function committed_history_boundary(env)
     local history_ok, record_type, record_text = pcall(function()
         local record = env.engine.context.commit_history:back()
@@ -228,6 +233,14 @@ end
 
 function auto_space_filter(input, env)
     local left = committed_history_boundary(env)
+    local output_provenance = {}
+
+    local function yield_other(candidate, text)
+        if output_provenance[text] == nil then
+            output_provenance[text] = "other"
+        end
+        yield(candidate)
+    end
 
     for candidate in input:iter() do
         local text = type(candidate.text) == "string" and candidate.text or ""
@@ -245,23 +258,44 @@ function auto_space_filter(input, env)
 
             if genuine and same_candidate_span(candidate, genuine) and
                 not (display_comment == "" and genuine_comment ~= "") then
-                local wrap_ok, wrapped = pcall(
-                    ShadowCandidate,
-                    genuine,
-                    "auto_space",
-                    " " .. text,
-                    display_comment
-                )
-                if wrap_ok and wrapped then
-                    yield(wrapped)
+                local spaced = " " .. text
+                local provenance = output_provenance[spaced]
+                if provenance == "other" then
+                    yield_other(candidate, text)
+                elseif provenance == nil then
+                    local seed_ok, seed = pcall(
+                        UniquifiedCandidate,
+                        genuine,
+                        "auto_space",
+                        spaced,
+                        display_comment
+                    )
+                    if seed_ok and is_candidate_value(seed) then
+                        output_provenance[spaced] = "auto"
+                        yield(seed)
+                    else
+                        output_provenance[spaced] = "other"
+                        yield_other(candidate, text)
+                    end
                 else
-                    yield(candidate)
+                    local wrap_ok, wrapped = pcall(
+                        ShadowCandidate,
+                        genuine,
+                        "auto_space",
+                        spaced,
+                        display_comment
+                    )
+                    if wrap_ok and is_candidate_value(wrapped) then
+                        yield(wrapped)
+                    else
+                        yield_other(candidate, text)
+                    end
                 end
             else
-                yield(candidate)
+                yield_other(candidate, text)
             end
         else
-            yield(candidate)
+            yield_other(candidate, text)
         end
     end
 end

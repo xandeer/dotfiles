@@ -47,8 +47,87 @@ local function wrapper(dynamic_type, kind, text, comment, source, start_pos, end
     return value
 end
 
+local function is_candidate(value)
+    local value_type = type(value)
+    return value_type == "table" or value_type == "userdata"
+end
+
+local function unpack_shadow_once(value)
+    if is_candidate(value) and value:get_dynamic_type() == "Shadow" then
+        return value:get_genuine()
+    end
+    return value
+end
+
+local function uniquified(kind, text, comment, source)
+    local value = {
+        type = kind,
+        start = source.start,
+        _end = source._end,
+        text = text ~= "" and text or source.text,
+        comment = comment ~= "" and comment or source.comment,
+        quality = source.quality,
+        items = {source},
+    }
+    function value:get_dynamic_type()
+        return "Uniquified"
+    end
+    function value:append(item)
+        self.items[#self.items + 1] = item
+        if self.quality < item.quality then
+            self.quality = item.quality
+        end
+        return true
+    end
+    function value:get_genuine()
+        return unpack_shadow_once(self.items[1])
+    end
+    function value:get_genuines()
+        local genuines = {}
+        for index, item in ipairs(self.items) do
+            genuines[index] = unpack_shadow_once(item)
+        end
+        return genuines
+    end
+    return value
+end
+
+local shadow_calls = {}
+local shadow_mode = "normal"
 ShadowCandidate = function(source, kind, text, comment)
+    shadow_calls[#shadow_calls + 1] = {
+        source = source,
+        kind = kind,
+        text = text,
+        comment = comment,
+    }
+    if shadow_mode == "throw" then
+        error("injected ShadowCandidate failure")
+    elseif shadow_mode == "nil" then
+        return nil
+    elseif shadow_mode == "noncandidate" then
+        return "not a candidate"
+    end
     return wrapper("Shadow", kind, text, comment, source)
+end
+
+local uniquified_calls = {}
+local uniquified_mode = "normal"
+UniquifiedCandidate = function(source, kind, text, comment)
+    uniquified_calls[#uniquified_calls + 1] = {
+        source = source,
+        kind = kind,
+        text = text,
+        comment = comment,
+    }
+    if uniquified_mode == "throw" then
+        error("injected UniquifiedCandidate failure")
+    elseif uniquified_mode == "nil" then
+        return nil
+    elseif uniquified_mode == "noncandidate" then
+        return "not a candidate"
+    end
+    return uniquified(kind, text or "", comment or "", source)
 end
 
 Candidate = function(kind, start_pos, end_pos, text, comment)
@@ -104,10 +183,104 @@ local function run_auto_filter(history, values)
     yielded = {}
     incoming_reads = 0
     reads_before_first_yield = nil
+    shadow_calls = {}
+    uniquified_calls = {}
     auto_space_filter(stream(values), filter_env)
     same(latest_text_reads, 0, "auto filter latest_text read count")
     same(back_reads, 1, "auto filter history back read count")
     return yielded
+end
+
+local function auto_filter_translation(history, values)
+    local back_reads = 0
+    local latest_text_reads = 0
+    local commit_history = {}
+    function commit_history:back()
+        back_reads = back_reads + 1
+        return {type = "phrase", text = history}
+    end
+    function commit_history:latest_text()
+        latest_text_reads = latest_text_reads + 1
+        error("latest_text must not be consulted")
+    end
+    local filter_env = {
+        engine = {
+            context = {
+                commit_history = commit_history,
+            },
+        },
+    }
+
+    incoming_reads = 0
+    reads_before_first_yield = nil
+    shadow_calls = {}
+    uniquified_calls = {}
+    local coroutine_handle = coroutine.create(function()
+        auto_space_filter(stream(values), filter_env)
+    end)
+    local iterator_state = {}
+    local translation = {
+        iter = function()
+            return function(current)
+                assert(current == iterator_state,
+                    "AI auto-filter iterator state must be forwarded")
+                if coroutine.status(coroutine_handle) == "dead" then
+                    return nil
+                end
+                local previous_yield = yield
+                yield = function(value)
+                    return coroutine.yield(value)
+                end
+                local ok, value = coroutine.resume(coroutine_handle)
+                yield = previous_yield
+                assert(ok, "lazy AI auto_space_filter failed: " .. tostring(value))
+                return value
+            end, iterator_state
+        end,
+    }
+    local function verify_history_reads()
+        same(latest_text_reads, 0, "lazy AI filter latest_text read count")
+        same(back_reads, 1, "lazy AI filter history back read count")
+    end
+    return translation, verify_history_reads
+end
+
+local function run_builtin_uniquifier(translation)
+    local menu = {}
+    local iterator, state = translation:iter()
+    while true do
+        local next_candidate = iterator(state)
+        if next_candidate == nil then
+            break
+        end
+        local previous_index = nil
+        for index, previous in ipairs(menu) do
+            if previous.text == next_candidate.text then
+                previous_index = index
+                break
+            end
+        end
+        if previous_index == nil then
+            menu[#menu + 1] = next_candidate
+        else
+            local previous = menu[previous_index]
+            if previous:get_dynamic_type() == "Uniquified" then
+                previous:append(next_candidate)
+            else
+                previous = uniquified("uniquified", "", "", previous)
+                previous:append(next_candidate)
+                menu[previous_index] = previous
+            end
+        end
+    end
+    return menu
+end
+
+local function run_spacing_pipeline(history, values)
+    local translation, verify_history_reads = auto_filter_translation(history, values)
+    local menu = run_builtin_uniquifier(translation)
+    verify_history_reads()
+    return menu
 end
 
 local function composition(segment)
@@ -584,11 +757,34 @@ local spaced_ultimate = candidate("ai_learned", 0, 4, "spaced correction")
 local spaced_final = wrapper(
     "Uniquified", "uniquified", "Chosen Display", "final-comment", spaced_ultimate
 )
-local spaced = run_auto_filter("中文", {spaced_final})[1]
+local spaced_duplicate_ultimate = candidate(
+    "ai_learned", 0, 4, "spaced correction duplicate"
+)
+local spaced_duplicate_final = wrapper(
+    "Uniquified",
+    "uniquified",
+    "Chosen Display",
+    "duplicate-comment",
+    spaced_duplicate_ultimate
+)
+local spaced_menu = run_spacing_pipeline("中文", {
+    spaced_final,
+    spaced_duplicate_final,
+})
+same(#spaced_menu, 1, "AI integration final uniquifier menu count")
+local spaced = spaced_menu[1]
 same(spaced.type, "auto_space", "AI integration must exercise auto spacing")
 same(spaced.text, " Chosen Display", "AI integration spaced display")
+same(spaced:get_dynamic_type(), "Uniquified",
+    "AI integration post-uniquifier dynamic type")
 assert(rawequal(spaced:get_genuine(), spaced_ultimate),
     "AI integration must expose ultimate genuine")
+local spaced_genuines = spaced:get_genuines()
+same(#spaced_genuines, 2, "AI integration flat genuine count")
+assert(rawequal(spaced_genuines[1], spaced_ultimate),
+    "AI integration first flat genuine")
+assert(rawequal(spaced_genuines[2], spaced_duplicate_ultimate),
+    "AI integration duplicate flat genuine")
 
 learn_context.selected_candidate = spaced
 learn_context.properties._ai_generation = ""

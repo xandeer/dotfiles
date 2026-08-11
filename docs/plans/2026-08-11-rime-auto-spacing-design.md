@@ -27,7 +27,7 @@
 
 ## 方案选择
 
-采用 Lua filter 读取 Rime `commit_history:back()` 的带类型提交记录，并用 `ShadowCandidate` 为当前候选增加前导空格。
+采用 Lua filter 读取 Rime `commit_history:back()` 的带类型提交记录，并以 `UniquifiedCandidate` 种子和后续 `ShadowCandidate` 为当前候选增加前导空格。
 
 选择该方案的原因：
 
@@ -43,24 +43,29 @@
 
 ## 组件与顺序
 
-在 `rime/rime.lua` 中增加 `auto_space_filter`。在 `rime/double_pinyin_flypy.schema.yaml` 中把它放在现有 AI 过滤器和去重器之后，作为最终候选装饰器：
+在 `rime/rime.lua` 中增加 `auto_space_filter`。在 `rime/double_pinyin_flypy.schema.yaml` 中把它放在简繁转换和 AI 过滤器之后、内建去重器之前，并使 `uniquifier` 严格位于 filter 尾部：
 
 ```yaml
 filters:
   - simplifier@emoji
   - simplifier@traditionalize
   - lua_filter@ai_candidate_filter
-  - uniquifier
   - lua_filter@auto_space_filter
+  - uniquifier
 ```
 
 该顺序保证：
 
 - 普通、英文、AI 和自定义短语候选都经过相同的边界规则；
-- 自动空格包装发生在简繁转换、AI 注入和最终去重之后，使用用户实际看到的候选文本；
+- 自动空格文本变换发生在简繁转换和 AI 注入之后，使用用户实际看到的候选文本；
+- 内建 `uniquifier` 作为最后一层，按已加空格的最终文本去重；
 - AI filter 的候选注入和排序逻辑不需要理解自动空格。
 
-librime 的 `get_genuine()` 一次只会从 `UniquifiedCandidate` 取第一项并继续解开一层 `ShadowCandidate`，不会递归解开任意层 Shadow。因此过滤器不能直接包装可能已由 simplifier 生成的 Shadow 候选。librime-lua 每次把返回的 C++ `shared_ptr<Candidate>` 压入 Lua 时都会创建新的 userdata，Candidate metatable 也没有 `__eq`；即使 C++ 已返回同一个 genuine candidate，Lua 的 `==`/`rawequal` 也不能证明固定点。过滤器必须改用 `get_dynamic_type()`：只对白名单 wrapper 类型 `Shadow`/`Uniquified` 调用 `get_genuine()`，遇到终态 `Sentence`/`Phrase`/`Simple`/`Other` 立即停止，并用有上限、带 mock identity 循环检测的迭代取得最底层 genuine candidate。随后以该 genuine candidate 为 source、以最终显示候选为 display 构造唯一一层 `auto_space` Shadow。这样用户看到的简繁转换文本与 comment 得以保留，而用户词典和 AI 学习仍取得无排版空格的原始候选。
+librime 的 Menu 会保存最外层 filter 已输出的候选，而 `UniquifiedTranslation` 是惰性的：它在外层 Lua filter 继续迭代时，使用自己的内层下一候选文本与共享 Menu 比较。若顺序为 `uniquifier -> auto_space_filter`，Menu 中已是 `" Rime"`，内层却仍以 `"Rime"` 比较，重复候选会泄漏。因此内建去重器必须最后运行。
+
+但若自动空格的第一个输出只是 Shadow，最终去重器发现第二个同文本候选时，会把 Menu 中的第一项替换为逻辑类型 `uniquified` 的 `UniquifiedCandidate`，从而丢失 `auto_space` 来源标记。过滤器因此必须对每个首次出现的安全加空格文本预先构造 `UniquifiedCandidate(ultimate, "auto_space", spaced, final_comment)`。后续同文本自动候选输出 `ShadowCandidate(ultimate, "auto_space", spaced, final_comment)`，最终去重器看到前项已是 dynamic `Uniquified`，只会 append，不会改写其逻辑类型。
+
+librime 的 `get_genuine()` 一次只会从 `UniquifiedCandidate` 取第一项并继续解开一层 `ShadowCandidate`，`get_genuines()` 则按 append 顺序对每项各解一层 Shadow。过滤器在构造种子前，仍必须通过 `get_dynamic_type()` 和有上限的迭代取得最底层 genuine candidate：只对 `Shadow`/`Uniquified` 调用 `get_genuine()`，遇到 `Sentence`/`Phrase`/`Simple`/`Other` 立即停止。librime-lua 每次为返回的 C++ `shared_ptr<Candidate>` 创建新 userdata，且 Candidate metatable 没有 `__eq`，因此 Lua identity 不能用作原生固定点证明。此结构保留最终 display/comment，同时使 `get_genuine()` 和扁平 `get_genuines()` 都返回无排版空格的 ultimate candidates。
 
 ## 数据流
 
@@ -71,9 +76,11 @@ librime 的 `get_genuine()` 一次只会从 `UniquifiedCandidate` 取第一项�
 3. 只接受非空字符串记录类型，并排除保留类型 `thru` 和 `raw`；再取该记录文本最后一个 Unicode 字符和当前候选第一个 Unicode 字符。
 4. 仅当边界为“汉字 -> ASCII 字母”或“ASCII 字母 -> 汉字”时需要空格。
 5. 需要空格时，读取 `get_dynamic_type()`；终态类型直接作为 genuine，只有 `Shadow`/`Uniquified` 才以有上限、带循环检测的迭代逐层解包。
-6. 只有 genuine candidate 与最终显示候选的 `start/_end` 相同，且不存在“最终 comment 为空、genuine comment 非空”的继承冲突时，才输出一个 source 为该 genuine candidate、文本为 `" " .. candidate.text`、comment 显式复制最终显示候选、类型为 `auto_space` 的 `ShadowCandidate`；否则原样输出候选。
-7. 构造器不依赖 `inherit_comment` 参数；当前 librime-lua 绑定接受该参数但没有把它传给 C++ 构造器，因此 comment 必须显式传入。若空 comment 会因默认继承而恢复 genuine comment，则选择不包装，避免改变候选注释。
-8. 不对候选内部做全局替换。
+6. 每次 filter coroutine 维护一个按“实际输出文本”键控的来源表。所有原样通过和 fail-closed 输出都只在键尚未出现时记为 `other`。
+7. 只有 genuine candidate 与最终显示候选的 `start/_end` 相同，且不存在“最终 comment 为空、genuine comment 非空”的继承冲突时，才计算 `spaced = " " .. candidate.text`：若 `spaced` 未出现，用 ultimate genuine 构造逻辑类型 `auto_space` 的 `UniquifiedCandidate` 种子，成功后记为 `auto`；若已为 `auto`，输出一层 source 同样为 ultimate genuine 的 `ShadowCandidate`；若已为 `other`，原样输出未加空格候选。
+8. 种子构造抛错或返回非 candidate 时，同时把 `spaced` 标记为 `other` 并输出原候选，阻止后续重复项在同一 coroutine 中从未加空格切换为加空格。只有成功种子才能标记 `auto`。
+9. 两个构造器的返回值都必须是 table/userdata。`ShadowCandidate` 不依赖 `inherit_comment` 参数；当前 librime-lua 绑定接受该参数但没有把它传给 C++ 构造器，因此 comment 必须显式传入。若空 comment 会因默认继承而恢复 genuine comment，则选择不包装，避免改变候选注释。
+10. 最终内建去重器按加空格后的文本聚合重复项，保留首次出现的 display/comment 和位置，把 quality 提升到各项最大值，并使 `get_genuines()` 保持 ultimate candidates 的遇到顺序。不对候选内部做全局替换。
 
 例如：
 
@@ -130,7 +137,9 @@ URL、邮箱、`C++`、版本号等候选内部内容不做改写。如果整个
 - 候选已经带有自动空格包装或前导空白；
 - dynamic type 查询报错、为空、不是字符串或不属于明确的 wrapper/终态白名单；
 - genuine 解包报错、返回无效值、形成循环、超过深度上限或改变候选 span；
-- 最终 comment 为空但 genuine comment 非空，无法在当前绑定中无损包装。
+- 最终 comment 为空但 genuine comment 非空，无法在当前绑定中无损包装；
+- `UniquifiedCandidate`/`ShadowCandidate` 构造抛错、返回 `nil` 或非 candidate；
+- 同一 coroutine 中已有原样输出占用目标加空格文本，例如自然前导空格候选先于 `Rime` 出现时，后者保守地以未加空格文本输出。
 
 Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`，把未翻译的 composition 片段及 `engine:commit_text()` 记录为 `raw`。两者都不能证明文本来自候选提交，因此一律排除：直接 ASCII 之后的 Han 候选、以及任一方向的 `raw` 记录边界都故意不自动补空格。无修饰退格或回车会清空提交历史，此后同样不插入。
 
@@ -140,7 +149,7 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 
 ### 以词定字
 
-当前 `select_character` 使用 `context:get_commit_text()` 选择首字或尾字。自动空格候选会带一个前导空格，因此该 processor 必须从 `context.composition:toSegmentation()` 取得首 segment 的选中候选及其 `get_genuine()` 结果，而不能只查看当前活动候选。只有该候选类型严格为 `auto_space`、存在有效 genuine candidate、显示文本以恰好一个自动前缀开头，且完整 commit text 确实以该显示文本开头时，才能确认它来自自动包装；不能仅凭文本以空格开头来猜测来源。这里不要求 display 等于空格加 genuine 文本，因为简繁转换后的最终 display 可能与 genuine 文本不同。
+当前 `select_character` 使用 `context:get_commit_text()` 选择首字或尾字。最终去重后的自动空格候选是 dynamic `Uniquified`、逻辑类型 `auto_space`，并带一个前导空格。该 processor 必须从 `context.composition:toSegmentation()` 取得首 segment 的实际选中候选及其 `get_genuine()` 结果，而不能只查看当前活动候选。只有该候选类型严格为 `auto_space`、存在有效 genuine candidate、显示文本以恰好一个自动前缀开头，且完整 commit text 确实以该显示文本开头时，才能确认它来自自动包装；不能仅凭文本以空格开头来猜测来源。这里不要求 display 等于空格加 genuine 文本，因为简繁转换后的最终 display 可能与 genuine 文本不同。
 
 确认包装关系后：
 
@@ -154,17 +163,17 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 
 ### AI 候选学习
 
-现有学习路径对选中候选调用 `get_genuine()`。最终自动空格 Shadow 直接以最底层 genuine candidate 为 source，使单次 `get_genuine()` 就能取得无排版空格的原始类型和文本。自动空格只影响最终显示与上屏文本，不应进入 AI 学习 TSV。
+现有学习路径对最终选中候选调用 `get_genuine()`。自动空格种子的第一项直接是 ultimate genuine，后续重复项则是只包装该 ultimate 的一层 Shadow；因此最终 dynamic `Uniquified` 候选的单次 `get_genuine()` 取得第一个无排版空格的原始候选，`get_genuines()` 也按顺序得到扁平 ultimate 列表。自动空格只影响最终显示与上屏文本，不应进入 AI 学习 TSV。
 
 ### 用户词典与排序
 
-普通候选仍通过原有选择路径提交。最终过滤器先把 `UniquifiedCandidate` 和已有 Shadow 层归一到最底层 genuine candidate，再只增加一层自动空格 Shadow；但 mocked Lua 测试和部署成功都不足以证明真实用户词典语义。验证必须在实际 Rime 会话中确认显示 comment 与排序没有退化，且用户词频继续写入无前导空格的 genuine 词条。public Rime API 不暴露原始 quality，因此真实会话不能据此宣称 quality 数值完全相等。
+普通候选仍通过原有选择路径提交。自动空格过滤器先把已有 `UniquifiedCandidate` 和 Shadow 层归一到最底层 genuine，再输出一个 `auto_space` Uniquified 种子及后续单层 Shadow，由最终内建去重器聚合。内建 append 保留首次出现位置和 display/comment，并把 quality 提升到各项最大值；但 mocked Lua Menu 测试和部署成功都不足以证明真实用户词典语义或原生惰性去重。验证必须在实际 Rime 会话中确认重复候选只剩一项、逻辑类型仍可被 `Ctrl+J/L` 识别、comment 与排序没有退化，且用户词频继续写入无前导空格的 genuine 词条。public Rime API 不暴露原始 quality，因此真实会话不能据此宣称 quality 数值完全相等。
 
 ## 验证
 
 ### Lua 行为回归
 
-新增 `tests/config/rime-auto-space-regression.lua`，由现有 `tests/config/rime-config-regression.zsh` 使用 Squirrel 自带 Lua 加载生产 `rime.lua` 后执行。该 harness 使用 mock 验证 Lua 判断和包装契约，不把结果当作真实 C++ ShadowCandidate 或用户词典行为证明。覆盖：
+新增 `tests/config/rime-auto-space-regression.lua`，由现有 `tests/config/rime-config-regression.zsh` 使用 Squirrel 自带 Lua 加载生产 `rime.lua` 后执行。该 harness 使用 mock 验证 Lua 判断、包装和共享 Menu 惰性去重契约，不把结果当作真实 C++ `UniquifiedCandidate`/`ShadowCandidate`、原生 Menu 或用户词典行为证明。覆盖：
 
 - 汉字到英文、英文到汉字；
 - 普通历史使用候选记录类型，任意非空、非保留类型均可接受；
@@ -174,9 +183,15 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 - 数字、标点、已有空白、Emoji、空历史；
 - 不重复包装；
 - 仅处理 `candidate.start == 0`，后续 segment 原样输出；
-- 对 simplifier/uniquifier 风格的嵌套候选逐层归一，最终 Shadow 的 source 是最底层 genuine candidate；
+- 对 simplifier/uniquifier 风格的嵌套候选逐层归一，种子和后续 Shadow 的 source 都是最底层 genuine candidate；
 - native-like 终态即使 `get_genuine()` 会返回新 alias 或抛错也不得调用该方法，并通过 dynamic type 直接终止；
 - 自动包装保留最终显示文本、comment、候选数量和顺序；
+- 两个、三个及交错出现的同文本加空格候选在最终 Menu 中每种文本只剩一项，逻辑类型为 `auto_space`、dynamic type 为 `Uniquified`；
+- 种子第一项是 ultimate1，后续项为非嵌套的单层 Shadow，`get_genuine()` 取 ultimate1，`get_genuines()` 以 ultimate1…n 顺序扁平返回；
+- 两种不同加空格文本各自建立种子，非加空格重复项保持内建去重行为；
+- 首个自然前导空格候选占用目标文本时，后续自动目标 fail closed 为未加空格文本；
+- 种子和后续 Shadow 构造抛错、返回 `nil`/非 candidate 时原样输出，种子失败后同文本不重试加空格；
+- 模拟 Lua 迭代器、最外层输出和共享 Menu 的先后顺序，并验证去重后的实际候选可被 `Ctrl+J/L` 与 AI 学习消费；
 - dynamic type 异常/未知，以及 genuine 链循环、超深、异常、无效返回或 span 不一致时原样通过；
 - 空 display comment 会被非空 genuine comment 继承时原样通过；
 - `Ctrl+J/L` 对带自动前缀的候选正确提交；
@@ -188,7 +203,7 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 扩展 `tests/config/rime-config-regression.zsh`：
 
 - 检查自动空格 harness 存在；
-- 断言 filter 顺序严格为 `ai_candidate_filter -> uniquifier -> auto_space_filter`；
+- 断言 filter 各出现一次，尾序严格为 `ai_candidate_filter -> auto_space_filter -> uniquifier`，且 `uniquifier` 是绝对最后一项；
 - 使用现有 bundled-Lua 运行器加载生产 Lua 与两个测试 harness。
 
 ### 静态和原生部署
@@ -200,7 +215,7 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 - 临时 HOME 下执行 Rime 安装和原生 `rime_deployer --build`
 - 检查部署和 Squirrel 日志中没有 Lua、编码或组件加载错误
 
-原生部署只证明组件能够加载和编译配置，不证明 ShadowCandidate 解包、用户词典学习或真实提交行为；这些由下一节的实际会话验收承担。
+原生部署只证明组件能够加载和编译配置，不证明原生 Menu 的惰性去重、`UniquifiedCandidate`/Shadow 解包、用户词典学习或真实提交行为；这些由下一节的实际会话验收承担。
 
 ### 真实输入验收
 
@@ -215,7 +230,7 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 中文，-> Rime            = 中文，Rime
 ```
 
-另测 `Ctrl+J/L`、退格、回车和 AI 候选，并确认测试结果不宣称覆盖鼠标移动、粘贴或宿主应用改文。部署到当前用户的 Rime 目录不属于仓库实现，除非另行明确授权。
+另测 `Ctrl+J/L`、退格、回车和 AI 候选，并为能从两个、三个及交错来源产生同一最终加空格文本的真实输入编码检查 Menu：每种文本只能显示一个候选，在该实际去重结果上 `Ctrl+J/L` 仍必须保留前缀，AI 学习仍必须使用无空格 genuine 文本。确认测试结果不宣称覆盖鼠标移动、粘贴或宿主应用改文。部署到当前用户的 Rime 目录不属于仓库实现，除非另行明确授权。
 
 使用真实普通词典候选重复输入，确认候选排序与用户词频仍能正常学习，且用户词典没有产生带前导空格的词条。使用真实 AI 与 `ai_learned` 候选，确认上屏文本有排版空格，而 AI 学习 TSV 中仍保存无前导空格的 genuine 文本。
 
