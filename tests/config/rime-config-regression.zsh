@@ -80,9 +80,20 @@ unless script_index && translators[script_index + 1] == "lua_translator@ai_learn
   abort "expected lua_translator@ai_learned_translator immediately after script_translator"
 end
 
-uniquifier_index = filters.index("uniquifier")
-unless uniquifier_index&.positive? && filters[uniquifier_index - 1] == "lua_filter@ai_candidate_filter"
-  abort "expected lua_filter@ai_candidate_filter immediately before uniquifier"
+ai_name = "lua_filter@ai_candidate_filter"
+unique_name = "uniquifier"
+space_name = "lua_filter@auto_space_filter"
+
+ai_index = filters.index(ai_name)
+unique_index = filters.index(unique_name)
+space_index = filters.index(space_name)
+
+unless filters.count(ai_name) == 1 &&
+    filters.count(unique_name) == 1 &&
+    filters.count(space_name) == 1 &&
+    unique_index == ai_index.to_i + 1 &&
+    space_index == unique_index.to_i + 1
+  abort "expected filters to contain exactly ai_candidate_filter -> uniquifier -> auto_space_filter"
 end
 
 patch = YAML.load_file(squirrel_path).fetch("patch")
