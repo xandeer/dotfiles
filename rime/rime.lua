@@ -231,6 +231,17 @@ local function committed_history_boundary(env)
     return boundary_codepoint(record_text, true)
 end
 
+local function safe_auto_space_genuine(candidate, display_comment)
+    local genuine = ultimate_genuine(candidate)
+    local genuine_comment = genuine and
+        type(genuine.comment) == "string" and genuine.comment or ""
+    if genuine and same_candidate_span(candidate, genuine) and
+        not (display_comment == "" and genuine_comment ~= "") then
+        return genuine
+    end
+    return nil
+end
+
 function auto_space_filter(input, env)
     local left = committed_history_boundary(env)
     local output_provenance = {}
@@ -252,12 +263,9 @@ function auto_space_filter(input, env)
             needs_auto_space(left, right)
 
         if should_wrap then
-            local genuine = ultimate_genuine(candidate)
-            local genuine_comment = genuine and
-                type(genuine.comment) == "string" and genuine.comment or ""
+            local genuine = safe_auto_space_genuine(candidate, display_comment)
 
-            if genuine and same_candidate_span(candidate, genuine) and
-                not (display_comment == "" and genuine_comment ~= "") then
+            if genuine then
                 local spaced = " " .. text
                 local provenance = output_provenance[spaced]
                 if provenance == "other" then
@@ -912,6 +920,29 @@ function ai_candidate_filter(input, env)
         buffered[#buffered + 1] = candidate
         if not match_index and candidate.text == text then
             match_index = index
+        end
+    end
+
+    if not match_index and type(text) == "string" and
+        tonumber(segment.start) == 0 and text:sub(1, 1) == " " and
+        text:sub(2, 2) ~= " " then
+        local semantic_text = text:sub(2)
+        local left = committed_history_boundary(env)
+        local right = boundary_codepoint(semantic_text, false)
+        if needs_auto_space(left, right) then
+            for index, candidate in ipairs(buffered) do
+                if candidate.text == semantic_text then
+                    local display_comment = type(candidate.comment) == "string" and
+                        candidate.comment or ""
+                    local safe_match = tostring(candidate.type or "") ~= "auto_space" and
+                        same_candidate_span(candidate, segment) and
+                        safe_auto_space_genuine(candidate, display_comment) ~= nil
+                    if safe_match then
+                        match_index = index
+                        break
+                    end
+                end
+            end
         end
     end
 

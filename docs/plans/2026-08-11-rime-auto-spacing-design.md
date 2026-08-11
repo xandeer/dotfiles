@@ -59,7 +59,7 @@ filters:
 - 普通、英文、AI 和自定义短语候选都经过相同的边界规则；
 - 自动空格文本变换发生在简繁转换和 AI 注入之后，使用用户实际看到的候选文本；
 - 内建 `uniquifier` 作为最后一层，按已加空格的最终文本去重；
-- AI filter 的候选注入和排序逻辑不需要理解自动空格。
+- AI filter 在注入前只反解能够由同一 typed-history 边界规则严格证明的一个展示空格，随后仍由自动空格 filter 统一生成最终显示文本。
 
 librime 的 Menu 会保存最外层 filter 已输出的候选，而 `UniquifiedTranslation` 是惰性的：它在外层 Lua filter 继续迭代时，使用自己的内层下一候选文本与共享 Menu 比较。若顺序为 `uniquifier -> auto_space_filter`，Menu 中已是 `" Rime"`，内层却仍以 `"Rime"` 比较，重复候选会泄漏。因此内建去重器必须最后运行。
 
@@ -68,6 +68,8 @@ librime 的 Menu 会保存最外层 filter 已输出的候选，而 `UniquifiedT
 librime 的 `get_genuine()` 一次只会从 `UniquifiedCandidate` 取第一项并继续解开一层 `ShadowCandidate`，`get_genuines()` 则按 append 顺序对每项各解一层 Shadow。过滤器在构造种子前，仍必须通过 `get_dynamic_type()` 和有上限的迭代取得最底层 genuine candidate：只对 `Shadow`/`Uniquified` 调用 `get_genuine()`，遇到 `Sentence`/`Phrase`/`Simple`/`Other` 立即停止。librime-lua 每次为返回的 C++ `shared_ptr<Candidate>` 创建新 userdata，且 Candidate metatable 没有 `__eq`，因此 Lua identity 不能用作原生固定点证明。此结构保留最终 display/comment，同时使 `get_genuine()` 和扁平 `get_genuines()` 都返回无排版空格的 ultimate candidates。
 
 ## 数据流
+
+在自动空格 filter 之前，`ai_candidate_filter` 先按原始 live `_ai_candidate` 文本查找 incoming Candidate；精确命中可能代表自然前导空白，必须原样提升。只有没有精确命中时，才检查 live 文本是否携带可证明的自动展示前缀：active segment 与候选覆盖相同的首段 span、live 文本以恰好一个 U+0020 开头、typed history 与去前缀文本满足同一 Han ↔ ASCII 规则，而且无空格同文候选本身通过 ultimate genuine、span 与 comment 的安全包装检查。首个同文候选不安全时继续扫描后续项。没有安全无空格同文项时保留 live 文本构造 synthetic candidate，不猜测空格来源。这样已知展示往返会恢复原 Candidate，而自然或歧义空格仍 fail closed。
 
 过滤器对每个候选执行以下步骤：
 
@@ -134,7 +136,7 @@ URL、邮箱、`C++`、版本号等候选内部内容不做改写。如果整个
 - UTF-8 字符无法可靠解析；
 - 任一边界字符不属于明确的 Han 或 ASCII 字母类别；
 - 候选不是 composition 的首段（`candidate.start ~= 0`）；
-- 候选已经带有自动空格包装或前导空白；
+- 上游候选已经带有自动空格包装或自然前导空白；live AI property 中满足上一节全部证明条件的单个 U+0020 展示前缀是唯一例外；
 - dynamic type 查询报错、为空、不是字符串或不属于明确的 wrapper/终态白名单；
 - genuine 解包报错、返回无效值、形成循环、超过深度上限或改变候选 span；
 - 最终 comment 为空但 genuine comment 非空，无法在当前绑定中无损包装；
@@ -165,6 +167,8 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 
 现有学习路径对最终选中候选调用 `get_genuine()`。自动空格种子的第一项直接是 ultimate genuine，后续重复项则是只包装该 ultimate 的一层 Shadow；因此最终 dynamic `Uniquified` 候选的单次 `get_genuine()` 取得第一个无排版空格的原始候选，`get_genuines()` 也按顺序得到扁平 ultimate 列表。自动空格只影响最终显示与上屏文本，不应进入 AI 学习 TSV。
 
+Squirrel 的 AI snapshot 只能通过 public C API 读取最终 Menu 的显示文本，所以自动前缀也会随候选发送给模型；response parser 与 `_ai_candidate` property 会原样保留它。`ai_candidate_filter` 因此必须把已知展示往返映射回语义候选，但不能盲目 trim。它先在前 8 项中查找与 live 文本完全相同的 Candidate 并原样提升；只有未精确命中、live 文本以恰好一个 U+0020 开头、active segment 从 0 开始、`commit_history:back()` 是有效且非 `thru`/`raw` 的候选记录，并且去掉该空格后满足现有 Han ↔ ASCII 字母规则时，才查找可安全包装的无空格同文候选。找到时直接提升该原 Candidate，保留 genuine/type/span/comment/quality；找不到时以原 live 文本构造 synthetic candidate。任一证明失败时同样保留 live 文本不变。
+
 ### 用户词典与排序
 
 普通候选仍通过原有选择路径提交。自动空格过滤器先把已有 `UniquifiedCandidate` 和 Shadow 层归一到最底层 genuine，再输出一个 `auto_space` Uniquified 种子及后续单层 Shadow，由最终内建去重器聚合。内建 append 保留首次出现位置和 display/comment，并把 quality 提升到各项最大值；但 mocked Lua Menu 测试和部署成功都不足以证明真实用户词典语义或原生惰性去重。验证必须在实际 Rime 会话中确认重复候选只剩一项、逻辑类型仍可被 `Ctrl+J/L` 识别、comment 与排序没有退化，且用户词频继续写入无前导空格的 genuine 词条。public Rime API 不暴露原始 quality，因此真实会话不能据此宣称 quality 数值完全相等。
@@ -192,6 +196,8 @@ Rime 会把无修饰的可打印 ASCII（包括手动空格）记录为 `thru`�
 - 首个自然前导空格候选占用目标文本时，后续自动目标 fail closed 为未加空格文本；
 - 种子和后续 Shadow 构造抛错、返回 `nil`/非 candidate 时原样输出，种子失败后同文本不重试加空格；
 - 模拟 Lua 迭代器、最外层输出和共享 Menu 的先后顺序，并验证去重后的实际候选可被 `Ctrl+J/L` 与 AI 学习消费；
+- 模拟 Squirrel 把带自动前缀的最终 Menu 文本经模型原样回灌 `_ai_candidate`，覆盖两种边界方向、匹配原 Candidate、自然空格 exact match、歧义无匹配 fail-closed、最终去重以及 AI TSV 只递增无空格语义行；
+- 缺失/`raw`/`thru` 历史、非 Han ↔ ASCII 边界、多个首空格和非首 segment 均不得反解 live 文本；
 - dynamic type 异常/未知，以及 genuine 链循环、超深、异常、无效返回或 span 不一致时原样通过；
 - 空 display comment 会被非空 genuine comment 继承时原样通过；
 - `Ctrl+J/L` 对带自动前缀的候选正确提交；

@@ -194,10 +194,14 @@ end
 local function auto_filter_translation(history, values)
     local back_reads = 0
     local latest_text_reads = 0
+    local history_record = history
+    if type(history_record) ~= "table" then
+        history_record = {type = "phrase", text = history}
+    end
     local commit_history = {}
     function commit_history:back()
         back_reads = back_reads + 1
-        return {type = "phrase", text = history}
+        return history_record
     end
     function commit_history:latest_text()
         latest_text_reads = latest_text_reads + 1
@@ -374,7 +378,7 @@ local function env(input, segment, schema_id, initial_quality)
 end
 
 local no_segment = {}
-local function run_filter(values, properties, input, segment)
+local function run_filter(values, properties, input, segment, history_record)
     local active_segment = segment
     if segment == nil then
         active_segment = {start = 0, _end = 4, status = "selected"}
@@ -383,6 +387,14 @@ local function run_filter(values, properties, input, segment)
     end
     local filter_env, ctx = env(input or "code", active_segment)
     ctx.properties = properties or {}
+    ctx.commit_history = {
+        back = function()
+            return history_record
+        end,
+        latest_text = function()
+            error("AI candidate filter must not consult aggregated history")
+        end,
+    }
     yielded = {}
     incoming_reads = 0
     reads_before_first_yield = nil
@@ -521,6 +533,122 @@ for index, original in ipairs(deep) do
     assert(rawequal(bounded[index + 1], original), "bounded filter must replay originals in order")
 end
 assert_originals_once(bounded, deep, 1)
+
+local display_roundtrip_input = "hdyckclvuhxxwf"
+local display_roundtrip_raw = "还要考虑上下文"
+local display_roundtrip_spaced = " " .. display_roundtrip_raw
+
+local unsafe_roundtrip_genuine = candidate("phrase", 1, 4, "Rime")
+local unsafe_roundtrip_match = wrapper(
+    "Shadow", "shadow", "Rime", "", unsafe_roundtrip_genuine, 0, 4
+)
+local safe_roundtrip_match = candidate("phrase", 0, 4, "Rime")
+local safe_match_roundtrip = run_filter({
+    unsafe_roundtrip_match,
+    safe_roundtrip_match,
+}, {
+    _ai_candidate = " Rime",
+    _ai_input = "code",
+    _ai_generation = "safe-match-display-roundtrip",
+}, "code", nil, {type = "phrase", text = "中文"})
+assert(rawequal(safe_match_roundtrip[1], safe_roundtrip_match),
+    "display-prefix matching must skip a candidate that downstream cannot wrap safely")
+assert_originals_once(safe_match_roundtrip, {
+    unsafe_roundtrip_match,
+    safe_roundtrip_match,
+})
+
+local reverse_roundtrip_original = candidate("phrase", 0, 4, "Rime")
+local reverse_roundtrip = run_filter({reverse_roundtrip_original}, {
+    _ai_candidate = " Rime",
+    _ai_input = "code",
+    _ai_generation = "reverse-display-roundtrip",
+}, "code", nil, {type = "phrase", text = "中文"})
+assert(rawequal(reverse_roundtrip[1], reverse_roundtrip_original),
+    "Han-to-ASCII display prefix must promote the original raw candidate")
+
+local natural_spaced_roundtrip_original = candidate(
+    "phrase", 0, 4, " 新答案"
+)
+local natural_spaced_roundtrip_raw = candidate("phrase", 0, 4, "新答案")
+local natural_spaced_roundtrip = run_filter({
+    natural_spaced_roundtrip_raw,
+    natural_spaced_roundtrip_original,
+}, {
+    _ai_candidate = " 新答案",
+    _ai_input = "code",
+    _ai_generation = "natural-space-roundtrip",
+}, "code", nil, {type = "phrase", text = "Rime"})
+assert(rawequal(natural_spaced_roundtrip[1], natural_spaced_roundtrip_original),
+    "an exact naturally spaced candidate must keep its original provenance")
+assert_originals_once(natural_spaced_roundtrip, {
+    natural_spaced_roundtrip_raw,
+    natural_spaced_roundtrip_original,
+})
+
+local generated_roundtrip = run_filter({
+    candidate("phrase", 0, 4, "别的候选"),
+}, {
+    _ai_candidate = " 新答案",
+    _ai_input = "code",
+    _ai_generation = "generated-display-roundtrip",
+}, "code", nil, {type = "phrase", text = "Rime"})
+same(generated_roundtrip[1].type, "ai",
+    "unmatched display round trip must remain a synthetic AI candidate")
+same(generated_roundtrip[1].text, " 新答案",
+    "an unmatched leading space must remain ambiguous and fail closed")
+
+local function assert_prefixed_ai_is_not_canonicalized(label, history_record,
+        property_text, segment_start)
+    local start_pos = segment_start or 0
+    local active_segment = {
+        start = start_pos,
+        _end = #display_roundtrip_input,
+        status = "selected",
+    }
+    local original = candidate(
+        "ai_learned",
+        start_pos,
+        #display_roundtrip_input,
+        display_roundtrip_raw,
+        "AI"
+    )
+    local output = run_filter({original}, {
+        _ai_candidate = property_text or display_roundtrip_spaced,
+        _ai_input = display_roundtrip_input,
+        _ai_generation = "display-roundtrip-negative",
+    }, display_roundtrip_input, active_segment, history_record)
+
+    same(output[1].type, "ai", label .. " must keep a terminal AI candidate")
+    same(output[1].text, property_text or display_roundtrip_spaced,
+        label .. " must preserve the live property verbatim")
+    assert(not rawequal(output[1], original),
+        label .. " must not borrow provenance from the raw candidate")
+    assert(rawequal(output[2], original),
+        label .. " must replay the original candidate unchanged")
+end
+
+assert_prefixed_ai_is_not_canonicalized("missing committed history", nil)
+assert_prefixed_ai_is_not_canonicalized("raw committed history", {
+    type = "raw",
+    text = "Rime",
+})
+assert_prefixed_ai_is_not_canonicalized("thru committed history", {
+    type = "thru",
+    text = "Rime",
+})
+assert_prefixed_ai_is_not_canonicalized("non-spacing boundary", {
+    type = "phrase",
+    text = "中文",
+})
+assert_prefixed_ai_is_not_canonicalized("multiple leading spaces", {
+    type = "phrase",
+    text = "Rime",
+}, "  " .. display_roundtrip_raw)
+assert_prefixed_ai_is_not_canonicalized("non-initial segment", {
+    type = "phrase",
+    text = "Rime",
+}, display_roundtrip_spaced, 1)
 
 local real_execute = os.execute
 local real_popen = io.popen
@@ -800,6 +928,103 @@ local spaced_display_count = exact_rows(
     read_file(weights_path), "test_schema", "code", " Chosen Display"
 )
 same(spaced_display_count, 0, "spaced display text must not enter AI learning")
+
+write_file(weights_path, read_file(weights_path) .. table.concat({
+    "test_schema",
+    display_roundtrip_input,
+    display_roundtrip_raw,
+    "1",
+    "1",
+}, "\t") .. "\n")
+local roundtrip_raw_count, roundtrip_raw_weight = exact_rows(
+    read_file(weights_path),
+    "test_schema",
+    display_roundtrip_input,
+    display_roundtrip_raw
+)
+same(roundtrip_raw_count, 1, "display-roundtrip fixture raw row count")
+same(roundtrip_raw_weight, 1, "display-roundtrip fixture raw weight")
+local roundtrip_spaced_count = exact_rows(
+    read_file(weights_path),
+    "test_schema",
+    display_roundtrip_input,
+    display_roundtrip_spaced
+)
+same(roundtrip_spaced_count, 0, "display-roundtrip fixture spaced row count")
+
+local roundtrip_history = {type = "phrase", text = "Rime"}
+local roundtrip_segment = {
+    start = 0,
+    _end = #display_roundtrip_input,
+    status = "selected",
+}
+local roundtrip_original = candidate(
+    "ai_learned",
+    roundtrip_segment.start,
+    roundtrip_segment._end,
+    display_roundtrip_raw,
+    "AI",
+    1.201
+)
+local roundtrip_duplicate = candidate(
+    "phrase",
+    roundtrip_segment.start,
+    roundtrip_segment._end,
+    display_roundtrip_raw
+)
+local roundtrip_filtered = run_filter({roundtrip_original, roundtrip_duplicate}, {
+    _ai_candidate = display_roundtrip_spaced,
+    _ai_input = display_roundtrip_input,
+    _ai_generation = "display-roundtrip",
+}, display_roundtrip_input, roundtrip_segment, roundtrip_history)
+local roundtrip_menu = run_spacing_pipeline(roundtrip_history, roundtrip_filtered)
+same(roundtrip_menu[1].text, display_roundtrip_spaced,
+    "display-roundtrip final display must contain exactly one boundary space")
+
+local roundtrip_env, roundtrip_context = env(
+    display_roundtrip_input,
+    roundtrip_segment,
+    "test_schema"
+)
+function roundtrip_segment:get_selected_candidate()
+    return self.selected_candidate
+end
+function roundtrip_context:get_selected_candidate()
+    local selected_segment = self.composition:back()
+    return selected_segment and selected_segment:get_selected_candidate() or nil
+end
+roundtrip_segment.selected_candidate = roundtrip_menu[1]
+roundtrip_context.properties._ai_generation = "display-roundtrip"
+ai_learned_translator.init(roundtrip_env)
+roundtrip_context.select_notifier:emit(roundtrip_context)
+roundtrip_context.commit_notifier:emit(roundtrip_context)
+
+roundtrip_raw_count, roundtrip_raw_weight = exact_rows(
+    read_file(weights_path),
+    "test_schema",
+    display_roundtrip_input,
+    display_roundtrip_raw
+)
+same(roundtrip_raw_count, 1,
+    "display-prefixed AI must keep one canonical raw learned row")
+same(roundtrip_raw_weight, 2,
+    "display-prefixed AI must increment the canonical raw learned weight")
+roundtrip_spaced_count = exact_rows(
+    read_file(weights_path),
+    "test_schema",
+    display_roundtrip_input,
+    display_roundtrip_spaced
+)
+same(roundtrip_spaced_count, 0,
+    "display-prefixed AI must not create a leading-space learned row")
+same(#roundtrip_menu, 1, "display-roundtrip final uniquifier menu count")
+same(roundtrip_menu[1].type, "auto_space",
+    "display-roundtrip final candidate must retain auto-space provenance")
+same(roundtrip_menu[1]:get_dynamic_type(), "Uniquified",
+    "display-roundtrip final candidate must have native uniquifier shape")
+assert(rawequal(roundtrip_menu[1]:get_genuine(), roundtrip_original),
+    "display-roundtrip final candidate genuine must be the original raw candidate")
+ai_learned_translator.fini(roundtrip_env)
 
 learn_context.input = "native"
 learn_context.composition.segment = {start = 0, _end = 6, status = "selected"}

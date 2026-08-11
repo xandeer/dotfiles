@@ -4,7 +4,7 @@
 
 **Goal:** 在中文模式的连续 Rime 候选提交之间，仅对 Han ↔ ASCII 字母边界自动补一个半角空格，同时保持数字、标点、已有空白、AI 学习和用户词典语义不变。
 
-**Architecture:** 新增 `auto_space_filter`，恰好一次读取 `commit_history:back()` 的 `type/text`，只接受非空且非 `thru`/`raw` 的候选提交记录，并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在简繁转换和 AI 之后、绝对最后的内建 `uniquifier` 之前；它通过 `get_dynamic_type()` 有界归一到 ultimate genuine，按实际输出文本记录 `auto`/`other` 来源，为每种首次安全加空格文本输出逻辑类型 `auto_space` 的 `UniquifiedCandidate` 种子，为后续同文本项输出一层 `ShadowCandidate`。最终内建去重器因而只 append 到已有种子，保留 `auto_space` 类型和扁平 ultimate genuine 列表。无法无损证明 typed history、dynamic type、genuine、span、comment 或输出来源时原样通过。`select_character` 从 composition 的首 segment 识别最终去重候选仍保留的 `auto_space` 逻辑类型，并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
+**Architecture:** 新增 `auto_space_filter`，恰好一次读取 `commit_history:back()` 的 `type/text`，只接受非空且非 `thru`/`raw` 的候选提交记录，并装饰 `candidate.start == 0` 的最终显示候选。过滤器运行在简繁转换和 AI 之后、绝对最后的内建 `uniquifier` 之前；它通过 `get_dynamic_type()` 有界归一到 ultimate genuine，按实际输出文本记录 `auto`/`other` 来源，为每种首次安全加空格文本输出逻辑类型 `auto_space` 的 `UniquifiedCandidate` 种子，为后续同文本项输出一层 `ShadowCandidate`。最终内建去重器因而只 append 到已有种子，保留 `auto_space` 类型和扁平 ultimate genuine 列表。Squirrel 会把最终 Menu 的显示空格随 AI snapshot 回灌，因此 `ai_candidate_filter` 在没有原始 live 文本 exact match 时，还要以同一 typed-history、首 segment 和 Han ↔ ASCII 规则验证恰好一个 U+0020，并只匹配可安全包装的无空格原 Candidate；无匹配时保留 live 文本，不猜测自然空格。无法无损证明 typed history、dynamic type、genuine、span、comment、AI 展示前缀或输出来源时原样通过。`select_character` 从 composition 的首 segment 识别最终去重候选仍保留的 `auto_space` 逻辑类型，并在 `Ctrl+J/L` 提交中保留唯一自动前缀。
 
 **Tech Stack:** Rime/Squirrel 1.16、librime-lua、Lua 5.4 `utf8`、YAML、zsh、Ruby/Psych/Fiddle、GNU Make、Git。
 
@@ -1066,9 +1066,30 @@ print -- "after_export=$after_export"
 - 不存在对应的带前导空格 display row；
 - 文件权限仍为 `0600`。
 
-live `ai` bridge 作为单独人工场景验证，不把它与本地 `ai_learned` 的确定性 TSV 断言混为一谈。
+live `ai` bridge 作为单独人工场景验证，不把它与本地 `ai_learned` 的确定性 TSV 断言混为一谈。为证明 live generation 确实参与，优先选择 before 中尚无 AI row 的普通候选：只有 `_ai_generation` 非空时，该普通 genuine 才会进入独立 AI 表；无空格 row 新增且对应带空格 row 仍不存在才算通过，两者都不新增则判定为未观察到 live response，不能算成功。
 
 public Rime API 不暴露 raw quality，因此只报告顺序、comment 与学习结果，不宣称运行时 quality 数值完全相等。
+
+### Step 4A: 处理活动验收发现的显示文本回灌
+
+活动 Squirrel 验收发现，Swift bridge 从最终 Menu 采集的 AI snapshot 已包含自动 U+0020；response parser 与 `applyAICandidate` 又把模型返回值原样写进 `_ai_candidate`。旧 `ai_candidate_filter` 无法用带空格显示文本匹配无空格 incoming Candidate，于是构造 genuine text 自带空格的 terminal `ai` candidate，最终把排版空格写入 `ai_weights.tsv`。
+
+按 TDD 新增完整链路回归：
+
+```text
+Squirrel display property
+  -> ai_candidate_filter
+  -> auto_space_filter
+  -> native-like uniquifier
+  -> segment-backed selected candidate
+  -> AI select/commit learning
+```
+
+RED 必须显示无空格 fixture row 没有递增；GREEN 必须同时证明：最终显示恰好一个空格、logical type 为 `auto_space`、dynamic type 为 `Uniquified`、genuine 是原始无空格 Candidate、无空格 row `+1`、带空格 row 为 0。另覆盖 Han→ASCII、自然空格 exact match、歧义无匹配 fail-closed，以及缺失/`raw`/`thru` 历史、非边界、多个首空格、非首 segment 和首个同文候选不可安全包装时的 fail-closed/继续扫描行为。
+
+生产修复先保留原始 live 文本的 exact incoming match。只有不存在 exact match，且首 segment、恰好一个 U+0020、有效 typed history 和 Han ↔ ASCII 边界同时成立时，才查找无空格语义候选。该候选还必须与 active segment span 一致，并通过与下游相同的 ultimate genuine/span/comment 安全检查；不安全同文项不能被提升。无安全匹配时以原 live 文本构造 synthetic candidate，不推断歧义空格；找到安全原 Candidate 后，显示空格仍只由后续 `auto_space_filter` 添加。
+
+活动复测必须使用 before 中无正常/带空格 AI row 的新普通候选，并保留旧污染 row 作为缺陷证据；不能静默删除或改写真实学习数据来制造绿色。通过新 key 只能证明修复后的 live round trip，不能宣称已有学习表已自动迁移或清洁。
 
 ### Step 5: 完成分支
 
