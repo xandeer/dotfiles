@@ -34,6 +34,10 @@ rg -U -q 'rime->api = rime_get_api\(\);\n  rime->session_id = 0;' "$tmp/source/l
   print -u2 "patched module must initialize the guarded session id"
   exit 1
 }
+rg -U -q 'rime->session_id = 0;\n  rime->first_run = true;' "$tmp/source/lib.c" || {
+  print -u2 "patched module must initialize first_run"
+  exit 1
+}
 
 added_bindings=(${(f)"$(sed -n '/^+.*emacs_defun.*"rime-lib-/s/.*"\(rime-lib-[^"]*\)".*/\1/p' "$patch_file")"})
 expected_bindings=(

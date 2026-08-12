@@ -125,11 +125,12 @@ index ca4dad3..f9291de 100644
  emacs_value
  process_key(emacs_env *env, ptrdiff_t nargs, emacs_value *args, void *data) {
    EmacsRime *rime = (EmacsRime*) data;
-@@ -459,6 +574,7 @@ emacs_module_init (struct emacs_runtime *ert)
+@@ -459,6 +574,8 @@ emacs_module_init (struct emacs_runtime *ert)
    /* Get Rime API */
    EmacsRime *rime = (EmacsRime*) malloc(sizeof(EmacsRime));
    rime->api = rime_get_api();
 +  rime->session_id = 0;
++  rime->first_run = true;
    if (!rime->api) {
      free(rime);
      return 0;
