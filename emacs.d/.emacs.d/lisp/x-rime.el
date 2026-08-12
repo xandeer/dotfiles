@@ -13,6 +13,9 @@
   "Keys that should be passed through Rime to Emacs.")
 
 (with-eval-after-load 'rime
+  (require 'x-rime-ai)
+  (x/rime-ai-install)
+
   (setq rime--module-path
         (expand-file-name (concat "var/rime/librime-emacs" module-file-suffix)
                           user-emacs-directory))

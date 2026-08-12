@@ -17,9 +17,19 @@
 (defvar url-http-end-of-headers)
 (defvar url-http-response-status)
 
+(declare-function rime--redisplay "rime")
+(declare-function rime-lib-get-context nil)
+(declare-function rime-lib-get-current-schema nil)
+(declare-function rime-lib-get-input nil)
+(declare-function rime-lib-get-option nil (name))
+(declare-function rime-lib-set-option nil (name value))
+(declare-function rime-lib-set-property nil (name value))
+(declare-function rime-lib-user-config-get-bool nil (config key default))
+(declare-function rime-lib-user-config-get-string nil (config key))
+
 (cl-defstruct (x/rime-ai--snapshot
                (:constructor x/rime-ai--snapshot-create))
-  generation buffer point schema input caret candidates recent-commits
+  generation buffer point schema input caret page selected candidates recent-commits
   surrounding-before surrounding-after)
 
 (cl-defstruct (x/rime-ai--state
@@ -87,13 +97,13 @@
         normalized))))
 
 (cl-defun x/rime-ai--make-snapshot
-    (&key generation buffer point schema input caret candidates recent-commits
+    (&key generation buffer point schema input caret page selected candidates recent-commits
           surrounding-before surrounding-after)
   "Create an immutable bounded snapshot, or nil when INPUT is invalid."
   (when (and (stringp input) (not (string-empty-p input)) (<= (length input) 64))
     (x/rime-ai--snapshot-create
      :generation generation :buffer buffer :point point :schema schema
-     :input input :caret caret
+     :input input :caret caret :page page :selected selected
      :candidates (mapcar (lambda (value) (x/rime-ai--character-prefix value 64))
                          (seq-take (copy-sequence candidates) 8))
      :recent-commits (mapcar (lambda (value) (x/rime-ai--character-prefix value 128))
@@ -185,6 +195,178 @@
                            (list (x/rime-ai--character-prefix value 128)))))
       (setf (x/rime-ai--state-recent-commits x/rime-ai--state)
             (last commits 5)))))
+
+(defun x/rime-ai--runtime-config ()
+  "Read the shared Squirrel AI configuration, or return nil when disabled."
+  (when (rime-lib-user-config-get-bool
+         "squirrel.custom" "patch/ai/enabled" t)
+    (let ((endpoint (rime-lib-user-config-get-string
+                     "squirrel.custom" "patch/ai/endpoint"))
+          (model (rime-lib-user-config-get-string
+                  "squirrel.custom" "patch/ai/model"))
+          (instructions (or (rime-lib-user-config-get-string
+                             "squirrel.custom" "patch/ai/instructions")
+                            "")))
+      (when (and (x/rime-ai--valid-endpoint-p endpoint)
+                 (x/rime-ai--valid-model-p model)
+                 (x/rime-ai--normalize-instructions instructions))
+        (list endpoint model instructions)))))
+
+(defun x/rime-ai--runtime-snapshot (generation)
+  "Snapshot the current Rime composition for GENERATION."
+  (let* ((context (rime-lib-get-context))
+         (composition (alist-get 'composition context))
+         (menu (alist-get 'menu context)))
+    (when (and context composition)
+      (x/rime-ai--make-snapshot
+       :generation generation :buffer (current-buffer) :point (point)
+       :schema (rime-lib-get-current-schema) :input (rime-lib-get-input)
+       :caret (alist-get 'cursor-pos composition)
+       :page (alist-get 'page-no menu)
+       :selected (alist-get 'highlighted-candidate-index menu)
+       :candidates (mapcar #'car (alist-get 'candidates menu))
+       :recent-commits (x/rime-ai--state-recent-commits x/rime-ai--state)
+       :surrounding-before (buffer-substring-no-properties (point-min) (point))
+       :surrounding-after (buffer-substring-no-properties (point) (point-max))))))
+
+(defun x/rime-ai--refresh ()
+  "Toggle the Rime refresh option and redisplay native candidates."
+  (rime-lib-set-option "_ai_refresh"
+                       (not (rime-lib-get-option "_ai_refresh")))
+  (rime--redisplay))
+
+(defun x/rime-ai--invalidate-clear ()
+  "Invalidate active work and clear a published AI candidate."
+  (let ((published (x/rime-ai--state-published x/rime-ai--state)))
+    (x/rime-ai--invalidate)
+    (rime-lib-set-property "_ai_candidate" "")
+    (rime-lib-set-property "_ai_input" "")
+    (rime-lib-set-property "_ai_generation" "")
+    (setf (x/rime-ai--state-published x/rime-ai--state) nil)
+    (when published (x/rime-ai--refresh))))
+
+(defun x/rime-ai--publish (candidate generation snapshot config)
+  "Publish CANDIDATE when GENERATION and SNAPSHOT still describe Rime."
+  (when (x/rime-ai--owns-p generation snapshot)
+    (let ((current (x/rime-ai--runtime-snapshot generation))
+          (current-config (x/rime-ai--runtime-config)))
+      (when (and (equal current-config config)
+                 (equal current snapshot))
+        (rime-lib-set-property "_ai_candidate" candidate)
+        (rime-lib-set-property "_ai_input" (x/rime-ai--snapshot-input snapshot))
+        (rime-lib-set-property "_ai_generation" (number-to-string generation))
+        (x/rime-ai--refresh)
+        (setf (x/rime-ai--state-published x/rime-ai--state) t)))))
+
+(defun x/rime-ai--debounce-fired (generation snapshot)
+  "Request a candidate when GENERATION and SNAPSHOT still own state."
+  (when (x/rime-ai--owns-p generation snapshot)
+    (setf (x/rime-ai--state-debounce-timer x/rime-ai--state) nil)
+    (if (not (equal (x/rime-ai--runtime-snapshot generation) snapshot))
+        (x/rime-ai--invalidate-clear)
+      (if-let ((config (x/rime-ai--runtime-config)))
+          (apply #'x/rime-ai--request
+                 (append config
+                         (list snapshot
+                               (lambda (candidate)
+                                 (when (buffer-live-p
+                                        (x/rime-ai--snapshot-buffer snapshot))
+                                   (with-current-buffer
+                                       (x/rime-ai--snapshot-buffer snapshot)
+                                     (x/rime-ai--publish
+                                      candidate generation snapshot config))))))))
+        (x/rime-ai--invalidate-clear))))
+
+(defun x/rime-ai--schedule ()
+  "Resnapshot Rime and schedule one AI request after 300 milliseconds."
+  (let* ((state x/rime-ai--state)
+         (generation (x/rime-ai--state-generation state))
+         (snapshot (x/rime-ai--runtime-snapshot generation)))
+    (cond
+     ((null snapshot) (x/rime-ai--invalidate-clear))
+     ((and (equal snapshot (x/rime-ai--state-snapshot state))
+           (or (x/rime-ai--state-debounce-timer state)
+               (x/rime-ai--state-request-buffer state))))
+     (t
+      (if (x/rime-ai--state-published state)
+          (x/rime-ai--invalidate-clear)
+        (x/rime-ai--invalidate))
+      (setq generation (x/rime-ai--state-generation state)
+            snapshot (x/rime-ai--runtime-snapshot generation))
+      (setf (x/rime-ai--state-snapshot state) snapshot
+            (x/rime-ai--state-debounce-timer state)
+            (run-at-time 0.3 nil #'x/rime-ai--debounce-fired
+                         generation snapshot))))))
+
+(defun x/rime-ai--after-input (&rest _)
+  "Schedule AI work after a shared Rime input path."
+  (condition-case error
+      (x/rime-ai--schedule)
+    (error
+     (message "Rime AI scheduling failed for generation %d (%s)"
+              (x/rime-ai--state-generation x/rime-ai--state)
+              (car error)))))
+
+(defun x/rime-ai--after-commit (value &rest _)
+  "Record nonempty commit VALUE returned by Rime."
+  (x/rime-ai--record-commit value)
+  value)
+
+(defun x/rime-ai--before-clear (&rest _)
+  "Cancel AI work before Rime clears or deactivates."
+  (condition-case error
+      (x/rime-ai--invalidate-clear)
+    (error
+     (message "Rime AI cleanup failed for generation %d (%s)"
+              (x/rime-ai--state-generation x/rime-ai--state)
+              (car error)))))
+
+(defun x/rime-ai--direct-mutation (function &rest arguments)
+  "Invalidate around direct Rime mutation FUNCTION with ARGUMENTS."
+  (x/rime-ai--before-clear)
+  (prog1 (apply function arguments)
+    (x/rime-ai--after-input)))
+
+(defun x/rime-ai--post-command ()
+  "Invalidate when point or buffer left the active snapshot."
+  (when-let ((snapshot (x/rime-ai--state-snapshot x/rime-ai--state)))
+    (unless (and (eq (current-buffer) (x/rime-ai--snapshot-buffer snapshot))
+                 (= (point) (x/rime-ai--snapshot-point snapshot)))
+      (x/rime-ai--invalidate-clear))))
+
+(defun x/rime-ai--kill-buffer ()
+  "Invalidate only when the active composition buffer is killed."
+  (when-let ((snapshot (x/rime-ai--state-snapshot x/rime-ai--state)))
+    (when (eq (current-buffer) (x/rime-ai--snapshot-buffer snapshot))
+      (x/rime-ai--invalidate-clear))))
+
+(defun x/rime-ai-uninstall ()
+  "Remove Rime AI integration hooks and advice."
+  (dolist (function '(rime-input-method rime-send-keybinding))
+    (advice-remove function #'x/rime-ai--after-input))
+  (advice-remove 'rime-lib-get-commit #'x/rime-ai--after-commit)
+  (dolist (function '(rime--backspace rime--escape rime-inline-ascii))
+    (advice-remove function #'x/rime-ai--direct-mutation))
+  (dolist (function '(rime--clear-state rime-deactivate))
+    (advice-remove function #'x/rime-ai--before-clear))
+  (remove-hook 'post-command-hook #'x/rime-ai--post-command)
+  (remove-hook 'kill-buffer-hook #'x/rime-ai--kill-buffer))
+
+(defun x/rime-ai-install ()
+  "Install the global Rime AI lifecycle integration idempotently."
+  (dolist (function '(rime-input-method rime-send-keybinding))
+    (unless (advice-member-p #'x/rime-ai--after-input function)
+      (advice-add function :after #'x/rime-ai--after-input)))
+  (unless (advice-member-p #'x/rime-ai--after-commit 'rime-lib-get-commit)
+    (advice-add 'rime-lib-get-commit :filter-return #'x/rime-ai--after-commit))
+  (dolist (function '(rime--backspace rime--escape rime-inline-ascii))
+    (unless (advice-member-p #'x/rime-ai--direct-mutation function)
+      (advice-add function :around #'x/rime-ai--direct-mutation)))
+  (dolist (function '(rime--clear-state rime-deactivate))
+    (unless (advice-member-p #'x/rime-ai--before-clear function)
+      (advice-add function :before #'x/rime-ai--before-clear)))
+  (add-hook 'post-command-hook #'x/rime-ai--post-command)
+  (add-hook 'kill-buffer-hook #'x/rime-ai--kill-buffer))
 
 (defun x/rime-ai--cleanup-request (buffer)
   "Cancel and release the request owned by BUFFER."

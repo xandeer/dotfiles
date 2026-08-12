@@ -6,6 +6,7 @@ repo_root=${0:A:h:h:h}
 patch_file="$repo_root/emacs.d/.emacs.d/patches/emacs-rime/0001-add-ai-session-bridge.patch"
 build_script="$repo_root/emacs.d/.emacs.d/libexec/build-emacs-rime-module.zsh"
 x_rime="$repo_root/emacs.d/.emacs.d/lisp/x-rime.el"
+x_rime_lisp_dir="$repo_root/emacs.d/.emacs.d/lisp"
 squirrel_config="$repo_root/rime/darwin/squirrel.custom.yaml"
 upstream=${EMACS_RIME_SOURCE:-$HOME/projects/personal/dotfiles/emacs.d/.emacs.d/straight/repos/emacs-rime}
 pinned=3eeef9c445fa056a4b32137f9ef72c27ced2d4ab
@@ -175,6 +176,7 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
 "$emacs" --batch -Q --eval "
 (progn
   (require 'cl-lib)
+  (add-to-list 'load-path \"$x_rime_lisp_dir\")
   (setq user-emacs-directory \"$tmp/emacs/\")
   (defvar rime--module-path nil)
   (defvar rime--root \"$tmp/package/\")
