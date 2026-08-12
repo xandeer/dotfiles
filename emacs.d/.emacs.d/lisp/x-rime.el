@@ -33,6 +33,8 @@
       (setenv "EMACS_RIME_SOURCE" (expand-file-name rime--root))
       (setenv "EMACS_RIME_MODULE_DIR" (file-name-directory rime--module-path))
       (setenv "LIBRIME_ROOT"
+              "/Library/Input Methods/Squirrel.app/Contents/Frameworks")
+      (setenv "LIBRIME_HEADER_ROOT"
               (and rime-librime-root (expand-file-name rime-librime-root)))
       (setenv "EMACS_MODULE_HEADER_ROOT"
               (and rime-emacs-module-header-root

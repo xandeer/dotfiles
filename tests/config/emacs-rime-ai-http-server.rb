@@ -50,6 +50,11 @@ loop do
         reply(socket, 200, { "Content-Type" => "application/json" }, response)
       when "/redirect"
         reply(socket, 302, { "Location" => "/must-not-be-called" }, "")
+      when "/redirect-candidate"
+        content = JSON.generate("candidate" => "must-not-publish")
+        response = JSON.generate("choices" => [{ "message" => { "content" => content } }])
+        reply(socket, 302, { "Content-Type" => "application/json",
+                             "Location" => "/must-not-be-called" }, response)
       when "/slow"
         sleep 5
         reply(socket, 200, { "Content-Type" => "application/json" }, "{}")

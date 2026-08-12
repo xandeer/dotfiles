@@ -4,8 +4,6 @@
 (require 'json)
 (require 'x-rime-ai)
 
-(defvar url-http-process)
-
 (defvar x/test-rime-ai--input "")
 (defvar x/test-rime-ai--context nil)
 (defvar x/test-rime-ai--schema "double_pinyin_flypy")
@@ -803,7 +801,33 @@
     (cl-letf (((symbol-function 'auth-source-pick-first-password)
                (lambda (&rest _) (error "auth failure"))))
       (should-not (x/rime-ai--request "https://api.example.invalid/v1"
+                                     "test-model" "" snapshot #'ignore)))
+    (cl-letf (((symbol-function 'auth-source-pick-first-password)
+               (lambda (&rest _) "bad token"))
+              ((symbol-function 'x/rime-ai--post-json)
+               (lambda (&rest _) (ert-fail "invalid token reached transport"))))
+      (should-not (x/rime-ai--request "https://api.example.invalid/v1"
                                      "test-model" "" snapshot #'ignore)))))
+
+(ert-deftest x/rime-ai-http-failures-clean-up-silently ()
+  (let ((snapshot (x/test-rime-ai--snapshot)))
+    (cl-letf (((symbol-function 'make-temp-file)
+               (lambda (&rest _) (error "disk full"))))
+      (should-not (x/rime-ai--post-json
+                   "https://api.example.invalid/v1" "{}" "token"
+                   snapshot #'ignore))))
+  (let ((buffer (generate-new-buffer " *x-rime-ai-cleanup*")))
+    (let ((file (make-temp-file "x-rime-ai-cleanup-"))
+          (original-delete (symbol-function 'delete-file)))
+      (unwind-protect
+          (progn
+            (with-current-buffer buffer
+              (setq-local x/rime-ai--request-body-file file))
+            (cl-letf (((symbol-function 'delete-file)
+                       (lambda (_) (error "delete failed"))))
+              (should-not (x/rime-ai--cleanup-request buffer)))
+            (should-not (buffer-live-p buffer)))
+        (funcall original-delete file)))))
 
 (ert-deftest x/rime-ai-http-bounds-posts-and-cleans-owned-resources ()
   (let* ((server (x/test-rime-ai--start-http-server))
@@ -812,20 +836,15 @@
          (snapshot (x/test-rime-ai--snapshot))
          (x/rime-ai--state
           (x/rime-ai--make-state :generation 7 :snapshot snapshot))
-         (debug-existed (get-buffer "*URL-DEBUG*"))
-         (debug-buffer (get-buffer-create "*URL-DEBUG*"))
-         (debug-content (with-current-buffer debug-buffer (buffer-string)))
          (secret "x-rime-ai-secret-token")
          (request-marker "x-rime-ai-private-request-marker")
          (body (x/rime-ai--request-body request-marker "" snapshot))
          (cleanup-calls 0)
          (cleaned-buffers nil)
-         request-buffers request-processes timeout-timers results)
+         request-buffers request-processes request-files timeout-timers results)
     (unwind-protect
         (progn
-          (with-current-buffer debug-buffer (erase-buffer))
-          (let ((url-debug t)
-                (original-cleanup (symbol-function 'x/rime-ai--cleanup-request)))
+          (let ((original-cleanup (symbol-function 'x/rime-ai--cleanup-request)))
             (cl-letf (((symbol-function 'x/rime-ai--cleanup-request)
                        (lambda (buffer)
                          (unless (memq buffer cleaned-buffers)
@@ -844,10 +863,24 @@
                        (when (bufferp buffer)
                          (push buffer request-buffers)
                          (with-current-buffer buffer
-                           (should-not url-debug)
-                           (should (= url-max-redirections 0))
-                           (when (processp url-http-process)
-                             (push url-http-process request-processes)))
+                           (let* ((process (get-buffer-process buffer))
+                                  (command (and process (process-command process)))
+                                  (arguments (and command
+                                                  (mapconcat #'identity command "\0"))))
+                             (should (equal (car command) "/usr/bin/curl"))
+                             (should (equal (nth 1 command) "--disable"))
+                             (should (member "--globoff" command))
+                             (should-not (string-match-p (regexp-quote secret)
+                                                         arguments))
+                             (should-not (string-match-p
+                                          (regexp-quote request-marker) arguments))
+                             (should (= (logand
+                                         (file-modes
+                                          x/rime-ai--request-body-file)
+                                         #o777)
+                                        #o600))
+                             (push x/rime-ai--request-body-file request-files)
+                             (push process request-processes)))
                          (let ((timer (x/rime-ai--state-timeout-timer
                                        x/rime-ai--state)))
                            (should (timerp timer))
@@ -859,6 +892,11 @@
                 (should (equal results '(("/ok" . "network-ok"))))
 
                 (let ((redirect-buffer (start "/redirect")))
+                  (should (x/test-rime-ai--wait
+                           (lambda () (not (buffer-live-p redirect-buffer))) 3)))
+                (should (equal results '(("/ok" . "network-ok"))))
+
+                (let ((redirect-buffer (start "/redirect-candidate")))
                   (should (x/test-rime-ai--wait
                            (lambda () (not (buffer-live-p redirect-buffer))) 3)))
                 (should (equal results '(("/ok" . "network-ok"))))
@@ -885,11 +923,12 @@
                   (accept-process-output nil 0.1))
                 (should (equal results '(("/ok" . "network-ok"))))))))
 
-          (should (= cleanup-calls 6))
+          (should (= cleanup-calls 7))
 
           (let ((events (x/test-rime-ai--http-events log)))
             (should (= (x/test-rime-ai--path-hits events "/ok") 1))
             (should (= (x/test-rime-ai--path-hits events "/redirect") 1))
+            (should (= (x/test-rime-ai--path-hits events "/redirect-candidate") 1))
             (should (= (x/test-rime-ai--path-hits events "/must-not-be-called") 0))
             (should (= (x/test-rime-ai--path-hits events "/large") 1))
             (should (= (x/test-rime-ai--path-hits events "/stale") 1))
@@ -900,15 +939,15 @@
               (should (equal (alist-get 'method ok) "POST"))
               (should (equal (alist-get 'authorization ok)
                              (concat "Bearer " secret)))
-              (should (equal (alist-get 'content_type ok) "application/json"))))
-          (with-current-buffer debug-buffer
-            (should-not (string-match-p (regexp-quote secret) (buffer-string)))
-            (should-not (string-match-p (regexp-quote request-marker)
-                                        (buffer-string))))
+              (should (equal (alist-get 'content_type ok) "application/json"))
+              (should (equal (encode-coding-string (alist-get 'body ok) 'utf-8)
+                             body))))
           (dolist (buffer request-buffers)
             (should-not (buffer-live-p buffer)))
           (dolist (process request-processes)
             (should-not (process-live-p process)))
+          (dolist (file request-files)
+            (should-not (file-exists-p file)))
           (dolist (timer timeout-timers)
             (should-not (x/test-rime-ai--timer-active-p timer))))
       (dolist (buffer request-buffers)
@@ -918,12 +957,6 @@
           (kill-buffer buffer)))
       (dolist (timer timeout-timers)
         (when (timerp timer) (cancel-timer timer)))
-      (when (buffer-live-p debug-buffer)
-        (if debug-existed
-            (with-current-buffer debug-buffer
-              (erase-buffer)
-              (insert debug-content))
-          (kill-buffer debug-buffer)))
       (x/test-rime-ai--stop-http-server server)))
 
 (provide 'emacs-rime-ai-regression)

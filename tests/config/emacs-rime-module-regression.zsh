@@ -10,19 +10,25 @@ x_rime_lisp_dir="$repo_root/emacs.d/.emacs.d/lisp"
 squirrel_config="$repo_root/rime/darwin/squirrel.custom.yaml"
 upstream=${EMACS_RIME_SOURCE:-$HOME/projects/personal/dotfiles/emacs.d/.emacs.d/straight/repos/emacs-rime}
 pinned=3eeef9c445fa056a4b32137f9ef72c27ced2d4ab
-librime_root=${LIBRIME_ROOT:-$HOME/syncthing/personal/configs/librime/}
+librime_root=${LIBRIME_ROOT:-/Library/Input Methods/Squirrel.app/Contents/Frameworks}
+librime_header_root=${LIBRIME_HEADER_ROOT:-$HOME/syncthing/personal/configs/librime/}
 module_header_root=${EMACS_MODULE_HEADER_ROOT:-/opt/homebrew/opt/emacs-plus@30/include}
 emacs=${EMACS:-/Applications/Emacs.app/Contents/MacOS/Emacs}
 tmp=$(mktemp -d)
 trap 'rm -rf -- "$tmp"' EXIT
 shared_data_dir=${RIME_SHARED_DATA_DIR:-$tmp/shared}
 straight_build=${EMACS_RIME_BUILD_DIR:-$upstream:h:h/build/rime}
+expected_lua_plugin=${RIME_LUA_PLUGIN:-${librime_root%/}/rime-plugins/librime-lua.dylib}
 
 [[ -f $patch_file ]] || { print -u2 "missing patch: $patch_file"; exit 1; }
 [[ -x $build_script ]] || { print -u2 "missing executable build script: $build_script"; exit 1; }
 [[ -d $upstream/.git ]] || { print -u2 "missing emacs-rime checkout: $upstream"; exit 1; }
 [[ -f $x_rime ]] || { print -u2 "missing Emacs Rime config: $x_rime"; exit 1; }
 [[ -f $squirrel_config ]] || { print -u2 "missing Squirrel config: $squirrel_config"; exit 1; }
+[[ -f $expected_lua_plugin ]] || {
+  print -u2 "missing ABI-matched librime Lua plugin: $expected_lua_plugin"
+  exit 1
+}
 
 tree_fingerprint() {
   local dir=$1 entry
@@ -48,7 +54,10 @@ before_hash=$(shasum "$upstream/lib.c" "$upstream/Makefile")
 before_build=$(tree_fingerprint "$straight_build")
 
 mkdir -p "$tmp/upstream" "$tmp/patched" "$tmp/user" "$tmp/shared" \
-  "$tmp/output" "$tmp/build-tmp" "$tmp/emacs/libexec"
+  "$tmp/output" "$tmp/build-tmp" "$tmp/emacs/libexec" \
+  "$tmp/librime headers" "$tmp/emacs headers"
+ln -s "${librime_header_root%/}/include" "$tmp/librime headers/include"
+ln -s "${module_header_root%/}/emacs-module.h" "$tmp/emacs headers/emacs-module.h"
 git -C "$upstream" show "${pinned}:lib.c" > "$tmp/upstream/lib.c"
 git -C "$upstream" show "${pinned}:Makefile" > "$tmp/upstream/Makefile"
 cp "$tmp/upstream/lib.c" "$tmp/upstream/Makefile" "$tmp/patched/"
@@ -84,7 +93,8 @@ TMPDIR="$tmp/build-tmp" \
 EMACS_RIME_SOURCE="$tmp/upstream" \
 EMACS_RIME_MODULE_DIR="$tmp/output" \
 LIBRIME_ROOT="${librime_root%/}" \
-EMACS_MODULE_HEADER_ROOT="$module_header_root" \
+LIBRIME_HEADER_ROOT="$tmp/librime headers" \
+EMACS_MODULE_HEADER_ROOT="$tmp/emacs headers" \
 MODULE_FILE_SUFFIX=.dylib \
   /bin/zsh -x "$build_script" 2> "$tmp/build.trace"
 
@@ -105,9 +115,11 @@ source_copy_trace=$(rg -F "cp $tmp/upstream/" "$tmp/build.trace" || true)
 }
 otool -L "$tmp/output/librime-emacs.dylib" | rg -q '@rpath/librime'
 otool -l "$tmp/output/librime-emacs.dylib" |
-  rg -F -q "path ${librime_root%/}/lib/"
+  rg -F -q "path ${librime_root%/}/"
+otool -L "$expected_lua_plugin" | rg -q '@rpath/librime\.1\.dylib'
 
 cp "$squirrel_config" "$tmp/user/squirrel.custom.yaml"
+cp "$repo_root/rime/rime.lua" "$tmp/shared/rime.lua"
 
 cat > "$tmp/shared/default.yaml" <<'YAML'
 config_version: "1"
@@ -122,12 +134,19 @@ schema:
   version: "1"
 engine:
   processors:
+    - speller
     - selector
+    - navigator
     - express_editor
   segmentors:
+    - abc_segmentor
     - fallback_segmentor
   translators:
     - echo_translator
+  filters:
+    - lua_filter@ai_candidate_filter
+speller:
+  alphabet: abcdefghijklmnopqrstuvwxyz
 YAML
 
 GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
@@ -165,8 +184,25 @@ GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
         (let ((schema (rime-lib-get-current-schema)))
           (unless (and (stringp schema) (> (length schema) 0))
             (error \"current schema is not a non-empty string: %S\" schema)))
-        (unless (rime-lib-set-property \"_ai_candidate\" \"测试\")
-          (error \"property publication failed\")))
+        (unless (rime-lib-process-key ?a 0)
+          (error \"test input was not accepted\"))
+        (let* ((context (rime-lib-get-context))
+               (menu (alist-get 'menu context))
+               (first (caar (alist-get 'candidates menu))))
+          (unless (equal first \"a\")
+            (error \"unexpected baseline candidate: %S\" first)))
+        (dolist (pair '((\"_ai_candidate\" . \"测试\")
+                        (\"_ai_input\" . \"a\")
+                        (\"_ai_generation\" . \"1\")))
+          (unless (rime-lib-set-property (car pair) (cdr pair))
+            (error \"property publication failed: %s\" (car pair))))
+        (rime-lib-set-option \"_ai_refresh\"
+                             (not (rime-lib-get-option \"_ai_refresh\")))
+        (let* ((context (rime-lib-get-context))
+               (menu (alist-get 'menu context))
+               (first (caar (alist-get 'candidates menu))))
+          (unless (equal first \"测试\")
+            (error \"Lua AI candidate was not first: %S\" first))))
     (ignore-errors (rime-lib-finalize))))
 "
 
@@ -221,7 +257,8 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
       (dolist (expected
                '((\"EMACS_RIME_SOURCE\" . \"$tmp/package/\")
                  (\"EMACS_RIME_MODULE_DIR\" . \"$tmp/emacs/var/rime/\")
-                 (\"LIBRIME_ROOT\" . \"$tmp/librime\")
+                 (\"LIBRIME_ROOT\" . \"/Library/Input Methods/Squirrel.app/Contents/Frameworks\")
+                 (\"LIBRIME_HEADER_ROOT\" . \"$tmp/librime\")
                  (\"EMACS_MODULE_HEADER_ROOT\" . \"$tmp/include\")
                  (\"MODULE_FILE_SUFFIX\" . \".dylib\")))
         (unless (equal (getenv (car expected)) (cdr expected))
