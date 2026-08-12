@@ -538,12 +538,23 @@ function unicode(input, seg, env)
 end
 -------------------------------------------------------------
 -- AI candidate ordering and the small learned correction lexicon.
-local function ai_weights_path()
-    local directory = rime_api.get_user_data_dir()
-    if type(directory) ~= "string" then
-        return nil
+local function ai_weights_path(env)
+    local path = env.engine.schema.config:get_string(env.name_space .. "/weights_path")
+    if path == nil or path == "" then
+        local directory = rime_api.get_user_data_dir()
+        if type(directory) ~= "string" then
+            return nil
+        end
+        return directory .. "/ai_weights.tsv"
     end
-    return directory .. "/ai_weights.tsv"
+    if type(path) == "string" and (path == "~" or path:sub(1, 2) == "~/") then
+        local home = os.getenv("HOME")
+        if type(home) ~= "string" or home == "" then
+            return nil
+        end
+        path = home .. (path == "~" and "" or path:sub(2))
+    end
+    return path
 end
 
 local function ai_valid_path(path)
@@ -606,7 +617,7 @@ end
 
 local function ai_ensure_storage(env)
     if env.ai_storage_ready == nil then
-        env.ai_weights_path = ai_weights_path()
+        env.ai_weights_path = ai_weights_path(env)
         env.ai_storage_ready = ai_prepare_storage(env.ai_weights_path)
     end
     return env.ai_storage_ready
@@ -685,6 +696,7 @@ local function ai_create_temporary(path)
 end
 
 local function ai_write_learning(path, pending)
+    -- ponytail: no cross-process lock; add one only if Emacs and Squirrel write concurrently.
     if not ai_valid_path(path) then
         return false
     end

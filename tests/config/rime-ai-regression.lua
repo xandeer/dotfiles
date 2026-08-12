@@ -352,7 +352,7 @@ local function context(input, segment)
     return value
 end
 
-local function env(input, segment, schema_id, initial_quality)
+local function env(input, segment, schema_id, initial_quality, weights_path)
     local ctx = context(input, segment)
     local configured_quality = initial_quality
     if initial_quality == nil then
@@ -369,6 +369,10 @@ local function env(input, segment, schema_id, initial_quality)
                     get_double = function(_, key)
                         same(key, "translator/initial_quality", "initial quality config key")
                         return configured_quality
+                    end,
+                    get_string = function(_, key)
+                        same(key, "ai_learned_translator/weights_path", "weights path config key")
+                        return weights_path
                     end,
                 },
             },
@@ -713,12 +717,7 @@ local function make_directory(path)
     return path
 end
 
-local weights_path = temp_dir .. "/ai_weights.tsv"
-rime_api = {
-    get_user_data_dir = function()
-        return temp_dir
-    end,
-}
+local weights_path
 
 local function read_file(path)
     local file = real_open(path, "r")
@@ -800,16 +799,90 @@ end
 
 local selected_segment = {start = 2, _end = 6, status = "selected"}
 local selected_candidate = candidate("ai", 2, 6, "chosen correction")
-local learn_env, learn_context = env("xxcodeyy", selected_segment, "test_schema")
+local learn_env, learn_context
 local legacy_contents = "test_schema\tseed\tlegacy\t1\t1\n"
-write_file(weights_path, legacy_contents)
-set_file_mode(weights_path, "0644")
-same(file_mode(weights_path), "644", "fixture must begin with broad permissions under umask 022")
-ai_learned_translator.init(learn_env)
-same(file_mode(weights_path), "600", "translator init must secure an existing learned TSV")
-same(learn_context.select_notifier.slots[1].group, 0, "select notifier group")
-same(learn_context.commit_notifier.slots[1].group, 0, "commit notifier group")
-same(learn_context.update_notifier.slots[1].group, 0, "update notifier group")
+do
+    local shared_home = make_directory(temp_dir .. "/shared home")
+    make_directory(shared_home .. "/Library")
+    local shared_directory = make_directory(shared_home .. "/Library/Rime")
+    weights_path = shared_directory .. "/ai_weights.tsv"
+    local user_data_dir_reads = 0
+    rime_api = {
+        get_user_data_dir = function()
+            user_data_dir_reads = user_data_dir_reads + 1
+            return temp_dir
+        end,
+    }
+    learn_env, learn_context = env("xxcodeyy", selected_segment, "test_schema", nil,
+        "~/Library/Rime/ai_weights.tsv")
+    write_file(weights_path, legacy_contents)
+    set_file_mode(weights_path, "0644")
+    same(file_mode(weights_path), "644", "fixture must begin with broad permissions under umask 022")
+    local real_getenv = os.getenv
+    local home_reads = 0
+    local shared_chmod_commands = {}
+    os.getenv = function(name)
+        if name == "HOME" then
+            home_reads = home_reads + 1
+            return shared_home
+        end
+        return real_getenv(name)
+    end
+    os.execute = function(command)
+        if tostring(command):find("chmod", 1, true) then
+            shared_chmod_commands[#shared_chmod_commands + 1] = tostring(command)
+        end
+        return real_execute(command)
+    end
+    ai_learned_translator.init(learn_env)
+    os.getenv = real_getenv
+    os.execute = real_execute
+    same(user_data_dir_reads, 0, "configured weights path must not consult the frontend user-data directory")
+    same(home_reads, 1, "configured ~/ weights path must expand HOME exactly once")
+    same(learn_env.ai_weights_path, weights_path, "configured weights path expansion")
+    same(#shared_chmod_commands, 1, "shared learned TSV must be secured exactly once at init")
+    same(shared_chmod_commands[1], "/bin/chmod 600 " .. shell_quote(weights_path),
+        "shared learned TSV chmod path")
+    same(file_mode(weights_path), "600", "translator init must secure an existing learned TSV")
+    same(learn_context.select_notifier.slots[1].group, 0, "select notifier group")
+    same(learn_context.commit_notifier.slots[1].group, 0, "commit notifier group")
+    same(learn_context.update_notifier.slots[1].group, 0, "update notifier group")
+
+    local invalid_storage_accesses = 0
+    local function unexpected_storage_io()
+        invalid_storage_accesses = invalid_storage_accesses + 1
+        return nil
+    end
+    rime_api.get_user_data_dir = unexpected_storage_io
+    io.open = unexpected_storage_io
+    io.popen = unexpected_storage_io
+    os.execute = unexpected_storage_io
+    os.rename = unexpected_storage_io
+    for _, invalid in ipairs({
+        {name = "relative", path = "relative/ai_weights.tsv"},
+        {name = "other user", path = "~other/ai_weights.tsv"},
+        {name = "literal HOME", path = "$HOME/ai_weights.tsv"},
+        {name = "NUL", path = "/tmp/ai\0weights.tsv"},
+        {name = "CR", path = "/tmp/ai\rweights.tsv"},
+        {name = "LF", path = "/tmp/ai\nweights.tsv"},
+    }) do
+        local invalid_env = env("code", {start = 0, _end = 4}, "test_schema", nil, invalid.path)
+        ai_learned_translator.init(invalid_env)
+        same(invalid_env.ai_weights_path, invalid.path,
+            invalid.name .. " configured path must not fall back")
+        same(invalid_env.ai_storage_ready, false,
+            invalid.name .. " configured path must fail closed")
+        ai_learned_translator.fini(invalid_env)
+    end
+    io.open = real_open
+    io.popen = real_popen
+    os.execute = real_execute
+    os.rename = real_rename
+    same(invalid_storage_accesses, 0, "invalid configured paths must perform no storage I/O")
+    rime_api.get_user_data_dir = function()
+        return shared_directory
+    end
+end
 
 local renamed_temp_basenames = {}
 local renamed_temp_seen = {}
@@ -823,6 +896,10 @@ io.popen = function(command, mode)
     return real_popen(command, mode)
 end
 io.open = function(path, mode)
+    if type(path) == "string" and path:find("ai_weights.tsv", 1, true) then
+        assert(path == weights_path or path:sub(1, #weights_path + 5) == weights_path .. ".tmp.",
+            "main learned storage must use only the expanded shared path")
+    end
     if type(path) == "string" and path:match("/ai_weights%.tsv%.tmp%..+$") then
         atomic_temp_open_count = atomic_temp_open_count + 1
         same(mode, "r+", "mktemp output must be opened without truncating or recreating it")
@@ -830,6 +907,10 @@ io.open = function(path, mode)
     return real_open(path, mode)
 end
 os.rename = function(source, destination)
+    if source ~= destination and type(destination) == "string" and
+        destination:find("ai_weights.tsv", 1, true) then
+        same(destination, weights_path, "atomic replace destination must be the shared path")
+    end
     if destination == weights_path and source ~= destination then
         local basename = source:match("/([^/]+)$")
         assert(basename and basename:match("^ai_weights%.tsv%.tmp%..+$"),
@@ -1044,6 +1125,10 @@ same(atomic_temp_open_count, #renamed_temp_basenames,
     "each renamed temp file must be opened exactly once in r+ mode")
 same(#successful_mktemp_commands, #renamed_temp_basenames,
     "each successful atomic write must invoke absolute /usr/bin/mktemp -q once")
+for _, command in ipairs(successful_mktemp_commands) do
+    same(command, "/usr/bin/mktemp -q " .. shell_quote(weights_path .. ".tmp.XXXXXX"),
+        "atomic temp creation must use the shared path")
+end
 
 local function assert_aborted_selection_not_written(candidate_text, abort)
     learn_context.input = "code"
@@ -1149,7 +1234,7 @@ local function storage_case(label, mode)
         return directory
     end
     local case_env, case_context = env("fault-input",
-        {start = 0, _end = 11, status = "selected"}, "test_schema")
+        {start = 0, _end = 11, status = "selected"}, "test_schema", nil, "")
     ai_learned_translator.init(case_env)
     return {
         directory = directory,

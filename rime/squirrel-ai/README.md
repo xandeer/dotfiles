@@ -125,7 +125,7 @@ Delete only this key with:
   -s im.rime.inputmethod.Squirrel.ai
 ```
 
-Learned AI choices are kept in `~/Library/Rime/ai_weights.tsv`; it is runtime data and is not tracked. Existing storage is tightened to mode `0600` when the learned translator starts, and new atomic files are created at mode `0600`. If private storage cannot be secured or written, learning fails closed for that translator instance without disabling live AI candidate ordering. Deleting the file resets only AI learning.
+Squirrel and Emacs Rime share learned AI choices in `~/Library/Rime/ai_weights.tsv`; it is runtime data and is not tracked. Existing storage is tightened to mode `0600` when the learned translator starts, and new atomic files are created at mode `0600`. Concurrent writes by both frontends are intentionally unsupported and can lose one update; add a cross-process lock only if concurrent input becomes possible. If private storage cannot be secured or written, learning fails closed for that translator instance without disabling live AI candidate ordering. Deleting the file resets only AI learning.
 
 ## Roll back or upgrade
 

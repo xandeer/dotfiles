@@ -80,6 +80,11 @@ unless script_index && translators[script_index + 1] == "lua_translator@ai_learn
   abort "expected lua_translator@ai_learned_translator immediately after script_translator"
 end
 
+unless schema.fetch("ai_learned_translator").fetch("weights_path") ==
+    "~/Library/Rime/ai_weights.tsv"
+  abort "expected shared ai_learned_translator/weights_path"
+end
+
 ai_name = "lua_filter@ai_candidate_filter"
 unique_name = "uniquifier"
 space_name = "lua_filter@auto_space_filter"
@@ -174,6 +179,10 @@ abort "rollback summary must not depend on postinstall" if summary.include?("pos
 
 %w[ai/enabled ai/instructions 0600].each do |runtime_contract|
   abort "expected README runtime contract: #{runtime_contract}" unless readme.include?(runtime_contract)
+end
+unless readme.include?("Squirrel and Emacs Rime share learned AI choices") &&
+    readme.include?("Concurrent writes by both frontends are intentionally unsupported")
+  abort "expected README shared learning and concurrency contract"
 end
 instructions_example = readme[
   /^    instructions:\s*\|-\s*\n((?:[ \t]+\S[^\n]*(?:\n|\z))+)/,
