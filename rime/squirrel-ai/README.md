@@ -85,13 +85,14 @@ Set the complete HTTPS Chat Completions URL and non-secret model name in `$repo_
 
 ```yaml
 patch:
-  ai/enabled: true
-  ai/endpoint: "https://YOUR-ENDPOINT.example/v1/chat/completions"
-  ai/model: "YOUR-MODEL"
-  ai/instructions: |-
-    优先纠正输入错误，并选择最符合前后文的简体中文候选。
-    除非上下文明确表明有误，否则原样保留人名、专有名词和技术术语。
-    只纠正错误，不扩写、不润色；无法确定时，保留最贴近原输入的结果。
+  ai:
+    enabled: true
+    endpoint: "https://YOUR-ENDPOINT.example/v1/chat/completions"
+    model: "YOUR-MODEL"
+    instructions: |-
+      优先纠正输入错误，并选择最符合前后文的简体中文候选。
+      除非上下文明确表明有误，否则原样保留人名、专有名词和技术术语。
+      只纠正错误，不扩写、不润色；无法确定时，保留最贴近原输入的结果。
 ```
 
 `ai/enabled` is the global switch for every app using Squirrel. Set it to `false` to prevent new AI requests after reload; this does not retract a request that was already sent. `ai/instructions` is optional runtime guidance inserted before the mandatory built-in protocol postamble. Leave it as `""` for the default behavior. `ai/instructions` cannot override the mandatory request/response protocol.

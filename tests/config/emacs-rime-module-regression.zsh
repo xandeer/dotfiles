@@ -6,6 +6,7 @@ repo_root=${0:A:h:h:h}
 patch_file="$repo_root/emacs.d/.emacs.d/patches/emacs-rime/0001-add-ai-session-bridge.patch"
 build_script="$repo_root/emacs.d/.emacs.d/libexec/build-emacs-rime-module.zsh"
 x_rime="$repo_root/emacs.d/.emacs.d/lisp/x-rime.el"
+squirrel_config="$repo_root/rime/darwin/squirrel.custom.yaml"
 upstream=${EMACS_RIME_SOURCE:-$HOME/projects/personal/dotfiles/emacs.d/.emacs.d/straight/repos/emacs-rime}
 pinned=3eeef9c445fa056a4b32137f9ef72c27ced2d4ab
 librime_root=${LIBRIME_ROOT:-$HOME/syncthing/personal/configs/librime/}
@@ -20,6 +21,7 @@ straight_build=${EMACS_RIME_BUILD_DIR:-$upstream:h:h/build/rime}
 [[ -x $build_script ]] || { print -u2 "missing executable build script: $build_script"; exit 1; }
 [[ -d $upstream/.git ]] || { print -u2 "missing emacs-rime checkout: $upstream"; exit 1; }
 [[ -f $x_rime ]] || { print -u2 "missing Emacs Rime config: $x_rime"; exit 1; }
+[[ -f $squirrel_config ]] || { print -u2 "missing Squirrel config: $squirrel_config"; exit 1; }
 
 tree_fingerprint() {
   local dir=$1 entry
@@ -104,14 +106,7 @@ otool -L "$tmp/output/librime-emacs.dylib" | rg -q '@rpath/librime'
 otool -l "$tmp/output/librime-emacs.dylib" |
   rg -F -q "path ${librime_root%/}/lib/"
 
-cat > "$tmp/user/squirrel.custom.yaml" <<'YAML'
-patch:
-  ai:
-    enabled: true
-    endpoint: "https://example.invalid/v1/chat/completions"
-    model: "test-model"
-    instructions: "test"
-YAML
+cp "$squirrel_config" "$tmp/user/squirrel.custom.yaml"
 
 cat > "$tmp/shared/default.yaml" <<'YAML'
 config_version: "1"
@@ -152,7 +147,7 @@ GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
         (rime-lib-start \"$shared_data_dir\" \"$tmp/user\")
         (unless (equal (rime-lib-user-config-get-string
                         \"squirrel.custom\" \"patch/ai/endpoint\")
-                       \"https://example.invalid/v1/chat/completions\")
+                       \"https://ark.cn-beijing.volces.com/api/v3/chat/completions\")
           (error \"nested user config string was not read\"))
         (unless (eq (rime-lib-user-config-get-bool
                      \"squirrel.custom\" \"patch/ai/enabled\" nil)

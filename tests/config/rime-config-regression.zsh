@@ -99,8 +99,12 @@ unless filters.count(ai_name) == 1 &&
 end
 
 patch = YAML.load_file(squirrel_path).fetch("patch")
-endpoint = patch.fetch("ai/endpoint")
-model = patch.fetch("ai/model")
+%w[ai/endpoint ai/model ai/enabled ai/instructions].each do |old_key|
+  abort "expected old literal #{old_key} key to be absent" if patch.key?(old_key)
+end
+ai = patch.fetch("ai")
+endpoint = ai.fetch("endpoint")
+model = ai.fetch("model")
 unless endpoint.is_a?(String) && model.is_a?(String) && endpoint.empty? == model.empty?
   abort "expected ai/endpoint and ai/model to be strings configured together"
 end
@@ -116,10 +120,10 @@ unless endpoint.empty?
     abort "expected a credential-free HTTPS ai/endpoint and non-empty trimmed ai/model"
   end
 end
-unless patch["ai/enabled"] == true
+unless ai["enabled"] == true
   abort "expected ai/enabled to default to true in squirrel.custom.yaml patch"
 end
-instructions = patch.fetch("ai/instructions")
+instructions = ai.fetch("instructions")
 unless instructions.is_a?(String) && !instructions.empty? &&
     instructions == instructions.strip && instructions.length <= 4_096
   abort "expected non-empty normalized ai/instructions within the runtime limit"
@@ -172,9 +176,9 @@ abort "rollback summary must not depend on postinstall" if summary.include?("pos
   abort "expected README runtime contract: #{runtime_contract}" unless readme.include?(runtime_contract)
 end
 instructions_example = readme[
-  /ai\/instructions:\s*\|-\s*\n((?:[ \t]+\S[^\n]*(?:\n|\z))+)/,
+  /^    instructions:\s*\|-\s*\n((?:[ \t]+\S[^\n]*(?:\n|\z))+)/,
   1,
-] or abort "README must include a multiline ai/instructions |- YAML example"
+] or abort "README must include a nested multiline ai/instructions |- YAML example"
 instructions_example_lines = instructions_example.lines.map(&:strip)
 
 [
