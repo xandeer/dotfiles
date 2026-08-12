@@ -226,8 +226,10 @@
        :selected (alist-get 'highlighted-candidate-index menu)
        :candidates (mapcar #'car (alist-get 'candidates menu))
        :recent-commits (x/rime-ai--state-recent-commits x/rime-ai--state)
-       :surrounding-before (buffer-substring-no-properties (point-min) (point))
-       :surrounding-after (buffer-substring-no-properties (point) (point-max))))))
+       :surrounding-before
+       (buffer-substring-no-properties (max (point-min) (- (point) 128)) (point))
+       :surrounding-after
+       (buffer-substring-no-properties (point) (min (point-max) (+ (point) 128)))))))
 
 (defun x/rime-ai--refresh ()
   "Toggle the Rime refresh option and redisplay native candidates."
@@ -342,6 +344,7 @@
 
 (defun x/rime-ai-uninstall ()
   "Remove Rime AI integration hooks and advice."
+  (x/rime-ai--before-clear)
   (dolist (function '(rime-input-method rime-send-keybinding))
     (advice-remove function #'x/rime-ai--after-input))
   (advice-remove 'rime-lib-get-commit #'x/rime-ai--after-commit)
