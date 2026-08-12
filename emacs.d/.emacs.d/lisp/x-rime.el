@@ -13,6 +13,35 @@
   "Keys that should be passed through Rime to Emacs.")
 
 (with-eval-after-load 'rime
+  (setq rime--module-path
+        (expand-file-name (concat "var/rime/librime-emacs" module-file-suffix)
+                          user-emacs-directory))
+
+  (defun x/rime-compile-module ()
+    "Build the patched Rime module outside the Straight checkout."
+    (interactive)
+    (let ((script (expand-file-name "libexec/build-emacs-rime-module.zsh"
+                                    user-emacs-directory))
+          (process-environment (copy-sequence process-environment)))
+      (unless (file-executable-p script)
+        (error "Emacs Rime build script is not executable: %s" script))
+      (unless module-file-suffix
+        (error "Variable `module-file-suffix' is nil"))
+      (setenv "EMACS_RIME_SOURCE" (expand-file-name rime--root))
+      (setenv "EMACS_RIME_MODULE_DIR" (file-name-directory rime--module-path))
+      (setenv "LIBRIME_ROOT"
+              (and rime-librime-root (expand-file-name rime-librime-root)))
+      (setenv "EMACS_MODULE_HEADER_ROOT"
+              (and rime-emacs-module-header-root
+                   (expand-file-name rime-emacs-module-header-root)))
+      (setenv "MODULE_FILE_SUFFIX" module-file-suffix)
+      (unless (zerop (call-process script nil "*Compile Emacs Rime*" t))
+        (error "Compile patched Rime dynamic module failed"))
+      (message "Compile patched Rime dynamic module succeeded")))
+
+  (unless (advice-member-p #'x/rime-compile-module 'rime-compile-module)
+    (advice-add 'rime-compile-module :override #'x/rime-compile-module))
+
   (defun x/rime-vterm-translate-p ()
     "Check if current key should be translated in vterm."
     (and (derived-mode-p 'vterm-mode)

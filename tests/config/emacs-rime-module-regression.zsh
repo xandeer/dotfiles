@@ -4,6 +4,8 @@ set -eu
 
 repo_root=${0:A:h:h:h}
 patch_file="$repo_root/emacs.d/.emacs.d/patches/emacs-rime/0001-add-ai-session-bridge.patch"
+build_script="$repo_root/emacs.d/.emacs.d/libexec/build-emacs-rime-module.zsh"
+x_rime="$repo_root/emacs.d/.emacs.d/lisp/x-rime.el"
 upstream=${EMACS_RIME_SOURCE:-$HOME/projects/personal/dotfiles/emacs.d/.emacs.d/straight/repos/emacs-rime}
 pinned=3eeef9c445fa056a4b32137f9ef72c27ced2d4ab
 librime_root=${LIBRIME_ROOT:-$HOME/syncthing/personal/configs/librime/}
@@ -12,29 +14,53 @@ emacs=${EMACS:-/Applications/Emacs.app/Contents/MacOS/Emacs}
 tmp=$(mktemp -d)
 trap 'rm -rf -- "$tmp"' EXIT
 shared_data_dir=${RIME_SHARED_DATA_DIR:-$tmp/shared}
+straight_build=${EMACS_RIME_BUILD_DIR:-$upstream:h:h/build/rime}
 
 [[ -f $patch_file ]] || { print -u2 "missing patch: $patch_file"; exit 1; }
+[[ -x $build_script ]] || { print -u2 "missing executable build script: $build_script"; exit 1; }
 [[ -d $upstream/.git ]] || { print -u2 "missing emacs-rime checkout: $upstream"; exit 1; }
+[[ -f $x_rime ]] || { print -u2 "missing Emacs Rime config: $x_rime"; exit 1; }
+
+tree_fingerprint() {
+  local dir=$1 entry
+
+  if [[ ! -d $dir ]]; then
+    print MISSING
+    return
+  fi
+  for entry in "$dir"/*(DN); do
+    if [[ -L $entry ]]; then
+      print -r -- "L ${entry:t} -> $(readlink "$entry")"
+    elif [[ -f $entry ]]; then
+      print -r -- "F ${entry:t} $(shasum "$entry" | cut -d ' ' -f 1)"
+    else
+      print -r -- "D ${entry:t}"
+    fi
+  done
+}
 
 before_head=$(git -C "$upstream" rev-parse HEAD)
 before_status=$(git -C "$upstream" status --porcelain)
 before_hash=$(shasum "$upstream/lib.c" "$upstream/Makefile")
+before_build=$(tree_fingerprint "$straight_build")
 
-mkdir -p "$tmp/source" "$tmp/user" "$tmp/shared"
-git -C "$upstream" show "${pinned}:lib.c" > "$tmp/source/lib.c"
-git -C "$upstream" show "${pinned}:Makefile" > "$tmp/source/Makefile"
+mkdir -p "$tmp/upstream" "$tmp/patched" "$tmp/user" "$tmp/shared" \
+  "$tmp/output" "$tmp/build-tmp" "$tmp/emacs/libexec"
+git -C "$upstream" show "${pinned}:lib.c" > "$tmp/upstream/lib.c"
+git -C "$upstream" show "${pinned}:Makefile" > "$tmp/upstream/Makefile"
+cp "$tmp/upstream/lib.c" "$tmp/upstream/Makefile" "$tmp/patched/"
 
 (
-  cd "$tmp/source"
+  cd "$tmp/patched"
   git apply --check "$patch_file"
   git apply "$patch_file"
 )
 
-rg -U -q 'rime->api = rime_get_api\(\);\n  rime->session_id = 0;' "$tmp/source/lib.c" || {
+rg -U -q 'rime->api = rime_get_api\(\);\n  rime->session_id = 0;' "$tmp/patched/lib.c" || {
   print -u2 "patched module must initialize the guarded session id"
   exit 1
 }
-rg -U -q 'rime->session_id = 0;\n  rime->first_run = true;' "$tmp/source/lib.c" || {
+rg -U -q 'rime->session_id = 0;\n  rime->first_run = true;' "$tmp/patched/lib.c" || {
   print -u2 "patched module must initialize first_run"
   exit 1
 }
@@ -51,10 +77,32 @@ expected_bindings=(
   exit 1
 }
 
-make -C "$tmp/source" lib \
-  MODULE_FILE_SUFFIX=.dylib \
-  LIBRIME_ROOT="${librime_root%/}/" \
-  EMACS_MODULE_HEADER_ROOT="$module_header_root"
+TMPDIR="$tmp/build-tmp" \
+EMACS_RIME_SOURCE="$tmp/upstream" \
+EMACS_RIME_MODULE_DIR="$tmp/output" \
+LIBRIME_ROOT="${librime_root%/}" \
+EMACS_MODULE_HEADER_ROOT="$module_header_root" \
+MODULE_FILE_SUFFIX=.dylib \
+  /bin/zsh -x "$build_script" 2> "$tmp/build.trace"
+
+[[ -f $tmp/output/librime-emacs.dylib ]] || {
+  print -u2 "builder did not install the requested module"
+  exit 1
+}
+[[ -z $(find "$tmp/build-tmp" -maxdepth 1 -name 'emacs-rime-module.*' -print -quit) ]] || {
+  print -u2 "builder left its temporary source behind"
+  exit 1
+}
+source_copy_trace=$(rg -F "cp $tmp/upstream/" "$tmp/build.trace" || true)
+[[ $(print -r -- "$source_copy_trace" | wc -l | tr -d ' ') -eq 1 &&
+   $source_copy_trace == *"$tmp/upstream/lib.c"* &&
+   $source_copy_trace == *"$tmp/upstream/Makefile"* ]] || {
+  print -u2 "builder must copy only upstream lib.c and Makefile"
+  exit 1
+}
+otool -L "$tmp/output/librime-emacs.dylib" | rg -q '@rpath/librime'
+otool -l "$tmp/output/librime-emacs.dylib" |
+  rg -F -q "path ${librime_root%/}/lib/"
 
 cat > "$tmp/user/squirrel.custom.yaml" <<'YAML'
 patch:
@@ -88,7 +136,7 @@ YAML
 
 GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
 (progn
-  (module-load \"$tmp/source/librime-emacs.dylib\")
+  (module-load \"$tmp/output/librime-emacs.dylib\")
   (dolist (function '(rime-lib-set-property
                        rime-lib-get-current-schema
                        rime-lib-user-config-get-string
@@ -126,6 +174,72 @@ GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
     (ignore-errors (rime-lib-finalize))))
 "
 
+cp "$build_script" "$tmp/emacs/libexec/"
+chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
+
+"$emacs" --batch -Q --eval "
+(progn
+  (require 'cl-lib)
+  (setq user-emacs-directory \"$tmp/emacs/\")
+  (defvar rime--module-path nil)
+  (defvar rime--root \"$tmp/package/\")
+  (defvar rime-librime-root nil)
+  (defvar rime-emacs-module-header-root nil)
+  (defvar rime-mode-map (make-sparse-keymap))
+  (defvar rime-active-mode-map (make-sparse-keymap))
+  (defun rime-compile-module () (error \"upstream compiler called\"))
+  (provide 'rime)
+  (load-file \"$x_rime\")
+  (load-file \"$x_rime\")
+  (unless (equal rime--module-path
+                 (expand-file-name
+                  (concat \"var/rime/librime-emacs\" module-file-suffix)
+                  user-emacs-directory))
+    (error \"unexpected module path: %S\" rime--module-path))
+  (unless (advice-member-p #'x/rime-compile-module 'rime-compile-module)
+    (error \"custom module compiler is not installed as advice\"))
+  (let ((count 0))
+    (advice-mapc (lambda (advice _props)
+                   (when (eq advice #'x/rime-compile-module)
+                     (setq count (1+ count))))
+                 'rime-compile-module)
+    (unless (= count 1)
+      (error \"module compiler advice installed %d times\" count)))
+  (setq rime--root \"$tmp/package/\"
+        rime-librime-root \"$tmp/librime\"
+        rime-emacs-module-header-root \"$tmp/include\")
+  (let (called captured-environment)
+    (cl-letf (((symbol-function 'call-process)
+               (lambda (program _infile _destination _display &rest arguments)
+                 (setq called (cons program arguments)
+                       captured-environment (copy-sequence process-environment))
+                 0)))
+      (x/rime-compile-module))
+    (unless (equal called
+                   (list (expand-file-name
+                          \"libexec/build-emacs-rime-module.zsh\"
+                          user-emacs-directory)))
+      (error \"compiler invoked unexpected command: %S\" called))
+    (let ((process-environment captured-environment))
+      (dolist (expected
+               '((\"EMACS_RIME_SOURCE\" . \"$tmp/package/\")
+                 (\"EMACS_RIME_MODULE_DIR\" . \"$tmp/emacs/var/rime/\")
+                 (\"LIBRIME_ROOT\" . \"$tmp/librime\")
+                 (\"EMACS_MODULE_HEADER_ROOT\" . \"$tmp/include\")
+                 (\"MODULE_FILE_SUFFIX\" . \".dylib\")))
+        (unless (equal (getenv (car expected)) (cdr expected))
+          (error \"unexpected %s: %S\"
+                 (car expected) (getenv (car expected)))))))
+  (let ((failed nil))
+    (cl-letf (((symbol-function 'call-process)
+               (lambda (&rest _arguments) 9)))
+      (condition-case nil
+          (x/rime-compile-module)
+        (error (setq failed t))))
+    (unless failed
+      (error \"nonzero builder exit did not fail compilation\"))))
+"
+
 (
   cd "$upstream"
   git apply --check "$patch_file"
@@ -134,5 +248,6 @@ GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
 [[ $(git -C "$upstream" rev-parse HEAD) == $before_head ]]
 [[ $(git -C "$upstream" status --porcelain) == $before_status ]]
 [[ $(shasum "$upstream/lib.c" "$upstream/Makefile") == $before_hash ]]
+[[ $(tree_fingerprint "$straight_build") == $before_build ]]
 
 print "Emacs Rime module regression OK"
