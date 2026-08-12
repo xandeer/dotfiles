@@ -276,8 +276,8 @@
                                    (with-current-buffer
                                        (x/rime-ai--snapshot-buffer snapshot)
                                      (x/rime-ai--publish
-                                      candidate generation snapshot config))))))))
-        (x/rime-ai--invalidate-clear))))
+                                      candidate generation snapshot config)))))))
+        (x/rime-ai--invalidate-clear)))))
 
 (defun x/rime-ai--schedule ()
   "Resnapshot Rime and schedule one AI request after 300 milliseconds."

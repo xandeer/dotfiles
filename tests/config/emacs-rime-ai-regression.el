@@ -473,6 +473,23 @@
       (should-not requested)
       (should-not (x/rime-ai--state-snapshot x/rime-ai--state)))))
 
+(ert-deftest x/rime-ai-integration-started-request-preserves-ownership ()
+  (let ((x/rime-ai--state (x/rime-ai--make-state))
+        requested)
+    (x/test-rime-ai--set-runtime)
+    (let ((snapshot (x/rime-ai--runtime-snapshot 0)))
+      (setf (x/rime-ai--state-snapshot x/rime-ai--state) snapshot
+            (x/rime-ai--state-debounce-timer x/rime-ai--state) 'debounce)
+      (cl-letf (((symbol-function 'x/rime-ai--request)
+                 (lambda (&rest _) (setq requested t))))
+        (x/rime-ai--debounce-fired 0 snapshot))
+      (should requested)
+      (should (= (x/rime-ai--state-generation x/rime-ai--state) 0))
+      (should (equal (x/rime-ai--state-snapshot x/rime-ai--state) snapshot))
+      (should-not
+       (seq-some (lambda (event) (eq (car event) 'property))
+                 x/test-rime-ai--events)))))
+
 (ert-deftest x/rime-ai-integration-invalidates-clears-only-published-and-tracks-movement ()
   (let ((x/rime-ai--state (x/rime-ai--make-state)))
     (x/test-rime-ai--set-runtime)
