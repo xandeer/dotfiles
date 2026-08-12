@@ -5,7 +5,8 @@ index ca4dad3..f9291de 100644
 @@ -133,6 +133,121 @@ set_option (emacs_env *env, ptrdiff_t nargs, emacs_value *args, void *data) {
    return nil;
  }
- 
+-
++
 +emacs_value
 +set_property(emacs_env *env, ptrdiff_t nargs, emacs_value *args, void *data) {
 +  EmacsRime *rime = (EmacsRime*) data;
@@ -140,6 +141,7 @@ index ca4dad3..f9291de 100644
 +  emacs_defun(env, rime, get_current_schema, "rime-lib-get-current-schema", "Get current schema", 0, 0);
 +  emacs_defun(env, rime, user_config_get_string, "rime-lib-user-config-get-string", "Get user config string", 2, 2);
 +  emacs_defun(env, rime, user_config_get_bool, "rime-lib-user-config-get-bool", "Get user config bool", 3, 3);
- 
+-
++
    if (ert->size < sizeof (*ert))
      return 1;
