@@ -923,6 +923,43 @@ os.rename = function(source, destination)
     return real_rename(source, destination)
 end
 
+do
+    local punct = {
+        segment = {start = 0, _end = 1, status = "selected"},
+        candidate = candidate("punct", 0, 1, "，"),
+        contents = legacy_contents .. "test_schema\t,\t，\t1\t1\n",
+    }
+    function punct.segment:has_tag(tag)
+        return tag == "punct"
+    end
+
+    punct.live = run_filter({punct.candidate}, {
+        _ai_candidate = "可以，",
+        _ai_input = ",",
+        _ai_generation = "punct-guard",
+    }, ",", punct.segment)
+    same(#punct.live, 1, "punct live candidate count")
+    assert(rawequal(punct.live[1], punct.candidate),
+        "punct live filter must pass through the original native candidate")
+
+    write_file(weights_path, punct.contents)
+    yielded = {}
+    ai_learned_translator.func(",", punct.segment, learn_env)
+    same(#yielded, 0, "punct learned candidate count")
+
+    learn_context.input = ","
+    learn_context.composition.segment = punct.segment
+    learn_context.properties._ai_generation = "punct-guard"
+    learn_context.selected_candidate = punct.candidate
+    learn_context.select_notifier:emit(learn_context)
+    learn_context.commit_notifier:emit(learn_context)
+    same(read_file(weights_path), punct.contents,
+        "punct select and commit must not change learned storage")
+    write_file(weights_path, legacy_contents)
+    learn_context.input = "xxcodeyy"
+    learn_context.composition.segment = selected_segment
+end
+
 learn_context.properties._ai_generation = ""
 learn_context.selected_candidate = selected_candidate
 learn_context.select_notifier:emit(learn_context, function()

@@ -795,6 +795,10 @@ local function ai_segment_is_selected(segment)
         status:find("confirmed", 1, true) ~= nil
 end
 
+local function ai_segment_is_punct(segment)
+    return segment and segment.has_tag and segment:has_tag("punct")
+end
+
 ai_learned_translator = {}
 
 function ai_learned_translator.init(env)
@@ -807,6 +811,10 @@ function ai_learned_translator.init(env)
                 return
             end
             local segment = current.composition:empty() and nil or current.composition:back()
+            if ai_segment_is_punct(segment) then
+                env.ai_pending = nil
+                return
+            end
             local candidate = current:get_selected_candidate()
             local genuine = candidate and candidate:get_genuine() or nil
             if not segment or not genuine then
@@ -866,7 +874,7 @@ function ai_learned_translator.init(env)
 end
 
 function ai_learned_translator.func(input, seg, env)
-    if not ai_ensure_storage(env) then
+    if ai_segment_is_punct(seg) or not ai_ensure_storage(env) then
         return
     end
     local rows, read_ok = ai_read_rows(env.ai_weights_path)
@@ -914,7 +922,8 @@ function ai_candidate_filter(input, env)
     local ai_input = context:get_property("_ai_input") or ""
     local generation = context:get_property("_ai_generation") or ""
     local segment = context.composition:empty() and nil or context.composition:back()
-    if text == "" or ai_input ~= context.input or generation == "" or not segment then
+    if text == "" or ai_input ~= context.input or generation == "" or not segment or
+        ai_segment_is_punct(segment) then
         for candidate in input:iter() do
             yield(candidate)
         end
