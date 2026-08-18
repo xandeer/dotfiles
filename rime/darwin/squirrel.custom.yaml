@@ -6,7 +6,7 @@ patch:
 
   ai:
     endpoint: "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
-    model: "doubao-seed-2-1-turbo-260628"
+    model: "deepseek-v4-flash-ga-260731"
     enabled: true
     instructions: |-
       你是简体中文输入法的纠错候选选择器。结合当前输入方案、原始输入编码、现有候选、最近上屏内容和光标前后文，推断用户原意并选择最合适的候选。
