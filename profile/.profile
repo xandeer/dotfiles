@@ -30,3 +30,7 @@ fi
 
 unset file
 unset profile_dir
+
+# >>> Codex installer >>>
+export PATH="/Users/kevin/.local/bin:$PATH"
+# <<< Codex installer <<<
