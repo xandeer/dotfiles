@@ -73,13 +73,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 CODEX_HOME = "/Users/kevin/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
+BROWSER_USE_CODEX_APP_VERSION = "26.814.41407"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/kevin/.codex/plugins/cache/openai-bundled/browser/26.814.41407/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
 SKY_CUA_SERVICE_PATH = "/Users/kevin/.codex/computer-use/Codex Computer Use.app"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
@@ -134,6 +134,9 @@ enabled = true
 [plugins."chrome@openai-bundled"]
 enabled = true
 
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
 [apps.connector_68df038e0ba48191908c8434991bbac2]
 enabled = false
 
@@ -141,7 +144,7 @@ enabled = false
 enabled = false
 
 [marketplaces.openai-bundled]
-last_updated = "2026-08-17T13:04:28Z"
+last_updated = "2026-08-19T00:15:05Z"
 source_type = "local"
 source = "/Users/kevin/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -157,8 +160,8 @@ source_type = "git"
 source = "https://github.com/DietrichGebert/ponytail.git"
 
 [marketplaces.caveman]
-last_updated = "2026-08-14T06:41:36Z"
-last_revision = "c72984e4392c7a154e55c11dbf445f01ce5c35d4"
+last_updated = "2026-08-19T00:15:27Z"
+last_revision = "9e4356e717f0ec0030ee51ad169c0a41cd239d59"
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
 
@@ -204,9 +207,7 @@ global = "xcode"
 "/Users/kevin/projects/personal/notes" = "emacs"
 
 [shell_environment_policy.set]
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
-NODE_REPL_TRUSTED_CODE_PATHS = "/Users/kevin/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 
 [hooks.state]
 
