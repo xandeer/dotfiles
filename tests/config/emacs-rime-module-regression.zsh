@@ -9,6 +9,7 @@ x_rime="$repo_root/emacs.d/.emacs.d/lisp/x-rime.el"
 x_rime_lisp_dir="$repo_root/emacs.d/.emacs.d/lisp"
 squirrel_config="$repo_root/rime/darwin/squirrel.custom.yaml"
 upstream=${EMACS_RIME_SOURCE:-$HOME/projects/personal/dotfiles/emacs.d/.emacs.d/straight/repos/emacs-rime}
+straight_root=${upstream:h:h}
 pinned=3eeef9c445fa056a4b32137f9ef72c27ced2d4ab
 librime_root=${LIBRIME_ROOT:-/Library/Input Methods/Squirrel.app/Contents/Frameworks}
 librime_header_root=${LIBRIME_HEADER_ROOT:-$HOME/syncthing/personal/configs/librime/}
@@ -249,11 +250,11 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
   (load-file \"$x_rime\")
   (load-file \"$x_rime\")
   (unless (eq (lookup-key rime-active-mode-map (kbd \"RET\"))
-              #'x/rime-return)
-    (error \"RET is not bound to x/rime-return\"))
+              #'rime-x-return)
+    (error \"RET is not bound to rime-x-return\"))
   (unless (eq (lookup-key rime-active-mode-map (kbd \"<return>\"))
-              #'x/rime-return)
-    (error \"<return> is not bound to x/rime-return\"))
+              #'rime-x-return)
+    (error \"<return> is not bound to rime-x-return\"))
   (let (sent previewed)
     (cl-letf (((symbol-function 'rime-send-keybinding)
                (lambda () (setq sent last-input-event)))
@@ -261,7 +262,7 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
                (lambda () (setq previewed t))))
       (setq rime-return-insert-raw t)
       (let ((last-input-event ?\r))
-        (x/rime-return))
+        (rime-x-return))
       (unless (and (eq sent 'return) (not previewed))
         (error \"raw Return was not normalized and sent: %S %S\"
                sent previewed))
@@ -269,7 +270,7 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
             previewed nil
             rime-return-insert-raw nil)
       (let ((last-input-event ?\r))
-        (x/rime-return))
+        (rime-x-return))
       (unless (and previewed (not sent))
         (error \"non-raw Return did not preserve preview: %S %S\"
                sent previewed))))
@@ -321,6 +322,36 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
         (error (setq failed t))))
     (unless failed
       (error \"nonzero builder exit did not fail compilation\"))))
+"
+
+"$emacs" --batch -Q \
+  -L "$straight_root/build/dash" \
+  -L "$upstream" \
+  --eval "
+(progn
+  (require 'cl-lib)
+  (defun x/rime-ai-install () nil)
+  (provide 'x-rime-ai)
+  (require 'rime)
+  (setq user-emacs-directory \"$tmp/emacs/\")
+  (load-file \"$x_rime\")
+  (dolist (key '(\"RET\" \"<return>\"))
+    (let ((this-command (lookup-key rime-active-mode-map (kbd key)))
+          (last-input-event ?\r)
+          (rime-return-insert-raw t)
+          (pre-command-hook '(rime--clear-state-before-unrelated-command))
+          cleared
+          sent)
+      (cl-letf (((symbol-function 'rime--clear-state)
+                 (lambda () (setq cleared t)))
+                ((symbol-function 'rime-send-keybinding)
+                 (lambda ()
+                   (setq sent (cons (not cleared) last-input-event)))))
+        (run-hooks 'pre-command-hook)
+        (call-interactively this-command)
+        (unless (equal sent '(t . return))
+          (error \"%s cleared composition before Return dispatch: %S\"
+                 key sent))))))
 "
 
 (

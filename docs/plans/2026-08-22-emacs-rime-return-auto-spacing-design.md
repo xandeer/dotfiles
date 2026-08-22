@@ -17,7 +17,7 @@ emacs-rime 的 `rime--return` 在 `rime-return-insert-raw` 为真时直接读取
 
 ## 方案
 
-在 `x-rime.el` 中增加一个 Emacs Return 命令，并把 `rime-active-mode-map` 的 `RET` 与 `<return>` 绑定到它：
+在 `x-rime.el` 中增加 `rime-x-return` 命令，并把 `rime-active-mode-map` 的 `RET` 与 `<return>` 绑定到它。`rime-` 前缀让 emacs-rime 现有的 `rime--clear-state-before-unrelated-command` pre-command hook 将它识别为相关命令，避免在 Return 分发前清空 composition：
 
 - 当 `rime-return-insert-raw` 为真时，把 `last-input-event` 规范化为 `return`，调用现有 `rime-send-keybinding`；它会向 librime 发送 `#xff0d`、读取合并后的 native commit，并复用现有显示、模式刷新和 AI lifecycle advice。
 - 当 `rime-return-insert-raw` 为假时，继续调用 `rime--commit-preview`。
@@ -29,7 +29,7 @@ emacs-rime 的 `rime--return` 在 `rime-return-insert-raw` 为真时直接读取
 
 扩展现有 `tests/config/emacs-rime-module-regression.zsh`：
 
-1. Elisp 集成测试先锁定 raw Return 必须经 `rime-send-keybinding` 且事件为 `return`，preview 分支保持原样，重复加载配置不会产生重复或错误绑定。
+1. Elisp 集成测试先通过真实 emacs-rime pre-command hook 锁定 Return 分发前不会清空 composition，再验证 raw Return 必须经 `rime-send-keybinding` 且事件为 `return`，preview 分支保持原样，重复加载配置不会产生重复或错误绑定。
 2. native module fixture 启用 `lua_processor@select_character` 与 `lua_filter@auto_space_filter`，验证真实提交序列为 `中文`、`" harness"`、`" 中文"`。
 3. 继续运行集中 Rime/AI 回归、zsh 语法和 `git diff --check`。
 

@@ -32,11 +32,11 @@ In the second batch Emacs block, after loading `x-rime.el` twice:
 
 ```elisp
 (unless (eq (lookup-key rime-active-mode-map (kbd "RET"))
-            #'x/rime-return)
-  (error "RET is not routed through x/rime-return"))
+            #'rime-x-return)
+  (error "RET is not routed through rime-x-return"))
 (unless (eq (lookup-key rime-active-mode-map (kbd "<return>"))
-            #'x/rime-return)
-  (error "<return> is not routed through x/rime-return"))
+            #'rime-x-return)
+  (error "<return> is not routed through rime-x-return"))
 
 (let (sent-event previewed)
   (cl-letf (((symbol-function 'rime-send-keybinding)
@@ -45,7 +45,7 @@ In the second batch Emacs block, after loading `x-rime.el` twice:
              (lambda () (setq previewed t))))
     (setq rime-return-insert-raw t
           last-input-event ?\r)
-    (x/rime-return)
+    (rime-x-return)
     (unless (eq sent-event 'return)
       (error "raw RET was not normalized: %S" sent-event))
     (when previewed
@@ -54,12 +54,18 @@ In the second batch Emacs block, after loading `x-rime.el` twice:
     (setq rime-return-insert-raw nil
           sent-event nil
           previewed nil)
-    (x/rime-return)
+    (rime-x-return)
     (unless previewed
       (error "preview RET did not preserve upstream behavior"))
     (when sent-event
       (error "preview RET unexpectedly reached librime"))))
 ```
+
+Also load the real upstream `rime.el` in an isolated batch and run
+`rime--clear-state-before-unrelated-command` from `pre-command-hook` before
+calling the command resolved from each Return binding. Stub only
+`rime--clear-state` and `rime-send-keybinding`; assert the dispatch result is
+`(t . return)`, proving composition remained intact and the event was normalized.
 
 **Step 3: Run the test to verify RED**
 
@@ -69,7 +75,7 @@ Run:
 /bin/zsh tests/config/emacs-rime-module-regression.zsh
 ```
 
-Expected: nonzero with `x/rime-return` missing or the RET binding still resolving to `rime--return`. Record the exact failure before implementation.
+Expected: nonzero with `rime-x-return` missing, the RET binding still resolving to `rime--return`, or the real pre-command hook clearing composition before dispatch. Record the exact failure before implementation.
 
 ### Task 2: Route raw Emacs Return through librime
 
@@ -82,7 +88,7 @@ Expected: nonzero with `x/rime-return` missing or the RET binding still resolvin
 Inside the existing `with-eval-after-load 'rime` block, add:
 
 ```elisp
-(defun x/rime-return ()
+(defun rime-x-return ()
   "Commit raw input through Rime so shared processors run."
   (interactive)
   (if rime-return-insert-raw
@@ -90,8 +96,8 @@ Inside the existing `with-eval-after-load 'rime` block, add:
         (rime-send-keybinding))
     (rime--commit-preview)))
 
-(define-key rime-active-mode-map (kbd "RET") #'x/rime-return)
-(define-key rime-active-mode-map (kbd "<return>") #'x/rime-return)
+(define-key rime-active-mode-map (kbd "RET") #'rime-x-return)
+(define-key rime-active-mode-map (kbd "<return>") #'rime-x-return)
 ```
 
 Do not alter Shift+Return, Ctrl+J/L, predicates, `rime.lua`, schema, or the dynamic module patch.
@@ -137,8 +143,8 @@ If an Emacs server is available, evaluate:
 ```elisp
 (progn
   (load-file "/Users/kevin/projects/personal/dotfiles/emacs.d/.emacs.d/lisp/x-rime.el")
-  (and (eq (lookup-key rime-active-mode-map (kbd "RET")) #'x/rime-return)
-       (eq (lookup-key rime-active-mode-map (kbd "<return>")) #'x/rime-return)))
+  (and (eq (lookup-key rime-active-mode-map (kbd "RET")) #'rime-x-return)
+       (eq (lookup-key rime-active-mode-map (kbd "<return>")) #'rime-x-return)))
 ```
 
 Require a true result. If no server is available, report that the stowed file is ready for the next Emacs restart; do not claim a live reload.
