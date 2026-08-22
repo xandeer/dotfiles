@@ -134,6 +134,7 @@ schema:
   version: "1"
 engine:
   processors:
+    - lua_processor@select_character
     - speller
     - selector
     - navigator
@@ -145,6 +146,7 @@ engine:
     - echo_translator
   filters:
     - lua_filter@ai_candidate_filter
+    - lua_filter@auto_space_filter
 speller:
   alphabet: abcdefghijklmnopqrstuvwxyz
 YAML
@@ -202,7 +204,29 @@ GLOG_minloglevel=2 MallocPreScribble=1 "$emacs" --batch -Q --eval "
                (menu (alist-get 'menu context))
                (first (caar (alist-get 'candidates menu))))
           (unless (equal first \"测试\")
-            (error \"Lua AI candidate was not first: %S\" first))))
+            (error \"Lua AI candidate was not first: %S\" first)))
+        (unless (rime-lib-process-key 32 0)
+          (error \"AI candidate selection was not accepted\"))
+        (unless (equal (rime-lib-get-commit) \"测试\")
+          (error \"unexpected AI candidate commit\"))
+        (dolist (key (string-to-list \"harness\"))
+          (unless (rime-lib-process-key key 0)
+            (error \"Return input was not accepted: %c\" key)))
+        (unless (rime-lib-process-key 65293 0)
+          (error \"Return was not accepted\"))
+        (unless (equal (rime-lib-get-commit) \" harness\")
+          (error \"Han-to-Return spacing was not committed\"))
+        (unless (rime-lib-process-key ?a 0)
+          (error \"post-Return input was not accepted\"))
+        (let* ((context (rime-lib-get-context))
+               (menu (alist-get 'menu context))
+               (first (caar (alist-get 'candidates menu))))
+          (unless (equal first \" 测试\")
+            (error \"Return-to-Han spacing was not shown: %S\" first)))
+        (unless (rime-lib-process-key 32 0)
+          (error \"spaced AI candidate selection was not accepted\"))
+        (unless (equal (rime-lib-get-commit) \" 测试\")
+          (error \"Return-to-Han spacing was not committed\")))
     (ignore-errors (rime-lib-finalize))))
 "
 
@@ -224,6 +248,31 @@ chmod +x "$tmp/emacs/libexec/build-emacs-rime-module.zsh"
   (provide 'rime)
   (load-file \"$x_rime\")
   (load-file \"$x_rime\")
+  (unless (eq (lookup-key rime-active-mode-map (kbd \"RET\"))
+              #'x/rime-return)
+    (error \"RET is not bound to x/rime-return\"))
+  (unless (eq (lookup-key rime-active-mode-map (kbd \"<return>\"))
+              #'x/rime-return)
+    (error \"<return> is not bound to x/rime-return\"))
+  (let (sent previewed)
+    (cl-letf (((symbol-function 'rime-send-keybinding)
+               (lambda () (setq sent last-input-event)))
+              ((symbol-function 'rime--commit-preview)
+               (lambda () (setq previewed t))))
+      (setq rime-return-insert-raw t)
+      (let ((last-input-event ?\r))
+        (x/rime-return))
+      (unless (and (eq sent 'return) (not previewed))
+        (error \"raw Return was not normalized and sent: %S %S\"
+               sent previewed))
+      (setq sent nil
+            previewed nil
+            rime-return-insert-raw nil)
+      (let ((last-input-event ?\r))
+        (x/rime-return))
+      (unless (and previewed (not sent))
+        (error \"non-raw Return did not preserve preview: %S %S\"
+               sent previewed))))
   (unless (equal rime--module-path
                  (expand-file-name
                   (concat \"var/rime/librime-emacs\" module-file-suffix)

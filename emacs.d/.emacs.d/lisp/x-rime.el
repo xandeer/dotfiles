@@ -88,8 +88,18 @@
           x/rime-vterm-translate-p
           x/rime--telega-msg-p))
 
+  (defun x/rime-return ()
+    "Commit raw input through Rime so shared processors run."
+    (interactive)
+    (if rime-return-insert-raw
+        (let ((last-input-event 'return))
+          (rime-send-keybinding))
+      (rime--commit-preview)))
+
   (define-key rime-mode-map (kbd "M-I") 'rime-force-enable)
-  (define-key rime-active-mode-map (kbd "M-i") 'rime-inline-ascii))
+  (define-key rime-active-mode-map (kbd "M-i") 'rime-inline-ascii)
+  (define-key rime-active-mode-map (kbd "RET") #'x/rime-return)
+  (define-key rime-active-mode-map (kbd "<return>") #'x/rime-return))
 
 (global-set-key (kbd "M-i") 'toggle-input-method)
 
