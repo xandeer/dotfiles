@@ -933,10 +933,13 @@ end
 local function run_return_commit(input, options)
     options = options or {}
     local record = options.record or {type = "raw", text = input}
+    local commits = {}
+    local context_committed = false
     local calls = {
         option = 0,
         composing = 0,
         clear_non_confirmed = 0,
+        commit_text = 0,
         commit = 0,
         history = 0,
         config = 0,
@@ -958,17 +961,26 @@ local function run_return_commit(input, options)
     function context:clear_non_confirmed_composition()
         calls.clear_non_confirmed = calls.clear_non_confirmed + 1
     end
+    function context:get_commit_text()
+        calls.commit_text = calls.commit_text + 1
+        if options.native_text ~= nil then
+            return options.native_text
+        end
+        return self.input
+    end
     function context:commit()
         calls.commit = calls.commit + 1
         local succeeded = options.commit_result ~= false
         if succeeded then
+            commits[#commits + 1] = self.input
             self.input = ""
+            context_committed = true
         end
         return succeeded
     end
     function context.commit_history:back()
         calls.history = calls.history + 1
-        return record
+        return context_committed and record or options.previous_record
     end
 
     local config = {}
@@ -982,20 +994,21 @@ local function run_return_commit(input, options)
         return nil
     end
 
-    local ok, result = pcall(
-        select_character,
-        processor_key(options.key or "Return"),
-        {
-            engine = {
-                context = context,
-                schema = {config = config},
-            },
-        }
-    )
+    local engine = {
+        context = context,
+        schema = {config = config},
+    }
+    function engine:commit_text(text)
+        commits[#commits + 1] = text
+    end
+
+    local ok, result = pcall(select_character,
+        processor_key(options.key or "Return"), {engine = engine})
     assert(ok, "Return processor must fail closed: " .. tostring(result))
     return {
         result = result,
         record = record,
+        commits = commits,
         calls = calls,
     }
 end
@@ -1007,15 +1020,48 @@ local function assert_accepted(outcome, expected, message)
     same(outcome.clear_count, 1, message .. " clear count")
 end
 
+local han_then_return = run_return_commit("harness", {
+    previous_record = history_record("phrase", "中文"),
+})
+same(table.concat(han_then_return.commits), " harness",
+    "Han then Return committed text")
+same(han_then_return.record.type, "return_raw",
+    "Han then Return history type")
+same(run_auto_filter(han_then_return.record, {
+    candidate("phrase", 0, 2, "中文"),
+})[1].text, " 中文", "Return letters to future Han spacing")
+
+for _, previous in ipairs({
+    history_record("raw", "中"),
+    history_record("thru", "中"),
+}) do
+    local outcome = run_return_commit("harness", {
+        previous_record = previous,
+    })
+    same(table.concat(outcome.commits), "harness",
+        previous.type .. " history before Return")
+end
+
+local mismatched_native_text = run_return_commit("harness", {
+    previous_record = history_record("phrase", "中文"),
+    native_text = "",
+})
+same(table.concat(mismatched_native_text.commits), "harness",
+    "mismatched native Return text")
+
 local returned_letters = run_return_commit("harness")
 same(returned_letters.result, 1, "plain Return commit return value")
+same(table.concat(returned_letters.commits), "harness",
+    "plain Return committed text")
 same(returned_letters.record.type, "return_raw", "plain Return history type")
 same(returned_letters.calls.option, 1, "plain Return option read count")
 same(returned_letters.calls.composing, 1, "plain Return composing read count")
 same(returned_letters.calls.clear_non_confirmed, 1,
     "plain Return clear-non-confirmed count")
+same(returned_letters.calls.commit_text, 1,
+    "plain Return commit-text read count")
 same(returned_letters.calls.commit, 1, "plain Return commit count")
-same(returned_letters.calls.history, 1, "plain Return history read count")
+same(returned_letters.calls.history, 2, "plain Return history read count")
 same(returned_letters.calls.config, 0, "plain Return config read count")
 same(run_auto_filter(returned_letters.record, {
     candidate("phrase", 0, 2, "中文"),
@@ -1033,6 +1079,8 @@ for _, case in ipairs({
     same(outcome.calls.clear_non_confirmed, 0,
         case.name .. " clear-non-confirmed count")
     same(outcome.calls.commit, 0, case.name .. " commit count")
+    same(outcome.calls.commit_text, 0,
+        case.name .. " commit-text read count")
     same(outcome.calls.history, 0, case.name .. " history read count")
 end
 
@@ -1042,8 +1090,10 @@ local failed_return_commit = run_return_commit("harness", {
 same(failed_return_commit.result, 2, "failed Return commit value")
 same(failed_return_commit.calls.clear_non_confirmed, 1,
     "failed Return clear-non-confirmed count")
+same(failed_return_commit.calls.commit_text, 1,
+    "failed Return commit-text read count")
 same(failed_return_commit.calls.commit, 1, "failed Return commit count")
-same(failed_return_commit.calls.history, 0, "failed Return history read count")
+same(failed_return_commit.calls.history, 1, "failed Return history read count")
 same(failed_return_commit.record.type, "raw", "failed Return history type")
 
 local mismatched_return = run_return_commit("harness", {

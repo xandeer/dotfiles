@@ -383,7 +383,13 @@ function select_character(key, env)
                 return
             end
 
+            local left = committed_history_boundary(env)
             context:clear_non_confirmed_composition()
+            local native_text = context:get_commit_text()
+            if native_text == input and needs_auto_space(
+                    left, boundary_codepoint(input, false)) then
+                engine:commit_text(" ")
+            end
             if context:commit() ~= true then
                 return
             end
