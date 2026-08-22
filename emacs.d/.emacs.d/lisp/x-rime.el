@@ -73,8 +73,13 @@
   (defun x/rime--telega-msg-p ()
     (and (fboundp 'telega-msg-at) (telega-msg-at)))
 
+  (defun x/rime-predicate-after-alphabet-char-p ()
+    "Disable Rime after letters unless the current key is Space."
+    (and (not (eq rime--current-input-key ?\s))
+         (rime-predicate-after-alphabet-char-p)))
+
   (setq rime-disable-predicates
-        '(rime-predicate-after-alphabet-char-p
+        '(x/rime-predicate-after-alphabet-char-p
           rime-predicate-current-uppercase-letter-p
           meow-normal-mode-p
           x/ace-mode-p
