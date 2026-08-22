@@ -796,7 +796,8 @@ local function ai_segment_is_selected(segment)
 end
 
 local function ai_segment_is_punct(segment)
-    return segment and segment.has_tag and segment:has_tag("punct")
+    return segment and segment.has_tag and
+        (segment:has_tag("punct") or segment:has_tag("punct_number"))
 end
 
 ai_learned_translator = {}
