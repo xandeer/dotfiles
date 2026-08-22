@@ -113,3 +113,42 @@ Do not delete by candidate text and do not match `/A` or other symbol inputs.
 **Step 5: Verify live state**
 
 Confirm the deployed schema loads, the cleaned table retains every unrelated row, and physical comma directly commits in a real Squirrel client. If UI automation cannot prove the final insertion, report that manual acceptance remains instead of claiming it.
+
+### Task 3: Guard librime digit separators
+
+**Files:**
+- Modify: `tests/config/rime-ai-regression.lua`
+- Modify: `rime/rime.lua`
+- Runtime data: `~/Library/Rime/ai_weights.tsv`
+
+**Step 1: Write and run the failing regression**
+
+Extend the punctuation test table to run once with tag `punct` and once with tag `punct_number`. The latter must preserve the native `.` candidate, yield no learned candidate, and leave storage unchanged.
+
+Run:
+
+```zsh
+/bin/zsh tests/config/rime-config-regression.zsh
+```
+
+Expected: FAIL on the `punct_number` case because `ai_segment_is_punct` only recognizes `punct`.
+
+**Step 2: Extend the shared guard**
+
+Change the existing predicate to return true for either `punct` or `punct_number`. Do not change Rime punctuation mappings or `punctuator/digit_separators`.
+
+**Step 3: Run GREEN and commit**
+
+Run:
+
+```zsh
+/bin/zsh -n tests/config/rime-config-regression.zsh
+/bin/zsh tests/config/rime-config-regression.zsh
+git diff --check
+```
+
+Expected: exit 0 with both Rime regression success messages.
+
+**Step 4: Deploy and clean the exact polluted row**
+
+Deploy the guarded Lua code, create a mode-0600 timestamped backup, atomically remove only rows whose schema/input/text are exactly `double_pinyin_flypy`, `.`, and `。`, then reload Squirrel. Verify unrelated rows are byte-for-byte retained.

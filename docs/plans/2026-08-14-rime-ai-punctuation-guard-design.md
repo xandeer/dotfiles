@@ -30,3 +30,9 @@ Extend the existing Lua regression harness with a `punct` segment mock. The test
 - AI behavior for non-punctuation segments remains unchanged.
 - Punctuation selection cannot create or increment AI learning rows.
 - No repository or runtime data outside the isolated worktree changes before deployment approval.
+
+## Digit-separator regression
+
+Librime 1.16 tags `.` after a committed digit as `punct_number`, not `punct`, so the original guard misses the native decimal separator composition. Treat both tags as punctuation at the same three AI boundaries. Preserve librime's native behavior: `1.` remains an in-progress ASCII decimal separator, a following digit commits the number, and ordinary `.` still maps to `。`.
+
+Verify this with the existing Lua harness using a `punct_number` segment, then remove only the exact runtime row `double_pinyin_flypy\t.\t。` after deployment.
