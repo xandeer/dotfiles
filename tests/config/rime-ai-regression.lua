@@ -1100,7 +1100,7 @@ local roundtrip_spaced_count = exact_rows(
 )
 same(roundtrip_spaced_count, 0, "display-roundtrip fixture spaced row count")
 
-local roundtrip_history = {type = "phrase", text = "Rime"}
+local roundtrip_history = {type = "return_raw", text = "Rime"}
 local roundtrip_segment = {
     start = 0,
     _end = #display_roundtrip_input,

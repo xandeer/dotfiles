@@ -367,13 +367,42 @@ end
 function select_character(key, env)
     local engine = env.engine
     local context = engine.context
-    local config = engine.schema.config
+    local key_repr = key:repr()
+
+    if key_repr == "Return" then
+        local committed = false
+        pcall(function()
+            if context:get_option("ascii_mode") or
+                context:is_composing() ~= true then
+                return
+            end
+
+            local input = context.input
+            if type(input) ~= "string" or
+                input:match("^[A-Za-z]+$") == nil then
+                return
+            end
+
+            context:clear_non_confirmed_composition()
+            if context:commit() ~= true then
+                return
+            end
+            committed = true
+
+            local record = context.commit_history:back()
+            if record ~= nil and record.type == "raw" and
+                record.text == input then
+                record.type = "return_raw"
+            end
+        end)
+        return committed and 1 or 2 -- kAccepted or kNoop
+    end
 
     -- local first_key = config:get_string('key_binder/select_first_character') or 'bracketleft'
     -- local last_key = config:get_string('key_binder/select_last_character') or 'bracketright'
+    local config = engine.schema.config
     local first_key = config:get_string('key_binder/select_first_character')
     local last_key = config:get_string('key_binder/select_last_character')
-    local key_repr = key:repr()
     if key_repr ~= first_key and key_repr ~= last_key then
         return 2 -- kNoop
     end

@@ -930,12 +930,145 @@ local function run_select_character(representation, commit_text, composition)
     }
 end
 
+local function run_return_commit(input, options)
+    options = options or {}
+    local record = options.record or {type = "raw", text = input}
+    local calls = {
+        option = 0,
+        composing = 0,
+        clear_non_confirmed = 0,
+        commit = 0,
+        history = 0,
+        config = 0,
+    }
+
+    local context = {
+        input = input,
+        commit_history = {},
+    }
+    function context:get_option(name)
+        same(name, "ascii_mode", "Return option name")
+        calls.option = calls.option + 1
+        return options.ascii_mode == true
+    end
+    function context:is_composing()
+        calls.composing = calls.composing + 1
+        return options.composing ~= false
+    end
+    function context:clear_non_confirmed_composition()
+        calls.clear_non_confirmed = calls.clear_non_confirmed + 1
+    end
+    function context:commit()
+        calls.commit = calls.commit + 1
+        local succeeded = options.commit_result ~= false
+        if succeeded then
+            self.input = ""
+        end
+        return succeeded
+    end
+    function context.commit_history:back()
+        calls.history = calls.history + 1
+        return record
+    end
+
+    local config = {}
+    function config:get_string(path)
+        calls.config = calls.config + 1
+        if path == "key_binder/select_first_character" then
+            return "Control+j"
+        elseif path == "key_binder/select_last_character" then
+            return "Control+l"
+        end
+        return nil
+    end
+
+    local ok, result = pcall(
+        select_character,
+        processor_key(options.key or "Return"),
+        {
+            engine = {
+                context = context,
+                schema = {config = config},
+            },
+        }
+    )
+    assert(ok, "Return processor must fail closed: " .. tostring(result))
+    return {
+        result = result,
+        record = record,
+        calls = calls,
+    }
+end
+
 local function assert_accepted(outcome, expected, message)
     same(outcome.result, 1, message .. " return value")
     same(#outcome.commits, 1, message .. " commit count")
     same(outcome.commits[1], expected, message)
     same(outcome.clear_count, 1, message .. " clear count")
 end
+
+local returned_letters = run_return_commit("harness")
+same(returned_letters.result, 1, "plain Return commit return value")
+same(returned_letters.record.type, "return_raw", "plain Return history type")
+same(returned_letters.calls.option, 1, "plain Return option read count")
+same(returned_letters.calls.composing, 1, "plain Return composing read count")
+same(returned_letters.calls.clear_non_confirmed, 1,
+    "plain Return clear-non-confirmed count")
+same(returned_letters.calls.commit, 1, "plain Return commit count")
+same(returned_letters.calls.history, 1, "plain Return history read count")
+same(returned_letters.calls.config, 0, "plain Return config read count")
+same(run_auto_filter(returned_letters.record, {
+    candidate("phrase", 0, 2, "中文"),
+})[1].text, " 中文", "plain Return ASCII to Han spacing")
+
+for _, case in ipairs({
+    {name = "ASCII mode", input = "harness", ascii_mode = true},
+    {name = "no composition", input = "harness", composing = false},
+    {name = "empty input", input = ""},
+    {name = "input with digits", input = "GPT4"},
+    {name = "input with punctuation", input = "GPT-4"},
+}) do
+    local outcome = run_return_commit(case.input, case)
+    same(outcome.result, 2, case.name .. " Return value")
+    same(outcome.calls.clear_non_confirmed, 0,
+        case.name .. " clear-non-confirmed count")
+    same(outcome.calls.commit, 0, case.name .. " commit count")
+    same(outcome.calls.history, 0, case.name .. " history read count")
+end
+
+local failed_return_commit = run_return_commit("harness", {
+    commit_result = false,
+})
+same(failed_return_commit.result, 2, "failed Return commit value")
+same(failed_return_commit.calls.clear_non_confirmed, 1,
+    "failed Return clear-non-confirmed count")
+same(failed_return_commit.calls.commit, 1, "failed Return commit count")
+same(failed_return_commit.calls.history, 0, "failed Return history read count")
+same(failed_return_commit.record.type, "raw", "failed Return history type")
+
+local mismatched_return = run_return_commit("harness", {
+    record = {type = "raw", text = "other"},
+})
+same(mismatched_return.result, 1, "mismatched Return commit value")
+same(mismatched_return.record.type, "raw", "mismatched Return history type")
+
+local throwing_record = setmetatable({}, {
+    __index = function(_, key)
+        if key == "type" then
+            return "raw"
+        elseif key == "text" then
+            return "harness"
+        end
+    end,
+    __newindex = function()
+        error("injected Return history write failure")
+    end,
+})
+local unmarked_return = run_return_commit("harness", {
+    record = throwing_record,
+})
+same(unmarked_return.result, 1,
+    "committed Return must remain accepted when history marking fails")
 
 local genuine_for_selection = candidate(
     "phrase", 0, 4, "与显示文本刻意不同", "", 1
